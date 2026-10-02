@@ -249,7 +249,7 @@ static void SelectClosestIdleRotation(UObject* Context, FFrame& Stack)
 
 static void SetFixedRotationGoalForReplication(UObject* Context, FFrame& Stack)
 {
-    FRotator InFixedRotationGoalTemp;
+    FRotator InFixedRotationGoalTemp{};
     auto& InFixedRotationGoal = Stack.StepCompiledInRef(&InFixedRotationGoalTemp);
 
     Stack.IncrementCode();
@@ -259,7 +259,7 @@ static void SetFixedRotationGoalForReplication(UObject* Context, FFrame& Stack)
 
 static void SetStartingIdleRotation(UObject* Context, FFrame& Stack)
 {
-    FRotator InStartingIdleRotationTemp;
+    FRotator InStartingIdleRotationTemp{};
     auto& InStartingIdleRotation = Stack.StepCompiledInRef(&InStartingIdleRotationTemp);
 
     Stack.IncrementCode();

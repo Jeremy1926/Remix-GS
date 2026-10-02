@@ -374,14 +374,14 @@ static bool SelectCalendarPlaylist()
     while (ManagerPackage && ManagerPackage->Outer)
         ManagerPackage = ManagerPackage->Outer;
 
-    auto PackageName = ManagerPackage ? ManagerPackage->Name.ToString() : std::string();
+    auto PackageName = ManagerPackage ? ManagerPackage->Name.GetRawString() : std::string();
     auto RootEnd = PackageName.size() > 1 ? PackageName.find('/', 1) : std::string::npos;
 
     if (RootEnd == std::string::npos)
         return bDone = true;
 
     std::wstring Root(PackageName.begin(), PackageName.begin() + RootEnd + 1);
-    auto Level = CurrentPlaylist->PreloadPersistentLevel.ObjectID.AssetPath.PackageName.ToString();
+    auto Level = CurrentPlaylist->PreloadPersistentLevel.ObjectID.AssetPath.PackageName.GetRawString();
     std::wstring MatchPath;
     int32 Matches = 0;
     int32 BestSharedTags = -1;
@@ -407,7 +407,7 @@ static bool SelectCalendarPlaylist()
 
         auto Candidate = FindObject<UFortPlaylistAthena>(Path.c_str());
 
-        if (!Candidate || Candidate == CurrentPlaylist || Candidate->MaxSquadSize != CurrentPlaylist->MaxSquadSize || Candidate->PreloadPersistentLevel.ObjectID.AssetPath.PackageName.ToString() != Level)
+        if (!Candidate || Candidate == CurrentPlaylist || Candidate->MaxSquadSize != CurrentPlaylist->MaxSquadSize || Candidate->PreloadPersistentLevel.ObjectID.AssetPath.PackageName.GetRawString() != Level)
             continue;
 
         bool bHasWeekTag = false;
@@ -941,12 +941,9 @@ static void HandleMatchHasStarted(AFortGameModeAthena* GameMode)
     if (!bSkipWarmup)
     {
         auto Time = (float)UGameplayStatics::GetTimeSeconds(UWorld::GetWorld());
-        auto WarmupDuration = 300.f;
 
         GamePhaseLogic->WarmupCountdownStartTime = Time;
-        GamePhaseLogic->WarmupCountdownEndTime = Time + WarmupDuration;
-        GamePhaseLogic->WarmupCountdownDuration = 10.f;
-        GamePhaseLogic->WarmupEarlyCountdownDuration = WarmupDuration - 10.f;
+        GamePhaseLogic->WarmupCountdownEndTime = Time + GamePhaseLogic->WarmupCountdownDuration;
 
         SetGamePhase(GamePhaseLogic, EAthenaGamePhase::Warmup);
         SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::Warmup);
@@ -1252,7 +1249,7 @@ static void FinishWorldInitialization(AFortGameModeAthena* GameMode, AActor* Wor
 
 static void GetPhaseInfo(UObject* Context, FFrame& Stack, bool* Ret)
 {
-    FFortSafeZonePhaseInfo OutSafeZonePhaseTemp;
+    FFortSafeZonePhaseInfo OutSafeZonePhaseTemp{};
     auto& OutSafeZonePhase = Stack.StepCompiledInRef(&OutSafeZonePhaseTemp);
     int32 InPhaseToGet;
     Stack.StepCompiledIn(&InPhaseToGet);
@@ -1330,7 +1327,7 @@ void AFortGameMode__Tick()
             static bool bGettingReady = false;
             if (!bGettingReady && GamePhaseLogic->GamePhase == EAthenaGamePhase::Warmup)
             {
-                if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->WarmupEarlyCountdownDuration != -1 && GamePhaseLogic->WarmupEarlyCountdownDuration < Time)
+                if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->WarmupCountdownEndTime != -1 && GamePhaseLogic->WarmupCountdownEndTime - 10.f <= Time)
                 {
                     bGettingReady = true;
 
@@ -1355,7 +1352,7 @@ void AFortGameMode__Tick()
             static bool bBusUnlocked = false;
             if (!bBusUnlocked)
             {
-                if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Data[0].Get() && GamePhaseLogic->Aircrafts_GameState.Data[0]->DropStartTime < Time)
+                if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Data[0].Get() && GamePhaseLogic->Aircrafts_GameState.Data[0]->DropStartTime < Time)
                 {
                     bBusUnlocked = true;
 
@@ -1368,7 +1365,7 @@ void AFortGameMode__Tick()
             static bool bStartedForming = false;
             if (!bStartedForming)
             {
-                if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Data[0].Get() && GamePhaseLogic->Aircrafts_GameState.Data[0]->DropEndTime != -1 && GamePhaseLogic->Aircrafts_GameState.Data[0]->DropEndTime < Time)
+                if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Data[0].Get() && GamePhaseLogic->Aircrafts_GameState.Data[0]->DropEndTime != -1 && GamePhaseLogic->Aircrafts_GameState.Data[0]->DropEndTime < Time)
                 {
                     bStartedForming = true;
 
@@ -1389,7 +1386,7 @@ void AFortGameMode__Tick()
 
         if (!bFinishedFlight)
         {
-            if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Data[0].Get() && GamePhaseLogic->Aircrafts_GameState.Data[0]->FlightEndTime != -1 && GamePhaseLogic->Aircrafts_GameState.Data[0]->FlightEndTime < Time)
+            if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Data[0].Get() && GamePhaseLogic->Aircrafts_GameState.Data[0]->FlightEndTime != -1 && GamePhaseLogic->Aircrafts_GameState.Data[0]->FlightEndTime < Time)
             {
                 bFinishedFlight = true;
                 auto Aircraft = GamePhaseLogic->Aircrafts_GameState.Data[0].Get();

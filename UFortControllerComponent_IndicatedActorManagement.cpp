@@ -400,7 +400,7 @@ static void AddActorsInRadiusToIndicatedList(UObject* Context, FFrame& Stack)
     AActor* InstigatingActorOverride;
 
     Stack.StepCompiledIn(&InstigatingController);
-    TArray<FIndicatedActorDataWithFilter> IndicatedActorFilterDatasTemp;
+    TArray<FIndicatedActorDataWithFilter> IndicatedActorFilterDatasTemp{};
     auto& IndicatedActorFilterDatas = Stack.StepCompiledInRef(&IndicatedActorFilterDatasTemp);
     Stack.StepCompiledIn(&bAddAsUnique);
     Stack.StepCompiledIn(&bReplaceExistingEntry);
@@ -435,7 +435,7 @@ static void AddActorsInRadiusToStenciledList(UObject* Context, FFrame& Stack)
     AActor* InstigatingActorOverride;
 
     Stack.StepCompiledIn(&InstigatingController);
-    TArray<FIndicatedActorDataWithFilter> StenciledActorFilterDatasTemp;
+    TArray<FIndicatedActorDataWithFilter> StenciledActorFilterDatasTemp{};
     auto& StenciledActorFilterDatas = Stack.StepCompiledInRef(&StenciledActorFilterDatasTemp);
     Stack.StepCompiledIn(&bAddAsUnique);
     Stack.StepCompiledIn(&bReplaceExistingEntry);

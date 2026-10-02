@@ -11,6 +11,8 @@ void Main()
     freopen_s(&s, "CONOUT$", "w+", stderr);
     freopen_s(&s, "CONIN$", "r", stdin);
 
+    Sleep(5000);
+
     UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), L"log LogFortUIDirector None", nullptr);
     UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), L"log LogFortUIManager None", nullptr);
     UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), L"net.AllowEncryption 0", nullptr);

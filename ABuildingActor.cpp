@@ -215,7 +215,7 @@ static void SetDynamicFoundationEnabled(UObject* Context, FFrame& Stack, void* R
 
 static void SetDynamicFoundationTransform(UObject* Context, FFrame& Stack, void* Ret)
 {
-    FTransform NewTransformTemp;
+    FTransform NewTransformTemp{};
     auto& NewTransform = Stack.StepCompiledInRef(&NewTransformTemp);
     Stack.IncrementCode();
 

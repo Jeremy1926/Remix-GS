@@ -106,10 +106,10 @@ class UObject* FSoftObjectPtr::Load(const class UClass* Class)
 	if (ObjectID.AssetPath.PackageName.IsNone())
 		return nullptr;
 
-	std::wstring Path = UtfN::Utf8StringToUtf16String<std::wstring>(ObjectID.AssetPath.PackageName.ToString());
+	std::wstring Path = UtfN::Utf8StringToUtf16String<std::wstring>(ObjectID.AssetPath.PackageName.GetRawString());
 
 	if (!ObjectID.AssetPath.AssetName.IsNone())
-		Path += L"." + UtfN::Utf8StringToUtf16String<std::wstring>(ObjectID.AssetPath.AssetName.ToString());
+		Path += L"." + UtfN::Utf8StringToUtf16String<std::wstring>(ObjectID.AssetPath.AssetName.GetRawString());
 
 	if (ObjectID.SubPathString.Num() > 0)
 		Path += L":" + ObjectID.SubPathString.ToWString();

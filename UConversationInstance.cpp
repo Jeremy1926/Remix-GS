@@ -1645,12 +1645,12 @@ static void GatherStaticExtraData(UFortConversationTaskNode* Node, const FConver
 
     if (BriefWidgetClassOverride.PackageName.ComparisonIndex != 0)
     {
-        auto PackageName = BriefWidgetClassOverride.PackageName.ToString();
+        auto PackageName = BriefWidgetClassOverride.PackageName.GetRawString();
         auto FullPath = std::wstring(PackageName.begin(), PackageName.end());
 
         if (BriefWidgetClassOverride.AssetName.ComparisonIndex != 0)
         {
-            auto AssetName = BriefWidgetClassOverride.AssetName.ToString();
+            auto AssetName = BriefWidgetClassOverride.AssetName.GetRawString();
             FullPath += L"." + std::wstring(AssetName.begin(), AssetName.end());
         }
 

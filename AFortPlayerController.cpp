@@ -1231,9 +1231,9 @@ static void ServerAwardVehicleTrickPoints(UObject* Context, FFrame& Stack)
 
 static void ServerSetMultiProductCosmeticLoadout(UObject* Context, FFrame& Stack)
 {
-    FCosmeticLoadout LoadoutTemp;
+    FCosmeticLoadout LoadoutTemp{};
     auto& Loadout = Stack.StepCompiledInRef(&LoadoutTemp);
-    TArray<FCosmeticLoadoutActiveArchetype> ArchetypesTemp;
+    TArray<FCosmeticLoadoutActiveArchetype> ArchetypesTemp{};
     auto& Archetypes = Stack.StepCompiledInRef(&ArchetypesTemp);
 
     Stack.IncrementCode();
@@ -1355,9 +1355,9 @@ static void ServerOnMaterialSelection(UObject* Context, FFrame& Stack)
 
 static void ServerPlaySquadQuickChatMessage(UObject* Context, FFrame& Stack)
 {
-    FAthenaQuickChatActiveEntry ChatEntryTemp;
+    FAthenaQuickChatActiveEntry ChatEntryTemp{};
     auto& ChatEntry = Stack.StepCompiledInRef(&ChatEntryTemp);
-    FUniqueNetIdRepl SenderIDTemp;
+    FUniqueNetIdRepl SenderIDTemp{};
     auto& SenderID = Stack.StepCompiledInRef(&SenderIDTemp);
 
     Stack.IncrementCode();

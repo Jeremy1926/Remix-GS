@@ -563,7 +563,7 @@ static void PickLootDrops(UObject* Context, FFrame& Stack, bool* Ret)
     FGameplayTagContainer OptionalLootTags{};
 
     Stack.StepCompiledIn(&WorldContextObject);
-    TArray<FFortItemEntry> OutLootToDropTemp;
+    TArray<FFortItemEntry> OutLootToDropTemp{};
     auto& OutLootToDrop = Stack.StepCompiledInRef(&OutLootToDropTemp);
     Stack.StepCompiledIn(&TierGroupName);
     Stack.StepCompiledIn(&WorldLevel);

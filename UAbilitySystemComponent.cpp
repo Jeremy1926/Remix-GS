@@ -40,9 +40,9 @@ static void (*K2_ExecuteGameplayCueWithParamsOG)(UObject*, FFrame&, void*);
 
 static void K2_AddGameplayCueWithParams(UObject* Context, FFrame& Stack)
 {
-    FGameplayTag GameplayCueTagTemp;
+    FGameplayTag GameplayCueTagTemp{};
     auto& GameplayCueTag = Stack.StepCompiledInRef(&GameplayCueTagTemp);
-    FGameplayCueParameters GameplayCueParameterTemp;
+    FGameplayCueParameters GameplayCueParameterTemp{};
     auto& GameplayCueParameter = Stack.StepCompiledInRef(&GameplayCueParameterTemp);
     bool bRemoveOnAbilityEnd;
 
@@ -58,9 +58,9 @@ static void K2_AddGameplayCueWithParams(UObject* Context, FFrame& Stack)
 
 static void K2_AddGameplayCue(UObject* Context, FFrame& Stack)
 {
-    FGameplayTag GameplayCueTagTemp;
+    FGameplayTag GameplayCueTagTemp{};
     auto& GameplayCueTag = Stack.StepCompiledInRef(&GameplayCueTagTemp);
-    FGameplayEffectContextHandle EffectContextTemp;
+    FGameplayEffectContextHandle EffectContextTemp{};
     auto& EffectContext = Stack.StepCompiledInRef(&EffectContextTemp);
     bool bRemoveOnAbilityEnd;
 
@@ -76,9 +76,9 @@ static void K2_AddGameplayCue(UObject* Context, FFrame& Stack)
 
 static void K2_ExecuteGameplayCue(UObject* Context, FFrame& Stack)
 {
-    FGameplayTag GameplayCueTagTemp;
+    FGameplayTag GameplayCueTagTemp{};
     auto& GameplayCueTag = Stack.StepCompiledInRef(&GameplayCueTagTemp);
-    FGameplayEffectContextHandle EffectContextTemp;
+    FGameplayEffectContextHandle EffectContextTemp{};
     auto& EffectContext = Stack.StepCompiledInRef(&EffectContextTemp);
 
     Stack.IncrementCode();
@@ -92,9 +92,9 @@ static void K2_ExecuteGameplayCue(UObject* Context, FFrame& Stack)
 
 static void K2_ExecuteGameplayCueWithParams(UObject* Context, FFrame& Stack)
 {
-    FGameplayTag GameplayCueTagTemp;
+    FGameplayTag GameplayCueTagTemp{};
     auto& GameplayCueTag = Stack.StepCompiledInRef(&GameplayCueTagTemp);
-    FGameplayCueParameters GameplayCueParameterTemp;
+    FGameplayCueParameters GameplayCueParameterTemp{};
     auto& GameplayCueParameter = Stack.StepCompiledInRef(&GameplayCueParameterTemp);
 
     Stack.IncrementCode();
