@@ -70,6 +70,7 @@ namespace Offsets
 
 	constexpr int32 Realloc              = 0x050D984C;
 	constexpr int32 StaticFindObject     = 0x01590074;
+	constexpr int32 FNameConstructor     = 0x01722854;
 	constexpr int32 StaticLoadObject     = 0x022651D8;
 	constexpr int32 GetInterfaceAddress  = 0x01583468;
 	constexpr int32 Step                 = 0x01948818;

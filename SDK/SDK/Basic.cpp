@@ -69,9 +69,11 @@ UFunction* BasicFilesImplUtils::FindFunctionByFName(const FName* Name)
 
 FName BasicFilesImplUtils::StringToName(const wchar_t* Name)
 {
-	const int32 Length = static_cast<int32>(wcslen(Name) + 0x1);
+	FName Result;
 
-	return UKismetStringLibrary::Conv_StringToName(FString(const_cast<wchar_t*>(Name), Length, Length));
+	reinterpret_cast<void(*)(FName*, const wchar_t*, int32)>(InSDKUtils::GetImageBase() + Offsets::FNameConstructor)(&Result, Name, 1);
+
+	return Result;
 }
 
 FName::FName(const wchar_t* Name)
