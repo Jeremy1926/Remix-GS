@@ -20,6 +20,65 @@ static bool bSkipWarmup = false;
 static bool bSkipAircraft = false;
 
 static TArray<FVector> SafeZoneLocations;
+static TArray<FName> LevelsToStream;
+
+static int GetLateGamePhase(AFortGameStateAthena* GameState)
+{
+    auto& SafeZoneDefinition = GameState->MapInfo->SafeZoneDefinition;
+    auto Count = (int)SafeZoneDefinition.Count.Evaluate();
+    auto FinalPhase = Count - 1;
+
+    for (int i = 1; i < Count; i++)
+    {
+        if (SafeZoneDefinition.Radius.Evaluate((float)i) <= 0.f)
+        {
+            FinalPhase = i;
+            break;
+        }
+    }
+
+    return FinalPhase - 9 + LateGameZone;
+}
+
+struct FSharedRef
+{
+    void* Object;
+    void* SharedReferenceCount;
+};
+
+struct FOnlineSessionSettings
+{
+    uint8 Pad_0[0x8];
+    int32 NumPublicConnections;
+    int32 NumPrivateConnections;
+    bool bShouldAdvertise;
+    bool bAllowJoinInProgress;
+    bool bIsLANMatch;
+    uint8 Pad_13[0xC5];
+};
+
+static void RegisterServer(AGameSession* GameSession)
+{
+    static auto GetSessionInterface = (FSharedRef* (*)(FSharedRef*, UWorld*, FName))(ImageBase + 0x71D8BA0);
+    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+
+    FSharedRef SessionInterface{};
+    GetSessionInterface(&SessionInterface, UWorld::GetWorld(), FName());
+
+    if (SessionInterface.Object)
+    {
+        auto CreateSession = (bool (*)(void*, int32, FName, const FOnlineSessionSettings&))(*(void***)SessionInterface.Object)[0x9];
+        FOnlineSessionSettings SessionSettings{};
+
+        SessionSettings.NumPublicConnections = GameSession->MaxPlayers;
+        SessionSettings.bAllowJoinInProgress = true;
+        SessionSettings.bIsLANMatch = true;
+
+        CreateSession(SessionInterface.Object, 0, GameSession->SessionName, SessionSettings);
+    }
+
+    TSharedRef_Destructor(&SessionInterface);
+}
 
 static void SetGamePhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic, EAthenaGamePhase GamePhase)
 {
@@ -60,6 +119,26 @@ static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogi
     if (Playlist && Playlist->bAllowJoinInProgress)
         *(bool*)(__int64(GameMode) + 0x1018) = false;
 
+    static auto GetSessionInterface = (FSharedRef* (*)(FSharedRef*, UWorld*, FName))(ImageBase + 0x71D8BA0);
+    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+
+    FSharedRef SessionInterface{};
+    GetSessionInterface(&SessionInterface, UWorld::GetWorld(), FName());
+
+    if (SessionInterface.Object)
+    {
+        auto GetSessionSettings = (FOnlineSessionSettings* (*)(void*, FName))(*(void***)SessionInterface.Object)[0x70];
+        auto UpdateSession = (bool (*)(void*, FName, FOnlineSessionSettings&, bool))(*(void***)SessionInterface.Object)[0x13];
+
+        if (auto SessionSettings = GetSessionSettings(SessionInterface.Object, GameMode->GameSession->SessionName))
+        {
+            SessionSettings->bAllowJoinInProgress = Playlist && Playlist->bAllowJoinInProgress;
+            UpdateSession(SessionInterface.Object, GameMode->GameSession->SessionName, *SessionSettings, false);
+        }
+    }
+
+    TSharedRef_Destructor(&SessionInterface);
+
     if (bSkipAircraft)
     {
         SetGamePhase(GamePhaseLogic, EAthenaGamePhase::SafeZones);
@@ -73,6 +152,35 @@ static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogi
     if (GameState->MapInfo->FlightInfos.Num() > 0)
     {
         auto& FlightInfo = GameState->MapInfo->FlightInfos[0];
+
+        if (bLateGame)
+        {
+            GameState->DefaultParachuteDeployTraceForGroundDistance = 2500.f;
+
+            auto BusPhase = GetLateGamePhase(GameState) - 1;
+            auto& Center = SafeZoneLocations.Data[BusPhase];
+            auto Radius = GameState->MapInfo->SafeZoneDefinition.Radius.Evaluate((float)BusPhase);
+
+            if (bLateGameMovingBus && Radius > 0.f)
+            {
+                auto Speed = FlightInfo.FlightSpeed > 0.f && Radius / 10.f > FlightInfo.FlightSpeed ? FlightInfo.FlightSpeed : Radius / 10.f;
+                auto Yaw = FlightInfo.FlightStartRotation.Yaw;
+
+                (FVector&)FlightInfo.FlightStartLocation = FVector(Center.X - UKismetMathLibrary::DegCos(Yaw) * Speed * 5.f, Center.Y - UKismetMathLibrary::DegSin(Yaw) * Speed * 5.f, 17500.);
+                FlightInfo.FlightSpeed = Speed;
+                FlightInfo.TimeTillFlightEnd = 10.f;
+                FlightInfo.TimeTillDropEnd = 10.f;
+            }
+            else
+            {
+                (FVector&)FlightInfo.FlightStartLocation = FVector(Center.X, Center.Y, 17500.);
+                FlightInfo.FlightSpeed = 0.f;
+                FlightInfo.TimeTillFlightEnd = 7.f;
+                FlightInfo.TimeTillDropEnd = 7.f;
+            }
+
+            FlightInfo.TimeTillDropStart = 0.f;
+        }
 
         if (!GameState->MapInfo->AircraftClass.Get())
             return;
@@ -161,7 +269,7 @@ static void StartNewSafeZonePhase(UFortGameStateComponent_BattleRoyaleGamePhaseL
             SafeZoneIndicator->NextNextMegaStormGridCellThickness = NextPhaseInfo.MegaStormGridCellThickness;
         }
 
-        SafeZoneIndicator->SafeZoneStartShrinkTime = TimeSeconds + PhaseInfo.WaitTime;
+        SafeZoneIndicator->SafeZoneStartShrinkTime = bLateGame && bLateGameLongZone ? 676767.f : TimeSeconds + PhaseInfo.WaitTime;
         SafeZoneIndicator->SafeZoneFinishShrinkTime = SafeZoneIndicator->SafeZoneStartShrinkTime + PhaseInfo.ShrinkTime;
 
         SafeZoneIndicator->CurrentDamageInfo = PhaseInfo.DamageInfo;
@@ -180,7 +288,9 @@ static void StartNewSafeZonePhase(UFortGameStateComponent_BattleRoyaleGamePhaseL
         SafeZoneIndicator->OnSafeZoneStateChange(EFortSafeZoneState::Holding, bInitial);
         SafeZoneIndicator->SafezoneStateChangedDelegate.Process(SafeZoneIndicator, EFortSafeZoneState::Holding);
 
-        SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::StormHolding);
+        static auto UpdateGamePhaseStep = (void (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, float))(ImageBase + 0x1BB24D0);
+
+        UpdateGamePhaseStep(GamePhaseLogic, 0.f);
 
         auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
         if (!bInitial)
@@ -304,7 +414,7 @@ static bool SelectCalendarPlaylist()
     static bool bDone = false;
     static ULONGLONG WaitStart = 0;
 
-    if (bDone)
+    if (bDone || bReload)
         return true;
 
     auto ManagerClass = UObject::FindClassFast("BP_Clyde_DataLayerManager_C");
@@ -448,6 +558,28 @@ static bool SelectCalendarPlaylist()
     return bDone = true;
 }
 
+static std::wstring GetPluginName(const FName& LevelToStream)
+{
+    auto Level = LevelToStream.GetRawString();
+    auto PluginName = Level.substr(1, Level.find('/', 1) - 1);
+
+    return std::wstring(PluginName.begin(), PluginName.end());
+}
+
+static bool IsGameFeaturePluginActive(const std::wstring& PluginName)
+{
+    static auto GetGameFeatureDataForActivePlugin = (UGameFeatureData* (*)(UGameFeaturePluginStateMachine*))(ImageBase + 0x29EB49C);
+    auto PluginDescriptor = L"/" + PluginName + L".uplugin";
+
+    for (auto& Pair : GetFirstInstance<UGameFeaturesSubsystem>()->GameFeaturePluginStateMachines)
+    {
+        if (Pair.Key().ToWString().ends_with(PluginDescriptor))
+            return Pair.Value() && GetGameFeatureDataForActivePlugin(Pair.Value());
+    }
+
+    return false;
+}
+
 static bool bIsLargeTeamGame = false;
 static std::unordered_map<int, float> WeightMap;
 static float Sum = 0;
@@ -523,6 +655,21 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
             GameMode->bDisableGCOnServerDuringMatch = true;
             GameMode->bPlaylistHotfixChangedGCDisabling = true;
 
+            bForceRespawns = bForceRespawns && Playlist->RespawnType == EAthenaRespawnType::None;
+
+            if (bForceRespawns)
+            {
+                Playlist->RespawnType = bStormRespawns ? EAthenaRespawnType::InfiniteRespawn : EAthenaRespawnType::InfiniteRespawnExceptStorm;
+                Playlist->bRespawnInAir = true;
+                Playlist->RespawnHeight.Value = 20000.f;
+                Playlist->RespawnHeight.Curve.CurveTable = nullptr;
+                Playlist->RespawnHeight.Curve.RowName = FName();
+                Playlist->RespawnTime.Value = 3.f;
+                Playlist->RespawnTime.Curve.CurveTable = nullptr;
+                Playlist->RespawnTime.Curve.RowName = FName();
+                Playlist->bAllowJoinInProgress = true;
+            }
+
             GameState->CurrentPlaylistInfo.BasePlaylist = Playlist;
             GameState->CurrentPlaylistInfo.PlaylistReplicationKey++;
             GameState->CurrentPlaylistInfo.MarkArrayDirty();
@@ -548,12 +695,32 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
                 for (auto& SharedAsset : StreamingPlaylist->SharedAssetGroup->SharedAssetsToLoad)
                     for (auto& AdditionalLevel : SharedAsset->SharedAdditionalLevels)
                         StartStreamingAdditionalPlaylistLevel(GameState, AdditionalLevel.ObjectID.AssetPath.PackageName, false);
+
+            if (auto UEFNProjects = (UFortGameStateComponent_UEFNProjects*)GameState->GetComponentByClass(UFortGameStateComponent_UEFNProjects::StaticClass()))
+            {
+                static auto GetLevelsToStream = (bool (*)(UFortGameStateComponent_UEFNProjects*, TArray<FName>*))(ImageBase + 0x90D8CA0);
+                static auto ChangeGameFeatureTargetState = (void (*)(UGameFeaturesSubsystem*, const FString&, EGameFeatureTargetState, const void*))(ImageBase + 0x189B27C);
+
+                GetLevelsToStream(UEFNProjects, &LevelsToStream);
+
+                for (auto& LevelToStream : LevelsToStream)
+                {
+                    auto PluginName = GetPluginName(LevelToStream);
+                    auto PluginURL = FString((L"file:../../../FortniteGame/Plugins/GameFeatures/" + PluginName + L"/" + PluginName + L".uplugin").c_str());
+                    uint8 CompleteDelegate[0x10]{};
+
+                    ChangeGameFeatureTargetState(GetFirstInstance<UGameFeaturesSubsystem>(), PluginURL, EGameFeatureTargetState::Active, CompleteDelegate);
+                    PluginURL.Free();
+                }
+            }
         }
         else
         {
             GameState->CurrentPlaylistId = GameMode->CurrentPlaylistId = 0;
             GameMode->GameSession->MaxPlayers = 100;
         }
+
+        RegisterServer(GameMode->GameSession);
 
         if (auto MeshNetworkSubsystem = GetFirstInstance<UMeshNetworkSubsystem>())
             MeshNetworkSubsystem->NodeType = (EMeshNetworkNodeType)2;
@@ -658,10 +825,29 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
         auto MapInfosNum = AllMapInfos.Num();
         AllMapInfos.Free();
 
-        if (MapInfosNum > 0 && !GameState->MapInfo)
+        if (!GameState->MapInfo && (MapInfosNum > 0 || LevelsToStream.Num() > 0))
         {
-            *Ret = false;
-            return;
+            static auto StartStreamingAdditionalPlaylistLevel = (void (*)(AFortGameStateAthena*, FName, bool))(ImageBase + 0x984CF30);
+            static auto InitializeMapInfo = (AFortAthenaMapInfo* (*)(AFortGameModeAthena*, AFortGameStateAthena*))(ImageBase + 0x8F9DDA0);
+
+            for (auto& LevelToStream : LevelsToStream)
+            {
+                if (!IsGameFeaturePluginActive(GetPluginName(LevelToStream)))
+                {
+                    *Ret = false;
+                    return;
+                }
+
+                StartStreamingAdditionalPlaylistLevel(GameState, LevelToStream, false);
+            }
+
+            InitializeMapInfo(GameMode, GameState);
+
+            if (!GameState->MapInfo)
+            {
+                *Ret = false;
+                return;
+            }
         }
 
         if (GameState->MapInfo)
@@ -682,6 +868,9 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
             bSkipWarmup = Playlist->bSkipWarmup;
             bSkipAircraft = Playlist->bSkipAircraft;
         }
+
+        bLateGame = bLateGame && Playlist && (Playlist->RespawnType == EAthenaRespawnType::None || bForceRespawns) && !bSkipAircraft && GameState->MapInfo && LateGameZone >= 1 && GetLateGamePhase(GameState) >= 1 &&
+                    GetLateGamePhase(GameState) < (int)GameState->MapInfo->SafeZoneDefinition.Count.Evaluate();
 
         auto AbilitySet = FindObject<UFortAbilitySet>(L"/Game/Abilities/Player/Generic/Traits/DefaultPlayer/GAS_AthenaPlayer.GAS_AthenaPlayer");
         AbilitySet->AddToRoot();
@@ -865,12 +1054,6 @@ enum class EHttpRequestStatus : int32
     Failed,
     Failed_ConnectionError,
     Succeeded
-};
-
-struct FSharedRef
-{
-    void* Object;
-    void* SharedReferenceCount;
 };
 
 struct FStringView
@@ -1221,28 +1404,8 @@ static void FinishWorldInitialization(AFortGameModeAthena* GameMode, AActor* Wor
 
         Table->AddToRoot();
 
-        if (Table->IsA(UCompositeDataTable::StaticClass()))
-            for (auto& ParentTable : ((UCompositeDataTable*)Table)->ParentTables)
-                if (ParentTable)
-                    for (auto& Pair : ParentTable->RowMap)
-                        TempArr.Add((FFortLootTierData*)Pair.Value());
-
         for (auto& Pair : Table->RowMap)
-        {
-            auto Val = (FFortLootTierData*)Pair.Value();
-            bool bFound = false;
-
-            for (auto& TierData : TempArr)
-                if (TierData->TierGroup == Val->TierGroup && TierData->LootPackage == Val->LootPackage)
-                {
-                    TierData = Val;
-                    bFound = true;
-                    break;
-                }
-
-            if (!bFound)
-                TempArr.Add(Val);
-        }
+            TempArr.Add((FFortLootTierData*)Pair.Value());
     };
 
     auto AddToPackages = [&](UDataTable* Table, std::unordered_map<int32, FFortLootPackageData*>& TempArr)
@@ -1251,12 +1414,6 @@ static void FinishWorldInitialization(AFortGameModeAthena* GameMode, AActor* Wor
             return;
 
         Table->AddToRoot();
-
-        if (Table->IsA(UCompositeDataTable::StaticClass()))
-            for (auto& ParentTable : ((UCompositeDataTable*)Table)->ParentTables)
-                if (ParentTable)
-                    for (auto& Pair : ParentTable->RowMap)
-                        TempArr[Pair.Key().ComparisonIndex] = (FFortLootPackageData*)Pair.Value();
 
         for (auto& Pair : Table->RowMap)
             TempArr[Pair.Key().ComparisonIndex] = (FFortLootPackageData*)Pair.Value();
@@ -1649,7 +1806,7 @@ void AFortGameMode__Tick()
                             Player->GetAircraftComponent()->ServerAttemptAircraftJump(FRotator{});
                     }
 
-                    GamePhaseLogic->SafeZonesStartTime = (float)Time + 60.f;
+                    GamePhaseLogic->SafeZonesStartTime = bLateGame ? (float)Time : (float)Time + 60.f;
 
                     SetGamePhase(GamePhaseLogic, EAthenaGamePhase::SafeZones);
                     SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::StormForming);
@@ -1750,7 +1907,7 @@ void AFortGameMode__Tick()
                         GamePhaseLogic->OnRep_SafeZoneIndicator();
                     }
 
-                    StartNewSafeZonePhase(GamePhaseLogic, 1);
+                    StartNewSafeZonePhase(GamePhaseLogic, bLateGame ? GetLateGamePhase((AFortGameStateAthena*)UWorld::GetWorld()->GameState) : 1);
                     return;
                 }
             }

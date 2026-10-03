@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Shared.h"
+#include "Config.h"
 #include "AFortPlayerController.h"
 #include "AFortInventory.h"
 #include "AFortPickup.h"
@@ -11,6 +12,7 @@
 INIT_POSTLOAD(AFortPlayerController);
 
 static void (*GetPlayerViewPointOG)(AFortPlayerControllerAthena*, FVector&, FRotator&);
+static void (*OnPawnDiedOG)(AFortPlayerControllerAthena*, AFortPawn*, float, const FGameplayTagContainer&, const FGameplayEffectContextHandle&, AController*, AActor*, AActor*);
 static void (*ClientOnPawnDiedOG)(AFortPlayerControllerAthena*, FFortPlayerDeathReport&);
 static void (*K2_OnUnEquipOG)(AFortWeapon*);
 static void (*ServerRequestSeatChangeOG)(UObject*, FFrame&, void*);
@@ -53,6 +55,172 @@ static void ApplyCosmeticLoadoutToPawn(AFortPlayerControllerAthena* PlayerContro
     ((void (*)(APawn*, const FFortAthenaLoadout*, bool, UObject*))Pawn->VTable[0x29E])(Pawn, &PlayerController->CosmeticLoadoutPC, true, nullptr);
 }
 
+struct FLateGameItem
+{
+    UFortItemDefinition* ItemDefinition;
+    int32 Count;
+    float Weight;
+};
+
+struct FLateGamePool
+{
+    std::vector<FLateGameItem> Shotguns;
+    std::vector<FLateGameItem> Rifles;
+    std::vector<FLateGameItem> Utilities;
+    std::vector<FLateGameItem> Heals;
+    std::vector<FLateGameItem> Traps;
+    std::vector<FLateGameItem> Ammo;
+};
+
+static void AddLateGameItem(std::vector<FLateGameItem>& Items, UFortItemDefinition* ItemDefinition, int32 Count, float Weight)
+{
+    for (auto& Item : Items)
+    {
+        if (Item.ItemDefinition != ItemDefinition)
+            continue;
+
+        Item.Count = (std::max)(Item.Count, Count);
+        Item.Weight += Weight;
+        return;
+    }
+
+    Items.push_back({ ItemDefinition, Count, Weight });
+}
+
+static FLateGamePool& GetLateGamePool()
+{
+    static FLateGamePool Pool;
+    static bool bBuilt = false;
+
+    if (bBuilt)
+        return Pool;
+
+    bBuilt = true;
+
+    auto LightAmmo = FindObject<UFortWorldItemDefinition>(L"/Game/Athena/Items/Ammo/AthenaAmmoDataBulletsLight.AthenaAmmoDataBulletsLight");
+    auto MediumAmmo = FindObject<UFortWorldItemDefinition>(L"/Game/Athena/Items/Ammo/AthenaAmmoDataBulletsMedium.AthenaAmmoDataBulletsMedium");
+    auto HeavyAmmo = FindObject<UFortWorldItemDefinition>(L"/Game/Athena/Items/Ammo/AthenaAmmoDataBulletsHeavy.AthenaAmmoDataBulletsHeavy");
+    auto ShellsAmmo = FindObject<UFortWorldItemDefinition>(L"/Game/Athena/Items/Ammo/AthenaAmmoDataShells.AthenaAmmoDataShells");
+
+    for (auto& [PackageId, Packages] : LootPackageMap)
+    {
+        for (auto Package : Packages)
+        {
+            if (!Package || Package->Weight <= 0.f || Package->LootPackageCall.Num() > 1)
+                continue;
+
+            auto ItemDefinition = Package->ItemDefinition.Get();
+
+            if (!ItemDefinition)
+                continue;
+
+            auto Count = Package->Count > 0 ? Package->Count : 1;
+
+            if (ItemDefinition->IsA(UFortAmmoItemDefinition::StaticClass()))
+                AddLateGameItem(Pool.Ammo, ItemDefinition, Count, Package->Weight);
+            else if (ItemDefinition->ItemType == EFortItemType::Trap)
+                AddLateGameItem(Pool.Traps, ItemDefinition, Count, Package->Weight);
+            else if (ItemDefinition->ItemType == EFortItemType::Consumable)
+                AddLateGameItem(Pool.Heals, ItemDefinition, Count, Package->Weight);
+            else if (ItemDefinition->IsA(UFortWeaponRangedItemDefinition::StaticClass()))
+            {
+                auto AmmoDefinition = ((UFortWorldItemDefinition*)ItemDefinition)->GetAmmoWorldItemDefinition_BP();
+
+                if (AmmoDefinition && AmmoDefinition == ShellsAmmo)
+                    AddLateGameItem(Pool.Shotguns, ItemDefinition, 1, Package->Weight);
+                else if (AmmoDefinition && AmmoDefinition == MediumAmmo)
+                    AddLateGameItem(Pool.Rifles, ItemDefinition, 1, Package->Weight);
+                else if (AmmoDefinition && (AmmoDefinition == LightAmmo || AmmoDefinition == HeavyAmmo))
+                    AddLateGameItem(Pool.Utilities, ItemDefinition, 1, Package->Weight);
+            }
+        }
+    }
+
+    return Pool;
+}
+
+static const FLateGameItem* PickLateGameItem(const std::vector<FLateGameItem>& Items)
+{
+    auto bHasRare = std::any_of(Items.begin(), Items.end(), [](const FLateGameItem& Item) { return Item.ItemDefinition->Rarity >= EFortRarity::Rare; });
+    float TotalWeight = 0.f;
+
+    for (auto& Item : Items)
+    {
+        if (!bHasRare || Item.ItemDefinition->Rarity >= EFortRarity::Rare)
+            TotalWeight += Item.Weight;
+    }
+
+    auto Roll = (float)UKismetMathLibrary::RandomFloatInRange(0., TotalWeight);
+    const FLateGameItem* Picked = nullptr;
+
+    for (auto& Item : Items)
+    {
+        if (bHasRare && Item.ItemDefinition->Rarity < EFortRarity::Rare)
+            continue;
+
+        Picked = &Item;
+        Roll -= Item.Weight;
+
+        if (Roll <= 0.f)
+            break;
+    }
+
+    return Picked;
+}
+
+static int32 GetLateGameCount(const UFortItemDefinition* ItemDefinition, int32 Min, int32 Max)
+{
+    auto MaxStack = ItemDefinition->GetMaxStackSize(nullptr);
+
+    if (MaxStack > 0 && Max > MaxStack)
+        Max = MaxStack;
+
+    return UKismetMathLibrary::RandomIntegerInRange((std::min)(Min, Max), Max);
+}
+
+static void GiveLateGameLoadout(AFortPlayerControllerAthena* PlayerController)
+{
+    auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
+    auto& Pool = GetLateGamePool();
+    std::vector<FLateGameItem> Loadout;
+
+    if (LateGameLoadout.empty())
+    {
+        for (auto Items : { &Pool.Shotguns, &Pool.Rifles, &Pool.Utilities, &Pool.Heals, &Pool.Heals, &Pool.Traps })
+        {
+            if (auto Item = PickLateGameItem(*Items))
+                Loadout.push_back(*Item);
+        }
+    }
+    else
+    {
+        for (auto& [Path, Count] : LateGameLoadout)
+        {
+            if (auto ItemDefinition = FindObject<UFortItemDefinition>(Path.c_str()))
+                Loadout.push_back({ ItemDefinition, Count, 0.f });
+        }
+    }
+
+    for (auto ResourceType : { EFortResourceType::Wood, EFortResourceType::Stone, EFortResourceType::Metal })
+    {
+        if (auto Resource = UFortKismetLibrary::K2_GetResourceItemDefinition(ResourceType))
+            GiveItem(WorldInventory, Resource, Resource->GetMaxStackSize(nullptr));
+    }
+
+    for (auto& Ammo : Pool.Ammo)
+        GiveItem(WorldInventory, Ammo.ItemDefinition, GetLateGameCount(Ammo.ItemDefinition, Ammo.Count * 4, Ammo.Count * 10));
+
+    for (auto& Item : Loadout)
+    {
+        auto WeaponDefinition = Item.ItemDefinition->IsA(UFortGadgetItemDefinition::StaticClass()) ? ((UFortGadgetItemDefinition*)Item.ItemDefinition)->GetWeaponItemDefinition()
+                                : Item.ItemDefinition->IsA(UFortWeaponItemDefinition::StaticClass()) ? (UFortWeaponItemDefinition*)Item.ItemDefinition
+                                                                                                      : nullptr;
+        auto Stats = GetStats(WeaponDefinition);
+
+        GiveItem(WorldInventory, Item.ItemDefinition, Item.Count, Stats ? Stats->ClipSize : 0);
+    }
+}
+
 static void ServerAcknowledgePossession(UObject* Context, FFrame& Stack)
 {
     APawn* P;
@@ -72,22 +240,31 @@ static void ServerAcknowledgePossession(UObject* Context, FFrame& Stack)
     auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
     auto Num = WorldInventory->Inventory.ReplicatedEntries.Num();
-    std::vector<FGuid> GuidsToRemove;
-
-    for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
-    {
-        if (CanBeDropped((UFortItemDefinition*)Entry.ItemDefinition))
-            GuidsToRemove.push_back(Entry.ItemGuid);
-    }
-
-    for (auto& Guid : GuidsToRemove)
-        Remove(WorldInventory, Guid);
 
     ApplyOutsideSafeZoneEffect(((AFortPlayerStateAthena*)PlayerController->PlayerState)->AbilitySystemComponent);
     InitializePlayerGameplayAbilities(PlayerController);
 
     if (Num != 0)
+    {
+        if (bLateGame)
+        {
+            std::vector<FGuid> GuidsToRemove;
+
+            for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
+            {
+                if (CanBeDropped((UFortItemDefinition*)Entry.ItemDefinition))
+                    GuidsToRemove.push_back(Entry.ItemGuid);
+            }
+
+            for (auto& Guid : GuidsToRemove)
+                Remove(WorldInventory, Guid);
+
+            ((AFortPawn*)P)->SetShield(100.f);
+            GiveLateGameLoadout(PlayerController);
+        }
+
         return;
+    }
 
     static auto DefaultPickaxe = FindObject<UFortItemDefinition>(L"/Game/Athena/Items/Weapons/WID_Harvest_Pickaxe_Athena_C_T01.WID_Harvest_Pickaxe_Athena_C_T01");
 
@@ -699,29 +876,48 @@ static void GiveVictoryCrown(AFortPlayerControllerAthena* PlayerController)
     StateValues.Free();
 }
 
+static void OnPawnDied(AFortPlayerControllerAthena* PlayerController, AFortPawn* DeadPawn, float Damage, const FGameplayTagContainer& DamageTags, const FGameplayEffectContextHandle& EffectContext,
+                       AController* InstigatedBy, AActor* DamageCauser, AActor* KillerActor)
+{
+    auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
+
+    if (PlayerState && DeadPawn)
+    {
+        PlayerState->DeathInfo.DeathLocation = DeadPawn->K2_GetActorLocation();
+        PlayerState->DeathInfo.bInitialized = true;
+    }
+
+    OnPawnDiedOG(PlayerController, DeadPawn, Damage, DamageTags, EffectContext, InstigatedBy, DamageCauser, KillerActor);
+}
+
 static void ClientOnPawnDied(AFortPlayerControllerAthena* PlayerController, FFortPlayerDeathReport& DeathReport)
 {
     if (!PlayerController)
         return ClientOnPawnDiedOG(PlayerController, DeathReport);
 
-    auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
-    auto GameState = (AFortGameStateAthena*)GameMode->GameState;
     auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
     auto Pawn = (AFortPlayerPawnAthena*)PlayerController->Pawn;
 
     if (WorldInventory && Pawn && Pawn->bShouldDropItemsOnDeath)
     {
+        std::vector<FGuid> GuidsToRemove;
+
         for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
         {
-            if (CanBeDropped((UFortItemDefinition*)Entry.ItemDefinition))
-                SpawnPickup(Pawn->K2_GetActorLocation(), Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::PlayerElimination, PlayerController->MyFortPawn);
+            if (!CanBeDropped((UFortItemDefinition*)Entry.ItemDefinition))
+                continue;
+
+            SpawnPickup(Pawn->K2_GetActorLocation(), Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::PlayerElimination, PlayerController->MyFortPawn);
+            GuidsToRemove.push_back(Entry.ItemGuid);
         }
+
+        for (auto& Guid : GuidsToRemove)
+            Remove(WorldInventory, Guid);
     }
 
     auto KillerPlayerState = (AFortPlayerStateAthena*)DeathReport.KillerPlayerState;
     auto KillerPawn = (AFortPlayerPawnAthena*)DeathReport.KillerPawn.Get();
-    auto DeathReportDamageCauser = DeathReport.DamageCauser.Get();
     auto KillerPlayerController = KillerPlayerState && KillerPlayerState->Owner && KillerPlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)KillerPlayerState->Owner : nullptr;
 
     PlayerState->PawnDeathLocation = Pawn ? Pawn->K2_GetActorLocation() : FVector();
@@ -752,7 +948,7 @@ static void ClientOnPawnDied(AFortPlayerControllerAthena* PlayerController, FFor
 
         for (auto& Damager : Pawn->Damagers)
         {
-            if (Damager.DamageCauser == KillerPlayerController || !Damager.DamageCauser->IsA(AFortPlayerControllerAthena::StaticClass()))
+            if (!Damager.DamageCauser || Damager.DamageCauser == KillerPlayerController || !Damager.DamageCauser->IsA(AFortPlayerControllerAthena::StaticClass()))
                 continue;
 
             auto DamagerController = (AFortPlayerControllerAthena*)Damager.DamageCauser;
@@ -773,64 +969,92 @@ static void ClientOnPawnDied(AFortPlayerControllerAthena* PlayerController, FFor
         TargetTags.ParentTags.Free();
     }
 
-    if (!GameState->IsRespawningAllowed(PlayerState) && (Pawn ? !Pawn->IsDBNO() : true))
-    {
-        PlayerState->Place = GameState->PlayersLeft;
-        PlayerState->OnRep_Place();
-
-        AFortWeapon* DamageCauser = nullptr;
-
-        if (DeathReportDamageCauser && DeathReportDamageCauser->IsA(AFortProjectileBase::StaticClass()))
-        {
-            auto Owner = DeathReportDamageCauser->Owner;
-
-            if (Owner->IsA(AFortWeapon::StaticClass()))
-                DamageCauser = (AFortWeapon*)Owner;
-            else if (Owner->IsA(AFortPlayerControllerAthena::StaticClass()))
-                DamageCauser = ((AFortPlayerPawnAthena*)((AFortPlayerControllerAthena*)Owner)->Pawn)->CurrentWeapon;
-            else if (Owner->IsA(AFortPlayerPawnAthena::StaticClass()))
-                DamageCauser = ((AFortPlayerPawnAthena*)Owner)->CurrentWeapon;
-        }
-        else if (DeathReportDamageCauser && DeathReportDamageCauser->IsA(AFortWeapon::StaticClass()))
-            DamageCauser = (AFortWeapon*)DeathReportDamageCauser;
-
-        static auto RemoveFromAlivePlayers = (void (*)(AFortGameModeAthena*, AFortPlayerControllerAthena*, AFortPlayerStateAthena*, AFortPlayerPawnAthena*, UFortItemDefinition*, EDeathCause, char))(ImageBase + 0x8F9B900);
-
-        RemoveFromAlivePlayers(GameMode, PlayerController, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState, KillerPawn, DamageCauser && DamageCauser->IsA(AFortWeapon::StaticClass()) ? DamageCauser->WeaponData : nullptr,
-                               DeathInfo.DeathCause, 0);
-
-        TournamentPlayerEliminated(GameMode, PlayerState, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState);
-        SendPlacementUpdate(KillerPlayerController);
-        EndBattleRoyaleGame(PlayerController);
-
-        Pawn->CharacterMovement->DisableMovement();
-
-        if (Pawn && KillerPlayerState && KillerPlayerState != PlayerState && KillerPlayerState->Place == 1)
-        {
-            auto KillerWeapon = DamageCauser ? DamageCauser->WeaponData : nullptr;
-
-            if (KillerPlayerController)
-            {
-                KillerPlayerController->PlayWinEffects(KillerPawn, KillerWeapon, DeathInfo.DeathCause, false, (ERoundVictoryAnimation)0);
-                KillerPlayerController->ClientNotifyWon(KillerPawn, KillerWeapon, DeathInfo.DeathCause);
-                KillerPlayerController->ClientNotifyTeamWon(KillerPawn, KillerWeapon, DeathInfo.DeathCause);
-                GiveVictoryCrown(KillerPlayerController);
-            }
-
-            GameState->WinningTeam = KillerPlayerState->TeamIndex;
-            GameState->OnRep_WinningTeam();
-            GameState->WinningPlayerState = KillerPlayerState;
-            GameState->OnRep_WinningPlayerState();
-
-            for (auto AlivePlayer : GameMode->AlivePlayers)
-                EndBattleRoyaleGame(AlivePlayer);
-        }
-    }
-
     if (Pawn && KillerPlayerState && KillerPlayerState->AbilitySystemComponent && KillerPawn && KillerPawn->Controller != PlayerController)
         ApplySiphon(KillerPlayerState, KillerPawn, KillerPlayerController);
 
     ClientOnPawnDiedOG(PlayerController, DeathReport);
+}
+
+static void StartRespawnTimer(AFortPlayerControllerAthena* PlayerController, float RespawnTime, bool bNextRespawnInAir)
+{
+    static auto StartRespawnTimerOG = (void (*)(AFortPlayerControllerAthena*, float, bool))(ImageBase + 0x9031E9C);
+    static auto SetServerTimeForRespawn = (void (*)(AFortPlayerControllerAthena*, float))(ImageBase + 0x903208C);
+
+    SetServerTimeForRespawn(PlayerController, (float)(UWorld::GetWorld()->GameState->GetServerWorldTimeSeconds() + RespawnTime));
+    PlayerController->ClientSetDeathReport(PlayerController->PlayerDeathReport);
+
+    StartRespawnTimerOG(PlayerController, RespawnTime, bNextRespawnInAir);
+}
+
+static void (*OnPawnDeathNoRespawnOG)(AFortGameModeAthena*, AFortPlayerPawnAthena*);
+static void OnPawnDeathNoRespawn(AFortGameModeAthena* GameMode, AFortPlayerPawnAthena* Pawn)
+{
+    OnPawnDeathNoRespawnOG(GameMode, Pawn);
+
+    auto PlayerController = Pawn->Controller && Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)Pawn->Controller : nullptr;
+
+    if (!PlayerController)
+        return;
+
+    auto GameState = (AFortGameStateAthena*)GameMode->GameState;
+    auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
+    auto& DeathReport = PlayerController->PlayerDeathReport;
+    auto KillerPlayerState = (AFortPlayerStateAthena*)DeathReport.KillerPlayerState;
+    auto KillerPawn = (AFortPlayerPawnAthena*)DeathReport.KillerPawn.Get();
+    auto DeathReportDamageCauser = DeathReport.DamageCauser.Get();
+    auto KillerPlayerController = KillerPlayerState && KillerPlayerState->Owner && KillerPlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)KillerPlayerState->Owner : nullptr;
+    auto DeathCause = PlayerState->DeathInfo.DeathCause;
+
+    PlayerState->Place = GameState->PlayersLeft;
+    PlayerState->OnRep_Place();
+
+    AFortWeapon* DamageCauser = nullptr;
+
+    if (DeathReportDamageCauser && DeathReportDamageCauser->IsA(AFortProjectileBase::StaticClass()))
+    {
+        auto Owner = DeathReportDamageCauser->Owner;
+
+        if (Owner->IsA(AFortWeapon::StaticClass()))
+            DamageCauser = (AFortWeapon*)Owner;
+        else if (Owner->IsA(AFortPlayerControllerAthena::StaticClass()))
+            DamageCauser = ((AFortPlayerPawnAthena*)((AFortPlayerControllerAthena*)Owner)->Pawn)->CurrentWeapon;
+        else if (Owner->IsA(AFortPlayerPawnAthena::StaticClass()))
+            DamageCauser = ((AFortPlayerPawnAthena*)Owner)->CurrentWeapon;
+    }
+    else if (DeathReportDamageCauser && DeathReportDamageCauser->IsA(AFortWeapon::StaticClass()))
+        DamageCauser = (AFortWeapon*)DeathReportDamageCauser;
+
+    static auto RemoveFromAlivePlayers = (void (*)(AFortGameModeAthena*, AFortPlayerControllerAthena*, AFortPlayerStateAthena*, AFortPlayerPawnAthena*, UFortItemDefinition*, EDeathCause, char))(ImageBase + 0x8F9B900);
+
+    RemoveFromAlivePlayers(GameMode, PlayerController, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState, KillerPawn, DamageCauser && DamageCauser->IsA(AFortWeapon::StaticClass()) ? DamageCauser->WeaponData : nullptr,
+                           DeathCause, 0);
+
+    TournamentPlayerEliminated(GameMode, PlayerState, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState);
+    SendPlacementUpdate(KillerPlayerController);
+    EndBattleRoyaleGame(PlayerController);
+
+    Pawn->CharacterMovement->DisableMovement();
+
+    if (KillerPlayerState && KillerPlayerState != PlayerState && KillerPlayerState->Place == 1)
+    {
+        auto KillerWeapon = DamageCauser ? DamageCauser->WeaponData : nullptr;
+
+        if (KillerPlayerController)
+        {
+            KillerPlayerController->PlayWinEffects(KillerPawn, KillerWeapon, DeathCause, false, (ERoundVictoryAnimation)0);
+            KillerPlayerController->ClientNotifyWon(KillerPawn, KillerWeapon, DeathCause);
+            KillerPlayerController->ClientNotifyTeamWon(KillerPawn, KillerWeapon, DeathCause);
+            GiveVictoryCrown(KillerPlayerController);
+        }
+
+        GameState->WinningTeam = KillerPlayerState->TeamIndex;
+        GameState->OnRep_WinningTeam();
+        GameState->WinningPlayerState = KillerPlayerState;
+        GameState->OnRep_WinningPlayerState();
+
+        for (auto AlivePlayer : GameMode->AlivePlayers)
+            EndBattleRoyaleGame(AlivePlayer);
+    }
 }
 
 static void ServerSpectateActor(AFortPlayerControllerAthena* PlayerController, AActor* NewViewTarget, bool bAllowStateChange)
@@ -865,35 +1089,6 @@ static void ServerSpectateActor(AFortPlayerControllerAthena* PlayerController, A
 
     PlayerController->SetViewTargetWithBlend(NewViewTarget, TransitionParams.BlendTime, TransitionParams.BlendFunction, TransitionParams.BlendExp, false);
     PlayerController->ClientSetViewTarget(NewViewTarget, TransitionParams);
-}
-
-static void ServerClientIsReadyToRespawn(UObject* Context, FFrame& Stack)
-{
-    Stack.IncrementCode();
-
-    auto PlayerController = (AFortPlayerControllerAthena*)Context;
-    auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
-    auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
-    auto& RespawnData = PlayerState->RespawnData;
-
-    if (RespawnData.bRespawnDataAvailable && RespawnData.bServerIsReady)
-    {
-        FTransform SpawnTransform{};
-        SpawnTransform.Translation = RespawnData.RespawnLocation;
-        SpawnTransform.Rotation = UKismetMathLibrary::Conv_RotatorToQuaternion(RespawnData.RespawnRotation);
-        SpawnTransform.Scale3D = FVector(1, 1, 1);
-
-        auto NewPawn = (AFortPawn*)GameMode->SpawnDefaultPawnAtTransform(PlayerController, SpawnTransform);
-        PlayerController->Possess(NewPawn);
-        PlayerController->RespawnPlayerAfterDeath(true, false);
-
-        NewPawn->SetHealth(100.f);
-        NewPawn->SetShield(0.f);
-
-        InitializePlayerGameplayAbilities(PlayerController);
-    }
-
-    RespawnData.bClientIsReady = true;
 }
 
 void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntry* PickupEntry)
@@ -1515,6 +1710,22 @@ static void ServerAttemptAircraftJump(UObject* Context, FFrame& Stack)
 
     UWorld::GetWorld()->AuthorityGameMode->RestartPlayer(PlayerController);
     PlayerController->SetControlRotation(ClientRotation);
+
+    if (!bLateGame)
+        return;
+
+    auto Pawn = (AFortPawn*)PlayerController->Pawn;
+    auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(PlayerController);
+    auto Aircraft = GamePhaseLogic && GamePhaseLogic->Aircrafts_GameState.Num() > 0 ? GamePhaseLogic->Aircrafts_GameState.Data[0].Get() : nullptr;
+
+    if (!Pawn || !Aircraft)
+        return;
+
+    auto Angle = UKismetMathLibrary::RandomFloatInRange(0., 360.);
+    auto Distance = UKismetMathLibrary::RandomFloatInRange(0., 1000.);
+
+    Pawn->SetShield(100.f);
+    Pawn->K2_SetActorLocation(Aircraft->K2_GetActorLocation() + FVector(UKismetMathLibrary::DegCos(Angle) * Distance, UKismetMathLibrary::DegSin(Angle) * Distance, 0.), false, nullptr, true);
 }
 
 static void RefreshCosmeticLoadoutFromProfile(UFortControllerComponent_CosmeticLoadout* Component)
@@ -1701,9 +1912,11 @@ void AFortPlayerController__PostLoad()
     ExecHook(PlayerControllerClass->FindFunction("ServerRepairBuildingActor"), ServerRepairBuildingActor);
     ExecHook(PlayerControllerClass->FindFunction("ServerAttemptInventoryDrop"), ServerAttemptInventoryDrop);
     ExecHook(PlayerControllerClass->FindFunction("ServerPlayEmoteItem"), ServerPlayEmoteItem);
+    Hook(ImageBase + 0x901FDFC, OnPawnDied, OnPawnDiedOG);
     Hook(ImageBase + 0xA06E3C0, ClientOnPawnDied, ClientOnPawnDiedOG);
+    Hook(ImageBase + 0x8F98730, OnPawnDeathNoRespawn, OnPawnDeathNoRespawnOG);
+    Rel32Hook(ImageBase + 0x906A4F5 + 1, StartRespawnTimer);
     Hook<AFortPlayerControllerAthena>(uint32(0x48C), ServerSpectateActor);
-    ExecHook(PlayerControllerClass->FindFunction("ServerClientIsReadyToRespawn"), ServerClientIsReadyToRespawn);
     ExecHook(PlayerControllerClass->FindFunction("ServerDropAllItems"), ServerDropAllItems);
     Hook(ImageBase + 0xA45DC2C, K2_OnUnEquip, K2_OnUnEquipOG);
     ExecHook(PlayerControllerClass->FindFunction("SpawnToyInstance"), SpawnToyInstance);

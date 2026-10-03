@@ -797,6 +797,9 @@
     <ClCompile Include="UFortControllerComponent_IndicatedActorManagement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UFortControllerComponent_MapDiscoverability.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="UFortEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

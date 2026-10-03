@@ -113,6 +113,39 @@ UFortWorldItem* GiveItem(AFortInventory* Inventory, const UFortItemDefinition* I
     if (!Inventory || !ItemDefinition || !Count)
         return nullptr;
 
+    auto MaxStack = ItemDefinition->GetMaxStackSize(nullptr);
+
+    for (int i = 0; MaxStack > 1 && Count > 0 && i < Inventory->Inventory.ReplicatedEntries.Num(); i++)
+    {
+        auto& ReplicatedEntry = Inventory->Inventory.ReplicatedEntries[i];
+
+        if (ReplicatedEntry.ItemDefinition != ItemDefinition || ReplicatedEntry.Count >= MaxStack)
+            continue;
+
+        for (auto Instance : Inventory->Inventory.ItemInstances)
+        {
+            if (Instance->ItemEntry.ItemGuid != ReplicatedEntry.ItemGuid)
+                continue;
+
+            auto Added = (std::min)(Count, MaxStack - ReplicatedEntry.Count);
+
+            ReplicatedEntry.Count += Added;
+            Instance->ItemEntry.Count = ReplicatedEntry.Count;
+            Count -= Added;
+
+            if (bUpdateInventory)
+            {
+                UpdateEntry(Inventory, ReplicatedEntry);
+                Instance->ItemEntry.bIsDirty = true;
+            }
+
+            if (Count <= 0)
+                return Instance;
+
+            break;
+        }
+    }
+
     auto Item = (UFortWorldItem*)ItemDefinition->CreateTemporaryItemInstanceBP(Count, Level);
 
     if (Inventory->Owner && Inventory->Owner->IsA(AFortPlayerController::StaticClass()))

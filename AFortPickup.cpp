@@ -225,7 +225,6 @@ static void SetupLDSForPackage(TArray<FFortItemEntry*>& LootDrops, FName Package
     }
 
     bool found = false;
-    bool foundAmmo = false;
     for (auto& LootDrop : LootDrops)
     {
         if (LootDrop->ItemDefinition == (UItemDefinitionBase*)ItemDefinition && LootDrop->Count < ItemDefinition->GetMaxStackSize(nullptr))
@@ -259,14 +258,14 @@ static void SetupLDSForPackage(TArray<FFortItemEntry*>& LootDrops, FName Package
             }
 
             free(AmmoEntry);
-            foundAmmo = true;
+            AmmoEntry = nullptr;
         }
     }
 
     if (!found && LootPackage->Count > 0)
         LootDrops.Add(MakeItemEntry(ItemDefinition, LootPackage->Count, 0));
 
-    if (!foundAmmo && AmmoEntry && LootPackage->Count > 0)
+    if (AmmoEntry && LootPackage->Count > 0)
         LootDrops.Add(AmmoEntry);
     LPGroups.Free();
 }
@@ -300,74 +299,54 @@ void ChooseLootForContainer(TArray<FFortItemEntry*>& LootDrops, FName TierGroup,
             DropCount += RemainderSomething >= ((float)rand() / 32767.f);
     }
 
-    float AmountOfLootDrops = 0;
+    auto& Weights = LootTierData->LootPackageCategoryWeightArray;
+    auto& Maxes = LootTierData->LootPackageCategoryMaxArray;
+    auto NumCategories = (std::min)(LootTierData->LootPackageCategoryMinArray.Num(), Weights.Num());
 
-    std::unordered_map<int, int> NumMap;
+    TArray<int32> CategoryDrops{};
+    int32 NumDrops = 0;
 
-    for (int i = 0; i < LootTierData->LootPackageCategoryMinArray.Num(); i++)
+    for (int32 i = 0; i < NumCategories; i++)
     {
-        NumMap[i] = LootTierData->LootPackageCategoryMinArray[i];
-        AmountOfLootDrops += LootTierData->LootPackageCategoryMinArray[i];
+        CategoryDrops.Add(LootTierData->LootPackageCategoryMinArray[i]);
+        NumDrops += CategoryDrops[i];
     }
 
-    int SumWeights = 0;
-    std::unordered_map<int, int> WeightMap;
+    auto CanRollCategory = [&](int32 i) { return Weights[i] > 0 && (Maxes[i] < 0 || CategoryDrops[i] < Maxes[i]); };
 
-    for (int i = 0; i < LootTierData->LootPackageCategoryWeightArray.Num(); i++)
+    for (; NumDrops < DropCount; NumDrops++)
     {
-        if (LootTierData->LootPackageCategoryWeightArray[i] > 0 && (LootTierData->LootPackageCategoryMaxArray[i] < 0 || NumMap[i] < LootTierData->LootPackageCategoryMaxArray[i]))
+        int32 SumWeights = 0;
+
+        for (int32 i = 0; i < NumCategories; i++)
+            if (CanRollCategory(i))
+                SumWeights += Weights[i];
+
+        if (SumWeights <= 0)
+            break;
+
+        auto RandomWeight = (int32)(((float)rand() / 32768.f) * SumWeights);
+
+        for (int32 i = 0; i < NumCategories; i++)
         {
-            WeightMap[i] = LootTierData->LootPackageCategoryWeightArray[i];
-            SumWeights += LootTierData->LootPackageCategoryWeightArray[i];
-        }
-    }
+            if (!CanRollCategory(i))
+                continue;
 
-    if (AmountOfLootDrops < DropCount)
-        while (SumWeights > 0)
-        {
-            auto RandomValue = (float)rand() / 32767.f;
-            auto RandomWeight = (int)std::floor(RandomValue * SumWeights);
-
-            int Category = -1;
-            for (auto& [DropCategory, Weight] : WeightMap)
+            if (RandomWeight < Weights[i])
             {
-                if (RandomWeight <= Weight && RandomWeight <= LootTierData->NumLootPackageDrops)
-                {
-                    Category = DropCategory;
-                    break;
-                }
-
-                RandomWeight -= Weight;
-            }
-
-            if (Category != -1)
-            {
-                AmountOfLootDrops++;
-                NumMap[Category]++;
-
-                if (LootTierData->LootPackageCategoryMaxArray[Category] >= 0 && NumMap[Category] >= LootTierData->LootPackageCategoryMaxArray[Category])
-                {
-                    SumWeights -= LootTierData->LootPackageCategoryWeightArray[Category];
-                    WeightMap.erase(Category);
-                }
-            }
-
-            if (AmountOfLootDrops >= DropCount)
+                CategoryDrops[i]++;
                 break;
+            }
+
+            RandomWeight -= Weights[i];
         }
-
-    LootDrops.Reserve((int)DropCount);
-
-    int SpawnedItems = 0;
-    int CurrentCategory = 0;
-    while (SpawnedItems < DropCount && CurrentCategory < NumMap.size())
-    {
-        for (int j = 0; j < NumMap[CurrentCategory]; j++)
-            SetupLDSForPackage(LootDrops, LootTierData->LootPackage, CurrentCategory, TierGroup, WorldLevel);
-
-        SpawnedItems += NumMap[CurrentCategory];
-        CurrentCategory++;
     }
+
+    for (int32 i = 0; i < NumCategories; i++)
+        for (int32 j = 0; j < CategoryDrops[i]; j++)
+            SetupLDSForPackage(LootDrops, LootTierData->LootPackage, i, TierGroup, WorldLevel);
+
+    CategoryDrops.Free();
     TierDataGroups.Free();
 }
 

@@ -421,6 +421,7 @@
     <ClCompile Include="UConversationInstance.cpp" />
     <ClCompile Include="UFortAthenaLivingWorldManager.cpp" />
     <ClCompile Include="UFortControllerComponent_IndicatedActorManagement.cpp" />
+    <ClCompile Include="UFortControllerComponent_MapDiscoverability.cpp" />
     <ClCompile Include="UFortEngine.cpp" />
     <ClCompile Include="UFortMovementComp_Character.cpp" />
     <ClCompile Include="UFortControllerComponent_TournamentStatsTracker.cpp" />

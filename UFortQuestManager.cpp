@@ -47,22 +47,70 @@ struct FDelegateAllocation
     int32 Num = 0;
 };
 
+struct FVerbMessageView
+{
+    UScriptStruct* ScriptStruct;
+    FVerbMessage* Message;
+};
+
+enum class EQuestVerb : uint8
+{
+    DamageDone,
+    Hit,
+    HealingDone,
+    HealingReceived,
+    GainShields,
+    DestroyBuilding,
+    PawnEliminated,
+    Custom,
+    CurrencySpent,
+    MatchFinished,
+    PlayerReceivedGameplayEvent
+};
+
+struct FVerbProcessor
+{
+    EQuestVerb Verb;
+    UScriptStruct* MessageStruct;
+    UScriptStruct* FilterStruct;
+    EFortQuestObjectiveStatEvent Type;
+    bool bBroadcastByGame;
+};
+
+struct FPendingDamageTaken
+{
+    FWeakObjectPtr Victim;
+    FWeakObjectPtr DamageSource;
+    FGameplayTagContainer DamageSourceTags;
+    FGameplayTagContainer DamageTypeTags;
+    int32 Damage = 0;
+    double Distance = 0.0;
+};
+
 struct FQuestManagerFlushState
 {
     FWeakObjectPtr QuestManager;
     FWeakObjectPtr PlayerController;
     std::unordered_map<int32, int32> ElapsedSeconds;
+    std::unordered_map<int32, double> Remainders;
+    std::vector<int32> GameplayEventTags;
+    bool bGameplayEventTagsCached = false;
     double NextFlushTime = -1.0;
     int32 UpdateSaveId = -1;
     int32 EndSaveId = -1;
+    double EndRequestTime = -1.0;
     bool bUpdateInFlight = false;
+    bool bEndRequested = false;
+    bool bEndInFlight = false;
     bool bEnded = false;
 };
 
 static std::unordered_map<UFortQuestManager*, FQuestManagerFlushState> FlushStates;
+static FPendingDamageTaken PendingDamageTaken;
 
 static const char* QuestDiagReason = "";
 static bool bQuestDiagHookEntered = false;
+static bool bQuestDiagStructMatched = false;
 
 static void QuestLog(const char* Format, ...)
 {
@@ -108,6 +156,16 @@ static std::string QuestDiagPlayer(AActor* PlayerController)
 {
     auto Controller = PlayerController && PlayerController->IsA(APlayerController::StaticClass()) ? (APlayerController*)PlayerController : nullptr;
     return Controller && Controller->PlayerState ? Controller->PlayerState->GetPlayerName().ToString() : QuestDiagName(PlayerController);
+}
+
+static std::string QuestDiagTags(const FGameplayTagContainer& Tags)
+{
+    std::string Result;
+
+    for (int32 i = 0; i < Tags.GameplayTags.Num() && i < 16; i++)
+        Result += (i ? "," : "") + Tags.GameplayTags[i].TagName.ToString();
+
+    return Result;
 }
 
 static FQuestManagerFlushState& GetFlushState(UFortQuestManager* QuestManager)
@@ -186,7 +244,7 @@ static void ScheduleFlush(UFortQuestManager* QuestManager)
 {
     auto& State = GetFlushState(QuestManager);
 
-    if (State.bEnded || State.NextFlushTime >= 0.0)
+    if (State.NextFlushTime >= 0.0)
         return;
 
     State.NextFlushTime = UGameplayStatics::GetTimeSeconds(UWorld::GetWorld()) + QuestManager->DamageEventFlushDelaySeconds;
@@ -204,7 +262,8 @@ static bool DoesLocationMatch(const FGameplayTagQuery& TagQuery, FFortQuestStatE
            UBlueprintGameplayTagLibrary::DoesContainerMatchTagQuery(Event->TargetTags, TagQuery);
 }
 
-static bool IsInRange(const FInt32Range& Range, int32 Value)
+template <typename TRange, typename TValue>
+static bool IsInRange(const TRange& Range, TValue Value)
 {
     if ((Range.LowerBound.Type == ERangeBoundTypes::Inclusive && Value < Range.LowerBound.Value) || (Range.LowerBound.Type == ERangeBoundTypes::Exclusive && Value <= Range.LowerBound.Value))
         return false;
@@ -213,6 +272,173 @@ static bool IsInRange(const FInt32Range& Range, int32 Value)
         return false;
 
     return true;
+}
+
+static bool IsRequirementMet(EObjectiveProcessorPropertyRequirement Requirement, bool bValue)
+{
+    return Requirement == EObjectiveProcessorPropertyRequirement::Ignored || (Requirement == EObjectiveProcessorPropertyRequirement::Required) == bValue;
+}
+
+static void FreeGameplayTags(FGameplayTagContainer& Tags)
+{
+    Tags.GameplayTags.Free();
+    Tags.ParentTags.Free();
+}
+
+static int32 AccumulateProgress(UFortQuestManager* QuestManager, FName BackendName, double Amount)
+{
+    auto& Remainder = GetFlushState(QuestManager).Remainders[BackendName.ComparisonIndex];
+    Remainder += Amount;
+
+    auto Whole = (int32)Remainder;
+    Remainder -= Whole;
+
+    return Whole;
+}
+
+static void GetSubjectTags(UObject* Subject, FGameplayTagContainer* Tags)
+{
+    static auto GetSubjectTagsInternal = (void (*)(UObject*, FGameplayTagContainer*))(ImageBase + 0xA4CC204);
+
+    GetSubjectTagsInternal(Subject, Tags);
+}
+
+static void SetSubject(FSubjectTagsPair* Pair, UObject* Subject)
+{
+    static auto SetSubjectInternal = (void (*)(FSubjectTagsPair*, UObject*))(ImageBase + 0xA3F33E8);
+
+    SetSubjectInternal(Pair, Subject);
+}
+
+static UScriptStruct* FindFortniteGameStruct(const wchar_t* Name)
+{
+    return FindObject<UScriptStruct>((std::wstring(L"/Script/FortniteGame.") + Name).c_str());
+}
+
+static const std::vector<FVerbProcessor>& GetVerbProcessors()
+{
+    static std::vector<FVerbProcessor> Processors = {
+        { EQuestVerb::DamageDone, FindFortniteGameStruct(L"FortVerbMessage_DamageDone"), FindFortniteGameStruct(L"FortObjectiveFilter_DamageDone"), EFortQuestObjectiveStatEvent::Damage, false },
+        { EQuestVerb::Hit, FindFortniteGameStruct(L"FortVerbMessage_Hit"), FindFortniteGameStruct(L"FortObjectiveFilter_Hit"), EFortQuestObjectiveStatEvent::Hit, false },
+        { EQuestVerb::HealingDone, FindFortniteGameStruct(L"FortVerbMessage_HealingDone"), FindFortniteGameStruct(L"FortObjectiveFilter_HealingDone"), EFortQuestObjectiveStatEvent::Heal, true },
+        { EQuestVerb::HealingReceived, FindFortniteGameStruct(L"FortVerbMessage_HealingReceived"), FindFortniteGameStruct(L"FortObjectiveFilter_HealingReceived"), EFortQuestObjectiveStatEvent::Heal, true },
+        { EQuestVerb::GainShields, FindFortniteGameStruct(L"FortVerbMessage_GainShields"), FindFortniteGameStruct(L"FortObjectiveFilter_GainShields"), EFortQuestObjectiveStatEvent::Heal, true },
+        { EQuestVerb::DestroyBuilding, FindFortniteGameStruct(L"FortVerbMessage_DestroyBuilding"), FindFortniteGameStruct(L"FortObjectiveFilter_DestroyBuilding"), EFortQuestObjectiveStatEvent::Destroy, true },
+        { EQuestVerb::PawnEliminated, FindFortniteGameStruct(L"FortVerbMessage_PawnEliminated"), FindFortniteGameStruct(L"FortObjectiveFilter_PawnEliminated"), EFortQuestObjectiveStatEvent::Kill, true },
+        { EQuestVerb::Custom, FindFortniteGameStruct(L"VerbMessage_Custom"), FindFortniteGameStruct(L"ObjectiveFilter_Custom"), EFortQuestObjectiveStatEvent::Custom, true },
+        { EQuestVerb::CurrencySpent, FindFortniteGameStruct(L"FortVerbMessage_CurrencySpent"), FindFortniteGameStruct(L"FortObjectiveFilter_CurrencySpent"), EFortQuestObjectiveStatEvent::Custom, true },
+        { EQuestVerb::MatchFinished, FindFortniteGameStruct(L"FortVerbMessage_MatchFinished"), FindFortniteGameStruct(L"FortObjectiveFilter_MatchFinished"), EFortQuestObjectiveStatEvent::Finish, false },
+        { EQuestVerb::PlayerReceivedGameplayEvent, FindFortniteGameStruct(L"FortVerbMessage_PlayerReceivedGameplayEvent"), FindFortniteGameStruct(L"FortObjectiveFilter_PlayerReceivedGameplayEvent"),
+          EFortQuestObjectiveStatEvent::Custom, false },
+    };
+
+    return Processors;
+}
+
+static const FVerbProcessor& GetVerbProcessor(EQuestVerb Verb)
+{
+    return GetVerbProcessors()[(int32)Verb];
+}
+
+static AFortPlayerControllerAthena* ResolvePlayerController(UObject* Object)
+{
+    if (Object && Object->IsA(APawn::StaticClass()))
+        Object = ((APawn*)Object)->Controller;
+    else if (Object && Object->IsA(APlayerState::StaticClass()))
+        Object = ((APlayerState*)Object)->Owner;
+
+    return Object && Object->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)Object : nullptr;
+}
+
+static EDistanceTravelMode GetTravelMode(AFortPlayerPawn* Pawn)
+{
+    if (Pawn->IsInVehicle())
+        return Pawn->IsDrivingVehicle() ? EDistanceTravelMode::Driving : EDistanceTravelMode::Passenger;
+
+    auto Movement = Pawn->CharacterMovement;
+
+    if (!Movement)
+        return EDistanceTravelMode::EDistanceTravelMode_MAX;
+
+    switch (Movement->MovementMode)
+    {
+    case EMovementMode::MOVE_Walking:
+    case EMovementMode::MOVE_NavWalking:
+        if (Pawn->bIsSliding)
+            return EDistanceTravelMode::Sliding;
+
+        if (Pawn->bIsCrouched)
+            return EDistanceTravelMode::Crouch;
+
+        return Pawn->CurrentMovementStyle == EFortMovementStyle::Sprinting ? EDistanceTravelMode::Sprinting : EDistanceTravelMode::Running;
+    case EMovementMode::MOVE_Falling:
+        return Pawn->bIsParachuteOpen ? EDistanceTravelMode::Parachuting : Pawn->bIsSkydiving ? EDistanceTravelMode::SkyDiving : EDistanceTravelMode::Falling;
+    case EMovementMode::MOVE_Swimming:
+        return EDistanceTravelMode::Swimming;
+    case EMovementMode::MOVE_Flying:
+        return EDistanceTravelMode::Flying;
+    case EMovementMode::MOVE_Custom:
+        break;
+    default:
+        return EDistanceTravelMode::EDistanceTravelMode_MAX;
+    }
+
+    switch ((EFortCustomMovement)Movement->CustomMovementMode)
+    {
+    case EFortCustomMovement::Driving:
+        return EDistanceTravelMode::Driving;
+    case EFortCustomMovement::Passenger:
+        return EDistanceTravelMode::Passenger;
+    case EFortCustomMovement::Parachuting:
+        return EDistanceTravelMode::Parachuting;
+    case EFortCustomMovement::Skydiving:
+        return EDistanceTravelMode::SkyDiving;
+    case EFortCustomMovement::SkydiveFollowing:
+        return EDistanceTravelMode::SkydiveFollowing;
+    case EFortCustomMovement::Hover:
+        return EDistanceTravelMode::Hover;
+    case EFortCustomMovement::RemoteControl_Flying:
+        return EDistanceTravelMode::RemoteControl_Flying;
+    case EFortCustomMovement::Ziplining:
+        return EDistanceTravelMode::Ziplining;
+    case EFortCustomMovement::ZipliningOnSpline:
+        return EDistanceTravelMode::ZipliningOnSpline;
+    case EFortCustomMovement::Grinding:
+        return EDistanceTravelMode::Grinding;
+    case EFortCustomMovement::Ballooning:
+        return EDistanceTravelMode::Ballooning;
+    case EFortCustomMovement::SurfaceSwimming:
+        return EDistanceTravelMode::SurfaceSwimming;
+    case EFortCustomMovement::DBNOCarried:
+        return EDistanceTravelMode::DBNOCarried;
+    case EFortCustomMovement::Floating:
+        return EDistanceTravelMode::Floating;
+    case EFortCustomMovement::Goop:
+        return EDistanceTravelMode::Goop;
+    case EFortCustomMovement::Sliding:
+        return EDistanceTravelMode::Sliding;
+    case EFortCustomMovement::Skating:
+        return EDistanceTravelMode::Skating;
+    default:
+        return EDistanceTravelMode::EDistanceTravelMode_MAX;
+    }
+}
+
+static bool IsTravelModeAllowed(const TArray<EDistanceTravelMode>& Allowed, const TArray<EDistanceTravelMode>& Prohibited, EDistanceTravelMode Mode)
+{
+    for (auto Entry : Prohibited)
+    {
+        if (Entry == Mode)
+            return false;
+    }
+
+    for (auto Entry : Allowed)
+    {
+        if (Entry == EDistanceTravelMode::Any || Entry == Mode)
+            return true;
+    }
+
+    return Allowed.Num() == 0;
 }
 
 template <typename T>
@@ -248,14 +474,215 @@ static EFortTeamAffiliation GetTeamAffiliation(AFortPlayerControllerAthena* Play
     return TargetPlayerState->TeamIndex == PlayerState->TeamIndex ? EFortTeamAffiliation::Friendly : EFortTeamAffiliation::Hostile;
 }
 
-static EEliminationKillType GetEliminationKillType(UObject* TargetObject)
+static int32 EvaluateVerbFilter(void* Memory, UFortQuestManager* QuestManager, FName BackendName, AFortPlayerControllerAthena* PlayerController, const FVerbProcessor& Verb, FVerbMessage* Message)
 {
-    return TargetObject && TargetObject->IsA(AFortPlayerPawn::StaticClass()) ? EEliminationKillType::Player : EEliminationKillType::NPC;
+    QuestDiagReason = "verb";
+
+    switch (Verb.Verb)
+    {
+    case EQuestVerb::DamageDone:
+    {
+        auto Data = (FFortObjectiveFilter_DamageDone*)Memory;
+        auto Damage = (FFortVerbMessage_DamageDone*)Message;
+
+        if ((Damage->bDamageDoneToSelf && !Data->bAllowSelfInflictedDamage) || !IsRequirementMet(Data->SelfInflictedDamage, Damage->bDamageDoneToSelf) ||
+            !IsRequirementMet(Data->TeamDamage, Damage->bDamageDoneToTeamMember) || (Data->bRequireCriticalHit && Damage->DamageZone != EFortDamageZone::Critical) ||
+            (Data->bUseDistance && !IsInRange(Data->Distance, Damage->Distance)) || (Data->bUseDamageAmount && !IsInRange(Data->DamageAmount, Damage->Damage)) ||
+            (Data->bUseUncappedDamage && !IsInRange(Data->UncappedDamageAmount, Damage->UncappedDamage)))
+            return 0;
+
+        QuestDiagReason = "subjects";
+
+        if (!DoesTagQueryMatch(Data->DamageSource.TagQuery, Damage->DamageSource.Tags) || !DoesTagQueryMatch(Data->DamagedActor.TagQuery, Damage->DamagedActor.Tags) ||
+            !DoesTagQueryMatch(Data->DamageType.TagQuery, Damage->DamageType.Tags))
+            return 0;
+
+        return Data->bIncrementByUncappedDamage ? Damage->UncappedDamage : Data->bIncrementByDamageAmount ? Damage->Damage : 1;
+    }
+    case EQuestVerb::Hit:
+    {
+        auto Data = (FFortObjectiveFilter_Hit*)Memory;
+        auto Hit = (FFortVerbMessage_Hit*)Message;
+
+        if ((Hit->bHitSelf && !Data->bAllowSelfInflictedDamage) || !IsRequirementMet(Data->SelfInflictedDamage, Hit->bHitSelf) || !IsRequirementMet(Data->TeamDamage, Hit->bHitTeamMember) ||
+            (Data->bRequireCriticalHit && Hit->DamageZone != EFortDamageZone::Critical) || (Data->bUseDistance && !IsInRange(Data->Distance, Hit->Distance)))
+            return 0;
+
+        QuestDiagReason = "subjects";
+
+        if (!DoesTagQueryMatch(Data->DamageSource.TagQuery, Hit->DamageSource.Tags) || !DoesTagQueryMatch(Data->DamagedActor.TagQuery, Hit->DamagedActor.Tags) ||
+            !DoesTagQueryMatch(Data->DamageType.TagQuery, Hit->DamageType.Tags))
+            return 0;
+
+        return Data->bIncrementByDistance ? AccumulateProgress(QuestManager, BackendName, Hit->Distance) : 1;
+    }
+    case EQuestVerb::HealingDone:
+    case EQuestVerb::HealingReceived:
+    {
+        auto Data = (FFortObjectiveFilter_HealingBase*)Memory;
+        auto Healing = (FFortVerbMessage_Healing*)Message;
+        bool bTeammate = Verb.Verb == EQuestVerb::HealingDone ? ((FFortVerbMessage_HealingDone*)Message)->bHealedTeammate : ((FFortVerbMessage_HealingReceived*)Message)->bHealedByTeammate;
+
+        if ((Data->SelfHealingBehavior == EFortSelfHealingHandling::Required && bTeammate) || (Data->SelfHealingBehavior == EFortSelfHealingHandling::Prohibited && !bTeammate) ||
+            (Data->bRequireHealedToFull && !Healing->bHealedToFull) || (Data->bUseHealingAmount && !IsInRange(Data->HealingAmount, Healing->AmountHealedToHealth)) ||
+            (Data->bUseOverHealing && !IsInRange(Data->HealthOverHealed, Healing->HealthOverHealingAmount)) || (Data->bUsePercentHealed && !IsInRange(Data->PercentHealed, Healing->PercentHealed)))
+            return 0;
+
+        QuestDiagReason = "subjects";
+
+        if (!DoesTagQueryMatch(Data->HealingType.TagQuery, Healing->HealingType.Tags))
+            return 0;
+
+        if (Verb.Verb == EQuestVerb::HealingDone)
+        {
+            auto Done = (FFortObjectiveFilter_HealingDone*)Memory;
+
+            if ((Done->bRequireHealingDoneToTeammate && !bTeammate) || !DoesTagQueryMatch(Done->SubjectHealed.TagQuery, ((FFortVerbMessage_HealingDone*)Message)->SubjectHealed.Tags))
+                return 0;
+        }
+        else
+        {
+            auto Received = (FFortObjectiveFilter_HealingReceived*)Memory;
+
+            if ((Received->bRequireHealingReceivedFromTeammate && !bTeammate) || !DoesTagQueryMatch(Received->HealSource.TagQuery, ((FFortVerbMessage_HealingReceived*)Message)->HealSource.Tags))
+                return 0;
+        }
+
+        switch (Data->IncrementBy)
+        {
+        case EFortHealingIncrementType::Single:
+            return 1;
+        case EFortHealingIncrementType::HealthOverHealing:
+            return AccumulateProgress(QuestManager, BackendName, Healing->HealthOverHealingAmount);
+        case EFortHealingIncrementType::PercentHealed:
+            return AccumulateProgress(QuestManager, BackendName, Healing->PercentHealed);
+        default:
+            return AccumulateProgress(QuestManager, BackendName, Healing->AmountHealedToHealth);
+        }
+    }
+    case EQuestVerb::GainShields:
+    {
+        auto Data = (FFortObjectiveFilter_GainShields*)Memory;
+        auto Shields = (FFortVerbMessage_GainShields*)Message;
+
+        if ((Data->bRequireFullShields && !Shields->bGainedFullShields) || (Data->bRequireShieldGainedFromTeammate && !Shields->bGainedShieldsFromTeammate) || Data->bUseTotalShieldsGained ||
+            (Data->bRequireAuthorIsTheShieldGainSource && ResolvePlayerController(Shields->ShieldGainSource.Subject.Get()) != PlayerController) ||
+            (Data->bUseShieldAmountGained && !IsInRange(Data->AmountOfShieldsGained, Shields->AmountOfShieldsGained)) ||
+            (Data->bUseOverFullShields && !IsInRange(Data->ShieldsGainedOverFullAmount, Shields->ShieldsGainedOverFullAmount)) ||
+            (Data->bUseShieldGainedPercent && !IsInRange(Data->ShieldsPercentGained, Shields->ShieldPercentGained)))
+            return 0;
+
+        QuestDiagReason = "subjects";
+
+        if (!DoesTagQueryMatch(Data->ShieldGainSource.TagQuery, Shields->ShieldGainSource.Tags) || !DoesTagQueryMatch(Data->ShieldGainType.TagQuery, Shields->ShieldGainType.Tags))
+            return 0;
+
+        switch (Data->IncrementBy)
+        {
+        case EFortShieldGainIncrementType::Single:
+            return 1;
+        case EFortShieldGainIncrementType::ShieldGainedOverFull:
+            return AccumulateProgress(QuestManager, BackendName, Shields->ShieldsGainedOverFullAmount);
+        case EFortShieldGainIncrementType::ShieldGainPercent:
+            return AccumulateProgress(QuestManager, BackendName, Shields->ShieldPercentGained);
+        default:
+            return AccumulateProgress(QuestManager, BackendName, Shields->AmountOfShieldsGained);
+        }
+    }
+    case EQuestVerb::DestroyBuilding:
+    {
+        auto Data = (FFortObjectiveFilter_DestroyBuilding*)Memory;
+        auto Destroy = (FFortVerbMessage_DestroyBuilding*)Message;
+        auto Pawn = PlayerController->Pawn && PlayerController->Pawn->IsA(AFortPlayerPawn::StaticClass()) ? (AFortPlayerPawn*)PlayerController->Pawn : nullptr;
+
+        if (Data->bUseAdvancedVehicleFilter || (Data->bRequireInVehicle && (!Pawn || !Pawn->IsInVehicle())))
+            return 0;
+
+        QuestDiagReason = "subjects";
+
+        return DoesTagQueryMatch(Data->DestroyedBuilding.TagQuery, Destroy->DestroyedBuilding.Tags) && DoesTagQueryMatch(Data->DamageSource.TagQuery, Destroy->DamageSource.Tags) ? 1 : 0;
+    }
+    case EQuestVerb::PawnEliminated:
+    {
+        auto Data = (FFortObjectiveFilter_PawnEliminated*)Memory;
+        auto Elimination = (FFortVerbMessage_PawnEliminated*)Message;
+        auto KillType = Elimination->bKilledPawnWasPlayer ? EEliminationKillType::Player : Elimination->bKilledPawnWasWildlife ? EEliminationKillType::Wildlife : EEliminationKillType::NPC;
+
+        if ((Elimination->bWasSelfElimination && !Data->bAllowSelfEliminations) || (Data->bRequirePawnWasEliminatedByConvertedPawn && !Elimination->bWasEliminatedByConvertedPawn) ||
+            !IsAllowed(Data->AllowedTeamAffiliations, Data->ProhibitedTeamAffiliations, Elimination->EliminatedAndKillerTeamAffiliation) ||
+            !IsAllowed(Data->AllowedKilledPawnTypes, Data->ProhibitedKilledPawnTypes, KillType) || (Data->bUseDistance && !IsInRange(Data->Distance, Elimination->Distance)) ||
+            (Data->bUseKillStreak && !IsInRange(Data->KillStreak, Elimination->KillStreak)))
+            return 0;
+
+        QuestDiagReason = "subjects";
+
+        if (!DoesTagQueryMatch(Data->EliminatedPawn.TagQuery, Elimination->EliminatedPawn.Tags) || !DoesTagQueryMatch(Data->Killer.TagQuery, Elimination->Killer.Tags) ||
+            !DoesTagQueryMatch(Data->EliminationSource.TagQuery, Elimination->EliminationSource.Tags))
+            return 0;
+
+        return Data->bIncrementByDistance ? AccumulateProgress(QuestManager, BackendName, Elimination->Distance) : 1;
+    }
+    case EQuestVerb::Custom:
+    {
+        auto Data = (FObjectiveFilter_Custom*)Memory;
+        auto Custom = (FVerbMessage_Custom*)Message;
+
+        if (Data->Verb.TagName != Custom->Verb.TagName || Data->Subjects.Num() > 0 || Data->Values.Num() > 0 || Data->bIncrementByNamedValue)
+            return 0;
+
+        return (std::max)(Custom->Amount, 1);
+    }
+    case EQuestVerb::CurrencySpent:
+    {
+        auto Data = (FFortObjectiveFilter_CurrencySpent*)Memory;
+        auto Spent = (FFortVerbMessage_CurrencySpent*)Message;
+
+        if ((Data->AllowedMessages == ECurrencySpentFilterEventBehavior::OnlyGeneral && Spent->bIsFromSpecificEvent) ||
+            (Data->AllowedMessages == ECurrencySpentFilterEventBehavior::OnlySpecific && !Spent->bIsFromSpecificEvent) ||
+            (Data->bUseSpentAmount && !IsInRange(Data->SpentAmountToCountForProgress, Spent->AmountSpent)) || !DoesTagQueryMatch(Data->PurchaseTags.TagQuery, Spent->PurchaseTags.Tags))
+            return 0;
+
+        return Data->bIncrementByAmountSpent ? Spent->AmountSpent : 1;
+    }
+    case EQuestVerb::MatchFinished:
+    {
+        auto Data = (FFortObjectiveFilter_MatchFinished*)Memory;
+        auto Finished = (FFortVerbMessage_MatchFinished*)Message;
+
+        if ((Data->bUseFinishingRankRange && !IsInRange(Data->FinishingRankRange, Finished->PlayerRank)) || (Data->bUsePlayersOutLived && !IsInRange(Data->PlayersOutLived, Finished->PlayersOutLived)))
+            return 0;
+
+        return DoesTagQueryMatch(Data->MatchMetaData.TagQuery, Finished->MatchMetaData.Tags) ? 1 : 0;
+    }
+    case EQuestVerb::PlayerReceivedGameplayEvent:
+    {
+        auto Data = (FFortObjectiveFilter_PlayerReceivedGameplayEvent*)Memory;
+        auto Received = (FFortVerbMessage_PlayerReceivedGameplayEvent*)Message;
+        auto& Filter = Data->GameplayEventFilter;
+        auto& EventData = Received->EventData;
+
+        if (Received->GameplayEventTag.TagName != Data->GameplayEventTag.TagName || (Data->bRequireAuthorInstigator && !Received->bAuthorIsInstigator) ||
+            (Data->bRequireAuthorTarget && !Received->bAuthorIsTarget) || Filter.bUseAdvancedInstigatorClassFilter || Filter.bUseAdvancedTargetClassFilter || Filter.bUseAdvancedObject1ClassFilter ||
+            Filter.bUseAdvancedObject2ClassFilter || (Filter.bUseEventMagnitude && !IsInRange(Filter.EventMagnitude, EventData.EventMagnitude)))
+            return 0;
+
+        QuestDiagReason = "subjects";
+
+        if ((Filter.bUseInstigatorTags && !DoesTagQueryMatch(Filter.InstigatorTags, EventData.InstigatorTags)) || (Filter.bUseTargetTags && !DoesTagQueryMatch(Filter.TargetTags, EventData.TargetTags)) ||
+            (Filter.bUseObject1Tags && !DoesTagQueryMatch(Filter.Object1TagFilter, EventData.OptionalObject1Tags)) ||
+            (Filter.bUseObject2Tags && !DoesTagQueryMatch(Filter.Object2TagFilter, EventData.OptionalObject2Tags)))
+            return 0;
+
+        return Data->bIncrementByEventMagnitude ? AccumulateProgress(QuestManager, BackendName, EventData.EventMagnitude) : 1;
+    }
+    default:
+        return 0;
+    }
 }
 
-static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestManager* QuestManager, FName BackendName, AFortPlayerControllerAthena* PlayerController, FFortQuestStatEvent* Event, UObject* TargetObject)
+static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestManager* QuestManager, FName BackendName, AFortPlayerControllerAthena* PlayerController, FFortQuestStatEvent* Event, UObject* TargetObject,
+                                     const FVerbProcessor* Verb, FVerbMessage* Message)
 {
-    static auto PawnEliminated = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_PawnEliminated");
     static auto KillContribution = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_KillContribution");
     static auto Visit = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_Visit");
     static auto DiscoverPOI = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_DiscoverPOI");
@@ -271,9 +698,8 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
     static auto RevivedFromDBNO = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_RevivedFromDBNO");
     static auto StormPhaseChanged = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_StormPhaseChanged");
     static auto PlacementUpdate = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_PlacementUpdate");
-    static auto MatchFinished = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_MatchFinished");
-
     static auto MatchTimeElapsed = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_MatchTimeElapsed");
+    static auto DistanceTraveled = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_DistanceTraveled");
 
     auto Struct = Filter.ScriptStruct;
     auto Memory = Filter.StructMemory;
@@ -283,13 +709,10 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
     if (!Struct || !Memory)
         return 0;
 
-    UScriptStruct* ExpectedStructs[2] = {};
+    UScriptStruct* ExpectedStructs[2] = { Verb ? Verb->FilterStruct : nullptr };
 
-    switch (Event->Type)
+    switch (Verb ? EFortQuestObjectiveStatEvent::EFortQuestObjectiveStatEvent_MAX : Event->Type)
     {
-    case EFortQuestObjectiveStatEvent::Kill:
-        ExpectedStructs[0] = PawnEliminated;
-        break;
     case EFortQuestObjectiveStatEvent::KillContribution:
         ExpectedStructs[0] = KillContribution;
         break;
@@ -333,11 +756,12 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
     case EFortQuestObjectiveStatEvent::PlacementUpdate:
         ExpectedStructs[0] = PlacementUpdate;
         break;
-    case EFortQuestObjectiveStatEvent::Finish:
-        ExpectedStructs[0] = MatchFinished;
-        break;
     case EFortQuestObjectiveStatEvent::TimeElapsed:
         ExpectedStructs[0] = MatchTimeElapsed;
+        break;
+    case EFortQuestObjectiveStatEvent::DistanceTraveled:
+    case EFortQuestObjectiveStatEvent::AthenaDistanceTraveled:
+        ExpectedStructs[0] = DistanceTraveled;
         break;
     default:
         break;
@@ -345,6 +769,8 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
 
     if (!ExpectedStructs[0] || (Struct != ExpectedStructs[0] && Struct != ExpectedStructs[1]))
         return 0;
+
+    bQuestDiagStructMatched = true;
 
     auto ObjectiveFilter = (FObjectiveFilter*)Memory;
 
@@ -363,32 +789,15 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
     if (!DoesTagQueryMatch(ObjectiveFilter->Context.TagQuery, Event->ContextTags))
         return 0;
 
+    if (Verb)
+        return EvaluateVerbFilter(Memory, QuestManager, BackendName, PlayerController, *Verb, Message);
+
     QuestDiagReason = "type_check";
 
     auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
-    auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
 
     switch (Event->Type)
     {
-    case EFortQuestObjectiveStatEvent::Kill:
-    {
-        if (Struct != PawnEliminated)
-            return 0;
-
-        auto Data = (FFortObjectiveFilter_PawnEliminated*)Memory;
-
-        if (Data->bRequirePawnWasEliminatedByConvertedPawn || Data->bUseDistance || Data->bIncrementByDistance || Data->bUseKillStreak)
-            return 0;
-
-        if (!IsAllowed(Data->AllowedTeamAffiliations, Data->ProhibitedTeamAffiliations, GetTeamAffiliation(PlayerController, TargetObject)) ||
-            !IsAllowed(Data->AllowedKilledPawnTypes, Data->ProhibitedKilledPawnTypes, GetEliminationKillType(TargetObject)))
-            return 0;
-
-        return DoesTagQueryMatch(Data->EliminatedPawn.TagQuery, Event->TargetTags) && DoesTagQueryMatch(Data->Killer.TagQuery, Event->SourceTags) &&
-                       DoesTagQueryMatch(Data->EliminationSource.TagQuery, Event->SourceTags)
-                   ? 1
-                   : 0;
-    }
     case EFortQuestObjectiveStatEvent::KillContribution:
     {
         if (Struct != KillContribution)
@@ -493,6 +902,41 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
 
         return Data->IncrementType == ETimeElapsedFilterIncrementType::TimeElapsed ? Updates * UpdateTime : Updates;
     }
+    case EFortQuestObjectiveStatEvent::DistanceTraveled:
+    case EFortQuestObjectiveStatEvent::AthenaDistanceTraveled:
+    {
+        auto Data = (FFortObjectiveFilter_DistanceTraveled*)Memory;
+        auto Pawn = TargetObject && TargetObject->IsA(AFortPlayerPawn::StaticClass()) ? (AFortPlayerPawn*)TargetObject : nullptr;
+        bool bHorizontal = Data->TravelDirection == EDistanceTravelDirection::Horizontal;
+
+        if (!Pawn || (Event->Type == EFortQuestObjectiveStatEvent::AthenaDistanceTraveled) != bHorizontal || (!bHorizontal && Data->TravelDirection != EDistanceTravelDirection::Any) ||
+            Data->bUsePerAxisSettings || Data->BoostRequirement != EObjectiveProcessorPropertyRequirement::Ignored || Data->AllowedVehicleSurfaces.Num() > 0)
+            return 0;
+
+        QuestDiagReason = "travel_mode";
+
+        if (!IsTravelModeAllowed(Data->AllowedTravelModes, Data->ProhibitedTravelModes, GetTravelMode(Pawn)))
+            return 0;
+
+        auto Vehicle = Pawn->BP_GetVehicle();
+
+        if (Data->bRequireVehicleInAir && (!Vehicle || !Vehicle->IsInAir()))
+            return 0;
+
+        if (Data->Vehicle.TagQuery.QueryTokenStream.Num() > 0)
+        {
+            FGameplayTagContainer VehicleTags{};
+            GetSubjectTags(Vehicle, &VehicleTags);
+
+            bool bMatched = Vehicle && DoesTagQueryMatch(Data->Vehicle.TagQuery, VehicleTags);
+            FreeGameplayTags(VehicleTags);
+
+            if (!bMatched)
+                return 0;
+        }
+
+        return bHorizontal ? Event->Count : AccumulateProgress(QuestManager, BackendName, Event->Count / 100.0);
+    }
     case EFortQuestObjectiveStatEvent::Interact:
         return Struct == Interact && DoesTagQueryMatch(((FFortObjectiveFilter_Interact*)Memory)->Target.TagQuery, Event->TargetTags) ? 1 : 0;
     case EFortQuestObjectiveStatEvent::RevivePlayer:
@@ -535,19 +979,6 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
             return 0;
 
         return DoesTagQueryMatch(Data->PlayerThatSetPlacement.TagQuery, Event->TargetTags) ? 1 : 0;
-    }
-    case EFortQuestObjectiveStatEvent::Finish:
-    {
-        if (Struct != MatchFinished || !GameState || !PlayerState)
-            return 0;
-
-        auto Data = (FFortObjectiveFilter_MatchFinished*)Memory;
-
-        if ((Data->bUseFinishingRankRange && !IsInRange(Data->FinishingRankRange, PlayerState->Place)) ||
-            (Data->bUsePlayersOutLived && !IsInRange(Data->PlayersOutLived, (std::max)(GameState->TotalPlayers - PlayerState->Place, 0))))
-            return 0;
-
-        return DoesTagQueryMatch(Data->MatchMetaData.TagQuery, Event->ContextTags) ? 1 : 0;
     }
     default:
         return 0;
@@ -592,7 +1023,115 @@ static void AddPendingChange(UFortQuestManager* QuestManager, UFortQuestItem* Qu
     Entry->Quests.Add(FWeakObjectPtr(Quest));
 }
 
-static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlayerControllerAthena* PlayerController, FFortQuestStatEvent* Event, UObject* TargetObject)
+static FGameplayTag GetProductTag(UObject* Context)
+{
+    static auto GetProductTagInternal = (FGameplayTag* (*)(FGameplayTag*, UObject*))(ImageBase + 0x9B57830);
+
+    FGameplayTag ProductTag{};
+    GetProductTagInternal(&ProductTag, Context);
+
+    return ProductTag;
+}
+
+static bool IsCompatibleWithProduct(UFortQuestItemDefinition* Definition, AFortPlayerControllerAthena* PlayerController, FGameplayTag& ProductTag)
+{
+    static auto IsCompatibleWithProductInternal = (bool (*)(UFortQuestItemDefinition*, UObject*, FGameplayTag*))(ImageBase + 0xA114198);
+
+    if (ProductTag.TagName.IsNone() || Definition->Objectives.Num() == 0 || Definition->Objectives[0].ObjectiveFilters.Num() == 0)
+        return true;
+
+    return IsCompatibleWithProductInternal(Definition, PlayerController, &ProductTag);
+}
+
+static void QuestDiagVerb(const FVerbProcessor& Verb, FVerbMessage* Message)
+{
+    static std::unordered_map<int32, int32> Logged;
+
+    if (Logged[(int32)Verb.Verb]++ >= 5)
+        return;
+
+    QuestLog("    author=[%s] context=[%s]", QuestDiagTags(Message->Author.Tags).c_str(), QuestDiagTags(Message->ContextTags).c_str());
+
+    switch (Verb.Verb)
+    {
+    case EQuestVerb::DamageDone:
+    {
+        auto Damage = (FFortVerbMessage_DamageDone*)Message;
+        QuestLog("    damage=%d uncapped=%d distance=%.1f zone=%d team=%d self=%d source=%s [%s] damaged=[%s] type=[%s]", Damage->Damage, Damage->UncappedDamage, Damage->Distance, (int)Damage->DamageZone,
+                 Damage->bDamageDoneToTeamMember, Damage->bDamageDoneToSelf, QuestDiagName(Damage->DamageSource.Subject.Get()).c_str(), QuestDiagTags(Damage->DamageSource.Tags).c_str(),
+                 QuestDiagTags(Damage->DamagedActor.Tags).c_str(), QuestDiagTags(Damage->DamageType.Tags).c_str());
+        break;
+    }
+    case EQuestVerb::Hit:
+    {
+        auto Hit = (FFortVerbMessage_Hit*)Message;
+        QuestLog("    distance=%.1f zone=%d team=%d self=%d damaged=[%s] type=[%s]", Hit->Distance, (int)Hit->DamageZone, Hit->bHitTeamMember, Hit->bHitSelf, QuestDiagTags(Hit->DamagedActor.Tags).c_str(),
+                 QuestDiagTags(Hit->DamageType.Tags).c_str());
+        break;
+    }
+    case EQuestVerb::HealingDone:
+    case EQuestVerb::HealingReceived:
+    {
+        auto Healing = (FFortVerbMessage_Healing*)Message;
+        QuestLog("    amount=%.1f over=%.1f percent=%.1f full=%d teammate=%d type=[%s]", Healing->AmountHealedToHealth, Healing->HealthOverHealingAmount, Healing->PercentHealed, Healing->bHealedToFull,
+                 Verb.Verb == EQuestVerb::HealingDone ? ((FFortVerbMessage_HealingDone*)Message)->bHealedTeammate : ((FFortVerbMessage_HealingReceived*)Message)->bHealedByTeammate,
+                 QuestDiagTags(Healing->HealingType.Tags).c_str());
+        break;
+    }
+    case EQuestVerb::GainShields:
+    {
+        auto Shields = (FFortVerbMessage_GainShields*)Message;
+        QuestLog("    amount=%.1f full=%d teammate=%d source=%s [%s] type=[%s]", Shields->AmountOfShieldsGained, Shields->bGainedFullShields, Shields->bGainedShieldsFromTeammate,
+                 QuestDiagName(Shields->ShieldGainSource.Subject.Get()).c_str(), QuestDiagTags(Shields->ShieldGainSource.Tags).c_str(), QuestDiagTags(Shields->ShieldGainType.Tags).c_str());
+        break;
+    }
+    case EQuestVerb::DestroyBuilding:
+    {
+        auto Destroy = (FFortVerbMessage_DestroyBuilding*)Message;
+        QuestLog("    building=%s [%s] source=[%s]", QuestDiagName(Destroy->DestroyedBuilding.Subject.Get()).c_str(), QuestDiagTags(Destroy->DestroyedBuilding.Tags).c_str(),
+                 QuestDiagTags(Destroy->DamageSource.Tags).c_str());
+        break;
+    }
+    case EQuestVerb::PawnEliminated:
+    {
+        auto Elimination = (FFortVerbMessage_PawnEliminated*)Message;
+        QuestLog("    pawn=%s player=%d wildlife=%d self=%d affiliation=%d distance=%.1f streak=%d eliminated=[%s] killer=[%s] source=[%s]", QuestDiagName(Elimination->EliminatedPawn.Subject.Get()).c_str(),
+                 Elimination->bKilledPawnWasPlayer, Elimination->bKilledPawnWasWildlife, Elimination->bWasSelfElimination, (int)Elimination->EliminatedAndKillerTeamAffiliation, Elimination->Distance,
+                 Elimination->KillStreak, QuestDiagTags(Elimination->EliminatedPawn.Tags).c_str(), QuestDiagTags(Elimination->Killer.Tags).c_str(), QuestDiagTags(Elimination->EliminationSource.Tags).c_str());
+        break;
+    }
+    case EQuestVerb::Custom:
+    {
+        auto Custom = (FVerbMessage_Custom*)Message;
+        QuestLog("    verb=%s amount=%d", Custom->Verb.TagName.ToString().c_str(), Custom->Amount);
+        break;
+    }
+    case EQuestVerb::CurrencySpent:
+    {
+        auto Spent = (FFortVerbMessage_CurrencySpent*)Message;
+        QuestLog("    amount=%d specific=%d tags=[%s]", Spent->AmountSpent, (int)Spent->bIsFromSpecificEvent, QuestDiagTags(Spent->PurchaseTags.Tags).c_str());
+        break;
+    }
+    case EQuestVerb::MatchFinished:
+    {
+        auto Finished = (FFortVerbMessage_MatchFinished*)Message;
+        QuestLog("    rank=%d outlived=%d metadata=[%s]", Finished->PlayerRank, Finished->PlayersOutLived, QuestDiagTags(Finished->MatchMetaData.Tags).c_str());
+        break;
+    }
+    case EQuestVerb::PlayerReceivedGameplayEvent:
+    {
+        auto Received = (FFortVerbMessage_PlayerReceivedGameplayEvent*)Message;
+        QuestLog("    tag=%s instigator=%d target=%d magnitude=%.1f instigatortags=[%s] targettags=[%s]", Received->GameplayEventTag.TagName.ToString().c_str(), Received->bAuthorIsInstigator,
+                 Received->bAuthorIsTarget, Received->EventData.EventMagnitude, QuestDiagTags(Received->EventData.InstigatorTags).c_str(), QuestDiagTags(Received->EventData.TargetTags).c_str());
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlayerControllerAthena* PlayerController, FFortQuestStatEvent* Event, UObject* TargetObject, const FVerbProcessor* Verb,
+                                      FVerbMessage* Message)
 {
     static auto HasCompletedQuest = (bool (*)(UFortQuestItem*))(ImageBase + 0xA111AB0);
     static auto IsObjectiveInStage = (bool (*)(FFortMcpQuestObjectiveInfo*, int32, UFortQuestItemDefinition*))(ImageBase + 0xA11360C);
@@ -608,10 +1147,21 @@ static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlay
     int32 DiagConsidered = 0;
     int32 DiagMatched = 0;
     int32 DiagLogged = 0;
+    int32 DiagStructMatched = 0;
+    int32 DiagIncompatible = 0;
 
     static auto GetObjectiveCompletionCount = (int32 (*)(UFortQuestItem*, FName*))(ImageBase + 0xA10B850);
 
     auto ProfileQuests = GetProfileQuests(QuestManager);
+    auto ProductTag = GetProductTag(PlayerController);
+
+    static int32 DiagProductTag = -1;
+
+    if (DiagProductTag != ProductTag.TagName.ComparisonIndex)
+    {
+        DiagProductTag = ProductTag.TagName.ComparisonIndex;
+        QuestLog("product tag=%s player=%s", ProductTag.TagName.ToString().c_str(), QuestDiagPlayer(PlayerController).c_str());
+    }
 
     for (auto Quest : ProfileQuests)
     {
@@ -626,6 +1176,12 @@ static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlay
 
         if (!Definition)
             continue;
+
+        if (!IsCompatibleWithProduct(Definition, PlayerController, ProductTag))
+        {
+            DiagIncompatible++;
+            continue;
+        }
 
         for (auto& Objective : Definition->Objectives)
         {
@@ -660,6 +1216,7 @@ static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlay
 
             DiagConsidered++;
             QuestDiagReason = "";
+            bQuestDiagStructMatched = false;
 
             int32 Increment = 0;
 
@@ -667,20 +1224,23 @@ static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlay
             {
                 for (auto& Filter : Objective.ObjectiveFilters)
                 {
-                    if ((Increment = EvaluateObjectiveFilter(Filter, QuestManager, Objective.BackendName, PlayerController, Event, TargetObject)) > 0)
+                    if ((Increment = EvaluateObjectiveFilter(Filter, QuestManager, Objective.BackendName, PlayerController, Event, TargetObject, Verb, Message)) > 0)
                         break;
                 }
             }
-            else
+            else if (!Verb)
             {
                 bool bMatched = bHasObjectiveStat && Objective.InlineObjectiveStats.Num() <= 0 ? DoesObjectiveStatHandleMatch(&Objective.ObjectiveStatHandle, &Event->ObjectiveStat)
                                                                                               : DoesObjectiveMatchStatEvent(&Objective, Event, &ContextString);
                 Increment = bMatched ? Event->Count : 0;
             }
 
+            if (bQuestDiagStructMatched)
+                DiagStructMatched++;
+
             if (Increment <= 0)
             {
-                if (DiagLogged < 3)
+                if (DiagLogged < 3 && (!Verb || bQuestDiagStructMatched))
                 {
                     DiagLogged++;
                     QuestLog("  nomatch %s %s filters=%d first=%s legacy=%d reason=%s achieved=%d/%d", QuestDiagName(Definition).c_str(), Objective.BackendName.ToString().c_str(),
@@ -699,11 +1259,303 @@ static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlay
         }
     }
 
-    QuestLog("  result type=%d quests=%d active=%d considered=%d matched=%d pending=%d", (int)Event->Type, DiagQuests, DiagActive, DiagConsidered, DiagMatched, QuestManager->PendingChanges.Num());
+    if (!Verb)
+        QuestLog("  result type=%d quests=%d active=%d incompatible=%d considered=%d matched=%d pending=%d", (int)Event->Type, DiagQuests, DiagActive, DiagIncompatible, DiagConsidered, DiagMatched,
+                 QuestManager->PendingChanges.Num());
+    else if (DiagStructMatched > 0)
+    {
+        QuestLog("  verb %s player=%s target=%s objectives=%d matched=%d pending=%d", QuestDiagName(Verb->MessageStruct).c_str(), QuestDiagPlayer(PlayerController).c_str(), QuestDiagName(TargetObject).c_str(),
+                 DiagStructMatched, DiagMatched, QuestManager->PendingChanges.Num());
+        QuestDiagVerb(*Verb, Message);
+    }
 
     ProfileQuests.Free();
 
     return bChanged;
+}
+
+static void InitVerbMessage(FVerbMessage* Message, AFortPlayerControllerAthena* PlayerController)
+{
+    static auto GetVerbContextTags = (void (*)(UObject*, FGameplayTagContainer*))(ImageBase + 0xA4CBE90);
+    static auto SetVerbAuthor = (void (*)(FVerbMessage*, UObject*))(ImageBase + 0xA3F2A88);
+
+    GetVerbContextTags(PlayerController, &Message->ContextTags);
+    SetVerbAuthor(Message, PlayerController);
+}
+
+static void FreeVerbMessage(FVerbMessage* Message)
+{
+    FreeGameplayTags(Message->ContextTags);
+    FreeGameplayTags(Message->Author.Tags);
+}
+
+static void ProcessVerbMessage(AFortPlayerControllerAthena* PlayerController, const FVerbProcessor& Verb, FVerbMessage* Message, UObject* TargetObject)
+{
+    static auto ConstructStatEvent = (FFortQuestStatEvent* (*)(FFortQuestStatEvent*, EFortQuestObjectiveStatEvent, UObject*, FGameplayTagContainer*, FGameplayTagContainer*, FGameplayTagContainer*,
+                                                               FDataTableRowHandle*, FName, int32, FGuid*))(ImageBase + 0xA190B9C);
+    static auto DestroyStatEvent = (void (*)(FFortQuestStatEvent*))(ImageBase + 0x9060550);
+
+    auto QuestManager = PlayerController->GetQuestManager(ESubGame::Athena);
+
+    if (!QuestManager)
+        return;
+
+    LinkQuestManagerController(QuestManager, PlayerController);
+
+    FGameplayTagContainer TargetTags{};
+    FGameplayTagContainer ContextTags{};
+    ContextTags.AppendTags(Message->ContextTags);
+
+    if (auto Playlist = GetCurrentPlaylist())
+        ContextTags.AppendTags(Playlist->GameplayTagContainer);
+
+    FDataTableRowHandle EmptyObjectiveStat{};
+    FGuid EventId{};
+    alignas(16) uint8 EventStorage[sizeof(FFortQuestStatEvent)];
+
+    auto Event = ConstructStatEvent((FFortQuestStatEvent*)EventStorage, Verb.Type, TargetObject, &TargetTags, &Message->Author.Tags, &ContextTags, &EmptyObjectiveStat, FName(), 1, &EventId);
+
+    if (ProcessStatEventForQuests(QuestManager, PlayerController, Event, TargetObject, &Verb, Message))
+    {
+        ReapplyPendingChanges(QuestManager);
+        ScheduleFlush(QuestManager);
+    }
+
+    DestroyStatEvent(Event);
+    FreeGameplayTags(ContextTags);
+}
+
+static void FillDamageSubjects(FPendingDamageTaken& Pending, AFortPawn* Pawn, FSubjectTagsPair& DamageSource, FSubjectTagsPair& DamagedActor, FSubjectTagsPair& DamageType)
+{
+    static_cast<FWeakObjectPtr&>(DamageSource.Subject) = Pending.DamageSource;
+    DamageSource.Tags.AppendTags(Pending.DamageSourceTags);
+    SetSubject(&DamagedActor, Pawn);
+    DamageType.Tags.AppendTags(Pending.DamageTypeTags);
+}
+
+static void FreeDamageSubjects(FSubjectTagsPair& DamageSource, FSubjectTagsPair& DamagedActor, FSubjectTagsPair& DamageType)
+{
+    FreeGameplayTags(DamageSource.Tags);
+    FreeGameplayTags(DamagedActor.Tags);
+    FreeGameplayTags(DamageType.Tags);
+}
+
+static void SendDamageVerbs(AFortPlayerControllerAthena* PlayerController, AFortPawn* Pawn, FPendingDamageTaken& Pending, float Damage, bool bCriticalHit)
+{
+    bool bSelf = Pawn == PlayerController->Pawn;
+    bool bTeamMember = !bSelf && GetTeamAffiliation(PlayerController, Pawn) == EFortTeamAffiliation::Friendly;
+    auto DamageZone = bCriticalHit ? EFortDamageZone::Critical : EFortDamageZone::Normal;
+
+    FFortVerbMessage_DamageDone DamageDone{};
+    InitVerbMessage(&DamageDone, PlayerController);
+    FillDamageSubjects(Pending, Pawn, DamageDone.DamageSource, DamageDone.DamagedActor, DamageDone.DamageType);
+    DamageDone.Damage = Pending.Damage;
+    DamageDone.UncappedDamage = (std::max)((int32)Damage, Pending.Damage);
+    DamageDone.Distance = Pending.Distance;
+    DamageDone.DamageZone = DamageZone;
+    DamageDone.bDamageDoneToTeamMember = bTeamMember;
+    DamageDone.bDamageDoneToSelf = bSelf;
+
+    ProcessVerbMessage(PlayerController, GetVerbProcessor(EQuestVerb::DamageDone), &DamageDone, Pawn);
+
+    FreeDamageSubjects(DamageDone.DamageSource, DamageDone.DamagedActor, DamageDone.DamageType);
+    FreeVerbMessage(&DamageDone);
+
+    FFortVerbMessage_Hit Hit{};
+    InitVerbMessage(&Hit, PlayerController);
+    FillDamageSubjects(Pending, Pawn, Hit.DamageSource, Hit.DamagedActor, Hit.DamageType);
+    Hit.Distance = Pending.Distance;
+    Hit.DamageZone = DamageZone;
+    Hit.bHitTeamMember = bTeamMember;
+    Hit.bHitSelf = bSelf;
+
+    ProcessVerbMessage(PlayerController, GetVerbProcessor(EQuestVerb::Hit), &Hit, Pawn);
+
+    FreeDamageSubjects(Hit.DamageSource, Hit.DamagedActor, Hit.DamageType);
+    FreeVerbMessage(&Hit);
+}
+
+static void (*OnDamageServerOG)(AFortPawn*, float, const FGameplayTagContainer&, const FVector&, const FHitResult&, AController*, AActor*, const FGameplayEffectContextHandle&);
+static void OnDamageServer(AFortPawn* Pawn, float Damage, const FGameplayTagContainer& DamageTags, const FVector& Momentum, const FHitResult& HitInfo, AController* InstigatedBy, AActor* DamageCauser,
+                           const FGameplayEffectContextHandle& EffectContext)
+{
+    auto Context = *(FFortGameplayEffectContext**)(__int64(&EffectContext) + 0x8);
+    bool bCriticalHit = Context && Context->bIsCriticalHit;
+
+    FPendingDamageTaken Pending{};
+
+    if (PendingDamageTaken.Victim.Get() == Pawn)
+        std::swap(Pending, PendingDamageTaken);
+
+    OnDamageServerOG(Pawn, Damage, DamageTags, Momentum, HitInfo, InstigatedBy, DamageCauser, EffectContext);
+
+    auto PlayerController = ResolvePlayerController(InstigatedBy);
+
+    if (Pending.Victim.Get() == Pawn && PlayerController && ResolvePlayerController(Pending.DamageSource.Get()) == PlayerController)
+        SendDamageVerbs(PlayerController, Pawn, Pending, Damage, bCriticalHit);
+
+    FreeGameplayTags(Pending.DamageSourceTags);
+    FreeGameplayTags(Pending.DamageTypeTags);
+}
+
+static void OnVerbMessage(UScriptStruct* Struct, FVerbMessage* Message)
+{
+    static auto DamageTaken = FindFortniteGameStruct(L"FortVerbMessage_DamageTaken");
+    static std::unordered_set<UScriptStruct*> DiagSeen;
+
+    if (DiagSeen.insert(Struct).second)
+        QuestLog("verb seen %s author=%s", QuestDiagName(Struct).c_str(), QuestDiagName(Message->Author.Subject.Get()).c_str());
+
+    if (Struct == DamageTaken)
+    {
+        auto Taken = (FFortVerbMessage_DamageTaken*)Message;
+
+        FreeGameplayTags(PendingDamageTaken.DamageSourceTags);
+        FreeGameplayTags(PendingDamageTaken.DamageTypeTags);
+        PendingDamageTaken.Victim = FWeakObjectPtr();
+
+        if (!ResolvePlayerController(Taken->DamageSource.Subject.Get()))
+            return;
+
+        PendingDamageTaken.Victim = Message->Author.Subject;
+        PendingDamageTaken.DamageSource = Taken->DamageSource.Subject;
+        PendingDamageTaken.DamageSourceTags.AppendTags(Taken->DamageSource.Tags);
+        PendingDamageTaken.DamageTypeTags.AppendTags(Taken->DamageType.Tags);
+        PendingDamageTaken.Damage = Taken->Damage;
+        PendingDamageTaken.Distance = Taken->Distance;
+        return;
+    }
+
+    for (auto& Verb : GetVerbProcessors())
+    {
+        if (!Verb.bBroadcastByGame || Verb.MessageStruct != Struct)
+            continue;
+
+        if (auto PlayerController = ResolvePlayerController(Message->Author.Subject.Get()))
+            ProcessVerbMessage(PlayerController, Verb, Message, nullptr);
+
+        return;
+    }
+}
+
+static __int64 (*BroadcastVerbMessageOG)(UObject*, FVerbMessageView*);
+static __int64 BroadcastVerbMessage(UObject* Author, FVerbMessageView* View)
+{
+    auto Result = BroadcastVerbMessageOG(Author, View);
+
+    if (View && View->ScriptStruct && View->Message)
+        OnVerbMessage(View->ScriptStruct, View->Message);
+
+    return Result;
+}
+
+static bool HasGameplayEventObjective(UFortQuestManager* QuestManager, FGameplayTag EventTag)
+{
+    auto& State = GetFlushState(QuestManager);
+
+    if (!State.bGameplayEventTagsCached)
+    {
+        State.bGameplayEventTagsCached = true;
+
+        auto FilterStruct = GetVerbProcessor(EQuestVerb::PlayerReceivedGameplayEvent).FilterStruct;
+        auto ProfileQuests = GetProfileQuests(QuestManager);
+
+        for (auto Quest : ProfileQuests)
+        {
+            auto Definition = Quest ? (UFortQuestItemDefinition*)Quest->ItemDefinition : nullptr;
+
+            for (int32 i = 0; Definition && i < Definition->Objectives.Num(); i++)
+            {
+                for (auto& Filter : Definition->Objectives[i].ObjectiveFilters)
+                {
+                    if (Filter.ScriptStruct == FilterStruct && Filter.StructMemory)
+                        State.GameplayEventTags.push_back(((FFortObjectiveFilter_PlayerReceivedGameplayEvent*)Filter.StructMemory)->GameplayEventTag.TagName.ComparisonIndex);
+                }
+            }
+        }
+
+        ProfileQuests.Free();
+
+        QuestLog("gameplay event objectives qm=%p tags=%d", QuestManager, (int)State.GameplayEventTags.size());
+    }
+
+    return std::find(State.GameplayEventTags.begin(), State.GameplayEventTags.end(), EventTag.TagName.ComparisonIndex) != State.GameplayEventTags.end();
+}
+
+static void SendPlayerReceivedGameplayEvent(AFortPlayerControllerAthena* PlayerController, FGameplayTag EventTag, const FGameplayEventData& Payload)
+{
+    auto Pawn = PlayerController->Pawn;
+
+    FFortVerbMessage_PlayerReceivedGameplayEvent Received{};
+    InitVerbMessage(&Received, PlayerController);
+
+    Received.GameplayEventTag = EventTag;
+    Received.bAuthorIsInstigator = Payload.Instigator && (Payload.Instigator == Pawn || Payload.Instigator == PlayerController);
+    Received.bAuthorIsTarget = Payload.Target && (Payload.Target == Pawn || Payload.Target == PlayerController);
+
+    auto& EventData = Received.EventData;
+    EventData.EventTag = Payload.EventTag;
+    EventData.Instigator = TWeakObjectPtr<AActor>(Payload.Instigator);
+    EventData.Target = TWeakObjectPtr<AActor>(Payload.Target);
+    EventData.OptionalObject = TWeakObjectPtr<UObject>(Payload.OptionalObject);
+    EventData.OptionalObject2 = TWeakObjectPtr<UObject>(Payload.OptionalObject2);
+    EventData.InstigatorTags.AppendTags(Payload.InstigatorTags);
+    EventData.TargetTags.AppendTags(Payload.TargetTags);
+    GetSubjectTags(Payload.OptionalObject, &EventData.OptionalObject1Tags);
+    GetSubjectTags(Payload.OptionalObject2, &EventData.OptionalObject2Tags);
+    EventData.EventMagnitude = Payload.EventMagnitude;
+
+    ProcessVerbMessage(PlayerController, GetVerbProcessor(EQuestVerb::PlayerReceivedGameplayEvent), &Received, Payload.Target);
+
+    FreeGameplayTags(EventData.InstigatorTags);
+    FreeGameplayTags(EventData.TargetTags);
+    FreeGameplayTags(EventData.OptionalObject1Tags);
+    FreeGameplayTags(EventData.OptionalObject2Tags);
+    FreeVerbMessage(&Received);
+}
+
+static int32 (*HandleGameplayEventOG)(UAbilitySystemComponent*, FGameplayTag, const FGameplayEventData*);
+static int32 HandleGameplayEvent(UAbilitySystemComponent* AbilitySystemComponent, FGameplayTag EventTag, const FGameplayEventData* Payload)
+{
+    auto Result = HandleGameplayEventOG(AbilitySystemComponent, EventTag, Payload);
+    auto PlayerController = AbilitySystemComponent && Payload ? ResolvePlayerController(AbilitySystemComponent->OwnerActor) : nullptr;
+
+    if (!PlayerController)
+        return Result;
+
+    static std::unordered_set<int32> DiagSeen;
+
+    if (DiagSeen.size() < 64 && DiagSeen.insert(EventTag.TagName.ComparisonIndex).second)
+        QuestLog("gameplay event seen player=%s tag=%s", QuestDiagPlayer(PlayerController).c_str(), EventTag.TagName.ToString().c_str());
+
+    auto QuestManager = PlayerController->GetQuestManager(ESubGame::Athena);
+
+    if (QuestManager && HasGameplayEventObjective(QuestManager, EventTag))
+        SendPlayerReceivedGameplayEvent(PlayerController, EventTag, *Payload);
+
+    return Result;
+}
+
+static void SendMatchFinished(AFortPlayerControllerAthena* PlayerController)
+{
+    auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
+    auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
+
+    FFortVerbMessage_MatchFinished Finished{};
+    InitVerbMessage(&Finished, PlayerController);
+
+    Finished.MatchMetaData.Tags.AppendTags(Finished.ContextTags);
+
+    if (auto Playlist = GetCurrentPlaylist())
+        Finished.MatchMetaData.Tags.AppendTags(Playlist->GameplayTagContainer);
+
+    Finished.PlayerRank = PlayerState ? PlayerState->Place : 0;
+    Finished.PlayersOutLived = GameState && PlayerState ? (std::max)(GameState->TotalPlayers - PlayerState->Place, 0) : 0;
+
+    ProcessVerbMessage(PlayerController, GetVerbProcessor(EQuestVerb::MatchFinished), &Finished, PlayerController);
+
+    FreeGameplayTags(Finished.MatchMetaData.Tags);
+    FreeVerbMessage(&Finished);
 }
 
 static void CallMcpOperation(UFortQuestManager* QuestManager, UFortMcpProfile* Profile, UFunction* Function, void* Parms, FDedicatedServerUrlContext* Context, void (*OnComplete)(UFortQuestManager*, uint8*))
@@ -772,6 +1624,13 @@ static void OnEndBattleRoyaleGameComplete(UFortQuestManager* QuestManager, uint8
 
     HandleQuestUpdate(QuestManager, Result, It->second.EndSaveId);
     It->second.EndSaveId = -1;
+    It->second.bEndInFlight = false;
+
+    if (QuestManager->PendingChanges.Num() > 0)
+    {
+        QuestLog("  late progress after match report qm=%p pending=%d", QuestManager, QuestManager->PendingChanges.Num());
+        ScheduleFlush(QuestManager);
+    }
 
     auto PlayerController = GetPlayerController(QuestManager);
     auto Profile = GetBoundProfile(QuestManager);
@@ -832,26 +1691,24 @@ static std::wstring GetMatchId()
     return MatchId;
 }
 
-void EndBattleRoyaleGame(AFortPlayerControllerAthena* PlayerController)
+static void SendEndBattleRoyaleGame(UFortQuestManager* QuestManager, FQuestManagerFlushState& State)
 {
     static auto ProcessPendingStatEvents = (FFortQuestSaveRequest* (*)(UFortQuestManager*))(ImageBase + 0xA12E178);
     static auto EndBattleRoyaleGameV2 = UFortMcpProfileAthena::StaticClass()->FindFunction("EndBattleRoyaleGameV2");
 
-    auto QuestManager = PlayerController ? PlayerController->GetQuestManager(ESubGame::Athena) : nullptr;
-
-    if (!QuestManager || GetFlushState(QuestManager).bEnded)
-        return;
-
+    auto PlayerController = GetPlayerController(QuestManager);
     auto Profile = GetBoundProfile(QuestManager);
 
-    if (!Profile || !Profile->IsA(UFortMcpProfileAthena::StaticClass()) || !EndBattleRoyaleGameV2)
-        return;
-
-    SendStatEvent(QuestManager, PlayerController, EFortQuestObjectiveStatEvent::Finish, 1, true);
-
-    auto& State = GetFlushState(QuestManager);
     State.bEnded = true;
+
+    if (!PlayerController || !Profile || !EndBattleRoyaleGameV2)
+    {
+        QuestLog("EndBattleRoyaleGameV2 skipped qm=%p player=%p profile=%p pending=%d", QuestManager, PlayerController, Profile, QuestManager->PendingChanges.Num());
+        return;
+    }
+
     State.NextFlushTime = -1.0;
+    State.bEndInFlight = true;
 
     auto SaveRequest = ProcessPendingStatEvents(QuestManager);
     auto Playlist = GetCurrentPlaylist();
@@ -878,6 +1735,52 @@ void EndBattleRoyaleGame(AFortPlayerControllerAthena* PlayerController)
 
     Parms.PlaylistId.Free();
     Parms.MatchStats.MatchID.Free();
+}
+
+static void SendRequestedMatchReports(double Now)
+{
+    std::vector<UFortQuestManager*> QuestManagers;
+
+    for (auto& [QuestManager, State] : FlushStates)
+    {
+        if (State.bEndRequested && !State.bEnded && State.QuestManager.IsValid() && (Now < 0.0 || Now > State.EndRequestTime))
+            QuestManagers.push_back(QuestManager);
+    }
+
+    for (auto QuestManager : QuestManagers)
+        SendEndBattleRoyaleGame(QuestManager, FlushStates[QuestManager]);
+}
+
+void EndBattleRoyaleGame(AFortPlayerControllerAthena* PlayerController)
+{
+    static auto EndBattleRoyaleGameV2 = UFortMcpProfileAthena::StaticClass()->FindFunction("EndBattleRoyaleGameV2");
+
+    auto QuestManager = PlayerController ? PlayerController->GetQuestManager(ESubGame::Athena) : nullptr;
+
+    if (!QuestManager || GetFlushState(QuestManager).bEndRequested)
+        return;
+
+    auto Profile = GetBoundProfile(QuestManager);
+
+    if (!Profile || !Profile->IsA(UFortMcpProfileAthena::StaticClass()) || !EndBattleRoyaleGameV2)
+        return;
+
+    LinkQuestManagerController(QuestManager, PlayerController);
+    SendMatchFinished(PlayerController);
+
+    auto& State = GetFlushState(QuestManager);
+    State.bEndRequested = true;
+    State.EndRequestTime = UGameplayStatics::GetTimeSeconds(UWorld::GetWorld());
+
+    QuestLog("EndBattleRoyaleGameV2 requested player=%s qm=%p pending=%d", QuestDiagPlayer(PlayerController).c_str(), QuestManager, QuestManager->PendingChanges.Num());
+}
+
+static void (*HandlePawnKilledOG)(AGameModeBase*, AActor*, AController*, AFortPawn*, FGameplayTagContainer*);
+static void HandlePawnKilled(AGameModeBase* GameMode, AActor* Killer, AController* KilledController, AFortPawn* KilledPawn, FGameplayTagContainer* DeathTags)
+{
+    HandlePawnKilledOG(GameMode, Killer, KilledController, KilledPawn, DeathTags);
+
+    SendRequestedMatchReports(-1.0);
 }
 
 void SendPlacementUpdate(AFortPlayerControllerAthena* Eliminator)
@@ -1042,7 +1945,7 @@ static void QueueStatEvent(UFortQuestManager* QuestManager, EFortQuestObjectiveS
 
     BroadcastStatEvent((void*)(__int64(QuestManager) + 0x140), Event, nullptr);
 
-    if (ProcessStatEventForQuests(QuestManager, PlayerController, Event, InTargetObject))
+    if (ProcessStatEventForQuests(QuestManager, PlayerController, Event, InTargetObject, nullptr, nullptr))
     {
         ReapplyPendingChanges(QuestManager);
         ScheduleFlush(QuestManager);
@@ -1112,6 +2015,7 @@ void UFortQuestManager__Tick()
     }
 
     SendTimeElapsed(Now);
+    SendRequestedMatchReports(Now);
 
     for (auto It = FlushStates.begin(); It != FlushStates.end();)
     {
@@ -1123,7 +2027,7 @@ void UFortQuestManager__Tick()
             continue;
         }
 
-        if (!State.bEnded && !State.bUpdateInFlight && State.NextFlushTime >= 0.0 && Now >= State.NextFlushTime)
+        if ((State.bEnded || !State.bEndRequested) && !State.bEndInFlight && !State.bUpdateInFlight && State.NextFlushTime >= 0.0 && Now >= State.NextFlushTime)
         {
             State.NextFlushTime = -1.0;
             SendUpdateQuests(It->first, State);
@@ -1145,4 +2049,14 @@ void UFortQuestManager__PostLoad()
         *DisablePartialQS1InNonCampaign = 0;
 
     QuestLog("init qs1disabled after=%d", **(uint8**)(ImageBase + 0x12D3EE50));
+
+    auto HandleGameplayEventFunction = UFortAbilitySystemComponentAthena::GetDefaultObj()->VTable[0xE3];
+
+    Hook(ImageBase + 0xA3E26F8, BroadcastVerbMessage, BroadcastVerbMessageOG);
+    Hook(ImageBase + 0x9F2CCAC, OnDamageServer, OnDamageServerOG);
+    Hook(ImageBase + 0x8F96DA4, HandlePawnKilled, HandlePawnKilledOG);
+    Hook((uint64)HandleGameplayEventFunction, HandleGameplayEvent, HandleGameplayEventOG);
+
+    QuestLog("init verbs broadcast=%p damage=%p gameplayevent=%p rva=%llx processors=%d", (void*)(ImageBase + 0xA3E26F8), (void*)(ImageBase + 0x9F2CCAC), HandleGameplayEventFunction,
+             (unsigned long long)((uint64)HandleGameplayEventFunction - ImageBase), (int)GetVerbProcessors().size());
 }
