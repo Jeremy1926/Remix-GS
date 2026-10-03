@@ -40,10 +40,9 @@ void UFortGameplayCinematicWidget::OnCinematicFinished()
 
 void UFortGameplayCinematicWidget::OnStartCinematic()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartCinematic");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayCinematicWidget", "OnStartCinematic");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -73,10 +72,9 @@ void UFortGameplayIntroPanelWidget::OnIntroFinished()
 
 void UFortGameplayIntroPanelWidget::OnStartIntro()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartIntro");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayIntroPanelWidget", "OnStartIntro");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -87,10 +85,9 @@ void UFortGameplayIntroPanelWidget::OnStartIntro()
 
 void UFortGameplayIntroPanelWidget::OnWaitingForMinTime()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWaitingForMinTime");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayIntroPanelWidget", "OnWaitingForMinTime");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -101,10 +98,9 @@ void UFortGameplayIntroPanelWidget::OnWaitingForMinTime()
 
 void UFortGameplayIntroPanelWidget::OnWaitingForPawn()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWaitingForPawn");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayIntroPanelWidget", "OnWaitingForPawn");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -115,10 +111,9 @@ void UFortGameplayIntroPanelWidget::OnWaitingForPawn()
 
 void UFortGameplayIntroPanelWidget::OnWaitingForReadyForGameplay()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWaitingForReadyForGameplay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayIntroPanelWidget", "OnWaitingForReadyForGameplay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -133,10 +128,9 @@ void UFortGameplayIntroPanelWidget::OnWaitingForReadyForGameplay()
 
 void USpecialEventCursorWidget::BP_OnCursorModeChanged(class USpecialEventCursorPawnComponent* InCursorPawnComponent, const struct FGameplayTag& NewCursorModeTag, const struct FGameplayTag& OldCursorModeTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCursorModeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventCursorWidget", "BP_OnCursorModeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SpecialEventCursorWidget_BP_OnCursorModeChanged Parms{};
 
@@ -157,10 +151,9 @@ void USpecialEventCursorWidget::BP_OnCursorModeChanged(class USpecialEventCursor
 
 void USpecialEventCursorWidget::BP_OnDesiredVisibilityChanged(class USpecialEventCursorPawnComponent* InCursorPawnComponent, const struct FGameplayTag& CursorModeTag, const bool bShouldBeVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDesiredVisibilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventCursorWidget", "BP_OnDesiredVisibilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SpecialEventCursorWidget_BP_OnDesiredVisibilityChanged Parms{};
 
@@ -239,10 +232,9 @@ void USpecialEventCursorWidget::OnDesiredVisibilityChanged(class USpecialEventCu
 
 void USpecialEventCursorWidget::OnViewportLocationChanged(class USpecialEventCursorPawnComponent* InCursorPawnComponent, const struct FVector2D& NormalizedLocation, const struct FVector2D& ViewportLocation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnViewportLocationChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventCursorWidget", "OnViewportLocationChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SpecialEventCursorWidget_OnViewportLocationChanged Parms{};
 

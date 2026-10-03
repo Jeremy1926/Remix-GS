@@ -51,10 +51,9 @@ struct FVector UFortMovementMode_ClamberingRuntimeData::GetSyncPosition() const
 
 void UFortMovementMode_ExtClambering::BP_GetAnimationMontageInformation(const struct FClamberMontageInput& Context, class UAnimMontage** AnimMontage, class FName* StartSectionName, class FName* MontageMiddleSectionName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetAnimationMontageInformation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtClambering", "BP_GetAnimationMontageInformation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtClambering_BP_GetAnimationMontageInformation Parms{};
 
@@ -81,10 +80,9 @@ void UFortMovementMode_ExtClambering::BP_GetAnimationMontageInformation(const st
 
 void AInstancedLedgeActor::BP_OnAddInstance(const struct FTransform& LedgeTransform, int32 InstanceIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnAddInstance");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InstancedLedgeActor", "BP_OnAddInstance");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InstancedLedgeActor_BP_OnAddInstance Parms{};
 
@@ -103,10 +101,9 @@ void AInstancedLedgeActor::BP_OnAddInstance(const struct FTransform& LedgeTransf
 
 void AInstancedLedgeActor::BP_OnRemoveInstance(const struct FTransform& LedgeTransform, int32 InstanceIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnRemoveInstance");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InstancedLedgeActor", "BP_OnRemoveInstance");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InstancedLedgeActor_BP_OnRemoveInstance Parms{};
 
@@ -162,10 +159,9 @@ void ULedgeLaunchWorldSubsystem::OnWallDied(float Damage, const struct FGameplay
 
 void UClamberingComponent::BP_HandleClamberingStateChanged(const EClamberingState OldClamberingState, const EClamberingState NewClamberingState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleClamberingStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "BP_HandleClamberingStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ClamberingComponent_BP_HandleClamberingStateChanged Parms{};
 
@@ -183,10 +179,9 @@ void UClamberingComponent::BP_HandleClamberingStateChanged(const EClamberingStat
 
 void UClamberingComponent::BP_HandleSynchedActionStarted(const struct FSynchedActionInfo& SynchedActionInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleSynchedActionStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "BP_HandleSynchedActionStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ClamberingComponent_BP_HandleSynchedActionStarted Parms{};
 
@@ -201,10 +196,9 @@ void UClamberingComponent::BP_HandleSynchedActionStarted(const struct FSynchedAc
 
 void UClamberingComponent::BP_OnMMEStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnMMEStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "BP_OnMMEStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -242,10 +236,9 @@ void UClamberingComponent::DrawDebugHUD(class AHUD* HUD, class UCanvas* Canvas)
 
 void UClamberingComponent::HandleClamberingTargetInActivationRange()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleClamberingTargetInActivationRange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "HandleClamberingTargetInActivationRange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -256,10 +249,9 @@ void UClamberingComponent::HandleClamberingTargetInActivationRange()
 
 void UClamberingComponent::HandleClamberingTargetOutOfActivationRange()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleClamberingTargetOutOfActivationRange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "HandleClamberingTargetOutOfActivationRange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -508,10 +500,9 @@ void UClamberingComponent::HandleTargetActorHealthChanged()
 
 void UClamberingComponent::HandleTargetingDataInvalid()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTargetingDataInvalid");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "HandleTargetingDataInvalid");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -524,10 +515,9 @@ void UClamberingComponent::HandleTargetingDataInvalid()
 
 void UClamberingComponent::HandleTargetingDataValid(const struct FClamberingTargetingData& TargetingData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTargetingDataValid");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "HandleTargetingDataValid");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ClamberingComponent_HandleTargetingDataValid Parms{};
 
@@ -734,10 +724,9 @@ void UClamberingComponent::UnregisterMutatorUpdatedDelegate()
 
 void UClamberingComponent::BP_CanStartClambering(bool* bCanStartClambering) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CanStartClambering");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "BP_CanStartClambering");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ClamberingComponent_BP_CanStartClambering Parms{};
 
@@ -755,10 +744,9 @@ void UClamberingComponent::BP_CanStartClambering(bool* bCanStartClambering) cons
 
 void UClamberingComponent::BP_CanStartTargeting(bool* bCanStartTargeting) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CanStartTargeting");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "BP_CanStartTargeting");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ClamberingComponent_BP_CanStartTargeting Parms{};
 
@@ -777,10 +765,9 @@ void UClamberingComponent::BP_CanStartTargeting(bool* bCanStartTargeting) const
 
 void UClamberingComponent::BP_IsValidTargetActor(const class AActor* TargetActor, bool* bIsValidTargetActor) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_IsValidTargetActor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "BP_IsValidTargetActor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ClamberingComponent_BP_IsValidTargetActor Parms{};
 
@@ -798,10 +785,9 @@ void UClamberingComponent::BP_IsValidTargetActor(const class AActor* TargetActor
 
 void UClamberingComponent::BP_TutorialModeDisabled() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_TutorialModeDisabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "BP_TutorialModeDisabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -812,10 +798,9 @@ void UClamberingComponent::BP_TutorialModeDisabled() const
 
 void UClamberingComponent::BP_TutorialModeEnabled() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_TutorialModeEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClamberingComponent", "BP_TutorialModeEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

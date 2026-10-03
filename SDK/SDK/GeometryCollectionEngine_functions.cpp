@@ -1104,10 +1104,9 @@ void UGeometryCollectionComponent::OnRep_RepStateData()
 
 void UGeometryCollectionComponent::ReceivePhysicsCollision(const struct FChaosPhysicsCollisionInfo& CollisionInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePhysicsCollision");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GeometryCollectionComponent", "ReceivePhysicsCollision");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GeometryCollectionComponent_ReceivePhysicsCollision Parms{};
 

@@ -259,10 +259,9 @@ void UNPCBehaviorComponentData::HandleMinigameStateChanged(class AFortMinigame* 
 
 void UNPCCharacterModifier::BP_ModifySpawnComponentList(class UFortAthenaAISpawnerDataComponentList* OutList, class UObject* ComponentOuter)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_ModifySpawnComponentList");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NPCCharacterModifier", "BP_ModifySpawnComponentList");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NPCCharacterModifier_BP_ModifySpawnComponentList Parms{};
 
@@ -285,10 +284,9 @@ void UNPCCharacterModifier::BP_ModifySpawnComponentList(class UFortAthenaAISpawn
 
 void UNPCCharacterModifier::BP_OnPostSpawned(class AFortPawn* Pawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnPostSpawned");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NPCCharacterModifier", "BP_OnPostSpawned");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NPCCharacterModifier_BP_OnPostSpawned Parms{};
 
@@ -310,10 +308,9 @@ void UNPCCharacterModifier::BP_OnPostSpawned(class AFortPawn* Pawn)
 
 void UNPCCharacterModifier::BP_OnPreSpawned(class AFortPawn* Pawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnPreSpawned");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NPCCharacterModifier", "BP_OnPreSpawned");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NPCCharacterModifier_BP_OnPreSpawned Parms{};
 
@@ -335,10 +332,9 @@ void UNPCCharacterModifier::BP_OnPreSpawned(class AFortPawn* Pawn)
 
 void UNPCCharacterModifier::BP_OnSpawned(class AFortPawn* Pawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnSpawned");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NPCCharacterModifier", "BP_OnSpawned");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NPCCharacterModifier_BP_OnSpawned Parms{};
 
@@ -361,10 +357,9 @@ void UNPCCharacterModifier::BP_OnSpawned(class AFortPawn* Pawn)
 
 EDataValidationResult UNPCCharacterModifier::BP_IsDataValid(TArray<class FText>* OutErrorMessages) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_IsDataValid");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NPCCharacterModifier", "BP_IsDataValid");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NPCCharacterModifier_BP_IsDataValid Parms{};
 
@@ -389,10 +384,9 @@ EDataValidationResult UNPCCharacterModifier::BP_IsDataValid(TArray<class FText>*
 
 bool UNPCCharacterModifier::BP_IsNeededForPreview() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_IsNeededForPreview");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NPCCharacterModifier", "BP_IsNeededForPreview");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NPCCharacterModifier_BP_IsNeededForPreview Parms{};
 
@@ -1065,10 +1059,9 @@ const TArray<class UNPCCharacterModifier*> UNPCCharacterDefinitionComponent::Get
 
 void UNPCCharacterModifier_CosmeticSpawn::K2_OnCharacterCosmeticChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnCharacterCosmeticChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NPCCharacterModifier_CosmeticSpawn", "K2_OnCharacterCosmeticChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1106,10 +1099,9 @@ TSoftObjectPtr<class UAthenaCharacterItemDefinition> UNPCCharacterModifier_Cosme
 
 TArray<struct FNPCCustomEffect> UNPCCharacterModifier_Effects::GetCustomEffects() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCustomEffects");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NPCCharacterModifier_Effects", "GetCustomEffects");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NPCCharacterModifier_Effects_GetCustomEffects Parms{};
 
@@ -1127,10 +1119,9 @@ TArray<struct FNPCCustomEffect> UNPCCharacterModifier_Effects::GetCustomEffects(
 
 class AFortAthenaPatrolPath* UNPCCharacterModifier_PatrolPath::GetPatrolPathToAssign(class AActor* ModifierOwner)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPatrolPathToAssign");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NPCCharacterModifier_PatrolPath", "GetPatrolPathToAssign");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NPCCharacterModifier_PatrolPath_GetPatrolPathToAssign Parms{};
 
@@ -1150,10 +1141,9 @@ class AFortAthenaPatrolPath* UNPCCharacterModifier_PatrolPath::GetPatrolPathToAs
 
 bool UNPCCharacterType::IsPlayerCharacterRequired(const ECharacterLook CharacterLook) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsPlayerCharacterRequired");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NPCCharacterType", "IsPlayerCharacterRequired");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NPCCharacterType_IsPlayerCharacterRequired Parms{};
 

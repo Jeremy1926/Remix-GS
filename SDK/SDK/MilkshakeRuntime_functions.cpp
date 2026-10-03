@@ -131,10 +131,9 @@ void UMilkshakeControllerComponent::UpdateNearbyBuildingActors()
 
 float AMilkshakeEarthquakeActor::GetNormalizedMagnitudeAtLocation(const struct FVector& Location)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetNormalizedMagnitudeAtLocation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MilkshakeEarthquakeActor", "GetNormalizedMagnitudeAtLocation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MilkshakeEarthquakeActor_GetNormalizedMagnitudeAtLocation Parms{};
 
@@ -153,10 +152,9 @@ float AMilkshakeEarthquakeActor::GetNormalizedMagnitudeAtLocation(const struct F
 
 void AMilkshakeEarthquakeActor::OnActorRemovedFromAsyncOverlappedActors(class AActor* RemovedActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActorRemovedFromAsyncOverlappedActors");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MilkshakeEarthquakeActor", "OnActorRemovedFromAsyncOverlappedActors");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MilkshakeEarthquakeActor_OnActorRemovedFromAsyncOverlappedActors Parms{};
 
@@ -236,10 +234,9 @@ void AMilkshakeEarthquakeActor::TickEarthquakePhysicsActorForces(const float Del
 
 float AMilkshakeEarthquakeActor::GetRadius() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetRadius");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MilkshakeEarthquakeActor", "GetRadius");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MilkshakeEarthquakeActor_GetRadius Parms{};
 

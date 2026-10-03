@@ -94,10 +94,9 @@ void UCustomControlOptions_Base::AddGameplayEffectWithMagnitude(TSubclassOf<clas
 
 void UCustomControlOptions_Base::BP_OnActivate()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnActivate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CustomControlOptions_Base", "BP_OnActivate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -108,10 +107,9 @@ void UCustomControlOptions_Base::BP_OnActivate()
 
 void UCustomControlOptions_Base::BP_OnDeactivate()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDeactivate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CustomControlOptions_Base", "BP_OnDeactivate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -124,10 +122,9 @@ void UCustomControlOptions_Base::BP_OnDeactivate()
 
 bool UCustomControlOptions_Base::UsesCursor()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UsesCursor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CustomControlOptions_Base", "UsesCursor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CustomControlOptions_Base_UsesCursor Parms{};
 
@@ -175,10 +172,9 @@ class UFortControllerComponent_CustomControls* UCustomControlOptions_Base::GetOw
 
 void UCustomControlOptions_Targeting::BP_InitFilteringTask(const class UTargetingFilter_CC_Base* FilteringTask, ETargetingPresetType PresetType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_InitFilteringTask");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CustomControlOptions_Targeting", "BP_InitFilteringTask");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CustomControlOptions_Targeting_BP_InitFilteringTask Parms{};
 
@@ -197,10 +193,9 @@ void UCustomControlOptions_Targeting::BP_InitFilteringTask(const class UTargetin
 
 void UCustomControlOptions_Targeting::BP_InitSelectionTask(const class UTargetingSelection_CC_Base* SelectionTask, ETargetingPresetType PresetType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_InitSelectionTask");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CustomControlOptions_Targeting", "BP_InitSelectionTask");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CustomControlOptions_Targeting_BP_InitSelectionTask Parms{};
 
@@ -219,10 +214,9 @@ void UCustomControlOptions_Targeting::BP_InitSelectionTask(const class UTargetin
 
 void UCustomControlOptions_Targeting::BP_InitSortingTask(const class UTargetingSort_CC_Base* SortingTask, ETargetingPresetType PresetType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_InitSortingTask");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CustomControlOptions_Targeting", "BP_InitSortingTask");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CustomControlOptions_Targeting_BP_InitSortingTask Parms{};
 

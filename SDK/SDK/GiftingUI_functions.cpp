@@ -104,10 +104,9 @@ void UAthenaGiftingConfirmationScreen::HandleTokenOfferPurchaseComplete(bool bSu
 
 void UAthenaGiftingConfirmationScreen::OnPresentationModeChanged(EGiftingPresentationMode NewMode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPresentationModeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingConfirmationScreen", "OnPresentationModeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaGiftingConfirmationScreen_OnPresentationModeChanged Parms{};
 
@@ -124,10 +123,9 @@ void UAthenaGiftingConfirmationScreen::OnPresentationModeChanged(EGiftingPresent
 
 void UAthenaGiftingErrorsPanel::UpdateGiftEligibility(bool bStillGiftable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateGiftEligibility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingErrorsPanel", "UpdateGiftEligibility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaGiftingErrorsPanel_UpdateGiftEligibility Parms{};
 
@@ -144,10 +142,9 @@ void UAthenaGiftingErrorsPanel::UpdateGiftEligibility(bool bStillGiftable)
 
 void UAthenaGiftingPriceWidget::SetPresentationMode(EGiftingPricePresentationMode Mode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetPresentationMode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingPriceWidget", "SetPresentationMode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaGiftingPriceWidget_SetPresentationMode Parms{};
 
@@ -162,10 +159,9 @@ void UAthenaGiftingPriceWidget::SetPresentationMode(EGiftingPricePresentationMod
 
 void UAthenaGiftingPurchasePanel::PlayIntroAnimation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayIntroAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingPurchasePanel", "PlayIntroAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -179,10 +175,9 @@ void UAthenaGiftingPurchasePanel::PlayIntroAnimation()
 
 void UAthenaGiftingScreen::BlockScreenContent(const bool bBlockScreen, const class FText& ContentBlockedText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlockScreenContent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingScreen", "BlockScreenContent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaGiftingScreen_BlockScreenContent Parms{};
 
@@ -200,10 +195,9 @@ void UAthenaGiftingScreen::BlockScreenContent(const bool bBlockScreen, const cla
 
 void UAthenaGiftingScreen::OnFilterChanged(EFilterType FilterType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFilterChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingScreen", "OnFilterChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaGiftingScreen_OnFilterChanged Parms{};
 
@@ -218,10 +212,9 @@ void UAthenaGiftingScreen::OnFilterChanged(EFilterType FilterType)
 
 void UAthenaGiftingScreen::OnFriendSelectionChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFriendSelectionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingScreen", "OnFriendSelectionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -234,10 +227,9 @@ void UAthenaGiftingScreen::OnFriendSelectionChanged()
 
 void UAthenaGiftingScreen::OnHandlePreviewItem(bool bUseWidePreview)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHandlePreviewItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingScreen", "OnHandlePreviewItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaGiftingScreen_OnHandlePreviewItem Parms{};
 
@@ -254,10 +246,9 @@ void UAthenaGiftingScreen::OnHandlePreviewItem(bool bUseWidePreview)
 
 void UAthenaGiftingScreen::OnPartyListUpdated(bool bEmpty)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPartyListUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingScreen", "OnPartyListUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaGiftingScreen_OnPartyListUpdated Parms{};
 
@@ -274,10 +265,9 @@ void UAthenaGiftingScreen::OnPartyListUpdated(bool bEmpty)
 
 void UAthenaGiftingScreen::OnPresentationModeChanged(EGiftingScreenPresentationMode Mode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPresentationModeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingScreen", "OnPresentationModeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaGiftingScreen_OnPresentationModeChanged Parms{};
 
@@ -295,10 +285,9 @@ void UAthenaGiftingScreen::OnPresentationModeChanged(EGiftingScreenPresentationM
 
 void UAthenaGiftingScreen::OnSetupFilterTabButton(class UCommonButtonBase* Button, EFilterType FilterType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetupFilterTabButton");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingScreen", "OnSetupFilterTabButton");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaGiftingScreen_OnSetupFilterTabButton Parms{};
 
@@ -314,10 +303,9 @@ void UAthenaGiftingScreen::OnSetupFilterTabButton(class UCommonButtonBase* Butto
 
 void UAthenaGiftingScreen::OnShownItemChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShownItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingScreen", "OnShownItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -330,10 +318,9 @@ void UAthenaGiftingScreen::OnShownItemChanged()
 
 void UAthenaGiftingScreen::OnShowSearchWarningText(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowSearchWarningText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaGiftingScreen", "OnShowSearchWarningText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaGiftingScreen_OnShowSearchWarningText Parms{};
 
@@ -351,10 +338,9 @@ void UAthenaGiftingScreen::OnShowSearchWarningText(bool bShow)
 
 void UFortGiftingSocialUserListEntry::BP_OnHighlightedStateChanged(bool bInIsHighlighted, bool bPlayAnimation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnHighlightedStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGiftingSocialUserListEntry", "BP_OnHighlightedStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGiftingSocialUserListEntry_BP_OnHighlightedStateChanged Parms{};
 
@@ -370,10 +356,9 @@ void UFortGiftingSocialUserListEntry::BP_OnHighlightedStateChanged(bool bInIsHig
 
 void UFortGiftingSocialUserListEntry::BP_OnTouchSelectionConfirmed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTouchSelectionConfirmed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGiftingSocialUserListEntry", "BP_OnTouchSelectionConfirmed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -384,10 +369,9 @@ void UFortGiftingSocialUserListEntry::BP_OnTouchSelectionConfirmed()
 
 void UFortGiftingSocialUserListEntry::OnRecipientStatusUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRecipientStatusUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGiftingSocialUserListEntry", "OnRecipientStatusUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -398,10 +382,9 @@ void UFortGiftingSocialUserListEntry::OnRecipientStatusUpdated()
 
 void UFortGiftingSocialUserListEntry::OnUserItemSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUserItemSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGiftingSocialUserListEntry", "OnUserItemSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -414,10 +397,9 @@ void UFortGiftingSocialUserListEntry::OnUserItemSet()
 
 void UFortGiftingSocialUserListEntry::SetPresentationMode(ERecipientPresentationMode Mode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetPresentationMode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGiftingSocialUserListEntry", "SetPresentationMode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGiftingSocialUserListEntry_SetPresentationMode Parms{};
 
@@ -505,10 +487,9 @@ void UFortGiftingUserSearchWidget::HandleSearchFriendsTextEntered(const class FT
 
 void UFortGiftingUserSearchWidget::OnSearchCommit(bool bSearchStringShort)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSearchCommit");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGiftingUserSearchWidget", "OnSearchCommit");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGiftingUserSearchWidget_OnSearchCommit Parms{};
 

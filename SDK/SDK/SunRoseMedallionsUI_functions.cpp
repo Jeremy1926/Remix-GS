@@ -50,10 +50,9 @@ void USunRoseMedallionsInfoWidget::HandleGameplayTagEvent(const struct FGameplay
 
 void USunRoseMedallionsInfoWidget::OnMedallionTagChanged(class AFortPlayerStateAthena* InPlayerState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMedallionTagChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SunRoseMedallionsInfoWidget", "OnMedallionTagChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SunRoseMedallionsInfoWidget_OnMedallionTagChanged Parms{};
 
@@ -71,10 +70,9 @@ void USunRoseMedallionsInfoWidget::OnMedallionTagChanged(class AFortPlayerStateA
 
 void USunRoseMedallionsInfoWidget::OnPlayerDead(class AFortPlayerStateAthena* PSA, bool bIsDead)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerDead");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SunRoseMedallionsInfoWidget", "OnPlayerDead");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SunRoseMedallionsInfoWidget_OnPlayerDead Parms{};
 

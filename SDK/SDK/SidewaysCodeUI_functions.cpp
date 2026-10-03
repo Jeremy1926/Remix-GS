@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void USidewaysWidgetBase::ConfigureUIFromPlayspace(class ASidewaysPlayspace* Playspace)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ConfigureUIFromPlayspace");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SidewaysWidgetBase", "ConfigureUIFromPlayspace");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SidewaysWidgetBase_ConfigureUIFromPlayspace Parms{};
 
@@ -66,10 +65,9 @@ void USidewaysWidgetBase::HandleFortPawnChanged(class AFortPawn* PossessedPawn)
 
 void USidewaysWidgetBase::InitializeVariables()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InitializeVariables");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SidewaysWidgetBase", "InitializeVariables");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -82,10 +80,9 @@ void USidewaysWidgetBase::InitializeVariables()
 
 void USidewaysWidgetBase::OnEnterSideways(class ASidewaysPlayspace* Playspace)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEnterSideways");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SidewaysWidgetBase", "OnEnterSideways");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SidewaysWidgetBase_OnEnterSideways Parms{};
 
@@ -100,10 +97,9 @@ void USidewaysWidgetBase::OnEnterSideways(class ASidewaysPlayspace* Playspace)
 
 void USidewaysWidgetBase::OnExitSideways()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExitSideways");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SidewaysWidgetBase", "OnExitSideways");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -116,10 +112,9 @@ void USidewaysWidgetBase::OnExitSideways()
 
 void USidewaysWidgetBase::OnParamUpdated(const struct FGameplayTag& UpdatedParam)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnParamUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SidewaysWidgetBase", "OnParamUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SidewaysWidgetBase_OnParamUpdated Parms{};
 
@@ -168,10 +163,9 @@ void USidewaysWidgetBase::OnSidewaysStateChanged(class USidewaysStateComponent* 
 
 bool USidewaysWidgetBase::IsValidPlayspace(class ASidewaysPlayspace* Playspace) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsValidPlayspace");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SidewaysWidgetBase", "IsValidPlayspace");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SidewaysWidgetBase_IsValidPlayspace Parms{};
 

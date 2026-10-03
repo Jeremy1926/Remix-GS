@@ -267,10 +267,9 @@ void UPropGunFunctionLibrary::UpdatePropPreviewPosition(class USceneComponent* P
 
 void AReactorGradeGameplayCue_ChargeUp::OnEndPointUpdated(const struct FVector& FoundPoint)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEndPointUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ReactorGradeGameplayCue_ChargeUp", "OnEndPointUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ReactorGradeGameplayCue_ChargeUp_OnEndPointUpdated Parms{};
 

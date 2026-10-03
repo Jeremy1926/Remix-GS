@@ -98,10 +98,9 @@ bool UMatchObjectivesBonusEntryWidget::HasBeenCompleted()
 
 void UMatchObjectivesBonusEntryWidget::OnBonusRewardEntrySet(int32 Quantity)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBonusRewardEntrySet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesBonusEntryWidget", "OnBonusRewardEntrySet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MatchObjectivesBonusEntryWidget_OnBonusRewardEntrySet Parms{};
 
@@ -118,10 +117,9 @@ void UMatchObjectivesBonusEntryWidget::OnBonusRewardEntrySet(int32 Quantity)
 
 void UMatchObjectivesBonusEntryWidget::UpdateBonusRewardCompleteState(bool GoalIsCompleted)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateBonusRewardCompleteState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesBonusEntryWidget", "UpdateBonusRewardCompleteState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MatchObjectivesBonusEntryWidget_UpdateBonusRewardCompleteState Parms{};
 
@@ -136,10 +134,9 @@ void UMatchObjectivesBonusEntryWidget::UpdateBonusRewardCompleteState(bool GoalI
 
 void UMatchObjectivesBonusPunchWidget::OnWidgetPipsStateUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWidgetPipsStateUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesBonusPunchWidget", "OnWidgetPipsStateUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -153,10 +150,9 @@ void UMatchObjectivesBonusPunchWidget::OnWidgetPipsStateUpdated()
 
 void UMatchObjectivesBonusPunchWidget::UpdateTimerState(const bool bIsTimerValid, const EAthenaChallengeTimerState TimerState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateTimerState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesBonusPunchWidget", "UpdateTimerState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MatchObjectivesBonusPunchWidget_UpdateTimerState Parms{};
 
@@ -200,10 +196,9 @@ bool UMatchObjectivesBonusPunchWidget::CheckPunchcardsCompletion() const
 
 void UMatchObjectivesOptionEntryWidget::OnDailyObjectiveCountUpdated(const int32 ObjectiveCount, const int32 NumCompleted)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDailyObjectiveCountUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesOptionEntryWidget", "OnDailyObjectiveCountUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MatchObjectivesOptionEntryWidget_OnDailyObjectiveCountUpdated Parms{};
 
@@ -224,10 +219,9 @@ void UMatchObjectivesOptionEntryWidget::OnDailyObjectiveCountUpdated(const int32
 
 void UMatchObjectivesOptionEntryWidget::OnDailyObjectiveEntrySetup(const class UAthenaDailyQuestDefinition* DailyQuestData, const struct FFortItemQuantityPair& VisibleReward, const int32 ObjectiveCount, const int32 NumCompleted)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDailyObjectiveEntrySetup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesOptionEntryWidget", "OnDailyObjectiveEntrySetup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MatchObjectivesOptionEntryWidget_OnDailyObjectiveEntrySetup Parms{};
 
@@ -249,10 +243,9 @@ void UMatchObjectivesOptionEntryWidget::OnDailyObjectiveEntrySetup(const class U
 
 void UMatchObjectivesOptionEntryWidget::OnMatchObjectiveEntrySetup(const struct FUrgentQuestData& UrgentQuestData, const struct FFortItemQuantityPair& VisibleReward, const int32 ObjectiveCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMatchObjectiveEntrySetup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesOptionEntryWidget", "OnMatchObjectiveEntrySetup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MatchObjectivesOptionEntryWidget_OnMatchObjectiveEntrySetup Parms{};
 
@@ -271,10 +264,9 @@ void UMatchObjectivesOptionEntryWidget::OnMatchObjectiveEntrySetup(const struct 
 
 void UMatchObjectivesOptionEntryWidget::OnOptionFocusedStateChanged(bool bIsFocused)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOptionFocusedStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesOptionEntryWidget", "OnOptionFocusedStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MatchObjectivesOptionEntryWidget_OnOptionFocusedStateChanged Parms{};
 
@@ -291,10 +283,9 @@ void UMatchObjectivesOptionEntryWidget::OnOptionFocusedStateChanged(bool bIsFocu
 
 void UMatchObjectivesOptionEntryWidget::OnOptionSelectedStateChanged(bool bIsSelected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOptionSelectedStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesOptionEntryWidget", "OnOptionSelectedStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MatchObjectivesOptionEntryWidget_OnOptionSelectedStateChanged Parms{};
 
@@ -311,10 +302,9 @@ void UMatchObjectivesOptionEntryWidget::OnOptionSelectedStateChanged(bool bIsSel
 
 void UMatchObjectivesOptionEntryWidget::OnTeammateSelectionUpdated(const TArray<class AFortPlayerState*>& PlayersThatHaveSelectedThis)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTeammateSelectionUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesOptionEntryWidget", "OnTeammateSelectionUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MatchObjectivesOptionEntryWidget_OnTeammateSelectionUpdated Parms{};
 
@@ -404,10 +394,9 @@ void AMatchObjectivesUIDirectorBase::HandleSkydiveModeChanged(ESkydiveFeedbackPh
 
 void AMatchObjectivesUIDirectorBase::OnFinishSkydiving()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFinishSkydiving");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesUIDirectorBase", "OnFinishSkydiving");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -420,10 +409,9 @@ void AMatchObjectivesUIDirectorBase::OnFinishSkydiving()
 
 void UMatchObjectivesSelectorWidget::BP_OnBonusPunchcardsLoaded(bool bAllPunchcardsCompleted)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnBonusPunchcardsLoaded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesSelectorWidget", "BP_OnBonusPunchcardsLoaded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MatchObjectivesSelectorWidget_BP_OnBonusPunchcardsLoaded Parms{};
 
@@ -459,10 +447,9 @@ void UMatchObjectivesSelectorWidget::GetDailyChallengesFromMCP()
 
 void UMatchObjectivesSelectorWidget::OnQuestEntrySelected(class UUserWidget* SelectedEntry)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQuestEntrySelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesSelectorWidget", "OnQuestEntrySelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MatchObjectivesSelectorWidget_OnQuestEntrySelected Parms{};
 
@@ -477,10 +464,9 @@ void UMatchObjectivesSelectorWidget::OnQuestEntrySelected(class UUserWidget* Sel
 
 void UMatchObjectivesSelectorWidget::OnSelectorOpenStateChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSelectorOpenStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MatchObjectivesSelectorWidget", "OnSelectorOpenStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

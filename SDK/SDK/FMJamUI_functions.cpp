@@ -96,10 +96,9 @@ void UJamUIManagerComponent_SongIndicators::RebuildJamSongIndicatorsForPlayspace
 
 void UJamSongIndicator::OnDistanceChanged(int32 Distance)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDistanceChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamSongIndicator", "OnDistanceChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JamSongIndicator_OnDistanceChanged Parms{};
 
@@ -117,10 +116,9 @@ void UJamSongIndicator::OnDistanceChanged(int32 Distance)
 
 void UJamSongIndicator::OnInitInfo(const class UCatalogData* Song, EFMJamLoopType Type)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInitInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamSongIndicator", "OnInitInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JamSongIndicator_OnInitInfo Parms{};
 
@@ -138,10 +136,9 @@ void UJamSongIndicator::OnInitInfo(const class UCatalogData* Song, EFMJamLoopTyp
 
 void UJamSongIndicator::OnScreenClampChanged(bool bIsClamped)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnScreenClampChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamSongIndicator", "OnScreenClampChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JamSongIndicator_OnScreenClampChanged Parms{};
 

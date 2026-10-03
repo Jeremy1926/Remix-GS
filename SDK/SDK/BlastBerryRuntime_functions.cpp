@@ -323,10 +323,9 @@ void UFortControllerComponent_BlastBerry::HandleViewTargetChanged(class AFortPla
 
 void UFortControllerComponent_BlastBerry::LocalHandlePreRespawn(const struct FVector& RespawnLocation, const struct FRotator& RespawnRotation, float RespawnCameraDist)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"LocalHandlePreRespawn");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortControllerComponent_BlastBerry", "LocalHandlePreRespawn");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortControllerComponent_BlastBerry_LocalHandlePreRespawn Parms{};
 

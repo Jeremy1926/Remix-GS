@@ -1076,10 +1076,9 @@ void AVehicleCosmeticsActor::BoostStarted()
 
 void AVehicleCosmeticsActor::BP_OnBonusSpeedActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnBonusSpeedActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsActor", "BP_OnBonusSpeedActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1090,10 +1089,9 @@ void AVehicleCosmeticsActor::BP_OnBonusSpeedActivated()
 
 void AVehicleCosmeticsActor::BP_OnBonusSpeedDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnBonusSpeedDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsActor", "BP_OnBonusSpeedDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1104,10 +1102,9 @@ void AVehicleCosmeticsActor::BP_OnBonusSpeedDeactivated()
 
 void AVehicleCosmeticsActor::BP_OnBoostFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnBoostFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsActor", "BP_OnBoostFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1118,10 +1115,9 @@ void AVehicleCosmeticsActor::BP_OnBoostFinished()
 
 void AVehicleCosmeticsActor::BP_OnBoostStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnBoostStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsActor", "BP_OnBoostStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1135,10 +1131,9 @@ void AVehicleCosmeticsActor::BP_OnBoostStarted()
 
 void AVehicleCosmeticsActor::BP_OnColorReady(class FName Color, const struct FVehicleCosmeticsAdditionalParameterInfos& AdditionalInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnColorReady");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsActor", "BP_OnColorReady");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VehicleCosmeticsActor_BP_OnColorReady Parms{};
 
@@ -1154,10 +1149,9 @@ void AVehicleCosmeticsActor::BP_OnColorReady(class FName Color, const struct FVe
 
 void AVehicleCosmeticsActor::BP_OnCosmeticApplied()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCosmeticApplied");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsActor", "BP_OnCosmeticApplied");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1168,10 +1162,9 @@ void AVehicleCosmeticsActor::BP_OnCosmeticApplied()
 
 void AVehicleCosmeticsActor::BP_OnDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsActor", "BP_OnDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1182,10 +1175,9 @@ void AVehicleCosmeticsActor::BP_OnDeactivated()
 
 void AVehicleCosmeticsActor::BP_OnDriftFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDriftFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsActor", "BP_OnDriftFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1196,10 +1188,9 @@ void AVehicleCosmeticsActor::BP_OnDriftFinished()
 
 void AVehicleCosmeticsActor::BP_OnDriftStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDriftStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsActor", "BP_OnDriftStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1213,10 +1204,9 @@ void AVehicleCosmeticsActor::BP_OnDriftStarted()
 
 void AVehicleCosmeticsActor::BP_OnVehicleLanded(float LandingForced, bool bLandedKickflip)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVehicleLanded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsActor", "BP_OnVehicleLanded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VehicleCosmeticsActor_BP_OnVehicleLanded Parms{};
 
@@ -1232,10 +1222,9 @@ void AVehicleCosmeticsActor::BP_OnVehicleLanded(float LandingForced, bool bLande
 
 void AVehicleCosmeticsActor::BP_OnVehicleWheelsLeftGround()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVehicleWheelsLeftGround");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsActor", "BP_OnVehicleWheelsLeftGround");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

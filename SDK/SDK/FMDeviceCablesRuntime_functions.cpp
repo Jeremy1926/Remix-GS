@@ -117,10 +117,9 @@ void AFMDeviceCable::Disconnect()
 
 void AFMDeviceCable::OnCableConnected(bool bThroughReplication)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCableConnected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCable", "OnCableConnected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMDeviceCable_OnCableConnected Parms{};
 
@@ -137,10 +136,9 @@ void AFMDeviceCable::OnCableConnected(bool bThroughReplication)
 
 void AFMDeviceCable::OnCableDisconnected(bool bThroughReplication)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCableDisconnected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCable", "OnCableDisconnected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMDeviceCable_OnCableDisconnected Parms{};
 
@@ -157,10 +155,9 @@ void AFMDeviceCable::OnCableDisconnected(bool bThroughReplication)
 
 void AFMDeviceCable::OnCableGrabbed(bool bThroughReplication)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCableGrabbed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCable", "OnCableGrabbed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMDeviceCable_OnCableGrabbed Parms{};
 
@@ -177,10 +174,9 @@ void AFMDeviceCable::OnCableGrabbed(bool bThroughReplication)
 
 void AFMDeviceCable::OnCablePortsUpdated(EDeviceCablePortDataType CurrentPortDataType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCablePortsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCable", "OnCablePortsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMDeviceCable_OnCablePortsUpdated Parms{};
 
@@ -195,10 +191,9 @@ void AFMDeviceCable::OnCablePortsUpdated(EDeviceCablePortDataType CurrentPortDat
 
 void AFMDeviceCable::OnCableReturned()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCableReturned");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCable", "OnCableReturned");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -269,10 +264,9 @@ void AFMDeviceCable::OnRep_ServerPortB()
 
 void AFMDeviceCable::OnScalesUpdated(const struct FVector& StartScale, const struct FVector& EndScale)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnScalesUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCable", "OnScalesUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMDeviceCable_OnScalesUpdated Parms{};
 
@@ -290,10 +284,9 @@ void AFMDeviceCable::OnScalesUpdated(const struct FVector& StartScale, const str
 
 void AFMDeviceCable::OnSplineUpdated(bool bCollisionEnabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSplineUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCable", "OnSplineUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMDeviceCable_OnSplineUpdated Parms{};
 
@@ -642,10 +635,9 @@ void UFMDeviceCableAnimatorBase::OnPortArtifactUpdated()
 
 void UFMDeviceCableAnimatorBase::ReceiveTick(float DeltaSeconds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveTick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCableAnimatorBase", "ReceiveTick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMDeviceCableAnimatorBase_ReceiveTick Parms{};
 
@@ -949,10 +941,9 @@ float UFMDeviceCableAnimatorAudioAnalyzer::GetLastAnalyzerValue() const
 
 void UFMDeviceCableConnectionBase::EndConnectionBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EndConnectionBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCableConnectionBase", "EndConnectionBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -963,10 +954,9 @@ void UFMDeviceCableConnectionBase::EndConnectionBP()
 
 void UFMDeviceCableConnectionBase::RebuildDirtyConnectionBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RebuildDirtyConnectionBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCableConnectionBase", "RebuildDirtyConnectionBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -977,10 +967,9 @@ void UFMDeviceCableConnectionBase::RebuildDirtyConnectionBP()
 
 void UFMDeviceCableConnectionBase::StartConnectionBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StartConnectionBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCableConnectionBase", "StartConnectionBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1358,10 +1347,9 @@ void UFMDeviceCableControllerComponent::ServerVolumeChanged()
 
 void UFMDeviceCableControllerComponent::SetControllerTargetForControllerPortBP(class AActor* ControllerPortActor, class APlayerController* Controller)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetControllerTargetForControllerPortBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCableControllerComponent", "SetControllerTargetForControllerPortBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMDeviceCableControllerComponent_SetControllerTargetForControllerPortBP Parms{};
 
@@ -1435,10 +1423,9 @@ bool UFMDeviceCableControllerComponent::IsHoldingCable() const
 
 bool UFMDeviceCablePortComponent::ActorHasValidControllerBP(class AActor* Actor, class AFortPlayerPawn** OutFortPlayerPawn, class APlayerController** OutPlayerController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ActorHasValidControllerBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMDeviceCablePortComponent", "ActorHasValidControllerBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMDeviceCablePortComponent_ActorHasValidControllerBP Parms{};
 

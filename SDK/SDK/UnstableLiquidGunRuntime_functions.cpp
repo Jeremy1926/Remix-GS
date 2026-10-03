@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void AFortLiquidGunProjectile::HandleSplineHit(const struct FHitResult& Hit)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSplineHit");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortLiquidGunProjectile", "HandleSplineHit");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortLiquidGunProjectile_HandleSplineHit Parms{};
 
@@ -279,10 +278,9 @@ float ALiquidRibbonManager::CalculatePointSize(int32 SegmentIndex, int32 PointIn
 
 int32 ALiquidRibbonManager::GetFirstVisiblePointIndex() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetFirstVisiblePointIndex");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LiquidRibbonManager", "GetFirstVisiblePointIndex");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LiquidRibbonManager_GetFirstVisiblePointIndex Parms{};
 

@@ -472,10 +472,9 @@ void UDelMarPlayerIndicatorsContainer::HandleViewTargetChanged(class AFortPlayer
 
 void UDelMarPlayerIndicatorWidget::BP_HideIndicator()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HideIndicator");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarPlayerIndicatorWidget", "BP_HideIndicator");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -488,10 +487,9 @@ void UDelMarPlayerIndicatorWidget::BP_HideIndicator()
 
 void UDelMarPlayerIndicatorWidget::BP_SetViewModel(class UDelMarPlayerViewModel* ViewModel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetViewModel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarPlayerIndicatorWidget", "BP_SetViewModel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarPlayerIndicatorWidget_BP_SetViewModel Parms{};
 
@@ -511,10 +509,9 @@ void UDelMarPlayerIndicatorWidget::BP_SetViewModel(class UDelMarPlayerViewModel*
 
 void UDelMarPlayerIndicatorWidget::BP_UpdateIndicator(float Scale, float Opacity, bool bRearIndicator, EDelMarRearAlertVerticalHint VerticalHint)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateIndicator");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarPlayerIndicatorWidget", "BP_UpdateIndicator");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarPlayerIndicatorWidget_BP_UpdateIndicator Parms{};
 
@@ -539,10 +536,9 @@ void UDelMarPlayerIndicatorWidget::BP_UpdateIndicator(float Scale, float Opacity
 
 void UDelMarExpandableHudWidget::BP_HandlePlayerPreferencesAdded(class UDelMarPlayerPreferencesComponent* InPlayerPreferences)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandlePlayerPreferencesAdded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarExpandableHudWidget", "BP_HandlePlayerPreferencesAdded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarExpandableHudWidget_BP_HandlePlayerPreferencesAdded Parms{};
 
@@ -628,10 +624,9 @@ void UDelMarExpandableHudWidget::SetTargetInterpTransformY(float InTargetInterpT
 
 void UDelMarPositionalTrackerWidget::OnInputMethodChanged(ECommonInputType InputMethod)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputMethodChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarPositionalTrackerWidget", "OnInputMethodChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarPositionalTrackerWidget_OnInputMethodChanged Parms{};
 
@@ -850,10 +845,9 @@ bool UDelMarScreenBase::IsDisplayEnabled() const
 
 void UDelMarPostRaceLeaderboard::BP_UpdateLeaderboardFilter()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateLeaderboardFilter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarPostRaceLeaderboard", "BP_UpdateLeaderboardFilter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -866,10 +860,9 @@ void UDelMarPostRaceLeaderboard::BP_UpdateLeaderboardFilter()
 
 void UDelMarPostRaceScreen::BP_OnReadyUpChanged(bool bReady)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnReadyUpChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarPostRaceScreen", "BP_OnReadyUpChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarPostRaceScreen_BP_OnReadyUpChanged Parms{};
 
@@ -949,10 +942,9 @@ void UDelMarPostRaceScreen::UpdateVote(EDelMarPostRaceVote NewVote)
 
 void UDelMarPostRaceVoteWidget::BP_OnPostRaceVoteChanged(EDelMarPostRaceVote Vote)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnPostRaceVoteChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarPostRaceVoteWidget", "BP_OnPostRaceVoteChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarPostRaceVoteWidget_BP_OnPostRaceVoteChanged Parms{};
 
@@ -1419,10 +1411,9 @@ void UDelMarTouchWidgetBase::OnActiveInputModeChanged(ECommonInputMode NewInputM
 
 void UDelMarTouchWidgetBase::OnInputInjectionEnded(const struct FPointerEvent& InGestureEvent, EDelMarInputInjectionState InInjectedState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputInjectionEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchWidgetBase", "OnInputInjectionEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchWidgetBase_OnInputInjectionEnded Parms{};
 
@@ -1446,10 +1437,9 @@ void UDelMarTouchWidgetBase::OnInputInjectionEnded(const struct FPointerEvent& I
 
 void UDelMarTouchWidgetBase::OnInputInjectionStarted(const struct FPointerEvent& InGestureEvent, EDelMarInputInjectionState InInjectedState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputInjectionStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchWidgetBase", "OnInputInjectionStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchWidgetBase_OnInputInjectionStarted Parms{};
 
@@ -1473,10 +1463,9 @@ void UDelMarTouchWidgetBase::OnInputInjectionStarted(const struct FPointerEvent&
 
 void UDelMarTouchWidgetBase::OnTrackedInputEnded(const struct FPointerEvent& InGestureEvent, bool bCancelled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTrackedInputEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchWidgetBase", "OnTrackedInputEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchWidgetBase_OnTrackedInputEnded Parms{};
 
@@ -1499,10 +1488,9 @@ void UDelMarTouchWidgetBase::OnTrackedInputEnded(const struct FPointerEvent& InG
 
 void UDelMarTouchWidgetBase::OnTrackedInputStarted(const struct FPointerEvent& InGestureEvent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTrackedInputStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchWidgetBase", "OnTrackedInputStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchWidgetBase_OnTrackedInputStarted Parms{};
 
@@ -1524,10 +1512,9 @@ void UDelMarTouchWidgetBase::OnTrackedInputStarted(const struct FPointerEvent& I
 
 void UDelMarTouchWidgetBase::OnTrackedInputUpdated(const struct FPointerEvent& InGestureEvent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTrackedInputUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchWidgetBase", "OnTrackedInputUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchWidgetBase_OnTrackedInputUpdated Parms{};
 
@@ -1549,10 +1536,9 @@ void UDelMarTouchWidgetBase::OnTrackedInputUpdated(const struct FPointerEvent& I
 
 struct FGeometry UDelMarTouchWidgetBase::GetHitboxGeometry() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetHitboxGeometry");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchWidgetBase", "GetHitboxGeometry");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchWidgetBase_GetHitboxGeometry Parms{};
 
@@ -1603,10 +1589,9 @@ bool UDelMarTouchWidgetBase::IsGestureInsideHitbox(const struct FPointerEvent& I
 
 bool UDelMarTouchActionButton::CanSetState(EDelMarTouchActionButtonState NewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanSetState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchActionButton", "CanSetState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchActionButton_CanSetState Parms{};
 
@@ -1630,10 +1615,9 @@ bool UDelMarTouchActionButton::CanSetState(EDelMarTouchActionButtonState NewStat
 
 void UDelMarTouchActionButton::SetBackgroundBrush(const struct FSlateBrush& Brush)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetBackgroundBrush");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchActionButton", "SetBackgroundBrush");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchActionButton_SetBackgroundBrush Parms{};
 
@@ -1678,10 +1662,9 @@ bool UDelMarTouchActionButton::SetButtonState(EDelMarTouchActionButtonState NewS
 
 void UDelMarTouchActionButton::SetHighlightActive(bool bValue)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetHighlightActive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchActionButton", "SetHighlightActive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchActionButton_SetHighlightActive Parms{};
 
@@ -1703,10 +1686,9 @@ void UDelMarTouchActionButton::SetHighlightActive(bool bValue)
 
 void UDelMarTouchActionButton::SetIconBrush(const struct FSlateBrush& Brush)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetIconBrush");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchActionButton", "SetIconBrush");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchActionButton_SetIconBrush Parms{};
 
@@ -1749,10 +1731,9 @@ EDelMarTouchActionButtonState UDelMarTouchActionButton::GetState() const
 
 EDelMarTouchActionButtonState UDelMarTouchActionButton::GetStateOnStopInputTracking(bool bInputCancelled) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetStateOnStopInputTracking");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchActionButton", "GetStateOnStopInputTracking");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchActionButton_GetStateOnStopInputTracking Parms{};
 
@@ -1804,10 +1785,9 @@ class UDelMarTouchActionButton* UDelMarTouchRegion::FindButtonByInputAction(clas
 
 void UDelMarTouchRegion::SetHighlightForInputAction(class UInputAction* InputAction)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetHighlightForInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTouchRegion", "SetHighlightForInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTouchRegion_SetHighlightForInputAction Parms{};
 
@@ -3145,10 +3125,9 @@ void UDelMarAttachedWidgetComponent::HandleViewTargetChanged(class AFortPlayerCo
 
 void UDelMarStartlineCountdownWidget::BP_OnActiveIntervalsChanged(int32 NumActiveIntervals)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnActiveIntervalsChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarStartlineCountdownWidget", "BP_OnActiveIntervalsChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarStartlineCountdownWidget_BP_OnActiveIntervalsChanged Parms{};
 
@@ -3165,10 +3144,9 @@ void UDelMarStartlineCountdownWidget::BP_OnActiveIntervalsChanged(int32 NumActiv
 
 void UDelMarStartlineCountdownWidget::BP_OnCountdownStarted(int32 TotalIntervals)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCountdownStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarStartlineCountdownWidget", "BP_OnCountdownStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarStartlineCountdownWidget_BP_OnCountdownStarted Parms{};
 
@@ -3185,10 +3163,9 @@ void UDelMarStartlineCountdownWidget::BP_OnCountdownStarted(int32 TotalIntervals
 
 void UDelMarStartlineCountdownWidget::BP_OnStartlineBoostActivated(float PercentageMaxBonusSpeedEarned)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStartlineBoostActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarStartlineCountdownWidget", "BP_OnStartlineBoostActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarStartlineCountdownWidget_BP_OnStartlineBoostActivated Parms{};
 
@@ -3203,10 +3180,9 @@ void UDelMarStartlineCountdownWidget::BP_OnStartlineBoostActivated(float Percent
 
 void UDelMarStartlineCountdownWidget::BP_OnStartlineBoostFailed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStartlineBoostFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarStartlineCountdownWidget", "BP_OnStartlineBoostFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3299,10 +3275,9 @@ int32 UDelMarStartlineCountdownWidget::GetNumTotalIntervals() const
 
 void UDelMarCheckpointTrackerEntryWidget::BP_OnDisplayedCheckpointChanged(const struct FDelMarSectionData& InSectionData, const bool bNewEntry)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDisplayedCheckpointChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCheckpointTrackerEntryWidget", "BP_OnDisplayedCheckpointChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCheckpointTrackerEntryWidget_BP_OnDisplayedCheckpointChanged Parms{};
 
@@ -3343,10 +3318,9 @@ void UDelMarCheckpointTrackerWidget::UpdateCheckpoints(const TArray<struct FDelM
 
 void UDelMarDebugPointWidget::BP_OnPointsUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnPointsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarDebugPointWidget", "BP_OnPointsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3357,10 +3331,9 @@ void UDelMarDebugPointWidget::BP_OnPointsUpdated()
 
 void UDelMarDebugRubberbandingWidget::BP_OnRubberbandingUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnRubberbandingUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarDebugRubberbandingWidget", "BP_OnRubberbandingUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3371,10 +3344,9 @@ void UDelMarDebugRubberbandingWidget::BP_OnRubberbandingUpdated()
 
 void UDelMarDebugVehicleHealthWidget::BP_OnHealthUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnHealthUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarDebugVehicleHealthWidget", "BP_OnHealthUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3404,10 +3376,9 @@ void UDelMarDebugVehicleHealthWidget::HandleVehicleHealthChanged()
 
 void UDelMarDebugVehicleWidget::BP_OnVehicleUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVehicleUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarDebugVehicleWidget", "BP_OnVehicleUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3439,10 +3410,9 @@ void UDelMarEmotePickerContainer::CloseEmotePickerContainer()
 
 void UDelMarReadyUpWidget::BP_OnReadyUpChanged(bool bReady)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnReadyUpChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarReadyUpWidget", "BP_OnReadyUpChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarReadyUpWidget_BP_OnReadyUpChanged Parms{};
 
@@ -3484,10 +3454,9 @@ void UDelMarReadyUpWidget::BP_ReadyUp(const bool bReady)
 
 void UDelMarTurboBonusZoneWidget::BP_OnTurboZoneStateChanged(EDelMarTurboZoneState NewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTurboZoneStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTurboBonusZoneWidget", "BP_OnTurboZoneStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTurboBonusZoneWidget_BP_OnTurboZoneStateChanged Parms{};
 
@@ -3579,10 +3548,9 @@ void UDelMarInteractionIndicatorContainer::OnTargetChangedNative(bool bTargeting
 
 void UDelMarInteractionIndicatorContainer::OnTargetingChanged(bool bTargeting)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTargetingChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarInteractionIndicatorContainer", "OnTargetingChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarInteractionIndicatorContainer_OnTargetingChanged Parms{};
 
@@ -3712,10 +3680,9 @@ void UDelMarDebugTrackList::BP_OnExitButtonPressed()
 
 void UDelMarBoundActionButton::BP_OnActionProgress(const float HoldPercentage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnActionProgress");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarBoundActionButton", "BP_OnActionProgress");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarBoundActionButton_BP_OnActionProgress Parms{};
 
@@ -3730,10 +3697,9 @@ void UDelMarBoundActionButton::BP_OnActionProgress(const float HoldPercentage)
 
 void UDelMarBoundActionButton::BP_OnInputActionUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnInputActionUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarBoundActionButton", "BP_OnInputActionUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3746,10 +3712,9 @@ void UDelMarBoundActionButton::BP_OnInputActionUpdated()
 
 void UDelMarBoundActionButton::BP_SetText(const class FText& ButtonText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarBoundActionButton", "BP_SetText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarBoundActionButton_BP_SetText Parms{};
 

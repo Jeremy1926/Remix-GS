@@ -79,10 +79,9 @@ void UTankVehicleReticle::HandleOnEquipMountedWeapon(class AFortWeaponRanged* Eq
 
 void UTankVehicleReticle::OnCannonFired(const float RateTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCannonFired");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TankVehicleReticle", "OnCannonFired");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TankVehicleReticle_OnCannonFired Parms{};
 
@@ -100,10 +99,9 @@ void UTankVehicleReticle::OnCannonFired(const float RateTime)
 
 void UTankVehicleReticle::OnTankDistanceUpdate(const float Distance, const float DistancePercent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTankDistanceUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TankVehicleReticle", "OnTankDistanceUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TankVehicleReticle_OnTankDistanceUpdate Parms{};
 
@@ -124,10 +122,9 @@ void UTankVehicleReticle::OnTankDistanceUpdate(const float Distance, const float
 
 void UTankVehicleReticle::OnTankEngineHealthChanged(const float EngineHealth, const float EngineHealthMax, const bool bNewlyDisabled, const bool bNewlyEnabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTankEngineHealthChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TankVehicleReticle", "OnTankEngineHealthChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TankVehicleReticle_OnTankEngineHealthChanged Parms{};
 
@@ -150,10 +147,9 @@ void UTankVehicleReticle::OnTankEngineHealthChanged(const float EngineHealth, co
 
 void UTankVehicleReticle::OnTankHatchHealthChanged(const float HatchHealth, const float HatchHealthMax, const bool bNewlyDisabled, const bool bNewlyEnabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTankHatchHealthChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TankVehicleReticle", "OnTankHatchHealthChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TankVehicleReticle_OnTankHatchHealthChanged Parms{};
 
@@ -174,10 +170,9 @@ void UTankVehicleReticle::OnTankHatchHealthChanged(const float HatchHealth, cons
 
 void UTankVehicleReticle::OnTankRotationValueChanged(const float TankValue, const float TurretValue)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTankRotationValueChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TankVehicleReticle", "OnTankRotationValueChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TankVehicleReticle_OnTankRotationValueChanged Parms{};
 
@@ -193,10 +188,9 @@ void UTankVehicleReticle::OnTankRotationValueChanged(const float TankValue, cons
 
 void UTankVehicleReticle::OnTankTargetingPressed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTankTargetingPressed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TankVehicleReticle", "OnTankTargetingPressed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -207,10 +201,9 @@ void UTankVehicleReticle::OnTankTargetingPressed()
 
 void UTankVehicleReticle::OnTankTargetingReleased()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTankTargetingReleased");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TankVehicleReticle", "OnTankTargetingReleased");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -224,10 +217,9 @@ void UTankVehicleReticle::OnTankTargetingReleased()
 
 void UTankVehicleReticle::OnTankTurretAimPitchValueChanged(const float pitch, const float PitchPercent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTankTurretAimPitchValueChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TankVehicleReticle", "OnTankTurretAimPitchValueChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TankVehicleReticle_OnTankTurretAimPitchValueChanged Parms{};
 
@@ -245,10 +237,9 @@ void UTankVehicleReticle::OnTankTurretAimPitchValueChanged(const float pitch, co
 
 void UTankVehicleReticle::OnTankTurretAimYawValueChanged(const float Value)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTankTurretAimYawValueChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TankVehicleReticle", "OnTankTurretAimYawValueChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TankVehicleReticle_OnTankTurretAimYawValueChanged Parms{};
 
@@ -266,10 +257,9 @@ void UTankVehicleReticle::OnTankTurretAimYawValueChanged(const float Value)
 
 void UTankVehicleReticle::OnTreadEnabledChanged(const bool bEnabled, const ETreadSide Side)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTreadEnabledChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TankVehicleReticle", "OnTreadEnabledChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TankVehicleReticle_OnTreadEnabledChanged Parms{};
 

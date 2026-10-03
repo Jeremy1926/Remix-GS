@@ -1094,10 +1094,9 @@ class UMVVMViewModelBase* UMVVMViewModelCollectionObject::FindViewModelInstance(
 
 TScriptInterface<class INotifyFieldValueChanged> UMVVMViewModelContextResolver::K2_CreateInstance(const class UClass* ExpectedType, const class UUserWidget* UserWidget) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_CreateInstance");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MVVMViewModelContextResolver", "K2_CreateInstance");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MVVMViewModelContextResolver_K2_CreateInstance Parms{};
 
@@ -1118,10 +1117,9 @@ TScriptInterface<class INotifyFieldValueChanged> UMVVMViewModelContextResolver::
 
 void UMVVMViewModelContextResolver::K2_DestroyInstance(const class UObject* ViewModel, const class UMVVMView* View) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_DestroyInstance");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MVVMViewModelContextResolver", "K2_DestroyInstance");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MVVMViewModelContextResolver_K2_DestroyInstance Parms{};
 

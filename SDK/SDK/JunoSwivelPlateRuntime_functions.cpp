@@ -77,10 +77,9 @@ void AGameplayCueNotifyLoop_SwivelPlate::HandleComponentWake(class UPrimitiveCom
 
 void AGameplayCueNotifyLoop_SwivelPlate::OnSimulationStateChanged(const bool bIsAwake)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSimulationStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotifyLoop_SwivelPlate", "OnSimulationStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotifyLoop_SwivelPlate_OnSimulationStateChanged Parms{};
 
@@ -304,10 +303,9 @@ void AJunoSwivelBase::OnAddedToClusterUnion(class UClusterUnionComponent* Cluste
 
 void AJunoSwivelBase::OnAttached(class UPrimitiveComponent* AttachedComponent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAttached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoSwivelBase", "OnAttached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoSwivelBase_OnAttached Parms{};
 
@@ -349,10 +347,9 @@ void AJunoSwivelBase::OnConstrainedComponentPhysicsStateChanged(class UPrimitive
 
 void AJunoSwivelBase::OnConstraintBroken()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnConstraintBroken");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoSwivelBase", "OnConstraintBroken");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -365,10 +362,9 @@ void AJunoSwivelBase::OnConstraintBroken()
 
 void AJunoSwivelBase::OnDetached(class UPrimitiveComponent* DetachedComponent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDetached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoSwivelBase", "OnDetached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoSwivelBase_OnDetached Parms{};
 

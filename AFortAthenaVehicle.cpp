@@ -127,14 +127,190 @@ static void RemoveVehicleMod(void* VehicleInterface, const FGameplayTag* ModTag)
     UNetPushModelHelpers::MarkPropertyDirty(Vehicle, AppliedVehicleModTagsName);
 }
 
-static void PatchVehicleInterfaces()
+static void (*PostInitializeComponentsOG)(AFortAthenaVehicle*);
+static void PostInitializeComponents(AFortAthenaVehicle* Vehicle)
 {
+    static auto GetValueAtLevel = (float (*)(const FScalableFloat*, float, const FString*))(ImageBase + 0x1B24F08);
+    static auto DamageablePartsName = FName(L"DamageableParts");
+
+    PostInitializeComponentsOG(Vehicle);
+
+    auto VehicleConfigs = Vehicle->FortPhysicsVehicleConfigs;
+
+    if (Vehicle->Role != ENetRole::ROLE_Authority || !VehicleConfigs || Vehicle->DamageableParts.Num() > 0)
+        return;
+
+    for (int32 i = 0; i < VehicleConfigs->DamageableParts.Num(); i++)
+    {
+        auto& PartConfig = VehicleConfigs->DamageableParts[i];
+
+        FVehicleDamageablePart Part{};
+        Part.ConfigIndex = i;
+        Part.BoneName = PartConfig.BoneName;
+        Part.ShapeName = PartConfig.ShapeName;
+        Part.Health = PartConfig.bStartsDisabled ? 0.f : GetValueAtLevel(&PartConfig.MaxHealth, 0.f, nullptr);
+        Part.bConsideredCriticalHit = PartConfig.bConsideredCriticalHit;
+        Part.MaxHealthOverride = -1.f;
+
+        Vehicle->DamageableParts.Add(Part);
+    }
+
+    UNetPushModelHelpers::MarkPropertyDirty(Vehicle, DamageablePartsName);
+    Vehicle->RefreshDamageableParts();
+}
+
+static void RepairDamageablePart(AFortAthenaVehicle* Vehicle, const FName& ShapeName, float NewHealthPercent)
+{
+    static auto GetValueAtLevel = (float (*)(const FScalableFloat*, float, const FString*))(ImageBase + 0x1B24F08);
+    static auto RefreshDamageablePartsInternal = (void (*)(AFortAthenaVehicle*, const TArray<FVehicleDamageablePart>&))(ImageBase + 0x2EA04C0);
+    static auto DamageablePartsName = FName(L"DamageableParts");
+
+    auto VehicleConfigs = Vehicle->FortPhysicsVehicleConfigs;
+
+    if (Vehicle->Role != ENetRole::ROLE_Authority || !VehicleConfigs)
+        return;
+
+    for (auto& Part : Vehicle->DamageableParts)
+    {
+        if (Part.ShapeName != ShapeName || !VehicleConfigs->DamageableParts.IsValidIndex(Part.ConfigIndex))
+            continue;
+
+        TArray<FVehicleDamageablePart> PrevDamageableParts;
+
+        for (auto& PrevPart : Vehicle->DamageableParts)
+            PrevDamageableParts.Add(PrevPart);
+
+        Part.Health = GetValueAtLevel(&VehicleConfigs->DamageableParts[Part.ConfigIndex].MaxHealth, 0.f, nullptr) * NewHealthPercent;
+
+        UNetPushModelHelpers::MarkPropertyDirty(Vehicle, DamageablePartsName);
+        RefreshDamageablePartsInternal(Vehicle, PrevDamageableParts);
+        PrevDamageableParts.Free();
+        break;
+    }
+}
+
+static void BreakDamageablePart(AFortAthenaVehicle* Vehicle, const FName& ShapeName)
+{
+    RepairDamageablePart(Vehicle, ShapeName, 0.f);
+}
+
+static void (*RepairAllDamageablePartsOG)(AFortAthenaVehicle*, float);
+static void RepairAllDamageableParts(AFortAthenaVehicle* Vehicle, float NewHealthPercent)
+{
+    static auto GetValueAtLevel = (float (*)(const FScalableFloat*, float, const FString*))(ImageBase + 0x1B24F08);
+    static auto RefreshDamageablePartsInternal = (void (*)(AFortAthenaVehicle*, const TArray<FVehicleDamageablePart>&))(ImageBase + 0x2EA04C0);
+    static auto DamageablePartsName = FName(L"DamageableParts");
+
+    auto VehicleConfigs = Vehicle->FortPhysicsVehicleConfigs;
+
+    if (Vehicle->Role == ENetRole::ROLE_Authority && VehicleConfigs)
+    {
+        TArray<FVehicleDamageablePart> PrevDamageableParts;
+
+        for (auto& Part : Vehicle->DamageableParts)
+        {
+            PrevDamageableParts.Add(Part);
+
+            if (VehicleConfigs->DamageableParts.IsValidIndex(Part.ConfigIndex))
+                Part.Health = GetValueAtLevel(&VehicleConfigs->DamageableParts[Part.ConfigIndex].MaxHealth, 0.f, nullptr) * NewHealthPercent;
+        }
+
+        UNetPushModelHelpers::MarkPropertyDirty(Vehicle, DamageablePartsName);
+        RefreshDamageablePartsInternal(Vehicle, PrevDamageableParts);
+        PrevDamageableParts.Free();
+    }
+
+    if (Vehicle->IsA(AFortDagwoodVehicle::StaticClass()))
+        RepairAllDamageablePartsOG(Vehicle, NewHealthPercent);
+}
+
+static void DestroyAllDamageableParts(UObject* Context, FFrame& Stack, void* Ret)
+{
+    Stack.IncrementCode();
+
+    auto Vehicle = (AFortAthenaVehicle*)Context;
+
+    for (auto& Part : Vehicle->DamageableParts)
+        BreakDamageablePart(Vehicle, Part.ShapeName);
+}
+
+static void (*AbsorbDamageIntoDamagablePartOG)(AFortAthenaVehicle*, float&, const FGameplayTagContainer&, const FGameplayEffectContextHandle&, AController*, AActor*, AFortPlayerPawn*);
+static void AbsorbDamageIntoDamagablePart(AFortAthenaVehicle* Vehicle, float& Damage, const FGameplayTagContainer& DamageTags, const FGameplayEffectContextHandle& EffectContext, AController* EventInstigator, AActor* DamageCauser, AFortPlayerPawn* InstigatorPawn)
+{
+    static auto GetVehicleBulletCollisionComponent = (UPrimitiveComponent* (*)(AFortAthenaVehicle*))(ImageBase + 0x5A1021C);
+    static auto GetBodySetup = (UBodySetup* (*)(FBodyInstance*))(ImageBase + 0x1861B14);
+    static auto GetElement = (FKShapeElem* (*)(FKAggregateGeom*, int32))(ImageBase + 0x239E5E0);
+    static auto RefreshDamageablePartsInternal = (void (*)(AFortAthenaVehicle*, const TArray<FVehicleDamageablePart>&))(ImageBase + 0x2EA04C0);
+    static auto NeverBreakVehiclePartTag = FGameplayTag{ FName(L"Gameplay.Damage.NeverBreakVehiclePart") };
+    static auto AlwaysBreakVehiclePartTag = FGameplayTag{ FName(L"Gameplay.Damage.AlwaysBreakVehiclePart") };
+    static auto DamageablePartsName = FName(L"DamageableParts");
+
+    auto Context = *(FFortGameplayEffectContext**)(__int64(&EffectContext) + 0x8);
+    auto BulletCollisionComponent = GetVehicleBulletCollisionComponent(Vehicle);
+
+    if (Vehicle->Role == ENetRole::ROLE_Authority && Damage > 0.f && Context && BulletCollisionComponent && !DamageTags.HasTag(NeverBreakVehiclePartTag))
+    {
+        FHitResult HitResult{};
+        FVector HitDirection{};
+
+        ((void (*)(FFortGameplayEffectContext*, AActor*, AActor*, FHitResult*, FVector*))(*(void***)Context)[0x19])(Context, Vehicle, EventInstigator, &HitResult, &HitDirection);
+
+        auto BodyInstance = HitResult.Component.Get() == BulletCollisionComponent ? ((FBodyInstance* (*)(UPrimitiveComponent*, FName, bool, int32))BulletCollisionComponent->VTable[0xFA])(BulletCollisionComponent, FName(), true, -1) : nullptr;
+        auto BodySetup = BodyInstance ? GetBodySetup(BodyInstance) : nullptr;
+        auto ShapeElem = BodySetup ? GetElement(&BodySetup->AggGeom, HitResult.ElementIndex) : nullptr;
+
+        for (int32 i = 0; ShapeElem && i < Vehicle->DamageableParts.Num(); i++)
+        {
+            auto& Part = Vehicle->DamageableParts[i];
+
+            if (Part.ShapeName != ShapeElem->Name || Part.Health <= 0.f)
+                continue;
+
+            TArray<FVehicleDamageablePart> PrevDamageableParts;
+
+            for (auto& PrevPart : Vehicle->DamageableParts)
+                PrevDamageableParts.Add(PrevPart);
+
+            auto AbsorbedDamage = (std::min)(Damage, Part.Health);
+
+            Damage = (std::max)(Damage - Part.Health, 0.f);
+            Part.Health = DamageTags.HasTag(AlwaysBreakVehiclePartTag) ? 0.f : Part.Health - AbsorbedDamage;
+
+            if (AbsorbedDamage > 0.f && InstigatorPawn && InstigatorPawn->Controller && InstigatorPawn->Controller->IsA(AFortPlayerController::StaticClass()))
+                ((AFortPlayerController*)InstigatorPawn->Controller)->ClientAddDamageNumber(AbsorbedDamage, Vehicle, InstigatorPawn, EffectContext, DamageTags, Context->bIsCriticalHit, HitResult.ImpactPoint, HitResult.ImpactNormal);
+
+            UNetPushModelHelpers::MarkPropertyDirty(Vehicle, DamageablePartsName);
+            RefreshDamageablePartsInternal(Vehicle, PrevDamageableParts);
+            PrevDamageableParts.Free();
+            break;
+        }
+    }
+
+    if (Vehicle->IsA(AFortDagwoodVehicle::StaticClass()))
+        AbsorbDamageIntoDamagablePartOG(Vehicle, Damage, DamageTags, EffectContext, EventInstigator, DamageCauser, InstigatorPawn);
+}
+
+static void PatchVehicleVtables()
+{
+    const std::pair<uint32, void*> DamageablePartVirtuals[] = {
+        { 0x231, (void*)BreakDamageablePart },
+        { 0x232, (void*)RepairDamageablePart },
+        { 0x233, (void*)RepairAllDamageableParts },
+        { 0x23A, (void*)AbsorbDamageIntoDamagablePart }
+    };
+
     for (int32 i = 0; i < UObject::GObjects->Num(); i++)
     {
         auto Object = UObject::GObjects->GetByIndex(i);
 
         if (!Object || !Object->IsDefaultObject() || !Object->IsA(AFortAthenaVehicle::StaticClass()))
             continue;
+
+        for (auto& [Index, Detour] : DamageablePartVirtuals)
+        {
+            if (*(uint8*)Object->VTable[Index] == 0xC3 || *(uint8*)Object->VTable[Index] == 0xC2)
+                Patch<void*>(uint64(&Object->VTable[Index]), Detour);
+        }
 
         auto VehicleInterface = (uint8*)Object->GetInterface(IFortVehicleInterface::StaticClass());
 
@@ -239,15 +415,19 @@ void AFortAthenaVehicle__Init()
     ExecHook(AFortOctopusVehicle::StaticClass()->FindFunction("ServerUpdateTowhook"), ServerUpdateTowhook);
     ExecHook(AFortSpaghettiVehicle::StaticClass()->FindFunction("ServerUpdateTowhook"), ServerUpdateTowhook);
     Hook<AFortOctopusTowhookAttachableProjectile>(uint32(0x103), OnRep_ReplicatedAttachedInfo, OnRep_ReplicatedAttachedInfoOG);
+    ExecHook(AFortAthenaVehicle::StaticClass()->FindFunction("DestroyAllDamageableParts"), DestroyAllDamageableParts);
 
-    PatchVehicleInterfaces();
+    PatchVehicleVtables();
 
     Hook(ImageBase + 0x8F737D4, ShouldSelfSpawnVehicle, ShouldSelfSpawnVehicleOG);
+    Hook(ImageBase + 0x2AA57D8, PostInitializeComponents, PostInitializeComponentsOG);
+    Hook(ImageBase + 0xB309124, AbsorbDamageIntoDamagablePart, AbsorbDamageIntoDamagablePartOG);
+    Hook(ImageBase + 0xB3167B0, RepairAllDamageableParts, RepairAllDamageablePartsOG);
 }
 
 void AFortAthenaVehicle__PostLoad()
 {
-    PatchVehicleInterfaces();
+    PatchVehicleVtables();
 
     Hook(ImageBase + 0xA3E7224, EquipVehicleWeapon, EquipVehicleWeaponOG);
 }

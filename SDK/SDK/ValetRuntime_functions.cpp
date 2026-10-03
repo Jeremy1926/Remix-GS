@@ -355,10 +355,9 @@ void AFortDagwoodVehicle::CacheDagwoodConfigs()
 
 void AFortDagwoodVehicle::CleanupLoopingPooledFX()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CleanupLoopingPooledFX");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "CleanupLoopingPooledFX");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -532,10 +531,9 @@ void AFortDagwoodVehicle::NativePlayCollisionHitHaptics(const TArray<class APlay
 
 void AFortDagwoodVehicle::OnBoostFailed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnBoostFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -546,10 +544,9 @@ void AFortDagwoodVehicle::OnBoostFailed()
 
 void AFortDagwoodVehicle::OnBoostReady()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostReady");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnBoostReady");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -562,10 +559,9 @@ void AFortDagwoodVehicle::OnBoostReady()
 
 void AFortDagwoodVehicle::OnClientBeginAltInteract(class AFortPawn* Pawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnClientBeginAltInteract");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnClientBeginAltInteract");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDagwoodVehicle_OnClientBeginAltInteract Parms{};
 
@@ -582,10 +578,9 @@ void AFortDagwoodVehicle::OnClientBeginAltInteract(class AFortPawn* Pawn)
 
 void AFortDagwoodVehicle::OnDestroyedPropFromCollision(const class ABuildingActor* BuildingHitActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDestroyedPropFromCollision");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnDestroyedPropFromCollision");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDagwoodVehicle_OnDestroyedPropFromCollision Parms{};
 
@@ -600,10 +595,9 @@ void AFortDagwoodVehicle::OnDestroyedPropFromCollision(const class ABuildingActo
 
 void AFortDagwoodVehicle::OnFlipImpactDamage()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFlipImpactDamage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnFlipImpactDamage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -617,10 +611,9 @@ void AFortDagwoodVehicle::OnFlipImpactDamage()
 
 void AFortDagwoodVehicle::OnHoldSelfDestructStarted(class AFortPawn* DriverPawn, const float ExitDuration)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHoldSelfDestructStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnHoldSelfDestructStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDagwoodVehicle_OnHoldSelfDestructStarted Parms{};
 
@@ -638,10 +631,9 @@ void AFortDagwoodVehicle::OnHoldSelfDestructStarted(class AFortPawn* DriverPawn,
 
 void AFortDagwoodVehicle::OnHoldSelfDestructStopped(class AFortPawn* DriverPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHoldSelfDestructStopped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnHoldSelfDestructStopped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDagwoodVehicle_OnHoldSelfDestructStopped Parms{};
 
@@ -658,10 +650,9 @@ void AFortDagwoodVehicle::OnHoldSelfDestructStopped(class AFortPawn* DriverPawn)
 
 void AFortDagwoodVehicle::OnInoperableChanged(bool bInoperable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInoperableChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnInoperableChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDagwoodVehicle_OnInoperableChanged Parms{};
 
@@ -810,10 +801,9 @@ void AFortDagwoodVehicle::OnRep_ServerRepWheelData(const TArray<struct FAttached
 
 void AFortDagwoodVehicle::OnServerAltInteract(class AFortPawn* Pawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnServerAltInteract");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnServerAltInteract");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDagwoodVehicle_OnServerAltInteract Parms{};
 
@@ -828,10 +818,9 @@ void AFortDagwoodVehicle::OnServerAltInteract(class AFortPawn* Pawn)
 
 void AFortDagwoodVehicle::OnStartHandbrake()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartHandbrake");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnStartHandbrake");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -842,10 +831,9 @@ void AFortDagwoodVehicle::OnStartHandbrake()
 
 void AFortDagwoodVehicle::OnStopHandbrake()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStopHandbrake");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnStopHandbrake");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -858,10 +846,9 @@ void AFortDagwoodVehicle::OnStopHandbrake()
 
 void AFortDagwoodVehicle::OnTickAudioFade(float FadeParam)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTickAudioFade");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDagwoodVehicle", "OnTickAudioFade");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDagwoodVehicle_OnTickAudioFade Parms{};
 
@@ -1593,10 +1580,9 @@ void AFortValetAudioController::OnSuspensionCollision_Native(bool* OutResult, fl
 
 void AFortValetAudioController::OnTireModApplied(const struct FTireInfo& AppliedTireMod)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTireModApplied");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortValetAudioController", "OnTireModApplied");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortValetAudioController_OnTireModApplied Parms{};
 

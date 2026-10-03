@@ -90,10 +90,9 @@ void AFortGameplayCueNotify_CrownWear::RemoveCrownWear()
 
 void UFortPawnComponent_VictoryCrownsFrontEnd::PlaylistChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlaylistChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_VictoryCrownsFrontEnd", "PlaylistChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

@@ -28,10 +28,9 @@ SDK_NAMESPACE_START
 
 void UFortCameraMode_Flying::BP_ProcessViewRotation(const struct FRotator& InViewRotation, const struct FRotator& InDeltaRot, float DeltaTime, bool* bOutShouldOverride, struct FRotator* OutViewRotation, struct FRotator* OutDeltaRot) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_ProcessViewRotation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCameraMode_Flying", "BP_ProcessViewRotation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCameraMode_Flying_BP_ProcessViewRotation Parms{};
 
@@ -109,10 +108,9 @@ void UFortMovementMode_ExtLogicFlying::SetInputActionDisplayContext(const class 
 
 bool UFortMovementMode_ExtLogicFlying::CanBeginFlying() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanBeginFlying");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicFlying", "CanBeginFlying");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicFlying_CanBeginFlying Parms{};
 

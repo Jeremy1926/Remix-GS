@@ -1522,10 +1522,9 @@ void UJunoCaveVolumePlayspaceComponent::NotifyActorEndOverlap(class AActor* Over
 
 void UJunoCaveVolumePlayspaceComponent::OnPlayerEnteringCaveVolume(class AFortPlayerPawnAthena* PlayerPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerEnteringCaveVolume");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCaveVolumePlayspaceComponent", "OnPlayerEnteringCaveVolume");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCaveVolumePlayspaceComponent_OnPlayerEnteringCaveVolume Parms{};
 
@@ -1542,10 +1541,9 @@ void UJunoCaveVolumePlayspaceComponent::OnPlayerEnteringCaveVolume(class AFortPl
 
 void UJunoCaveVolumePlayspaceComponent::OnPlayerLeavingCaveVolume(class AFortPlayerPawnAthena* PlayerPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerLeavingCaveVolume");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCaveVolumePlayspaceComponent", "OnPlayerLeavingCaveVolume");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCaveVolumePlayspaceComponent_OnPlayerLeavingCaveVolume Parms{};
 
@@ -5055,10 +5053,9 @@ struct FVector2D UJunoWorldTileLayoutInterfaceBlueprintLibary::WorldLocationToTi
 
 void UJunoWorldTileSelectionBase::ChooseDebugTile(const struct FVector& Position, struct FPCGJunoWorldTile* OutSelectedTile)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ChooseDebugTile");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "ChooseDebugTile");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_ChooseDebugTile Parms{};
 
@@ -5083,10 +5080,9 @@ void UJunoWorldTileSelectionBase::ChooseDebugTile(const struct FVector& Position
 
 void UJunoWorldTileSelectionBase::ChooseOutOfBoundsTile(struct FPCGJunoWorldTile* OutSelectedTile)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ChooseOutOfBoundsTile");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "ChooseOutOfBoundsTile");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_ChooseOutOfBoundsTile Parms{};
 
@@ -5110,10 +5106,9 @@ void UJunoWorldTileSelectionBase::ChooseOutOfBoundsTile(struct FPCGJunoWorldTile
 
 bool UJunoWorldTileSelectionBase::ChooseStartTile(struct FVector* StartTileLocation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ChooseStartTile");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "ChooseStartTile");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_ChooseStartTile Parms{};
 
@@ -5139,10 +5134,9 @@ bool UJunoWorldTileSelectionBase::ChooseStartTile(struct FVector* StartTileLocat
 
 void UJunoWorldTileSelectionBase::ChooseTile(const struct FVector& Position, struct FPCGJunoWorldTile* OutSelectedTile)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ChooseTile");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "ChooseTile");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_ChooseTile Parms{};
 
@@ -5167,10 +5161,9 @@ void UJunoWorldTileSelectionBase::ChooseTile(const struct FVector& Position, str
 
 struct FVector UJunoWorldTileSelectionBase::GetDebugLevelLocation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetDebugLevelLocation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "GetDebugLevelLocation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_GetDebugLevelLocation Parms{};
 
@@ -5192,10 +5185,9 @@ struct FVector UJunoWorldTileSelectionBase::GetDebugLevelLocation()
 
 void UJunoWorldTileSelectionBase::Setup(const TScriptInterface<class IJunoWorldTileLayoutInterface>& InJunoWorldTileLayoutInterface)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Setup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "Setup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_Setup Parms{};
 
@@ -5219,10 +5211,9 @@ void UJunoWorldTileSelectionBase::Setup(const TScriptInterface<class IJunoWorldT
 
 void UJunoWorldTileSelectionBase::SetupForEvents(const struct FVector& PlayerPosition, TArray<class FName>* OutNewEvents, TMap<class FName, class AJunoWorldTileEventBuilder*>* OutAllBuilders)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupForEvents");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "SetupForEvents");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_SetupForEvents Parms{};
 
@@ -5252,10 +5243,9 @@ void UJunoWorldTileSelectionBase::SetupForEvents(const struct FVector& PlayerPos
 
 bool UJunoWorldTileSelectionBase::UpdateTile(const struct FPCGJunoWorldTile& CurrentTile, struct FPCGJunoWorldTile* OutUpdatedTile)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateTile");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "UpdateTile");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_UpdateTile Parms{};
 
@@ -5288,10 +5278,9 @@ bool UJunoWorldTileSelectionBase::UpdateTile(const struct FPCGJunoWorldTile& Cur
 
 bool UJunoWorldTileSelectionBase::UpdateTileForEvent(const class FName& EventName, class AJunoWorldTileEventBuilder* EventBuilder, const class FName& CellName, const struct FIntPoint& CellCoords, const struct FBox2D& CellBounds, struct FPCGJunoWorldTile* OutSelectedTile)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateTileForEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "UpdateTileForEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_UpdateTileForEvent Parms{};
 
@@ -5325,10 +5314,9 @@ bool UJunoWorldTileSelectionBase::UpdateTileForEvent(const class FName& EventNam
 
 bool UJunoWorldTileSelectionBase::UseReservedArea(const class FName& AreaName, const TMap<class FName, struct FBox2D>& AreaTiles, TArray<struct FPCGJunoWorldTile>* OutNewTiles)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UseReservedArea");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "UseReservedArea");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_UseReservedArea Parms{};
 
@@ -5357,10 +5345,9 @@ bool UJunoWorldTileSelectionBase::UseReservedArea(const class FName& AreaName, c
 
 TArray<struct FPCGJunoWorldEventTile> UJunoWorldTileSelectionBase::GetEligibleTilesForEvent(const struct FJunoWorldEventTileDefinition& Event) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetEligibleTilesForEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "GetEligibleTilesForEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_GetEligibleTilesForEvent Parms{};
 
@@ -5384,10 +5371,9 @@ TArray<struct FPCGJunoWorldEventTile> UJunoWorldTileSelectionBase::GetEligibleTi
 
 TArray<struct FJunoWorldEventTileDefinition> UJunoWorldTileSelectionBase::GetEventDefinitions() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetEventDefinitions");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "GetEventDefinitions");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_GetEventDefinitions Parms{};
 
@@ -5411,10 +5397,9 @@ TArray<struct FJunoWorldEventTileDefinition> UJunoWorldTileSelectionBase::GetEve
 
 bool UJunoWorldTileSelectionBase::GetEventTileDefinition(const class FName& EventName, struct FJunoWorldEventTileDefinition* OutTileEventDefinition) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetEventTileDefinition");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "GetEventTileDefinition");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_GetEventTileDefinition Parms{};
 
@@ -5443,10 +5428,9 @@ bool UJunoWorldTileSelectionBase::GetEventTileDefinition(const class FName& Even
 
 bool UJunoWorldTileSelectionBase::ModifyTileInformation(const struct FPCGJunoWorldTile& CurrentTile, struct FPCGJunoWorldTile* OutTile) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ModifyTileInformation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileSelectionBase", "ModifyTileInformation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileSelectionBase_ModifyTileInformation Parms{};
 
@@ -5502,10 +5486,9 @@ class UJunoWorldEventTileLayout* AJunoWorldTileEventBuilder::CreateEmptyLayout(E
 
 void AJunoWorldTileEventBuilder::FinalizeTilesForEventClient(const TMap<struct FIntPoint, class AJunoWorldTile*>& EventTiles, const struct FBox2D& EventBounds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"FinalizeTilesForEventClient");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileEventBuilder", "FinalizeTilesForEventClient");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileEventBuilder_FinalizeTilesForEventClient Parms{};
 
@@ -5558,10 +5541,9 @@ void AJunoWorldTileEventBuilder::FinalizeTilesForEventRPC(const TArray<struct FI
 
 void AJunoWorldTileEventBuilder::FinalizeTilesForEventServer(const TMap<struct FIntPoint, class AJunoWorldTile*>& EventTiles, const struct FBox2D& EventBounds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"FinalizeTilesForEventServer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileEventBuilder", "FinalizeTilesForEventServer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileEventBuilder_FinalizeTilesForEventServer Parms{};
 
@@ -5584,10 +5566,9 @@ void AJunoWorldTileEventBuilder::FinalizeTilesForEventServer(const TMap<struct F
 
 void AJunoWorldTileEventBuilder::Initialize(const struct FJunoWorldEventTileDefinition& Event)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Initialize");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileEventBuilder", "Initialize");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileEventBuilder_Initialize Parms{};
 
@@ -5610,10 +5591,9 @@ void AJunoWorldTileEventBuilder::Initialize(const struct FJunoWorldEventTileDefi
 
 TMap<struct FIntPoint, class FName> AJunoWorldTileEventBuilder::BuildEventTiles(const TArray<struct FPCGJunoWorldEventTile>& EligibleTiles) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BuildEventTiles");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileEventBuilder", "BuildEventTiles");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileEventBuilder_BuildEventTiles Parms{};
 
@@ -5637,10 +5617,9 @@ TMap<struct FIntPoint, class FName> AJunoWorldTileEventBuilder::BuildEventTiles(
 
 TArray<struct FJunoWorldTileEventBuilderRestriction> AJunoWorldTileEventBuilder::GetAdditionalEventLocationRestrictions() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAdditionalEventLocationRestrictions");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldTileEventBuilder", "GetAdditionalEventLocationRestrictions");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldTileEventBuilder_GetAdditionalEventLocationRestrictions Parms{};
 
@@ -5846,10 +5825,9 @@ void UJunoWorldEventTileLayout::InitializeLayout(const struct FIntPoint& Size, E
 
 TArray<class AJunoWorldTile*> UJunoWorldEventStartTileChooser::ChooseStartTiles(const TScriptInterface<class IJunoWorldTileLayoutInterface>& JunoWorldTileLayoutInterface, const TArray<class AJunoWorldTile*>& AllValidTiles, const TMap<struct FIntPoint, class AJunoWorldTile*>& CoordsToTile)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ChooseStartTiles");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWorldEventStartTileChooser", "ChooseStartTiles");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWorldEventStartTileChooser_ChooseStartTiles Parms{};
 
@@ -5916,10 +5894,9 @@ void UJunoWorldWeatherLocationComponent::HandleEnvironmentChanged(const class AA
 
 EPushFrontierResult ULandmassPathfinder::AdditionalPushFrontierResultCondition(EPushFrontierResult ResultFromLastPush, const struct FLandmassPathfinderRules& InCurrentRules, const struct FVector& InHome, const struct FVector& InDestination, const struct FVector& InCurrentLocation, int32 InCurrentPushSteps, float InCurrentCost, bool* bShouldUseBestNodeInsteadOfMostRecentNode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AdditionalPushFrontierResultCondition");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LandmassPathfinder", "AdditionalPushFrontierResultCondition");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LandmassPathfinder_AdditionalPushFrontierResultCondition Parms{};
 
@@ -6058,10 +6035,9 @@ bool ULandmassPathfinder::Initialize(class ALandscapeProxy* LandscapeProxy_0, cl
 
 bool ULandmassPathfinder::IsTargetLocationValid(const struct FVector& TargetLocation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsTargetLocationValid");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LandmassPathfinder", "IsTargetLocationValid");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LandmassPathfinder_IsTargetLocationValid Parms{};
 
@@ -6159,10 +6135,9 @@ EPushFrontierResult ULandmassPathfinder::K2_StepPathfinder(TArray<struct FVector
 
 void ULandmassPathfinder::OnInitialize(class ALandscapeProxy* InLandscapeProxy, class ALandmassProceduralRoute* InRoute, const struct FLandmassPathfinderRules& Rules, class ALandmassProceduralRoute* InBlockingRoute)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInitialize");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LandmassPathfinder", "OnInitialize");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LandmassPathfinder_OnInitialize Parms{};
 
@@ -6183,10 +6158,9 @@ void ULandmassPathfinder::OnInitialize(class ALandscapeProxy* InLandscapeProxy, 
 
 void ULandmassPathfinder::OnStartPathfinder(const struct FVector& A, const struct FVector& B)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartPathfinder");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LandmassPathfinder", "OnStartPathfinder");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LandmassPathfinder_OnStartPathfinder Parms{};
 
@@ -6477,10 +6451,9 @@ struct FPathfinderGuideSet UPathfinderGuideSetsDataAsset::GetRandomGuideSetFromS
 
 void AJunoCaveVolume::OnPlayerEnteringCaveVolume(class AFortPlayerPawnAthena* PlayerPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerEnteringCaveVolume");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCaveVolume", "OnPlayerEnteringCaveVolume");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCaveVolume_OnPlayerEnteringCaveVolume Parms{};
 
@@ -6497,10 +6470,9 @@ void AJunoCaveVolume::OnPlayerEnteringCaveVolume(class AFortPlayerPawnAthena* Pl
 
 void AJunoCaveVolume::OnPlayerLeavingCaveVolume(class AFortPlayerPawnAthena* PlayerPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerLeavingCaveVolume");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCaveVolume", "OnPlayerLeavingCaveVolume");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCaveVolume_OnPlayerLeavingCaveVolume Parms{};
 
@@ -7783,10 +7755,9 @@ bool ALandmassProceduralRoute::AddControlPoint(const struct FVector& WorldPositi
 
 void ALandmassProceduralRoute::BeginGeneratePCG(const TArray<struct FLandmassPCGRouteInput>& Inputs)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BeginGeneratePCG");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LandmassProceduralRoute", "BeginGeneratePCG");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LandmassProceduralRoute_BeginGeneratePCG Parms{};
 
@@ -7833,10 +7804,9 @@ bool ALandmassProceduralRoute::ClearCreatedLandscapeSplines()
 
 void ALandmassProceduralRoute::CustomTick(float DeltaSeconds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CustomTick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LandmassProceduralRoute", "CustomTick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LandmassProceduralRoute_CustomTick Parms{};
 
@@ -8908,10 +8878,9 @@ void AProceduralRivers::StartRiverGeneration()
 
 struct FVector AProceduralRivers::SurfaceLocationOverride(const struct FVector& InLocation, bool* bOutIsOverriden)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SurfaceLocationOverride");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ProceduralRivers", "SurfaceLocationOverride");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ProceduralRivers_SurfaceLocationOverride Parms{};
 

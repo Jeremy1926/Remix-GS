@@ -160,10 +160,9 @@ void UDelMarIntercomComponent::ServerReceiveInteraction(const struct FGameplayTa
 
 void ADelMarCockpitActor::BP_OnBoundVehicleChanged(const class ADelMarVehicle* NewVehicle)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnBoundVehicleChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCockpitActor", "BP_OnBoundVehicleChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCockpitActor_BP_OnBoundVehicleChanged Parms{};
 

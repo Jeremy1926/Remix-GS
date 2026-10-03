@@ -150,10 +150,9 @@ void UDelMarWorldValidator_Task::LogString(const class FString& InString)
 
 void UDelMarWorldValidator_Task::ValidateDelMarWorld()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ValidateDelMarWorld");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarWorldValidator_Task", "ValidateDelMarWorld");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -164,10 +163,9 @@ void UDelMarWorldValidator_Task::ValidateDelMarWorld()
 
 void UDelMarWorldValidator_Task::ValidateDelMarWorld_ClientOnly()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ValidateDelMarWorld_ClientOnly");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarWorldValidator_Task", "ValidateDelMarWorld_ClientOnly");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -178,10 +176,9 @@ void UDelMarWorldValidator_Task::ValidateDelMarWorld_ClientOnly()
 
 void UDelMarWorldValidator_Task::ValidateDelMarWorld_CookOnly()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ValidateDelMarWorld_CookOnly");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarWorldValidator_Task", "ValidateDelMarWorld_CookOnly");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

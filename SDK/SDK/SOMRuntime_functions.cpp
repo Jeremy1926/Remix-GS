@@ -52,10 +52,9 @@ void UFortGameStateComponent_ScriptedObjectMovementManager::HandleCurrentPlaylis
 
 void AFortScriptedObjectMovement_MovableObjectBase::BeginMovingToStaticPathNode(const struct FScriptedObjectMovement_StaticPathStepData& StepData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BeginMovingToStaticPathNode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScriptedObjectMovement_MovableObjectBase", "BeginMovingToStaticPathNode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScriptedObjectMovement_MovableObjectBase_BeginMovingToStaticPathNode Parms{};
 
@@ -264,10 +263,9 @@ void AFortScriptedObjectMovement_MovableObjectBase::Editor_TryJumpToStartStep()
 
 class UStaticMeshComponent* AFortScriptedObjectMovement_MovableObjectBase::GetScriptedObjectStaticMeshComponent()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetScriptedObjectStaticMeshComponent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScriptedObjectMovement_MovableObjectBase", "GetScriptedObjectStaticMeshComponent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScriptedObjectMovement_MovableObjectBase_GetScriptedObjectStaticMeshComponent Parms{};
 
@@ -289,10 +287,9 @@ class UStaticMeshComponent* AFortScriptedObjectMovement_MovableObjectBase::GetSc
 
 void AFortScriptedObjectMovement_MovableObjectBase::HandleSlotDefinitionSlotted(class UFortScriptedObjectMovement_SlotDefinition* SlotDefinition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSlotDefinitionSlotted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScriptedObjectMovement_MovableObjectBase", "HandleSlotDefinitionSlotted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScriptedObjectMovement_MovableObjectBase_HandleSlotDefinitionSlotted Parms{};
 
@@ -385,10 +382,9 @@ void AFortScriptedObjectMovement_MovableObjectBase::SetCanEverAffectNavigation(b
 
 bool AFortScriptedObjectMovement_MovableObjectBase::BlockOverlappingStaticPathSteps() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlockOverlappingStaticPathSteps");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScriptedObjectMovement_MovableObjectBase", "BlockOverlappingStaticPathSteps");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScriptedObjectMovement_MovableObjectBase_BlockOverlappingStaticPathSteps Parms{};
 
@@ -410,10 +406,9 @@ bool AFortScriptedObjectMovement_MovableObjectBase::BlockOverlappingStaticPathSt
 
 void AFortScriptedObjectMovement_MovableObjectBase::GetStaticPathTravelingBounds(struct FVector* OutBoxExtent) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetStaticPathTravelingBounds");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScriptedObjectMovement_MovableObjectBase", "GetStaticPathTravelingBounds");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScriptedObjectMovement_MovableObjectBase_GetStaticPathTravelingBounds Parms{};
 
@@ -436,10 +431,9 @@ void AFortScriptedObjectMovement_MovableObjectBase::GetStaticPathTravelingBounds
 
 float AFortScriptedObjectMovement_MovableObjectBase::GetStaticPathZOffsetHeight() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetStaticPathZOffsetHeight");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScriptedObjectMovement_MovableObjectBase", "GetStaticPathZOffsetHeight");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScriptedObjectMovement_MovableObjectBase_GetStaticPathZOffsetHeight Parms{};
 

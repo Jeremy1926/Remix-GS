@@ -193,10 +193,9 @@ float UFNE_UIBlock::GetTransitionTime(EFNE_UIBlockVisualState State)
 
 void UFNE_UIBlock::OnInstantTransitionToDeselected()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInstantTransitionToDeselected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnInstantTransitionToDeselected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -207,10 +206,9 @@ void UFNE_UIBlock::OnInstantTransitionToDeselected()
 
 void UFNE_UIBlock::OnInstantTransitionToDisabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInstantTransitionToDisabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnInstantTransitionToDisabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -221,10 +219,9 @@ void UFNE_UIBlock::OnInstantTransitionToDisabled()
 
 void UFNE_UIBlock::OnInstantTransitionToEnabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInstantTransitionToEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnInstantTransitionToEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -235,10 +232,9 @@ void UFNE_UIBlock::OnInstantTransitionToEnabled()
 
 void UFNE_UIBlock::OnInstantTransitionToLocked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInstantTransitionToLocked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnInstantTransitionToLocked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -249,10 +245,9 @@ void UFNE_UIBlock::OnInstantTransitionToLocked()
 
 void UFNE_UIBlock::OnInstantTransitionToSelected()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInstantTransitionToSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnInstantTransitionToSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -263,10 +258,9 @@ void UFNE_UIBlock::OnInstantTransitionToSelected()
 
 void UFNE_UIBlock::OnInstantTransitionToUnlocked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInstantTransitionToUnlocked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnInstantTransitionToUnlocked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -277,10 +271,9 @@ void UFNE_UIBlock::OnInstantTransitionToUnlocked()
 
 void UFNE_UIBlock::OnTransitionDeselectedFocusedRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionDeselectedFocusedRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnTransitionDeselectedFocusedRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -291,10 +284,9 @@ void UFNE_UIBlock::OnTransitionDeselectedFocusedRequested()
 
 void UFNE_UIBlock::OnTransitionDeselectedIdleRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionDeselectedIdleRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnTransitionDeselectedIdleRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -305,10 +297,9 @@ void UFNE_UIBlock::OnTransitionDeselectedIdleRequested()
 
 void UFNE_UIBlock::OnTransitionDisabledRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionDisabledRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnTransitionDisabledRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -319,10 +310,9 @@ void UFNE_UIBlock::OnTransitionDisabledRequested()
 
 void UFNE_UIBlock::OnTransitionEnabledRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionEnabledRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnTransitionEnabledRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -333,10 +323,9 @@ void UFNE_UIBlock::OnTransitionEnabledRequested()
 
 void UFNE_UIBlock::OnTransitionFocusedRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionFocusedRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnTransitionFocusedRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -347,10 +336,9 @@ void UFNE_UIBlock::OnTransitionFocusedRequested()
 
 void UFNE_UIBlock::OnTransitionHoveredRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionHoveredRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnTransitionHoveredRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -361,10 +349,9 @@ void UFNE_UIBlock::OnTransitionHoveredRequested()
 
 void UFNE_UIBlock::OnTransitionPressedRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionPressedRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnTransitionPressedRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -375,10 +362,9 @@ void UFNE_UIBlock::OnTransitionPressedRequested()
 
 void UFNE_UIBlock::OnTransitionReleasedRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionReleasedRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnTransitionReleasedRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -389,10 +375,9 @@ void UFNE_UIBlock::OnTransitionReleasedRequested()
 
 void UFNE_UIBlock::OnTransitionSelectedRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionSelectedRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnTransitionSelectedRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -403,10 +388,9 @@ void UFNE_UIBlock::OnTransitionSelectedRequested()
 
 void UFNE_UIBlock::OnTransitionUnfocusedRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionUnfocusedRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnTransitionUnfocusedRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -417,10 +401,9 @@ void UFNE_UIBlock::OnTransitionUnfocusedRequested()
 
 void UFNE_UIBlock::OnTransitionUnhoveredRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionUnhoveredRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_UIBlock", "OnTransitionUnhoveredRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -566,10 +549,9 @@ void UFNE_UIBlueprintFunctionLibrary::PlayAnimationDuringTime(class UUserWidget*
 
 void UFNE_CTAButton::BP_SetSecondaryText(const class FText& ButtonSecondaryText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetSecondaryText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_CTAButton", "BP_SetSecondaryText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FNE_CTAButton_BP_SetSecondaryText Parms{};
 
@@ -586,10 +568,9 @@ void UFNE_CTAButton::BP_SetSecondaryText(const class FText& ButtonSecondaryText)
 
 void UFNE_CTAButton::BP_SetText(const class FText& ButtonText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_CTAButton", "BP_SetText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FNE_CTAButton_BP_SetText Parms{};
 
@@ -656,10 +637,9 @@ void UFNE_CTAButton::SetText(const class FText& ButtonText)
 
 void UFNE_StylableButton::BP_SetSecondaryText(const class FText& ButtonSecondaryText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetSecondaryText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_StylableButton", "BP_SetSecondaryText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FNE_StylableButton_BP_SetSecondaryText Parms{};
 
@@ -676,10 +656,9 @@ void UFNE_StylableButton::BP_SetSecondaryText(const class FText& ButtonSecondary
 
 void UFNE_StylableButton::BP_SetText(const class FText& ButtonText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_StylableButton", "BP_SetText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FNE_StylableButton_BP_SetText Parms{};
 

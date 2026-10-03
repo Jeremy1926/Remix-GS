@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UFortContentGateDetailsWidget::OnShowGamemodeDescription(const class FString& ActivityTitle)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowGamemodeDescription");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortContentGateDetailsWidget", "OnShowGamemodeDescription");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortContentGateDetailsWidget_OnShowGamemodeDescription Parms{};
 
@@ -45,10 +44,9 @@ void UFortContentGateDetailsWidget::OnShowGamemodeDescription(const class FStrin
 
 void UFortContentGateRatingWidget::OnLabelUpdated(bool bLabelEnabled, const class FText& LabelText, const class FText& LabelNumber)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLabelUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortContentGateRatingWidget", "OnLabelUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortContentGateRatingWidget_OnLabelUpdated Parms{};
 
@@ -67,10 +65,9 @@ void UFortContentGateRatingWidget::OnLabelUpdated(bool bLabelEnabled, const clas
 
 void UFortContentGateRatingWidget::OnStyleUpdated(const struct FSqueegeeStyleParams& StyleParams)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStyleUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortContentGateRatingWidget", "OnStyleUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortContentGateRatingWidget_OnStyleUpdated Parms{};
 
@@ -88,10 +85,9 @@ void UFortContentGateRatingWidget::OnStyleUpdated(const struct FSqueegeeStylePar
 
 void UFortContentManagementDetails::OnPreviewImageChanged(const bool bIsLoading, const class UTexture* Texture)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreviewImageChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortContentManagementDetails", "OnPreviewImageChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortContentManagementDetails_OnPreviewImageChanged Parms{};
 
@@ -115,10 +111,9 @@ void UFortContentManagementDetails::OnPreviewImageChanged(const bool bIsLoading,
 
 void UFortContentManagementDetails::OnShowActivityData(const class FText& ActivityDisplayName, const class FText& ActivityDescription, const class FString& CreatorName, const class FText& LinkCode, const bool IsCreative, const struct FDateTime& UnlockTime, class UFortGameActivity* GameActivity)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowActivityData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortContentManagementDetails", "OnShowActivityData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortContentManagementDetails_OnShowActivityData Parms{};
 
@@ -139,10 +134,9 @@ void UFortContentManagementDetails::OnShowActivityData(const class FText& Activi
 
 void UFortContentManagementDetails::OnShowWeaponData()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowWeaponData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortContentManagementDetails", "OnShowWeaponData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -155,10 +149,9 @@ void UFortContentManagementDetails::OnShowWeaponData()
 
 void UFortContentManagementButton::OnChangeManagementState(EFortContentManagementState NewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnChangeManagementState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortContentManagementButton", "OnChangeManagementState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortContentManagementButton_OnChangeManagementState Parms{};
 
@@ -175,10 +168,9 @@ void UFortContentManagementButton::OnChangeManagementState(EFortContentManagemen
 
 void UFortContentManagementButton::OnShowError(const class FText& ErrorText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowError");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortContentManagementButton", "OnShowError");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortContentManagementButton_OnShowError Parms{};
 
@@ -195,10 +187,9 @@ void UFortContentManagementButton::OnShowError(const class FText& ErrorText)
 
 void UFortContentManagementButton::OnShowGameActivity(const class UFortGameActivity* NewGameActivity)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowGameActivity");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortContentManagementButton", "OnShowGameActivity");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortContentManagementButton_OnShowGameActivity Parms{};
 
@@ -215,10 +206,9 @@ void UFortContentManagementButton::OnShowGameActivity(const class UFortGameActiv
 
 void UFortContentManagementLabelWidget::OnSetLabel(const class FText& InText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetLabel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortContentManagementLabelWidget", "OnSetLabel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortContentManagementLabelWidget_OnSetLabel Parms{};
 
@@ -235,10 +225,9 @@ void UFortContentManagementLabelWidget::OnSetLabel(const class FText& InText)
 
 void UFortContentManagementList::OnNextUnlockPageRequestCompleted(bool bSuccess)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNextUnlockPageRequestCompleted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortContentManagementList", "OnNextUnlockPageRequestCompleted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortContentManagementList_OnNextUnlockPageRequestCompleted Parms{};
 

@@ -48,10 +48,9 @@ void UAthenaEquippedItemInfoWeaponMods::HandleWeaponFullyEquipped(class AFortWea
 
 void UAthenaEquippedItemInfoWeaponMods::ResetItemInfo()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ResetItemInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaEquippedItemInfoWeaponMods", "ResetItemInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -64,10 +63,9 @@ void UAthenaEquippedItemInfoWeaponMods::ResetItemInfo()
 
 void UAthenaEquippedItemInfoWeaponMods::SetItemSlotInfo(const struct FFortWeaponModSlot& ModSlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetItemSlotInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaEquippedItemInfoWeaponMods", "SetItemSlotInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaEquippedItemInfoWeaponMods_SetItemSlotInfo Parms{};
 
@@ -206,10 +204,9 @@ void UAthenaInventoryItemInfoWeaponMods::HandleWeaponModSlotsChanged(class AFort
 
 void UAthenaInventoryItemInfoWeaponMods::ResetItemInfo()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ResetItemInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaInventoryItemInfoWeaponMods", "ResetItemInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -222,10 +219,9 @@ void UAthenaInventoryItemInfoWeaponMods::ResetItemInfo()
 
 void UAthenaInventoryItemInfoWeaponMods::SetIsModifiableWeapon(const bool bIsModifiable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetIsModifiableWeapon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaInventoryItemInfoWeaponMods", "SetIsModifiableWeapon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaInventoryItemInfoWeaponMods_SetIsModifiableWeapon Parms{};
 
@@ -242,10 +238,9 @@ void UAthenaInventoryItemInfoWeaponMods::SetIsModifiableWeapon(const bool bIsMod
 
 void UAthenaInventoryItemInfoWeaponMods::SetItemSlotInfo(const struct FFortWeaponModSlot& ModSlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetItemSlotInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaInventoryItemInfoWeaponMods", "SetItemSlotInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaInventoryItemInfoWeaponMods_SetItemSlotInfo Parms{};
 
@@ -307,10 +302,9 @@ void UAthenaInventoryItemInfoWeaponModsConfigurator::RemoveMod(class UFortWeapon
 
 void UAthenaLastKillerWeaponModsInfo::SetKillerWeaponMods(const TArray<struct FFortWeaponModSlot>& ModSlots, const bool bShouldShowMods)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetKillerWeaponMods");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaLastKillerWeaponModsInfo", "SetKillerWeaponMods");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaLastKillerWeaponModsInfo_SetKillerWeaponMods Parms{};
 
@@ -326,10 +320,9 @@ void UAthenaLastKillerWeaponModsInfo::SetKillerWeaponMods(const TArray<struct FF
 
 void UAthenaMarkerDetailsExtensionWeaponMods::ResetModInfo()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ResetModInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaMarkerDetailsExtensionWeaponMods", "ResetModInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -342,10 +335,9 @@ void UAthenaMarkerDetailsExtensionWeaponMods::ResetModInfo()
 
 void UAthenaMarkerDetailsExtensionWeaponMods::SetModInfo(const struct FFortWeaponModSlot& ModSlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetModInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaMarkerDetailsExtensionWeaponMods", "SetModInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaMarkerDetailsExtensionWeaponMods_SetModInfo Parms{};
 
@@ -412,10 +404,9 @@ void UAthenaPickupIndicatorWeaponMods::HandleWeaponEquipped(class AFortWeapon* N
 
 void UAthenaPickupIndicatorWeaponMods::ResetItemInfo()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ResetItemInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaPickupIndicatorWeaponMods", "ResetItemInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -428,10 +419,9 @@ void UAthenaPickupIndicatorWeaponMods::ResetItemInfo()
 
 void UAthenaPickupIndicatorWeaponMods::SetEquippedWeaponItemInfo(const class UItemDefinitionBase* ItemDef)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetEquippedWeaponItemInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaPickupIndicatorWeaponMods", "SetEquippedWeaponItemInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaPickupIndicatorWeaponMods_SetEquippedWeaponItemInfo Parms{};
 
@@ -448,10 +438,9 @@ void UAthenaPickupIndicatorWeaponMods::SetEquippedWeaponItemInfo(const class UIt
 
 void UAthenaPickupIndicatorWeaponMods::SetEquippedWeaponItemSlotInfo(const struct FFortWeaponModSlot& ModSlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetEquippedWeaponItemSlotInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaPickupIndicatorWeaponMods", "SetEquippedWeaponItemSlotInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaPickupIndicatorWeaponMods_SetEquippedWeaponItemSlotInfo Parms{};
 
@@ -468,10 +457,9 @@ void UAthenaPickupIndicatorWeaponMods::SetEquippedWeaponItemSlotInfo(const struc
 
 void UAthenaPickupIndicatorWeaponMods::SetItemModifiedWeaponName(const class FText& ModifiedWeaponName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetItemModifiedWeaponName");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaPickupIndicatorWeaponMods", "SetItemModifiedWeaponName");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaPickupIndicatorWeaponMods_SetItemModifiedWeaponName Parms{};
 
@@ -488,10 +476,9 @@ void UAthenaPickupIndicatorWeaponMods::SetItemModifiedWeaponName(const class FTe
 
 void UAthenaPickupIndicatorWeaponMods::SetItemSlotInfo(const struct FFortWeaponModSlot& ModSlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetItemSlotInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaPickupIndicatorWeaponMods", "SetItemSlotInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaPickupIndicatorWeaponMods_SetItemSlotInfo Parms{};
 
@@ -650,10 +637,9 @@ void UAthenaQuickBarSlotWeaponModsIndicator::ResetItemInfo()
 
 void UAthenaQuickBarSlotWeaponModsIndicator::SetItemSlotInfo(const struct FFortWeaponModSlot& ModSlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetItemSlotInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaQuickBarSlotWeaponModsIndicator", "SetItemSlotInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaQuickBarSlotWeaponModsIndicator_SetItemSlotInfo Parms{};
 
@@ -670,10 +656,9 @@ void UAthenaQuickBarSlotWeaponModsIndicator::SetItemSlotInfo(const struct FFortW
 
 void UAthenaQuickBarSlotWeaponModsIndicator::SetItemSlotSelected(bool bIsSelected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetItemSlotSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaQuickBarSlotWeaponModsIndicator", "SetItemSlotSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaQuickBarSlotWeaponModsIndicator_SetItemSlotSelected Parms{};
 

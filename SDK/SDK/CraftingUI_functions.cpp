@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UAthenaCraftingQuickBarButton::OnCanCraftNowChanged(const bool bCanCraftNow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCanCraftNowChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaCraftingQuickBarButton", "OnCanCraftNowChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaCraftingQuickBarButton_OnCanCraftNowChanged Parms{};
 
@@ -43,10 +42,9 @@ void UAthenaCraftingQuickBarButton::OnCanCraftNowChanged(const bool bCanCraftNow
 
 void UAthenaCraftingQuickBarButton::OnIsCraftableItemChanged(const bool bIsCraftableItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIsCraftableItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaCraftingQuickBarButton", "OnIsCraftableItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaCraftingQuickBarButton_OnIsCraftableItemChanged Parms{};
 
@@ -115,10 +113,9 @@ void UAthenaEquippedItemCraftingIndicator::HandleWeaponEquipped(class AFortWeapo
 
 void UAthenaEquippedItemCraftingIndicator::OnCanCraftNowChanged(const bool bCanCraftNow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCanCraftNowChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaEquippedItemCraftingIndicator", "OnCanCraftNowChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaEquippedItemCraftingIndicator_OnCanCraftNowChanged Parms{};
 
@@ -135,10 +132,9 @@ void UAthenaEquippedItemCraftingIndicator::OnCanCraftNowChanged(const bool bCanC
 
 void UAthenaEquippedItemCraftingIndicator::OnIsCraftableItemChanged(const bool bIsCraftableItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIsCraftableItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaEquippedItemCraftingIndicator", "OnIsCraftableItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaEquippedItemCraftingIndicator_OnIsCraftableItemChanged Parms{};
 
@@ -180,10 +176,9 @@ void UAthenaInventoryItemInfoCraftingIndicator::HandleInventoryItemSelected(clas
 
 void UAthenaInventoryItemInfoCraftingIndicator::OnCanCraftNowChanged(const bool bCanCraftNow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCanCraftNowChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaInventoryItemInfoCraftingIndicator", "OnCanCraftNowChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaInventoryItemInfoCraftingIndicator_OnCanCraftNowChanged Parms{};
 
@@ -200,10 +195,9 @@ void UAthenaInventoryItemInfoCraftingIndicator::OnCanCraftNowChanged(const bool 
 
 void UAthenaInventoryItemInfoCraftingIndicator::OnIsCraftableItemChanged(const bool bIsCraftableItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIsCraftableItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaInventoryItemInfoCraftingIndicator", "OnIsCraftableItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaInventoryItemInfoCraftingIndicator_OnIsCraftableItemChanged Parms{};
 
@@ -272,10 +266,9 @@ void UAthenaQuickBarSlotCraftingIndicator::HandleWeaponEquipped(class AFortWeapo
 
 void UAthenaQuickBarSlotCraftingIndicator::OnCanCraftNowChanged(const bool bCanCraftNow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCanCraftNowChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaQuickBarSlotCraftingIndicator", "OnCanCraftNowChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaQuickBarSlotCraftingIndicator_OnCanCraftNowChanged Parms{};
 
@@ -292,10 +285,9 @@ void UAthenaQuickBarSlotCraftingIndicator::OnCanCraftNowChanged(const bool bCanC
 
 void UAthenaQuickBarSlotCraftingIndicator::OnIngredientChanged(const bool bCanCraftNow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIngredientChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaQuickBarSlotCraftingIndicator", "OnIngredientChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaQuickBarSlotCraftingIndicator_OnIngredientChanged Parms{};
 
@@ -312,10 +304,9 @@ void UAthenaQuickBarSlotCraftingIndicator::OnIngredientChanged(const bool bCanCr
 
 void UAthenaQuickBarSlotCraftingIndicator::OnIsCraftableItemChanged(const bool bIsCraftableItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIsCraftableItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaQuickBarSlotCraftingIndicator", "OnIsCraftableItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaQuickBarSlotCraftingIndicator_OnIsCraftableItemChanged Parms{};
 
@@ -335,10 +326,9 @@ void UAthenaQuickBarSlotCraftingIndicator::OnIsCraftableItemChanged(const bool b
 
 void UFortCraftingIngredientWidget::OnIngredientWidgetUpdated(const int32 NumAvailable, const int32 NumRequired, const bool bIsPrimaryIngredient, const bool bIsLastIngredient)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIngredientWidgetUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCraftingIngredientWidget", "OnIngredientWidgetUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCraftingIngredientWidget_OnIngredientWidgetUpdated Parms{};
 
@@ -359,10 +349,9 @@ void UFortCraftingIngredientWidget::OnIngredientWidgetUpdated(const int32 NumAva
 
 void UFortCraftingItemInfoWidget::OnItemRaritySet(const EFortRarity Rarity, const struct FFortRarityItemData& RarityItemData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemRaritySet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCraftingItemInfoWidget", "OnItemRaritySet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCraftingItemInfoWidget_OnItemRaritySet Parms{};
 
@@ -378,10 +367,9 @@ void UFortCraftingItemInfoWidget::OnItemRaritySet(const EFortRarity Rarity, cons
 
 void UFortCraftingListEntry::OnCraftingListItemSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCraftingListItemSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCraftingListEntry", "OnCraftingListItemSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -419,10 +407,9 @@ void UFortCraftingTab::HandleInventoryItemSelected(class UFortItem* Item)
 
 void UFortCraftingTab::OnFormulaListUpdated(const int32 NumFormulas)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFormulaListUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCraftingTab", "OnFormulaListUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCraftingTab_OnFormulaListUpdated Parms{};
 

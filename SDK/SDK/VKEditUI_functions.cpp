@@ -24,10 +24,9 @@ SDK_NAMESPACE_START
 
 void UVKConnectionIndicator::OnMinigameStateChanged(const EFortMinigameState MinigameState, const EFortMinigameState PreviousMinigameState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMinigameStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VKConnectionIndicator", "OnMinigameStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VKConnectionIndicator_OnMinigameStateChanged Parms{};
 
@@ -45,10 +44,9 @@ void UVKConnectionIndicator::OnMinigameStateChanged(const EFortMinigameState Min
 
 void UVKDebugMessagesBase::BP_OnGameStateInitialized(class AFortGameState* GameState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnGameStateInitialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VKDebugMessagesBase", "BP_OnGameStateInitialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VKDebugMessagesBase_BP_OnGameStateInitialized Parms{};
 

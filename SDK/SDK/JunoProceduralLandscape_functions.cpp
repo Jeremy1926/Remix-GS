@@ -25,10 +25,9 @@ SDK_NAMESPACE_START
 
 void UJunoLandscapeExternalMaterialsCollector::CollectExternalMaterials(class UJunoLandscapeLayersData* LayerData, bool bInlcudeMobile, bool bIncludeStandard)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CollectExternalMaterials");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoLandscapeExternalMaterialsCollector", "CollectExternalMaterials");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoLandscapeExternalMaterialsCollector_CollectExternalMaterials Parms{};
 

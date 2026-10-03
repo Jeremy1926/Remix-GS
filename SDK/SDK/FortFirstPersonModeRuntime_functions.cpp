@@ -94,10 +94,9 @@ void AFortFirstPersonMode_CameraController::HandleWeaponEquipped(class AFortWeap
 
 void AFortFirstPersonMode_CameraController::OnLocalPlayerVisibilityChanged(const bool bShouldBeVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLocalPlayerVisibilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortFirstPersonMode_CameraController", "OnLocalPlayerVisibilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortFirstPersonMode_CameraController_OnLocalPlayerVisibilityChanged Parms{};
 

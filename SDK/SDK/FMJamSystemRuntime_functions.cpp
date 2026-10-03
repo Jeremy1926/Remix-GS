@@ -76,10 +76,9 @@ class AController* UJamControllerComponent::GetControllerOfClass(TSubclassOf<cla
 
 void UJamControllerComponent::UpdateJamUI()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateJamUI");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamControllerComponent", "UpdateJamUI");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -306,10 +305,9 @@ void UJamControllerComponent_LoopOptions::RemoveJamCategories()
 
 bool UJamControllerComponent_LoopOptions::ShouldAddJamCategoriesBeforeLocker() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldAddJamCategoriesBeforeLocker");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamControllerComponent_LoopOptions", "ShouldAddJamCategoriesBeforeLocker");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JamControllerComponent_LoopOptions_ShouldAddJamCategoriesBeforeLocker Parms{};
 

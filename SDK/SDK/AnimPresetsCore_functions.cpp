@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 TSoftClassPtr<class UClass> UAnimPreset::GetPresetClass() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPresetClass");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimPreset", "GetPresetClass");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimPreset_GetPresetClass Parms{};
 
@@ -48,10 +47,9 @@ TSoftClassPtr<class UClass> UAnimPreset::GetPresetClass() const
 
 void UAnimPreset::HandleAnimInstance(class UAnimInstance* Instance) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAnimInstance");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimPreset", "HandleAnimInstance");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimPreset_HandleAnimInstance Parms{};
 

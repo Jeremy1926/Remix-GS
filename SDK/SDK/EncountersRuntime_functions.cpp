@@ -357,10 +357,9 @@ class UEncounterMobManagerComponent* UEncounterBlueprintLibrary::GetRelevantMobM
 
 void AEncounterGameplayVolume::OnCleanup()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCleanup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EncounterGameplayVolume", "OnCleanup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -373,10 +372,9 @@ void AEncounterGameplayVolume::OnCleanup()
 
 bool AEncounterGameplayVolume::IsDoneCleaningUp() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsDoneCleaningUp");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EncounterGameplayVolume", "IsDoneCleaningUp");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EncounterGameplayVolume_IsDoneCleaningUp Parms{};
 

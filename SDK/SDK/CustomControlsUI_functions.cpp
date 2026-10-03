@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void ACustomControlsUIDirector::BP_OnOptionsActivated(const class UCustomControlOptions_Base* Options)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnOptionsActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CustomControlsUIDirector", "BP_OnOptionsActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CustomControlsUIDirector_BP_OnOptionsActivated Parms{};
 
@@ -43,10 +42,9 @@ void ACustomControlsUIDirector::BP_OnOptionsActivated(const class UCustomControl
 
 void ACustomControlsUIDirector::BP_OnOptionsDeactivated(const class UCustomControlOptions_Base* Options)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnOptionsDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CustomControlsUIDirector", "BP_OnOptionsDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CustomControlsUIDirector_BP_OnOptionsDeactivated Parms{};
 

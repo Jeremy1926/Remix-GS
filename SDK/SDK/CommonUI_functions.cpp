@@ -365,10 +365,9 @@ void UCommonActivatableWidget::BindVisibilityToActivation(class UCommonActivatab
 
 void UCommonActivatableWidget::BP_OnActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonActivatableWidget", "BP_OnActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -379,10 +378,9 @@ void UCommonActivatableWidget::BP_OnActivated()
 
 void UCommonActivatableWidget::BP_OnDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonActivatableWidget", "BP_OnDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -395,10 +393,9 @@ void UCommonActivatableWidget::BP_OnDeactivated()
 
 bool UCommonActivatableWidget::BP_OnHandleBackAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnHandleBackAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonActivatableWidget", "BP_OnHandleBackAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonActivatableWidget_BP_OnHandleBackAction Parms{};
 
@@ -501,10 +498,9 @@ void UCommonActivatableWidget::SetBindVisibilities(ESlateVisibility OnActivatedV
 
 class UWidget* UCommonActivatableWidget::BP_GetDesiredFocusTarget() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetDesiredFocusTarget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonActivatableWidget", "BP_GetDesiredFocusTarget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonActivatableWidget_BP_GetDesiredFocusTarget Parms{};
 
@@ -521,10 +517,9 @@ class UWidget* UCommonActivatableWidget::BP_GetDesiredFocusTarget() const
 
 struct FUIInputConfig UCommonActivatableWidget::BP_GetDesiredInputConfig() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetDesiredInputConfig");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonActivatableWidget", "BP_GetDesiredInputConfig");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonActivatableWidget_BP_GetDesiredInputConfig Parms{};
 
@@ -1175,10 +1170,9 @@ class UCommonTextStyle* UCommonButtonStyle::GetSelectedTextStyle() const
 
 void UCommonButtonBase::BP_OnClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1189,10 +1183,9 @@ void UCommonButtonBase::BP_OnClicked()
 
 void UCommonButtonBase::BP_OnDeselected()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDeselected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnDeselected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1203,10 +1196,9 @@ void UCommonButtonBase::BP_OnDeselected()
 
 void UCommonButtonBase::BP_OnDisabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDisabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnDisabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1217,10 +1209,9 @@ void UCommonButtonBase::BP_OnDisabled()
 
 void UCommonButtonBase::BP_OnDoubleClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDoubleClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnDoubleClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1231,10 +1222,9 @@ void UCommonButtonBase::BP_OnDoubleClicked()
 
 void UCommonButtonBase::BP_OnEnabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1245,10 +1235,9 @@ void UCommonButtonBase::BP_OnEnabled()
 
 void UCommonButtonBase::BP_OnFocusLost()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnFocusLost");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnFocusLost");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1259,10 +1248,9 @@ void UCommonButtonBase::BP_OnFocusLost()
 
 void UCommonButtonBase::BP_OnFocusReceived()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnFocusReceived");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnFocusReceived");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1273,10 +1261,9 @@ void UCommonButtonBase::BP_OnFocusReceived()
 
 void UCommonButtonBase::BP_OnHovered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnHovered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnHovered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1287,10 +1274,9 @@ void UCommonButtonBase::BP_OnHovered()
 
 void UCommonButtonBase::BP_OnInputActionTriggered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnInputActionTriggered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnInputActionTriggered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1303,10 +1289,9 @@ void UCommonButtonBase::BP_OnInputActionTriggered()
 
 void UCommonButtonBase::BP_OnInputMethodChanged(ECommonInputType CurrentInputType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnInputMethodChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnInputMethodChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonButtonBase_BP_OnInputMethodChanged Parms{};
 
@@ -1321,10 +1306,9 @@ void UCommonButtonBase::BP_OnInputMethodChanged(ECommonInputType CurrentInputTyp
 
 void UCommonButtonBase::BP_OnLockClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnLockClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnLockClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1335,10 +1319,9 @@ void UCommonButtonBase::BP_OnLockClicked()
 
 void UCommonButtonBase::BP_OnLockDoubleClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnLockDoubleClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnLockDoubleClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1351,10 +1334,9 @@ void UCommonButtonBase::BP_OnLockDoubleClicked()
 
 void UCommonButtonBase::BP_OnLockedChanged(bool bIsLocked)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnLockedChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnLockedChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonButtonBase_BP_OnLockedChanged Parms{};
 
@@ -1369,10 +1351,9 @@ void UCommonButtonBase::BP_OnLockedChanged(bool bIsLocked)
 
 void UCommonButtonBase::BP_OnPressed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnPressed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnPressed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1383,10 +1364,9 @@ void UCommonButtonBase::BP_OnPressed()
 
 void UCommonButtonBase::BP_OnReleased()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnReleased");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnReleased");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1397,10 +1377,9 @@ void UCommonButtonBase::BP_OnReleased()
 
 void UCommonButtonBase::BP_OnSelected()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1411,10 +1390,9 @@ void UCommonButtonBase::BP_OnSelected()
 
 void UCommonButtonBase::BP_OnUnhovered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnUnhovered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "BP_OnUnhovered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1734,10 +1712,9 @@ bool UCommonButtonBase::NativeOnHoldProgressRollback(float DeltaTime)
 
 void UCommonButtonBase::OnActionComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActionComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "OnActionComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1750,10 +1727,9 @@ void UCommonButtonBase::OnActionComplete()
 
 void UCommonButtonBase::OnActionProgress(float HeldPercent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActionProgress");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "OnActionProgress");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonButtonBase_OnActionProgress Parms{};
 
@@ -1768,10 +1744,9 @@ void UCommonButtonBase::OnActionProgress(float HeldPercent)
 
 void UCommonButtonBase::OnCurrentTextStyleChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCurrentTextStyleChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "OnCurrentTextStyleChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1809,10 +1784,9 @@ void UCommonButtonBase::OnInputMethodChanged(ECommonInputType CurrentInputType)
 
 void UCommonButtonBase::OnTriggeredInputActionChanged(const struct FDataTableRowHandle& NewTriggeredAction)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTriggeredInputActionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "OnTriggeredInputActionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonButtonBase_OnTriggeredInputActionChanged Parms{};
 
@@ -1829,10 +1803,9 @@ void UCommonButtonBase::OnTriggeredInputActionChanged(const struct FDataTableRow
 
 void UCommonButtonBase::OnTriggeringEnhancedInputActionChanged(const class UInputAction* InInputAction)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTriggeringEnhancedInputActionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "OnTriggeringEnhancedInputActionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonButtonBase_OnTriggeringEnhancedInputActionChanged Parms{};
 
@@ -1849,10 +1822,9 @@ void UCommonButtonBase::OnTriggeringEnhancedInputActionChanged(const class UInpu
 
 void UCommonButtonBase::OnTriggeringInputActionChanged(const struct FDataTableRowHandle& NewTriggeredAction)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTriggeringInputActionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonButtonBase", "OnTriggeringInputActionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonButtonBase_OnTriggeringInputActionChanged Parms{};
 
@@ -3977,10 +3949,9 @@ void UCommonRichTextBlock::SetScrollingEnabled(bool bInIsScrollingEnabled)
 
 void UCommonRotator::BP_OnOptionSelected(int32 Index_0)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnOptionSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonRotator", "BP_OnOptionSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonRotator_BP_OnOptionSelected Parms{};
 
@@ -3997,10 +3968,9 @@ void UCommonRotator::BP_OnOptionSelected(int32 Index_0)
 
 void UCommonRotator::BP_OnOptionsPopulated(int32 Count)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnOptionsPopulated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonRotator", "BP_OnOptionsPopulated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonRotator_BP_OnOptionsPopulated Parms{};
 
@@ -4206,10 +4176,9 @@ void UCommonTabListWidgetBase::HandleNextTabInputAction(bool* bPassThrough)
 
 void UCommonTabListWidgetBase::HandlePostLinkedSwitcherChanged_BP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandlePostLinkedSwitcherChanged_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonTabListWidgetBase", "HandlePostLinkedSwitcherChanged_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -4220,10 +4189,9 @@ void UCommonTabListWidgetBase::HandlePostLinkedSwitcherChanged_BP()
 
 void UCommonTabListWidgetBase::HandlePreLinkedSwitcherChanged_BP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandlePreLinkedSwitcherChanged_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonTabListWidgetBase", "HandlePreLinkedSwitcherChanged_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -4290,10 +4258,9 @@ void UCommonTabListWidgetBase::HandleTabButtonSelected(class UCommonButtonBase* 
 
 void UCommonTabListWidgetBase::HandleTabCreation(class FName TabNameID, class UCommonButtonBase* TabButton)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTabCreation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonTabListWidgetBase", "HandleTabCreation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonTabListWidgetBase_HandleTabCreation Parms{};
 
@@ -4317,10 +4284,9 @@ void UCommonTabListWidgetBase::HandleTabCreation(class FName TabNameID, class UC
 
 void UCommonTabListWidgetBase::HandleTabRemoval(class FName TabNameID, class UCommonButtonBase* TabButton)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTabRemoval");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonTabListWidgetBase", "HandleTabRemoval");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonTabListWidgetBase_HandleTabRemoval Parms{};
 
@@ -6607,10 +6573,9 @@ void UCommonBoundActionBar::SetDisplayOwningPlayerActionsOnly(bool bShouldOnlyDi
 
 void UCommonBoundActionButton::OnUpdateInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonBoundActionButton", "OnUpdateInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

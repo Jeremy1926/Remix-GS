@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void AFortGameplayCueNotifyLoop_Hover::Cleanup()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Cleanup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayCueNotifyLoop_Hover", "Cleanup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -40,10 +39,9 @@ void AFortGameplayCueNotifyLoop_Hover::Cleanup()
 
 void AFortGameplayCueNotifyLoop_Hover::OnFuelLow()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFuelLow");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayCueNotifyLoop_Hover", "OnFuelLow");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -54,10 +52,9 @@ void AFortGameplayCueNotifyLoop_Hover::OnFuelLow()
 
 void AFortGameplayCueNotifyLoop_Hover::OnOutOfFuel()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOutOfFuel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayCueNotifyLoop_Hover", "OnOutOfFuel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -71,10 +68,9 @@ void AFortGameplayCueNotifyLoop_Hover::OnOutOfFuel()
 
 void AFortGameplayCueNotifyLoop_Hover::UpdateAudioParameters(const float HeightMod, const float VelocityMod)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateAudioParameters");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayCueNotifyLoop_Hover", "UpdateAudioParameters");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayCueNotifyLoop_Hover_UpdateAudioParameters Parms{};
 
@@ -92,10 +88,9 @@ void AFortGameplayCueNotifyLoop_Hover::UpdateAudioParameters(const float HeightM
 
 void AFortGameplayCueNotifyLoop_Hover::UpdateFuelFlicker(float FlickerPercent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateFuelFlicker");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayCueNotifyLoop_Hover", "UpdateFuelFlicker");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayCueNotifyLoop_Hover_UpdateFuelFlicker Parms{};
 
@@ -110,10 +105,9 @@ void AFortGameplayCueNotifyLoop_Hover::UpdateFuelFlicker(float FlickerPercent)
 
 void AFortGameplayCueNotifyLoop_Hover::UpdateFX()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateFX");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayCueNotifyLoop_Hover", "UpdateFX");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -131,10 +125,9 @@ void AFortGameplayCueNotifyLoop_Hover::UpdateFX()
 
 bool AFortGameplayCueNotifyLoop_Hover::UpdateGroundFX()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateGroundFX");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayCueNotifyLoop_Hover", "UpdateGroundFX");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayCueNotifyLoop_Hover_UpdateGroundFX Parms{};
 
@@ -243,10 +236,9 @@ class UFortMovementMode_HoverRuntimeData* UFortMovementMode_ExtHover::TryActivat
 
 void UFortMovementMode_ExtHover::BP_HandleHitResponse(const struct FMMERuntimeContext& RuntimeContext, const struct FVector& InVelocity, const struct FVector& OldPosition, const struct FVector& NewLocation, const struct FVector& Adjustement, const struct FHitResult& Hit)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleHitResponse");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtHover", "BP_HandleHitResponse");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtHover_BP_HandleHitResponse Parms{};
 
@@ -272,10 +264,9 @@ void UFortMovementMode_ExtHover::BP_HandleHitResponse(const struct FMMERuntimeCo
 
 void UFortMovementMode_ExtHover::BP_PhysUpdate(struct FVector* OutVelocity, struct FVector* OutAcceleration, const struct FMMERuntimeContext& RuntimeContext, const struct FVector& InVelocity, const struct FVector& InAcceleration)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_PhysUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtHover", "BP_PhysUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtHover_BP_PhysUpdate Parms{};
 
@@ -302,10 +293,9 @@ void UFortMovementMode_ExtHover::BP_PhysUpdate(struct FVector* OutVelocity, stru
 
 EFortMovementModeExt_UpdateResult UFortMovementMode_ExtHover::BP_UpdateBeforeCharacterMovement(const EFortMovementModeExt_UpdateResult& NativeUpdateResult, const struct FMMERuntimeContext& RuntimeContext)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateBeforeCharacterMovement");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtHover", "BP_UpdateBeforeCharacterMovement");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtHover_BP_UpdateBeforeCharacterMovement Parms{};
 
@@ -350,10 +340,9 @@ void UFortMovementMode_ExtHover::EndHover(class UFortMovementMode_HoverRuntimeDa
 
 void UFortMovementMode_ExtHover::OnAscendEnd(class UFortMovementMode_HoverRuntimeData* HoverRuntimeData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAscendEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtHover", "OnAscendEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtHover_OnAscendEnd Parms{};
 
@@ -375,10 +364,9 @@ void UFortMovementMode_ExtHover::OnAscendEnd(class UFortMovementMode_HoverRuntim
 
 void UFortMovementMode_ExtHover::OnAscendStart(class UFortMovementMode_HoverRuntimeData* HoverRuntimeData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAscendStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtHover", "OnAscendStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtHover_OnAscendStart Parms{};
 
@@ -400,10 +388,9 @@ void UFortMovementMode_ExtHover::OnAscendStart(class UFortMovementMode_HoverRunt
 
 void UFortMovementMode_ExtHover::OnBoostEnd(class UFortMovementMode_HoverRuntimeData* HoverRuntimeData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtHover", "OnBoostEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtHover_OnBoostEnd Parms{};
 
@@ -425,10 +412,9 @@ void UFortMovementMode_ExtHover::OnBoostEnd(class UFortMovementMode_HoverRuntime
 
 void UFortMovementMode_ExtHover::OnBoostStart(class UFortMovementMode_HoverRuntimeData* HoverRuntimeData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtHover", "OnBoostStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtHover_OnBoostStart Parms{};
 
@@ -450,10 +436,9 @@ void UFortMovementMode_ExtHover::OnBoostStart(class UFortMovementMode_HoverRunti
 
 void UFortMovementMode_ExtHover::OnHoverEnd(class UFortMovementMode_HoverRuntimeData* HoverRuntimeData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHoverEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtHover", "OnHoverEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtHover_OnHoverEnd Parms{};
 
@@ -475,10 +460,9 @@ void UFortMovementMode_ExtHover::OnHoverEnd(class UFortMovementMode_HoverRuntime
 
 void UFortMovementMode_ExtHover::OnHoverStart(class UFortMovementMode_HoverRuntimeData* HoverRuntimeData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHoverStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtHover", "OnHoverStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtHover_OnHoverStart Parms{};
 
@@ -600,10 +584,9 @@ void UFortMovementMode_ExtHover::TryStartBoost(class UFortMovementMode_HoverRunt
 
 bool UFortMovementMode_ExtHover::CanStartBoosting() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanStartBoosting");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtHover", "CanStartBoosting");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtHover_CanStartBoosting Parms{};
 

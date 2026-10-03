@@ -76,10 +76,9 @@ class UAnimMontage* UFortPawnComponent_AscenderMontageProvider::GetSuitableMonta
 
 void AFortAscenderZipline::BP_HandlePlayerStartedUsingHandle(class AFortPlayerPawn* Player)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandlePlayerStartedUsingHandle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "BP_HandlePlayerStartedUsingHandle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAscenderZipline_BP_HandlePlayerStartedUsingHandle Parms{};
 
@@ -96,10 +95,9 @@ void AFortAscenderZipline::BP_HandlePlayerStartedUsingHandle(class AFortPlayerPa
 
 void AFortAscenderZipline::BP_HandlePlayerStoppedUsingHandle(class AFortPlayerPawn* Player)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandlePlayerStoppedUsingHandle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "BP_HandlePlayerStoppedUsingHandle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAscenderZipline_BP_HandlePlayerStoppedUsingHandle Parms{};
 
@@ -114,10 +112,9 @@ void AFortAscenderZipline::BP_HandlePlayerStoppedUsingHandle(class AFortPlayerPa
 
 void AFortAscenderZipline::BP_HandleStartedLoweringCable()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleStartedLoweringCable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "BP_HandleStartedLoweringCable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -128,10 +125,9 @@ void AFortAscenderZipline::BP_HandleStartedLoweringCable()
 
 void AFortAscenderZipline::BP_HandleStartedLoweringHandle()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleStartedLoweringHandle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "BP_HandleStartedLoweringHandle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -142,10 +138,9 @@ void AFortAscenderZipline::BP_HandleStartedLoweringHandle()
 
 void AFortAscenderZipline::BP_HandleStoppedLoweringCable()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleStoppedLoweringCable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "BP_HandleStoppedLoweringCable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -156,10 +151,9 @@ void AFortAscenderZipline::BP_HandleStoppedLoweringCable()
 
 void AFortAscenderZipline::BP_HandleStoppedLoweringHandle()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleStoppedLoweringHandle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "BP_HandleStoppedLoweringHandle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -170,10 +164,9 @@ void AFortAscenderZipline::BP_HandleStoppedLoweringHandle()
 
 void AFortAscenderZipline::BP_HandleUpdatedLoweringCable()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleUpdatedLoweringCable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "BP_HandleUpdatedLoweringCable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -184,10 +177,9 @@ void AFortAscenderZipline::BP_HandleUpdatedLoweringCable()
 
 void AFortAscenderZipline::BP_HandleUpdatedLoweringHandle()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleUpdatedLoweringHandle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "BP_HandleUpdatedLoweringHandle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -198,10 +190,9 @@ void AFortAscenderZipline::BP_HandleUpdatedLoweringHandle()
 
 void AFortAscenderZipline::BP_OnVolumeReady()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVolumeReady");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "BP_OnVolumeReady");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -425,10 +416,9 @@ void AFortAscenderZipline::SetupEventForSpatialGameplayVolume()
 
 void AFortAscenderZipline::ApplyStructureDamage(class ABuildingSMActor* BuildingActor, class AActor* DamageSource) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ApplyStructureDamage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "ApplyStructureDamage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAscenderZipline_ApplyStructureDamage Parms{};
 
@@ -446,10 +436,9 @@ void AFortAscenderZipline::ApplyStructureDamage(class ABuildingSMActor* Building
 
 class UPrimitiveComponent* AFortAscenderZipline::GetHandleComponent() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetHandleComponent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "GetHandleComponent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAscenderZipline_GetHandleComponent Parms{};
 
@@ -468,10 +457,9 @@ class UPrimitiveComponent* AFortAscenderZipline::GetHandleComponent() const
 
 class UPrimitiveComponent* AFortAscenderZipline::GetInteractComponentOverride(class AFortPlayerPawn* InteractingPawn, class UPrimitiveComponent* InteractComponent) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetInteractComponentOverride");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "GetInteractComponentOverride");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAscenderZipline_GetInteractComponentOverride Parms{};
 
@@ -521,10 +509,9 @@ class AFortPlayerPawn* AFortAscenderZipline::GetPawnUsingHandle() const
 
 class UPrimitiveComponent* AFortAscenderZipline::GetTopComponent() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetTopComponent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAscenderZipline", "GetTopComponent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAscenderZipline_GetTopComponent Parms{};
 

@@ -73,10 +73,9 @@ void UFabricTooltipWidget::SetShowMore(bool bShowingMore)
 
 void UFabricTooltipWidget::ToggleShowMore()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ToggleShowMore");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricTooltipWidget", "ToggleShowMore");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;

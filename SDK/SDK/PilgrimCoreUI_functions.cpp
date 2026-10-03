@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void UPilgrimFTUEControllerComponent::DisplayFTUEWidgets()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"DisplayFTUEWidgets");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimFTUEControllerComponent", "DisplayFTUEWidgets");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -216,10 +215,9 @@ EPilgrimTrackType UPilgrimGameWidgetBase::GetTrackTypeForPlayer(class AFortPlaye
 
 void UPilgrimGameWidgetBase::OnMusicBattleInstanceInitializeEvent()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMusicBattleInstanceInitializeEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGameWidgetBase", "OnMusicBattleInstanceInitializeEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -232,10 +230,9 @@ void UPilgrimGameWidgetBase::OnMusicBattleInstanceInitializeEvent()
 
 void UPilgrimGameWidgetBase::OnOverdriveDataReceivedLocalPlayer(const struct FPilgrimGameProgress& GameProgress)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOverdriveDataReceivedLocalPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGameWidgetBase", "OnOverdriveDataReceivedLocalPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimGameWidgetBase_OnOverdriveDataReceivedLocalPlayer Parms{};
 
@@ -252,10 +249,9 @@ void UPilgrimGameWidgetBase::OnOverdriveDataReceivedLocalPlayer(const struct FPi
 
 void UPilgrimGameWidgetBase::OnScoreDataReceivedLocalPlayer(const struct FPilgrimGameProgress& GameProgress)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnScoreDataReceivedLocalPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGameWidgetBase", "OnScoreDataReceivedLocalPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimGameWidgetBase_OnScoreDataReceivedLocalPlayer Parms{};
 
@@ -272,10 +268,9 @@ void UPilgrimGameWidgetBase::OnScoreDataReceivedLocalPlayer(const struct FPilgri
 
 void UPilgrimGameWidgetBase::OnScoreDataReplicated(const struct FPilgrimMusicBattleData& MusicBattleData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnScoreDataReplicated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGameWidgetBase", "OnScoreDataReplicated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimGameWidgetBase_OnScoreDataReplicated Parms{};
 

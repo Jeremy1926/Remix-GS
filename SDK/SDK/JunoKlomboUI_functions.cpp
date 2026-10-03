@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void UJunoMobileHUDElementKlombo::HandleKlomboCreatureViewModelInitialized()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleKlomboCreatureViewModelInitialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoMobileHUDElementKlombo", "HandleKlomboCreatureViewModelInitialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

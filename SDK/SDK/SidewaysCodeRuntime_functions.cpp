@@ -50,10 +50,9 @@ void USidewaysCheatManager::SetSidewaysState(ESidewaysState SidewaysState)
 
 void USidewaysStateComponent::HandleSidewaysStateChanged(class ASidewaysPlayspace* NewSidewaysPlayspace, ESidewaysState OldState, ESidewaysState NewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSidewaysStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SidewaysStateComponent", "HandleSidewaysStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SidewaysStateComponent_HandleSidewaysStateChanged Parms{};
 

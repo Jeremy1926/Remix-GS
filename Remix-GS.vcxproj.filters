@@ -57,6 +57,9 @@
     <ClInclude Include="UConversationInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UFortControllerComponent_TournamentStatsTracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="UFortQuestManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -798,6 +801,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UFortMovementComp_Character.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UFortControllerComponent_TournamentStatsTracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UFortQuestManager.cpp">

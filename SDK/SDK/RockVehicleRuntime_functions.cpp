@@ -749,10 +749,9 @@ void URockVehicleAnalyticsComponent::OnSupersonicStart(class UActorComponent* In
 
 void ARockVehicleAudioController::OnInAirUpdated(const bool bNewInAir)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInAirUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RockVehicleAudioController", "OnInAirUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RockVehicleAudioController_OnInAirUpdated Parms{};
 

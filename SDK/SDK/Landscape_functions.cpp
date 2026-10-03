@@ -624,10 +624,9 @@ TArray<class USplineMeshComponent*> ULandscapeSplinesComponent::GetSplineMeshCom
 
 void ALandscapeBlueprintBrushBase::GetBlueprintRenderDependencies(TArray<class UObject*>* OutStreamableAssets)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetBlueprintRenderDependencies");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LandscapeBlueprintBrushBase", "GetBlueprintRenderDependencies");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LandscapeBlueprintBrushBase_GetBlueprintRenderDependencies Parms{};
 
@@ -647,10 +646,9 @@ void ALandscapeBlueprintBrushBase::GetBlueprintRenderDependencies(TArray<class U
 
 void ALandscapeBlueprintBrushBase::Initialize(const struct FTransform& InLandscapeTransform, const struct FIntPoint& InLandscapeSize, const struct FIntPoint& InLandscapeRenderTargetSize)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Initialize");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LandscapeBlueprintBrushBase", "Initialize");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LandscapeBlueprintBrushBase_Initialize Parms{};
 
@@ -677,10 +675,9 @@ void ALandscapeBlueprintBrushBase::Initialize(const struct FTransform& InLandsca
 
 class UTextureRenderTarget2D* ALandscapeBlueprintBrushBase::Render(bool InIsHeightmap, class UTextureRenderTarget2D* InCombinedResult, const class FName& InWeightmapLayerName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Render");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LandscapeBlueprintBrushBase", "Render");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LandscapeBlueprintBrushBase_Render Parms{};
 
@@ -707,10 +704,9 @@ class UTextureRenderTarget2D* ALandscapeBlueprintBrushBase::Render(bool InIsHeig
 
 class UTextureRenderTarget2D* ALandscapeBlueprintBrushBase::RenderLayer(const struct FLandscapeBrushParameters& InParameters)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RenderLayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LandscapeBlueprintBrushBase", "RenderLayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LandscapeBlueprintBrushBase_RenderLayer Parms{};
 

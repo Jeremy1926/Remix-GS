@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void AFortKeysAndLocksDisplayCase::GetLockChildActorsNativeHelper(TArray<class UChildActorComponent*>* LockChildActors)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetLockChildActorsNativeHelper");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortKeysAndLocksDisplayCase", "GetLockChildActorsNativeHelper");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortKeysAndLocksDisplayCase_GetLockChildActorsNativeHelper Parms{};
 

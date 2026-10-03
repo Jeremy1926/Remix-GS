@@ -48,10 +48,9 @@ void UGameplayState::AddStateRuntimeTag(const struct FGameplayTag& AddedTag)
 
 void UGameplayState::BeginStateEvent(const struct FGameplayTag& PrevStateId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BeginStateEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "BeginStateEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_BeginStateEvent Parms{};
 
@@ -68,10 +67,9 @@ void UGameplayState::BeginStateEvent(const struct FGameplayTag& PrevStateId)
 
 void UGameplayState::BeginStateEventClient(const struct FGameplayTag& PrevStateId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BeginStateEventClient");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "BeginStateEventClient");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_BeginStateEventClient Parms{};
 
@@ -88,10 +86,9 @@ void UGameplayState::BeginStateEventClient(const struct FGameplayTag& PrevStateI
 
 void UGameplayState::BeginStateEventServer(const struct FGameplayTag& PrevStateId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BeginStateEventServer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "BeginStateEventServer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_BeginStateEventServer Parms{};
 
@@ -108,10 +105,9 @@ void UGameplayState::BeginStateEventServer(const struct FGameplayTag& PrevStateI
 
 void UGameplayState::EndStateEvent(const struct FGameplayTag& NextStateId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EndStateEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "EndStateEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_EndStateEvent Parms{};
 
@@ -128,10 +124,9 @@ void UGameplayState::EndStateEvent(const struct FGameplayTag& NextStateId)
 
 void UGameplayState::EndStateEventClient(const struct FGameplayTag& NextStateId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EndStateEventClient");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "EndStateEventClient");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_EndStateEventClient Parms{};
 
@@ -148,10 +143,9 @@ void UGameplayState::EndStateEventClient(const struct FGameplayTag& NextStateId)
 
 void UGameplayState::EndStateEventServer(const struct FGameplayTag& NextStateId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EndStateEventServer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "EndStateEventServer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_EndStateEventServer Parms{};
 
@@ -196,10 +190,9 @@ bool UGameplayState::HasStateRuntimeTag(const struct FGameplayTag& QueryTag)
 
 void UGameplayState::InitializeStateEvent(const struct FGameplayTag& PrevStateId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InitializeStateEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "InitializeStateEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_InitializeStateEvent Parms{};
 
@@ -216,10 +209,9 @@ void UGameplayState::InitializeStateEvent(const struct FGameplayTag& PrevStateId
 
 void UGameplayState::InitializeStateEventClient(const struct FGameplayTag& PrevStateId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InitializeStateEventClient");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "InitializeStateEventClient");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_InitializeStateEventClient Parms{};
 
@@ -236,10 +228,9 @@ void UGameplayState::InitializeStateEventClient(const struct FGameplayTag& PrevS
 
 void UGameplayState::InitializeStateEventServer(const struct FGameplayTag& PrevStateId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InitializeStateEventServer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "InitializeStateEventServer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_InitializeStateEventServer Parms{};
 
@@ -300,10 +291,9 @@ void UGameplayState::RemoveStateRuntimeTag(const struct FGameplayTag& RemovedTag
 
 void UGameplayState::UpdateStateEvent(const float DeltaTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateStateEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "UpdateStateEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_UpdateStateEvent Parms{};
 
@@ -320,10 +310,9 @@ void UGameplayState::UpdateStateEvent(const float DeltaTime)
 
 void UGameplayState::UpdateStateEventClient(const float DeltaTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateStateEventClient");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "UpdateStateEventClient");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_UpdateStateEventClient Parms{};
 
@@ -340,10 +329,9 @@ void UGameplayState::UpdateStateEventClient(const float DeltaTime)
 
 void UGameplayState::UpdateStateEventServer(const float DeltaTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateStateEventServer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayState", "UpdateStateEventServer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayState_UpdateStateEventServer Parms{};
 
@@ -483,10 +471,9 @@ bool UGameplayState::HasAuthority() const
 
 void UGameplayStateMachine::EvaluateStateTransition()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EvaluateStateTransition");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayStateMachine", "EvaluateStateTransition");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;

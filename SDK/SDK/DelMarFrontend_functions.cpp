@@ -143,10 +143,9 @@ void UDelMarModeSetModificationModal::HandleCloseButtonClicked()
 
 void UDelMarModeSetModificationModal::OnActivityViewModelInitialized(class UDelMarActivityVM* ViewModel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActivityViewModelInitialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarModeSetModificationModal", "OnActivityViewModelInitialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarModeSetModificationModal_OnActivityViewModelInitialized Parms{};
 
@@ -239,10 +238,9 @@ void UDelMarModeSetPreviewModal::HandleDetailsButtonClicked()
 
 void UDelMarModeSetPreviewModal::OnActivityViewModelInitialized(class UDelMarActivityVM* ViewModel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActivityViewModelInitialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarModeSetPreviewModal", "OnActivityViewModelInitialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarModeSetPreviewModal_OnActivityViewModelInitialized Parms{};
 

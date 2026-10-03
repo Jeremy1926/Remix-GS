@@ -42,10 +42,9 @@ void ACowCatcherBarricadeBase::BeginCheckingForTouchingPawns()
 
 void ACowCatcherBarricadeBase::OnPlacementBlockedByPawnChanged(const bool bBlockedByPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlacementBlockedByPawnChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CowCatcherBarricadeBase", "OnPlacementBlockedByPawnChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CowCatcherBarricadeBase_OnPlacementBlockedByPawnChanged Parms{};
 

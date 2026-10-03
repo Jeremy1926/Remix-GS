@@ -349,10 +349,9 @@ void IAudioMotorSim::Reset()
 
 void UAudioMotorSimComponent::BP_Reset()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_Reset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioMotorSimComponent", "BP_Reset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -367,10 +366,9 @@ void UAudioMotorSimComponent::BP_Reset()
 
 bool UAudioMotorSimComponent::BP_Update(struct FAudioMotorSimInputContext& Input, struct FAudioMotorSimRuntimeContext& RuntimeInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_Update");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioMotorSimComponent", "BP_Update");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AudioMotorSimComponent_BP_Update Parms{};
 

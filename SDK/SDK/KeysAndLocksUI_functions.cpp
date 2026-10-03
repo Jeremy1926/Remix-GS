@@ -51,10 +51,9 @@ void UKeyPlayerInfoWidget::HandleGameplayTagEvent(const struct FGameplayTag& Upd
 
 void UKeyPlayerInfoWidget::OnKeyStatusActivated(class AFortPlayerStateAthena* InPlayerState, bool bActivated)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnKeyStatusActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("KeyPlayerInfoWidget", "OnKeyStatusActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::KeyPlayerInfoWidget_OnKeyStatusActivated Parms{};
 

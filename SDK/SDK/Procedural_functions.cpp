@@ -257,10 +257,9 @@ void UProceduralGeneratorContext::GetOrCreateGeneratorContext(class UProceduralG
 
 void UProceduralGeneratorContext::OnClearGeneratedContent()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnClearGeneratedContent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ProceduralGeneratorContext", "OnClearGeneratedContent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -278,10 +277,9 @@ void UProceduralGeneratorContext::OnClearGeneratedContent()
 
 bool UProceduralGeneratorContext::OnGenerate()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGenerate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ProceduralGeneratorContext", "OnGenerate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ProceduralGeneratorContext_OnGenerate Parms{};
 
@@ -326,10 +324,9 @@ TArray<class UProceduralGeneratorContext*> UProceduralGeneratorContext::GetGener
 
 void UProceduralGeneratorContext::OnDrawVisualization() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDrawVisualization");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ProceduralGeneratorContext", "OnDrawVisualization");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

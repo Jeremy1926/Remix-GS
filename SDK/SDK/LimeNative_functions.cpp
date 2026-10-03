@@ -69,10 +69,9 @@ void ULimePawnComponentOverrides::HandleEnterVehicle()
 
 void ULimeCameraMode_OrbitCam::OnBecomeActiveBP(class AActor* ViewTarget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBecomeActiveBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LimeCameraMode_OrbitCam", "OnBecomeActiveBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LimeCameraMode_OrbitCam_OnBecomeActiveBP Parms{};
 
@@ -91,10 +90,9 @@ void ULimeCameraMode_OrbitCam::OnBecomeActiveBP(class AActor* ViewTarget)
 
 void ULimeCameraMode_OrbitCam::UpdateCameraBP(class AActor* ViewTarget, float DeltaTime, struct FTViewTarget& OutVT)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCameraBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LimeCameraMode_OrbitCam", "UpdateCameraBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LimeCameraMode_OrbitCam_UpdateCameraBP Parms{};
 

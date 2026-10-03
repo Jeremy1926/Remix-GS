@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void ABuildingGameplayActorLaserGrid::CosmeticDestroyOutletInstance(const struct FLaserGridOutletEntry& OutletEntry)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CosmeticDestroyOutletInstance");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorLaserGrid", "CosmeticDestroyOutletInstance");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorLaserGrid_CosmeticDestroyOutletInstance Parms{};
 
@@ -43,10 +42,9 @@ void ABuildingGameplayActorLaserGrid::CosmeticDestroyOutletInstance(const struct
 
 void ABuildingGameplayActorLaserGrid::CosmeticLaserConnectionsUpdated(const TArray<struct FLaserGridConnectionEntry>& NewLaserGridConnections)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CosmeticLaserConnectionsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorLaserGrid", "CosmeticLaserConnectionsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorLaserGrid_CosmeticLaserConnectionsUpdated Parms{};
 
@@ -175,10 +173,9 @@ void ABuildingGameplayActorLaserGrid::HandlePatternTimerComplete_PreTransition()
 
 void ABuildingGameplayActorLaserGrid::LaserGridStateUpdated(bool bLaserGridEnabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"LaserGridStateUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorLaserGrid", "LaserGridStateUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorLaserGrid_LaserGridStateUpdated Parms{};
 
@@ -196,10 +193,9 @@ void ABuildingGameplayActorLaserGrid::LaserGridStateUpdated(bool bLaserGridEnabl
 
 void ABuildingGameplayActorLaserGrid::LaserGridTriggered(const struct FLaserGridConnectionEntry& LaserConnectionData, class AActor* TriggeringActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"LaserGridTriggered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorLaserGrid", "LaserGridTriggered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorLaserGrid_LaserGridTriggered Parms{};
 
@@ -281,10 +277,9 @@ void ABuildingGameplayActorLaserGrid::SetLaserGridEnable(const bool bEnable)
 
 bool ABuildingGameplayActorLaserGrid::CanActorTriggerLaserGrid(const class AActor* TriggeringActor) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanActorTriggerLaserGrid");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorLaserGrid", "CanActorTriggerLaserGrid");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorLaserGrid_CanActorTriggerLaserGrid Parms{};
 

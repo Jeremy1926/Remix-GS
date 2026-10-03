@@ -543,10 +543,9 @@ void UJunoBusManagerComponent::OnBusStopTileLoaded(bool bSuccess, const TArray<s
 
 void UJunoBusManagerComponent::OnClientQueueDataChange(const struct FJunoBattleBusQueuedPlayersData& QueueData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnClientQueueDataChange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBusManagerComponent", "OnClientQueueDataChange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBusManagerComponent_OnClientQueueDataChange Parms{};
 
@@ -563,10 +562,9 @@ void UJunoBusManagerComponent::OnClientQueueDataChange(const struct FJunoBattleB
 
 void UJunoBusManagerComponent::OnPlayerEnterBus(class AFortPlayerPawn* PlayerPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerEnterBus");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBusManagerComponent", "OnPlayerEnterBus");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBusManagerComponent_OnPlayerEnterBus Parms{};
 
@@ -588,10 +586,9 @@ void UJunoBusManagerComponent::OnPlayerEnterBus(class AFortPlayerPawn* PlayerPaw
 
 void UJunoBusManagerComponent::OnPlayerExitBus(class AFortPlayerPawn* PlayerPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerExitBus");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBusManagerComponent", "OnPlayerExitBus");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBusManagerComponent_OnPlayerExitBus Parms{};
 
@@ -638,10 +635,9 @@ void UJunoBusManagerComponent::OnPlayerPawnDied(class AFortPawn* DeadPawn)
 
 void UJunoBusManagerComponent::OnPlayerUnqueued(class AFortPlayerPawn* Player)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerUnqueued");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBusManagerComponent", "OnPlayerUnqueued");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBusManagerComponent_OnPlayerUnqueued Parms{};
 
@@ -696,10 +692,9 @@ void UJunoBusManagerComponent::OnRep_QueueTimeRemaining()
 
 void UJunoBusManagerComponent::OnSetupPlayerTeleport(const class AFortPlayerPawn* Player)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetupPlayerTeleport");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBusManagerComponent", "OnSetupPlayerTeleport");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBusManagerComponent_OnSetupPlayerTeleport Parms{};
 
@@ -714,10 +709,9 @@ void UJunoBusManagerComponent::OnSetupPlayerTeleport(const class AFortPlayerPawn
 
 void UJunoBusManagerComponent::OnTravelDataCleared()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTravelDataCleared");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBusManagerComponent", "OnTravelDataCleared");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1290,10 +1284,9 @@ void UJunoControllerComponent_BusTeleport::OnEndSkydiving()
 
 void UJunoControllerComponent_BusTeleport::OnNotifyServerClientEnteredBus()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNotifyServerClientEnteredBus");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoControllerComponent_BusTeleport", "OnNotifyServerClientEnteredBus");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1369,10 +1362,9 @@ void UJunoControllerComponent_BusTeleport::OnPlayerLanded(const struct FHitResul
 
 void UJunoControllerComponent_BusTeleport::OnPlayerQueued(const class AFortPlayerPawn* Player)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerQueued");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoControllerComponent_BusTeleport", "OnPlayerQueued");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoControllerComponent_BusTeleport_OnPlayerQueued Parms{};
 
@@ -1389,10 +1381,9 @@ void UJunoControllerComponent_BusTeleport::OnPlayerQueued(const class AFortPlaye
 
 void UJunoControllerComponent_BusTeleport::OnPlayerUnqueued(const class AFortPlayerPawn* Player)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerUnqueued");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoControllerComponent_BusTeleport", "OnPlayerUnqueued");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoControllerComponent_BusTeleport_OnPlayerUnqueued Parms{};
 

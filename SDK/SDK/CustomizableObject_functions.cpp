@@ -1427,10 +1427,9 @@ bool UCustomizableObject::IsParameterMultidimensional(const class FString& InPar
 
 class UCustomizableObjectInstanceUsage* UDGGUI::GetCustomizableObjectInstanceUsage()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCustomizableObjectInstanceUsage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DGGUI", "GetCustomizableObjectInstanceUsage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DGGUI_GetCustomizableObjectInstanceUsage Parms{};
 
@@ -1447,10 +1446,9 @@ class UCustomizableObjectInstanceUsage* UDGGUI::GetCustomizableObjectInstanceUsa
 
 void UDGGUI::SetCustomizableObjectInstanceUsage(class UCustomizableObjectInstanceUsage* CustomizableObjectInstanceUsage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetCustomizableObjectInstanceUsage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DGGUI", "SetCustomizableObjectInstanceUsage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DGGUI_SetCustomizableObjectInstanceUsage Parms{};
 

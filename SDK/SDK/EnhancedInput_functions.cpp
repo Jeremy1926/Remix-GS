@@ -2251,10 +2251,9 @@ void UInputMappingContext::UnmapKey(const class UInputAction* Action, const stru
 
 struct FLinearColor UInputModifier::GetVisualizationColor(const struct FInputActionValue& SampleValue, const struct FInputActionValue& FinalValue) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetVisualizationColor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InputModifier", "GetVisualizationColor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InputModifier_GetVisualizationColor Parms{};
 
@@ -2282,10 +2281,9 @@ struct FLinearColor UInputModifier::GetVisualizationColor(const struct FInputAct
 
 struct FInputActionValue UInputModifier::ModifyRaw(const class UEnhancedPlayerInput* PlayerInput, const struct FInputActionValue& CurrentValue, float DeltaTime) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ModifyRaw");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InputModifier", "ModifyRaw");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InputModifier_ModifyRaw Parms{};
 
@@ -2314,10 +2312,9 @@ struct FInputActionValue UInputModifier::ModifyRaw(const class UEnhancedPlayerIn
 
 ETriggerState UInputTrigger::UpdateState(const class UEnhancedPlayerInput* PlayerInput, const struct FInputActionValue& ModifiedValue, float DeltaTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InputTrigger", "UpdateState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InputTrigger_UpdateState Parms{};
 
@@ -2343,10 +2340,9 @@ ETriggerState UInputTrigger::UpdateState(const class UEnhancedPlayerInput* Playe
 
 ETriggerType UInputTrigger::GetTriggerType() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetTriggerType");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InputTrigger", "GetTriggerType");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InputTrigger_GetTriggerType Parms{};
 

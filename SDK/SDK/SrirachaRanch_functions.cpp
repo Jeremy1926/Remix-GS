@@ -608,10 +608,9 @@ void UStreamingRadioPlayerComponent::OnOwningVehicleDied(class AFortAthenaVehicl
 
 void UStreamingRadioPlayerComponent::OnPawnEnterSeat(const TScriptInterface<class IFortVehicleInterface>& Vehicle, class AFortPawn* PlayerPawn, int32 SeatIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPawnEnterSeat");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("StreamingRadioPlayerComponent", "OnPawnEnterSeat");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::StreamingRadioPlayerComponent_OnPawnEnterSeat Parms{};
 
@@ -632,10 +631,9 @@ void UStreamingRadioPlayerComponent::OnPawnEnterSeat(const TScriptInterface<clas
 
 void UStreamingRadioPlayerComponent::OnPawnEnterVehicle(const TScriptInterface<class IFortVehicleInterface>& Vehicle, class AFortPawn* PlayerPawn, int32 SeatIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPawnEnterVehicle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("StreamingRadioPlayerComponent", "OnPawnEnterVehicle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::StreamingRadioPlayerComponent_OnPawnEnterVehicle Parms{};
 
@@ -656,10 +654,9 @@ void UStreamingRadioPlayerComponent::OnPawnEnterVehicle(const TScriptInterface<c
 
 void UStreamingRadioPlayerComponent::OnPawnExitSeat(const TScriptInterface<class IFortVehicleInterface>& Vehicle, class AFortPawn* PlayerPawn, int32 SeatIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPawnExitSeat");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("StreamingRadioPlayerComponent", "OnPawnExitSeat");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::StreamingRadioPlayerComponent_OnPawnExitSeat Parms{};
 
@@ -680,10 +677,9 @@ void UStreamingRadioPlayerComponent::OnPawnExitSeat(const TScriptInterface<class
 
 void UStreamingRadioPlayerComponent::OnPawnExitVehicle(const TScriptInterface<class IFortVehicleInterface>& Vehicle, class AFortPawn* PlayerPawn, int32 SeatIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPawnExitVehicle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("StreamingRadioPlayerComponent", "OnPawnExitVehicle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::StreamingRadioPlayerComponent_OnPawnExitVehicle Parms{};
 

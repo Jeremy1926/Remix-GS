@@ -524,10 +524,9 @@ void UDaySequenceConditionTag::BroadcastOnConditionValueChanged() const
 
 bool UDaySequenceConditionTag::Evaluate() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Evaluate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DaySequenceConditionTag", "Evaluate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DaySequenceConditionTag_Evaluate Parms{};
 
@@ -547,10 +546,9 @@ bool UDaySequenceConditionTag::Evaluate() const
 
 void UDaySequenceConditionTag::SetupOnConditionValueChanged() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupOnConditionValueChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DaySequenceConditionTag", "SetupOnConditionValueChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -700,10 +698,9 @@ float UDaySequenceModifierComponent::GetBlendWeight() const
 
 void ADaySequenceModifierVolume::OnDaySequenceActorBound(class ADaySequenceActor* InActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDaySequenceActorBound");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DaySequenceModifierVolume", "OnDaySequenceActorBound");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DaySequenceModifierVolume_OnDaySequenceActorBound Parms{};
 
@@ -1423,10 +1420,9 @@ class UMovieSceneSequence* UDaySequenceDirector::GetSequence()
 
 void UDaySequenceDirector::OnCreated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCreated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DaySequenceDirector", "OnCreated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

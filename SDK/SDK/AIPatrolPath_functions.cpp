@@ -50,10 +50,9 @@ void UAIPatrolPathComponent::GeneratePathPoints(const EFortCreativePatrolPathGro
 
 TSubclassOf<class UNavigationQueryFilter> UAIPatrolPathComponent::GetPatrolFilterOptions()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPatrolFilterOptions");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIPatrolPathComponent", "GetPatrolFilterOptions");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIPatrolPathComponent_GetPatrolFilterOptions Parms{};
 
@@ -142,10 +141,9 @@ void UAIPatrolPathComponent::OnAnyPropertyChanged()
 
 void UAIPatrolPathComponent::OnPathExtremitiesChanged(const bool bIsStart, const bool bIsEnd)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPathExtremitiesChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIPatrolPathComponent", "OnPathExtremitiesChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIPatrolPathComponent_OnPathExtremitiesChanged Parms{};
 
@@ -161,10 +159,9 @@ void UAIPatrolPathComponent::OnPathExtremitiesChanged(const bool bIsStart, const
 
 void UAIPatrolPathComponent::OnPatrolPathActorAssigned()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPatrolPathActorAssigned");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIPatrolPathComponent", "OnPatrolPathActorAssigned");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -302,10 +299,9 @@ void UAIPatrolPathComponent::PostFinishSpawningActor()
 
 void UAIPatrolPathComponent::PropagatePatrolPathIndexToDevice(const int32 NewPatrolPathIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PropagatePatrolPathIndexToDevice");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIPatrolPathComponent", "PropagatePatrolPathIndexToDevice");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIPatrolPathComponent_PropagatePatrolPathIndexToDevice Parms{};
 
@@ -322,10 +318,9 @@ void UAIPatrolPathComponent::PropagatePatrolPathIndexToDevice(const int32 NewPat
 
 void UAIPatrolPathComponent::PropagatePatrolPathPointIndexToDevice(const int32 NewPatrolPathPointIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PropagatePatrolPathPointIndexToDevice");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIPatrolPathComponent", "PropagatePatrolPathPointIndexToDevice");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIPatrolPathComponent_PropagatePatrolPathPointIndexToDevice Parms{};
 
@@ -524,10 +519,9 @@ void UAIPatrolPathComponent::SetRenderPath(const bool bRenderPath)
 
 bool UAIPatrolPathComponent::ShouldRenderPath()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldRenderPath");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIPatrolPathComponent", "ShouldRenderPath");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIPatrolPathComponent_ShouldRenderPath Parms{};
 
@@ -642,10 +636,9 @@ bool UAIPatrolPathComponent::GetNextAvailablePatrolPathIndex(int32* NextAvailabl
 
 EPatrollingMode UAIPatrolPathComponent::GetPatrollingMode() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPatrollingMode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIPatrolPathComponent", "GetPatrollingMode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIPatrolPathComponent_GetPatrollingMode Parms{};
 
@@ -662,10 +655,9 @@ EPatrollingMode UAIPatrolPathComponent::GetPatrollingMode() const
 
 EFortCreativePatrolPathGroup UAIPatrolPathComponent::GetPatrolPathGroup() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPatrolPathGroup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIPatrolPathComponent", "GetPatrolPathGroup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIPatrolPathComponent_GetPatrolPathGroup Parms{};
 
@@ -707,10 +699,9 @@ int32 UAIPatrolPathComponent::GetPatrolPathIndex() const
 
 int32 UAIPatrolPathComponent::GetPatrolPathIndexFromDevice() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPatrolPathIndexFromDevice");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIPatrolPathComponent", "GetPatrolPathIndexFromDevice");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIPatrolPathComponent_GetPatrolPathIndexFromDevice Parms{};
 
@@ -782,10 +773,9 @@ int32 UAIPatrolPathComponent::GetPatrolPathPointIndex() const
 
 int32 UAIPatrolPathComponent::GetPatrolPathPointIndexFromDevice() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPatrolPathPointIndexFromDevice");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIPatrolPathComponent", "GetPatrolPathPointIndexFromDevice");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIPatrolPathComponent_GetPatrolPathPointIndexFromDevice Parms{};
 

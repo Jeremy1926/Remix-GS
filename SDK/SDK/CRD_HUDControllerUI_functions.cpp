@@ -59,10 +59,9 @@ void UHUDControllerWidgetBase::HandleHUDElementVisibilityRefreshed()
 
 void UHUDControllerWidgetBase::OnContentWidgetSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnContentWidgetSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HUDControllerWidgetBase", "OnContentWidgetSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -73,10 +72,9 @@ void UHUDControllerWidgetBase::OnContentWidgetSet()
 
 void UHUDControllerWidgetBase::OnViewModelCreated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnViewModelCreated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HUDControllerWidgetBase", "OnViewModelCreated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -90,10 +88,9 @@ void UHUDControllerWidgetBase::OnViewModelCreated()
 
 TSoftClassPtr<class UClass> UHUDControllerWidgetBase::GetContentWidgetClass(const class AFortAthenaMutator_HUDElementVisibility* HUDElementVisibilityMutator) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetContentWidgetClass");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HUDControllerWidgetBase", "GetContentWidgetClass");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HUDControllerWidgetBase_GetContentWidgetClass Parms{};
 
@@ -112,10 +109,9 @@ TSoftClassPtr<class UClass> UHUDControllerWidgetBase::GetContentWidgetClass(cons
 
 class UContentWidget* UHUDControllerWidgetBase::GetContentWidgetContainer() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetContentWidgetContainer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HUDControllerWidgetBase", "GetContentWidgetContainer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HUDControllerWidgetBase_GetContentWidgetContainer Parms{};
 

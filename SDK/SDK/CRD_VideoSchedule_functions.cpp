@@ -26,10 +26,9 @@ SDK_NAMESPACE_START
 
 void AVideoScheduleDeviceBase::OnControlVideoPlayer(const class FString& VUID, const struct FDateTime& StartTime, const TArray<class AController*>& Players, const class ULevelSequence* Sequence)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnControlVideoPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VideoScheduleDeviceBase", "OnControlVideoPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VideoScheduleDeviceBase_OnControlVideoPlayer Parms{};
 

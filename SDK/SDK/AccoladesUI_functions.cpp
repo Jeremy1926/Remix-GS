@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UAthenaAccoladeListEntryWidget::SetCount(int32 Count)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetCount");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaAccoladeListEntryWidget", "SetCount");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaAccoladeListEntryWidget_SetCount Parms{};
 
@@ -43,10 +42,9 @@ void UAthenaAccoladeListEntryWidget::SetCount(int32 Count)
 
 void UAthenaAccoladeListEntryWidget::SetIcon(const class UFortAccoladeItemDefinition* ItemDef)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetIcon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaAccoladeListEntryWidget", "SetIcon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaAccoladeListEntryWidget_SetIcon Parms{};
 
@@ -65,10 +63,9 @@ void UAthenaAccoladeListEntryWidget::SetIcon(const class UFortAccoladeItemDefini
 
 void UAthenaAccoladeListEntryWidget::SetIconImage(const TSoftObjectPtr<class UTexture2D>& IconImage, const EFortAccoladeType AccoladeType, const EFortAccoladeTierType AccoladeTier)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetIconImage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaAccoladeListEntryWidget", "SetIconImage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaAccoladeListEntryWidget_SetIconImage Parms{};
 
@@ -87,10 +84,9 @@ void UAthenaAccoladeListEntryWidget::SetIconImage(const TSoftObjectPtr<class UTe
 
 void UAthenaAccoladeListEntryWidget::SetJustCompleted(const bool bJustCompleted)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetJustCompleted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaAccoladeListEntryWidget", "SetJustCompleted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaAccoladeListEntryWidget_SetJustCompleted Parms{};
 
@@ -107,10 +103,9 @@ void UAthenaAccoladeListEntryWidget::SetJustCompleted(const bool bJustCompleted)
 
 void UAthenaAccoladeListEntryWidget::SetSource(const class FText& SourceText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetSource");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaAccoladeListEntryWidget", "SetSource");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaAccoladeListEntryWidget_SetSource Parms{};
 
@@ -127,10 +122,9 @@ void UAthenaAccoladeListEntryWidget::SetSource(const class FText& SourceText)
 
 void UAthenaAccoladeListEntryWidget::SetTitle(const class FText& TitleText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetTitle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaAccoladeListEntryWidget", "SetTitle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaAccoladeListEntryWidget_SetTitle Parms{};
 

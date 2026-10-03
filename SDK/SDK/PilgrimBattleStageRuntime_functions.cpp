@@ -230,10 +230,9 @@ void UBattleStageStandinPawnComponent::SetupListeners(class UGameplayEventRouter
 
 void UBattleStageStandinPawnComponent::StartInstrumentAnimation(class APawn* Pawn, class ASparksMusicPlayspace* Playspace)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StartInstrumentAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattleStageStandinPawnComponent", "StartInstrumentAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattleStageStandinPawnComponent_StartInstrumentAnimation Parms{};
 
@@ -471,10 +470,9 @@ struct FPilgrimPlacementAnalyticsData UPilgrimBattleStageGameManagerComponent::G
 
 class UTexture2D* UPilgrimBattleStageGameManagerComponent::GetRandomBandIcon()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetRandomBandIcon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStageGameManagerComponent", "GetRandomBandIcon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimBattleStageGameManagerComponent_GetRandomBandIcon Parms{};
 
@@ -491,10 +489,9 @@ class UTexture2D* UPilgrimBattleStageGameManagerComponent::GetRandomBandIcon()
 
 class FText UPilgrimBattleStageGameManagerComponent::GetRandomBandName()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetRandomBandName");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStageGameManagerComponent", "GetRandomBandName");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimBattleStageGameManagerComponent_GetRandomBandName Parms{};
 

@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UJunoBattleBusDestinationEntry::OnDestinationListObjectSet(class UJunoBattleBusDestinationListObject* DestinationListObject)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDestinationListObjectSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusDestinationEntry", "OnDestinationListObjectSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBattleBusDestinationEntry_OnDestinationListObjectSet Parms{};
 
@@ -43,10 +42,9 @@ void UJunoBattleBusDestinationEntry::OnDestinationListObjectSet(class UJunoBattl
 
 void UJunoBattleBusDestinationEntry::OnHeaderObjectSet(class UJunoBattleBusDestinationHeaderObject* DestinationListObject)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHeaderObjectSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusDestinationEntry", "OnHeaderObjectSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBattleBusDestinationEntry_OnHeaderObjectSet Parms{};
 
@@ -63,10 +61,9 @@ void UJunoBattleBusDestinationEntry::OnHeaderObjectSet(class UJunoBattleBusDesti
 
 void UJunoBattleBusDestinationList::OnOwningBattleBusStopSet(class AJunoBattleBusStop* OwningBattleBusStop)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOwningBattleBusStopSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusDestinationList", "OnOwningBattleBusStopSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBattleBusDestinationList_OnOwningBattleBusStopSet Parms{};
 
@@ -160,10 +157,9 @@ void UJunoBattleBusMapWidget::HandleRequestDestinationConfirmed()
 
 void UJunoBattleBusMapWidget::OnBattleBusMapStateSet(EJunoBattleBusMapWidgetState NewMapState, bool bFromInitialization)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBattleBusMapStateSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusMapWidget", "OnBattleBusMapStateSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBattleBusMapWidget_OnBattleBusMapStateSet Parms{};
 
@@ -181,10 +177,9 @@ void UJunoBattleBusMapWidget::OnBattleBusMapStateSet(EJunoBattleBusMapWidgetStat
 
 void UJunoBattleBusMapWidget::OnBusStopSelected(const struct FJunoDiscoveredBusStop& SelectedBusStop)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBusStopSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusMapWidget", "OnBusStopSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBattleBusMapWidget_OnBusStopSelected Parms{};
 
@@ -305,10 +300,9 @@ const struct FJunoDiscoveredBusStop UJunoBattleBusMapWidget::GetOriginBusStop() 
 
 void UJunoBattleBusQueuedPlayersWidget::OnDestinationBusStopCleared()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDestinationBusStopCleared");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusQueuedPlayersWidget", "OnDestinationBusStopCleared");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -321,10 +315,9 @@ void UJunoBattleBusQueuedPlayersWidget::OnDestinationBusStopCleared()
 
 void UJunoBattleBusQueuedPlayersWidget::OnDestinationBusStopSet(const struct FJunoDiscoveredBusStop& OriginBusStop)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDestinationBusStopSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusQueuedPlayersWidget", "OnDestinationBusStopSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBattleBusQueuedPlayersWidget_OnDestinationBusStopSet Parms{};
 
@@ -339,10 +332,9 @@ void UJunoBattleBusQueuedPlayersWidget::OnDestinationBusStopSet(const struct FJu
 
 void UJunoBattleBusQueuedPlayersWidget::OnOriginBusStopCleared()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOriginBusStopCleared");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusQueuedPlayersWidget", "OnOriginBusStopCleared");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -355,10 +347,9 @@ void UJunoBattleBusQueuedPlayersWidget::OnOriginBusStopCleared()
 
 void UJunoBattleBusQueuedPlayersWidget::OnOriginBusStopSet(const struct FJunoDiscoveredBusStop& OriginBusStop)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOriginBusStopSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusQueuedPlayersWidget", "OnOriginBusStopSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBattleBusQueuedPlayersWidget_OnOriginBusStopSet Parms{};
 
@@ -375,10 +366,9 @@ void UJunoBattleBusQueuedPlayersWidget::OnOriginBusStopSet(const struct FJunoDis
 
 void UJunoBattleBusQueuedPlayersWidget::OnQueuedPlayersSet(const TArray<struct FUniqueNetIdRepl>& QueuedPlayers)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQueuedPlayersSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusQueuedPlayersWidget", "OnQueuedPlayersSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBattleBusQueuedPlayersWidget_OnQueuedPlayersSet Parms{};
 
@@ -395,10 +385,9 @@ void UJunoBattleBusQueuedPlayersWidget::OnQueuedPlayersSet(const TArray<struct F
 
 void UJunoBattleBusQueuedPlayersWidget::OnQueueTimerUpdate(const int32 TimeRemaining)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQueueTimerUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusQueuedPlayersWidget", "OnQueueTimerUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBattleBusQueuedPlayersWidget_OnQueueTimerUpdate Parms{};
 
@@ -415,10 +404,9 @@ void UJunoBattleBusQueuedPlayersWidget::OnQueueTimerUpdate(const int32 TimeRemai
 
 bool UJunoBattleBusQueuedPlayersWidget::ShouldSetHasActiveContent()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldSetHasActiveContent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBattleBusQueuedPlayersWidget", "ShouldSetHasActiveContent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBattleBusQueuedPlayersWidget_ShouldSetHasActiveContent Parms{};
 

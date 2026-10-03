@@ -3452,10 +3452,9 @@ bool ULearningAgentsActions::ValidateActionObjectMatchesSchema(const class ULear
 
 void ULearningAgentsManagerListener::OnAgentsAdded(const TArray<int32>& AgentIds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAgentsAdded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsManagerListener", "OnAgentsAdded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsManagerListener_OnAgentsAdded Parms{};
 
@@ -3478,10 +3477,9 @@ void ULearningAgentsManagerListener::OnAgentsAdded(const TArray<int32>& AgentIds
 
 void ULearningAgentsManagerListener::OnAgentsManagerTick(const TArray<int32>& AgentIds, const float DeltaTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAgentsManagerTick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsManagerListener", "OnAgentsManagerTick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsManagerListener_OnAgentsManagerTick Parms{};
 
@@ -3504,10 +3502,9 @@ void ULearningAgentsManagerListener::OnAgentsManagerTick(const TArray<int32>& Ag
 
 void ULearningAgentsManagerListener::OnAgentsRemoved(const TArray<int32>& AgentIds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAgentsRemoved");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsManagerListener", "OnAgentsRemoved");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsManagerListener_OnAgentsRemoved Parms{};
 
@@ -3529,10 +3526,9 @@ void ULearningAgentsManagerListener::OnAgentsRemoved(const TArray<int32>& AgentI
 
 void ULearningAgentsManagerListener::OnAgentsReset(const TArray<int32>& AgentIds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAgentsReset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsManagerListener", "OnAgentsReset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsManagerListener_OnAgentsReset Parms{};
 
@@ -3739,10 +3735,9 @@ class ULearningAgentsController* ULearningAgentsController::MakeController(class
 
 void ULearningAgentsController::EvaluateAgentController(struct FLearningAgentsActionObjectElement* OutActionObjectElement, class ULearningAgentsActionObject* InActionObject, const class ULearningAgentsObservationObject* InObservationObject, const struct FLearningAgentsObservationObjectElement& InObservationObjectElement, const int32 AgentId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EvaluateAgentController");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsController", "EvaluateAgentController");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsController_EvaluateAgentController Parms{};
 
@@ -3774,10 +3769,9 @@ void ULearningAgentsController::EvaluateAgentController(struct FLearningAgentsAc
 
 void ULearningAgentsController::EvaluateAgentControllers(TArray<struct FLearningAgentsActionObjectElement>* OutActionObjectElements, class ULearningAgentsActionObject* InActionObject, const class ULearningAgentsObservationObject* InObservationObject, const TArray<struct FLearningAgentsObservationObjectElement>& InObservationObjectElements, const TArray<int32>& AgentIds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EvaluateAgentControllers");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsController", "EvaluateAgentControllers");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsController_EvaluateAgentControllers Parms{};
 
@@ -4098,10 +4092,9 @@ class ULearningAgentsInteractor* ULearningAgentsInteractor::MakeInteractor(class
 
 void ULearningAgentsInteractor::GatherAgentObservation(struct FLearningAgentsObservationObjectElement* OutObservationObjectElement, class ULearningAgentsObservationObject* InObservationObject, const int32 AgentId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GatherAgentObservation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsInteractor", "GatherAgentObservation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsInteractor_GatherAgentObservation Parms{};
 
@@ -4129,10 +4122,9 @@ void ULearningAgentsInteractor::GatherAgentObservation(struct FLearningAgentsObs
 
 void ULearningAgentsInteractor::GatherAgentObservations(TArray<struct FLearningAgentsObservationObjectElement>* OutObservationObjectElements, class ULearningAgentsObservationObject* InObservationObject, const TArray<int32>& AgentIds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GatherAgentObservations");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsInteractor", "GatherAgentObservations");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsInteractor_GatherAgentObservations Parms{};
 
@@ -4264,10 +4256,9 @@ void ULearningAgentsInteractor::PerformActions()
 
 void ULearningAgentsInteractor::PerformAgentAction(const class ULearningAgentsActionObject* InActionObject, const struct FLearningAgentsActionObjectElement& InActionObjectElement, const int32 AgentId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PerformAgentAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsInteractor", "PerformAgentAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsInteractor_PerformAgentAction Parms{};
 
@@ -4293,10 +4284,9 @@ void ULearningAgentsInteractor::PerformAgentAction(const class ULearningAgentsAc
 
 void ULearningAgentsInteractor::PerformAgentActions(const class ULearningAgentsActionObject* InActionObject, const TArray<struct FLearningAgentsActionObjectElement>& InActionObjectElements, const TArray<int32>& AgentIds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PerformAgentActions");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsInteractor", "PerformAgentActions");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsInteractor_PerformAgentActions Parms{};
 
@@ -4410,10 +4400,9 @@ void ULearningAgentsInteractor::SetupInteractor(class ULearningAgentsManager*& I
 
 void ULearningAgentsInteractor::SpecifyAgentAction(struct FLearningAgentsActionSchemaElement* OutActionSchemaElement, class ULearningAgentsActionSchema* InActionSchema)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SpecifyAgentAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsInteractor", "SpecifyAgentAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsInteractor_SpecifyAgentAction Parms{};
 
@@ -4439,10 +4428,9 @@ void ULearningAgentsInteractor::SpecifyAgentAction(struct FLearningAgentsActionS
 
 void ULearningAgentsInteractor::SpecifyAgentObservation(struct FLearningAgentsObservationSchemaElement* OutObservationSchemaElement, class ULearningAgentsObservationSchema* InObservationSchema)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SpecifyAgentObservation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsInteractor", "SpecifyAgentObservation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsInteractor_SpecifyAgentObservation Parms{};
 

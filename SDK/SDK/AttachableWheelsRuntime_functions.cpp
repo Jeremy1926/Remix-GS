@@ -132,10 +132,9 @@ bool AAttachableWheel::DetachFrom(class UPrimitiveComponent* InComponent)
 
 void AAttachableWheel::OnAttached(class UPrimitiveComponent* AttachedComponent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAttached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AttachableWheel", "OnAttached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AttachableWheel_OnAttached Parms{};
 
@@ -152,10 +151,9 @@ void AAttachableWheel::OnAttached(class UPrimitiveComponent* AttachedComponent)
 
 void AAttachableWheel::OnDetached(class UPrimitiveComponent* DetachedComponent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDetached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AttachableWheel", "OnDetached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AttachableWheel_OnDetached Parms{};
 
@@ -537,10 +535,9 @@ bool UAttachableWheelsComponent::HandleWheelDetached_Internal(class AAttachableW
 
 void UAttachableWheelsComponent::OnWheelAttached(class AAttachableWheel* AttachedWheel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWheelAttached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AttachableWheelsComponent", "OnWheelAttached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AttachableWheelsComponent_OnWheelAttached Parms{};
 
@@ -557,10 +554,9 @@ void UAttachableWheelsComponent::OnWheelAttached(class AAttachableWheel* Attache
 
 void UAttachableWheelsComponent::OnWheelDetached(class AAttachableWheel* AttachedWheel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWheelDetached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AttachableWheelsComponent", "OnWheelDetached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AttachableWheelsComponent_OnWheelDetached Parms{};
 

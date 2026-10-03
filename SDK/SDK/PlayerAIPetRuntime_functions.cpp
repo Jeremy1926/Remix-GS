@@ -161,10 +161,9 @@ void UPlayerAIPetCheatManager::SpawnPlayerPetForAllPlayers(const class FString& 
 
 void UFortAIPawnComponent_PlayerAIPet::OnPetSpawned(class AFortPlayerPawn* Player)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPetSpawned");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIPawnComponent_PlayerAIPet", "OnPetSpawned");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAIPawnComponent_PlayerAIPet_OnPetSpawned Parms{};
 
@@ -211,10 +210,9 @@ void UFortAIPawnComponent_PlayerAIPet::SetCurrentPlayer(class AFortPlayerPawn* N
 
 bool UFortControllerComponent_PlayerAIPet::AttachPet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AttachPet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortControllerComponent_PlayerAIPet", "AttachPet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortControllerComponent_PlayerAIPet_AttachPet Parms{};
 
@@ -239,10 +237,9 @@ bool UFortControllerComponent_PlayerAIPet::AttachPet()
 
 void UFortControllerComponent_PlayerAIPet::CustomCheat(const class FString& Command, const class FString& Param1, const class FString& Param2, const class FString& Param3)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CustomCheat");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortControllerComponent_PlayerAIPet", "CustomCheat");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortControllerComponent_PlayerAIPet_CustomCheat Parms{};
 
@@ -287,10 +284,9 @@ bool UFortControllerComponent_PlayerAIPet::DespawnPet()
 
 bool UFortControllerComponent_PlayerAIPet::DetachPet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"DetachPet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortControllerComponent_PlayerAIPet", "DetachPet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortControllerComponent_PlayerAIPet_DetachPet Parms{};
 

@@ -682,10 +682,9 @@ int32 UPoseSearchDatabase::GetNumAnimationAssets() const
 
 float UPoseSearchFeatureChannel_Curve::BP_GetCurveValue(const class UAnimInstance* AnimInstance) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetCurveValue");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PoseSearchFeatureChannel_Curve", "BP_GetCurveValue");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PoseSearchFeatureChannel_Curve_BP_GetCurveValue Parms{};
 
@@ -705,10 +704,9 @@ float UPoseSearchFeatureChannel_Curve::BP_GetCurveValue(const class UAnimInstanc
 
 struct FQuat UPoseSearchFeatureChannel_Heading::BP_GetWorldRotation(const class UAnimInstance* AnimInstance) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetWorldRotation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PoseSearchFeatureChannel_Heading", "BP_GetWorldRotation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PoseSearchFeatureChannel_Heading_BP_GetWorldRotation Parms{};
 
@@ -728,10 +726,9 @@ struct FQuat UPoseSearchFeatureChannel_Heading::BP_GetWorldRotation(const class 
 
 struct FVector UPoseSearchFeatureChannel_Position::BP_GetWorldPosition(const class UAnimInstance* AnimInstance) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetWorldPosition");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PoseSearchFeatureChannel_Position", "BP_GetWorldPosition");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PoseSearchFeatureChannel_Position_BP_GetWorldPosition Parms{};
 
@@ -751,10 +748,9 @@ struct FVector UPoseSearchFeatureChannel_Position::BP_GetWorldPosition(const cla
 
 float UPoseSearchFeatureChannel_TimeToEvent::BP_GetTimeToEvent(const class UAnimInstance* AnimInstance) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetTimeToEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PoseSearchFeatureChannel_TimeToEvent", "BP_GetTimeToEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PoseSearchFeatureChannel_TimeToEvent_BP_GetTimeToEvent Parms{};
 
@@ -774,10 +770,9 @@ float UPoseSearchFeatureChannel_TimeToEvent::BP_GetTimeToEvent(const class UAnim
 
 struct FVector UPoseSearchFeatureChannel_Velocity::BP_GetWorldVelocity(const class UAnimInstance* AnimInstance) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetWorldVelocity");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PoseSearchFeatureChannel_Velocity", "BP_GetWorldVelocity");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PoseSearchFeatureChannel_Velocity_BP_GetWorldVelocity Parms{};
 

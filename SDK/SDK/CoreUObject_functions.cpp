@@ -145,10 +145,9 @@ bool UObject::IsDefaultObject() const
 
 void UObject::ExecuteUbergraph(int32 EntryPoint)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ExecuteUbergraph");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Object", "ExecuteUbergraph");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Object_ExecuteUbergraph Parms{};
 

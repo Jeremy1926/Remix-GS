@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UFortAugmentSelectionToolAbility::OnHighlightSelectionUpdated(int32 NewHighlightedChoiceIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHighlightSelectionUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAugmentSelectionToolAbility", "OnHighlightSelectionUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAugmentSelectionToolAbility_OnHighlightSelectionUpdated Parms{};
 
@@ -44,10 +43,9 @@ void UFortAugmentSelectionToolAbility::OnHighlightSelectionUpdated(int32 NewHigh
 
 void UFortAugmentSelectionToolAbility::OnHoldRerollInputChanged(bool bIsPressed, bool bCompletedHold)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHoldRerollInputChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAugmentSelectionToolAbility", "OnHoldRerollInputChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAugmentSelectionToolAbility_OnHoldRerollInputChanged Parms{};
 
@@ -63,10 +61,9 @@ void UFortAugmentSelectionToolAbility::OnHoldRerollInputChanged(bool bIsPressed,
 
 void UFortAugmentSelectionToolAbility::OnRerollPressedAndCannotAfford()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRerollPressedAndCannotAfford");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAugmentSelectionToolAbility", "OnRerollPressedAndCannotAfford");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -79,10 +76,9 @@ void UFortAugmentSelectionToolAbility::OnRerollPressedAndCannotAfford()
 
 void UFortAugmentSelectionToolAbility::OnSelectedChoiceIndex(int32 ChoiceIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSelectedChoiceIndex");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAugmentSelectionToolAbility", "OnSelectedChoiceIndex");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAugmentSelectionToolAbility_OnSelectedChoiceIndex Parms{};
 
@@ -267,10 +263,9 @@ void UFortBattleRoyalePlayerAugmentSystem::BP_GetAugmentPlayerPawn(EFortBRAugmen
 
 struct FFortAugmentPassiveUnlockResult UFortBattleRoyalePlayerAugmentSystem::ChooseUnlockFromList(const TArray<struct FPlayerAugmentLockStatus>& LockedList)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ChooseUnlockFromList");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattleRoyalePlayerAugmentSystem", "ChooseUnlockFromList");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattleRoyalePlayerAugmentSystem_ChooseUnlockFromList Parms{};
 
@@ -319,10 +314,9 @@ void UFortBattleRoyalePlayerAugmentSystem::HandlePossessedPawnChanged(class APaw
 
 void UFortBattleRoyalePlayerAugmentSystem::OnMatchAugmentsReset()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMatchAugmentsReset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattleRoyalePlayerAugmentSystem", "OnMatchAugmentsReset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -336,10 +330,9 @@ void UFortBattleRoyalePlayerAugmentSystem::OnMatchAugmentsReset()
 
 void UFortBattleRoyalePlayerAugmentSystem::OnPossedPawnChanged(class APawn* OldPawn, class APawn* NewPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPossedPawnChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattleRoyalePlayerAugmentSystem", "OnPossedPawnChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattleRoyalePlayerAugmentSystem_OnPossedPawnChanged Parms{};
 
@@ -376,10 +369,9 @@ void UFortBattleRoyalePlayerAugmentSystem::OnRep_ServerGrantingStartedTimestamp(
 
 void UFortBattleRoyalePlayerAugmentSystem::OnServerAugmentGrantTimestampReplicated(float ServerGrantStartTimestamp)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnServerAugmentGrantTimestampReplicated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattleRoyalePlayerAugmentSystem", "OnServerAugmentGrantTimestampReplicated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattleRoyalePlayerAugmentSystem_OnServerAugmentGrantTimestampReplicated Parms{};
 
@@ -909,10 +901,9 @@ void UFortControllerComponent_AugmentGrantingSystem::HandleUnHolsteredEvent()
 
 void UFortControllerComponent_AugmentGrantingSystem::OnLocalEquipAugmentSelectionPressed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLocalEquipAugmentSelectionPressed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortControllerComponent_AugmentGrantingSystem", "OnLocalEquipAugmentSelectionPressed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -923,10 +914,9 @@ void UFortControllerComponent_AugmentGrantingSystem::OnLocalEquipAugmentSelectio
 
 void UFortControllerComponent_AugmentGrantingSystem::OnLocalUnequipAugmentSelectionPressed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLocalUnequipAugmentSelectionPressed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortControllerComponent_AugmentGrantingSystem", "OnLocalUnequipAugmentSelectionPressed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

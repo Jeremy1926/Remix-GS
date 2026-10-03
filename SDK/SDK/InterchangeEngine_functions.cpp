@@ -26,10 +26,9 @@ SDK_NAMESPACE_START
 
 bool UInterchangeFilePickerBase::ScriptedFilePickerForTranslatorAssetType(const EInterchangeTranslatorAssetType TranslatorAssetType, struct FInterchangeFilePickerParameters* Parameters, TArray<class FString>* OutFilenames)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedFilePickerForTranslatorAssetType");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangeFilePickerBase", "ScriptedFilePickerForTranslatorAssetType");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangeFilePickerBase_ScriptedFilePickerForTranslatorAssetType Parms{};
 
@@ -62,10 +61,9 @@ bool UInterchangeFilePickerBase::ScriptedFilePickerForTranslatorAssetType(const 
 
 bool UInterchangeFilePickerBase::ScriptedFilePickerForTranslatorType(const EInterchangeTranslatorType TranslatorType, struct FInterchangeFilePickerParameters* Parameters, TArray<class FString>* OutFilenames)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedFilePickerForTranslatorType");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangeFilePickerBase", "ScriptedFilePickerForTranslatorType");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangeFilePickerBase_ScriptedFilePickerForTranslatorType Parms{};
 
@@ -100,10 +98,9 @@ bool UInterchangeFilePickerBase::ScriptedFilePickerForTranslatorType(const EInte
 
 EInterchangePipelineConfigurationDialogResult UInterchangePipelineConfigurationBase::ScriptedShowPipelineConfigurationDialog(TArray<struct FInterchangeStackInfo>* PipelineStacks, TArray<class UInterchangePipelineBase*>* OutPipelines, class UInterchangeSourceData* SourceData, class UInterchangeTranslatorBase* Translator, class UInterchangeBaseNodeContainer* BaseNodeContainer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedShowPipelineConfigurationDialog");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangePipelineConfigurationBase", "ScriptedShowPipelineConfigurationDialog");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangePipelineConfigurationBase_ScriptedShowPipelineConfigurationDialog Parms{};
 
@@ -141,10 +138,9 @@ EInterchangePipelineConfigurationDialogResult UInterchangePipelineConfigurationB
 
 EInterchangePipelineConfigurationDialogResult UInterchangePipelineConfigurationBase::ScriptedShowReimportPipelineConfigurationDialog(TArray<struct FInterchangeStackInfo>* PipelineStacks, TArray<class UInterchangePipelineBase*>* OutPipelines, class UInterchangeSourceData* SourceData, class UInterchangeTranslatorBase* Translator, class UInterchangeBaseNodeContainer* BaseNodeContainer, class UObject* ReimportAsset)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedShowReimportPipelineConfigurationDialog");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangePipelineConfigurationBase", "ScriptedShowReimportPipelineConfigurationDialog");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangePipelineConfigurationBase_ScriptedShowReimportPipelineConfigurationDialog Parms{};
 
@@ -182,10 +178,9 @@ EInterchangePipelineConfigurationDialogResult UInterchangePipelineConfigurationB
 
 EInterchangePipelineConfigurationDialogResult UInterchangePipelineConfigurationBase::ScriptedShowScenePipelineConfigurationDialog(TArray<struct FInterchangeStackInfo>* PipelineStacks, TArray<class UInterchangePipelineBase*>* OutPipelines, class UInterchangeSourceData* SourceData, class UInterchangeTranslatorBase* Translator, class UInterchangeBaseNodeContainer* BaseNodeContainer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedShowScenePipelineConfigurationDialog");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangePipelineConfigurationBase", "ScriptedShowScenePipelineConfigurationDialog");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangePipelineConfigurationBase_ScriptedShowScenePipelineConfigurationDialog Parms{};
 

@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void UFortEventStoreOfferDetailsScreen::BP_HandleScreenClosed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleScreenClosed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventStoreOfferDetailsScreen", "BP_HandleScreenClosed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -139,10 +138,9 @@ bool UFortEventStoreOfferDetailsScreen::GetIsPurchasing() const
 
 void UFortOutpostSubscreenBase::BP_HandleBackAction(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleBackAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortOutpostSubscreenBase", "BP_HandleBackAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortOutpostSubscreenBase_BP_HandleBackAction Parms{};
 
@@ -207,10 +205,9 @@ void UFortItemManagementItemPopupMenu_STW::HandleCompareAction()
 
 void UFortItemManagementItemPopupMenu_STW::HandleItemChanged(bool bItemChanged, bool bAmmoChanged, bool bIngredientsChanged)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementItemPopupMenu_STW", "HandleItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementItemPopupMenu_STW_HandleItemChanged Parms{};
 
@@ -315,10 +312,9 @@ void UFortQuestMapViewer::HandleLayoutOutroAnimationFinished()
 
 void UFortQuestMapViewer::OnPlayLayoutFadeInAnimation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayLayoutFadeInAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapViewer", "OnPlayLayoutFadeInAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -331,10 +327,9 @@ void UFortQuestMapViewer::OnPlayLayoutFadeInAnimation()
 
 void UFortQuestMapViewer::OnPlayLayoutOutroAnimation(EViewerNavigationDirection TravelDirection)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayLayoutOutroAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapViewer", "OnPlayLayoutOutroAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapViewer_OnPlayLayoutOutroAnimation Parms{};
 
@@ -352,10 +347,9 @@ void UFortQuestMapViewer::OnPlayLayoutOutroAnimation(EViewerNavigationDirection 
 
 void UFortQuestMapViewer::OnTryUpdateUserWidgetColor(class UUserWidget* Widget, const struct FSlateColor& OverrideColor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTryUpdateUserWidgetColor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapViewer", "OnTryUpdateUserWidgetColor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapViewer_OnTryUpdateUserWidgetColor Parms{};
 
@@ -392,10 +386,9 @@ void UFortQuestMapViewer::UpdateViewerData()
 
 void UFortStoreOpeningCardPack::HandleInputMethodChanged_BP(ECommonInputType CommonInput)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleInputMethodChanged_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreOpeningCardPack", "HandleInputMethodChanged_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortStoreOpeningCardPack_HandleInputMethodChanged_BP Parms{};
 
@@ -412,10 +405,9 @@ void UFortStoreOpeningCardPack::HandleInputMethodChanged_BP(ECommonInputType Com
 
 void UFortStoreOpeningCardPack::HandleStoreStateChange_BP(EFortStoreState NewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleStoreStateChange_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreOpeningCardPack", "HandleStoreStateChange_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortStoreOpeningCardPack_HandleStoreStateChange_BP Parms{};
 
@@ -451,10 +443,9 @@ void UFortStoreOpeningCardPack::HandleSummaryAdd()
 
 void UFortUIStateWidget_STW::HandleDisplayedPrimaryContentChanged_BP(class UCommonActivatableWidget* DisplayWidget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDisplayedPrimaryContentChanged_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUIStateWidget_STW", "HandleDisplayedPrimaryContentChanged_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortUIStateWidget_STW_HandleDisplayedPrimaryContentChanged_BP Parms{};
 
@@ -471,10 +462,9 @@ void UFortUIStateWidget_STW::HandleDisplayedPrimaryContentChanged_BP(class UComm
 
 void UObjectivesPage::BackAction(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BackAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ObjectivesPage", "BackAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ObjectivesPage_BackAction Parms{};
 
@@ -652,10 +642,9 @@ void USTWDeathWidget::ToggleRespawnAction(bool bEnabled)
 
 void UXpBoostsRootWidget::HandleBack(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleBack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpBoostsRootWidget", "HandleBack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::XpBoostsRootWidget_HandleBack Parms{};
 
@@ -673,10 +662,9 @@ void UXpBoostsRootWidget::HandleBack(bool* bPassThrough)
 
 void UXpBoostsRootWidget::HandleShowLeaderboard(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleShowLeaderboard");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpBoostsRootWidget", "HandleShowLeaderboard");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::XpBoostsRootWidget_HandleShowLeaderboard Parms{};
 
@@ -711,10 +699,9 @@ void UFortArmoryScreen::HandleCustomBackAction()
 
 void UFortCommandScreen::HandleShowAllStats()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleShowAllStats");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCommandScreen", "HandleShowAllStats");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -725,10 +712,9 @@ void UFortCommandScreen::HandleShowAllStats()
 
 void UFortCommandScreen::HandleUpgradeInspectHero()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleUpgradeInspectHero");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCommandScreen", "HandleUpgradeInspectHero");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -779,10 +765,9 @@ void UFortCollectionBookGenericRewardWidget::ClearRewards()
 
 void UFortCollectionBookGenericRewardWidget::OnRewardStatusChanged(ECollectionBookRewardStatus NewStatus)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRewardStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookGenericRewardWidget", "OnRewardStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookGenericRewardWidget_OnRewardStatusChanged Parms{};
 
@@ -981,10 +966,9 @@ bool UFortCollectionBookItemPopupMenu::CanItemBeUnslotted()
 
 void UFortCollectionBookItemPopupMenu::HandleItemChanged(bool bItemChanged, bool bAmmoChanged, bool bIngredientsChanged)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookItemPopupMenu", "HandleItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookItemPopupMenu_HandleItemChanged Parms{};
 
@@ -1001,10 +985,9 @@ void UFortCollectionBookItemPopupMenu::HandleItemChanged(bool bItemChanged, bool
 
 void UFortCollectionBookItemPopupMenu::HandleItemUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookItemPopupMenu", "HandleItemUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1065,10 +1048,9 @@ void UFortCollectionBookOverviewWidget::HandlePagesChanged(class UFortCollection
 
 void UFortCollectionBookOverviewWidget::OnActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookOverviewWidget", "OnActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1084,10 +1066,9 @@ void UFortCollectionBookOverviewWidget::OnActivated()
 
 void UFortCollectionBookOverviewWidget::OnDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookOverviewWidget", "OnDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1105,10 +1086,9 @@ void UFortCollectionBookOverviewWidget::OnDeactivated()
 
 void UFortCollectionBookPageDetailsWidget::OnDetailsPageChanged(const class UFortCollectionBookPage* InNewDetailsPage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDetailsPageChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPageDetailsWidget", "OnDetailsPageChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPageDetailsWidget_OnDetailsPageChanged Parms{};
 
@@ -1132,10 +1112,9 @@ void UFortCollectionBookPageDetailsWidget::OnDetailsPageChanged(const class UFor
 
 void UFortCollectionBookPageDetailsWidget::OnPageProgressionUpdated(int32 TotalFilledSlots, int32 TotalSlots, EFortCollectionBookState State)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPageProgressionUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPageDetailsWidget", "OnPageProgressionUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPageDetailsWidget_OnPageProgressionUpdated Parms{};
 
@@ -1217,10 +1196,9 @@ void UFortCollectionBookPageDetailsWidget::OnUnslotItemComplete(const class UFor
 
 void UFortCollectionBookPageListWidget::OnCategoryDetailsUpdated(int32 AvailableSlots, int32 FilledSlots, int32 TotalSlots)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCategoryDetailsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPageListWidget", "OnCategoryDetailsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPageListWidget_OnCategoryDetailsUpdated Parms{};
 
@@ -1242,10 +1220,9 @@ void UFortCollectionBookPageListWidget::OnCategoryDetailsUpdated(int32 Available
 
 void UFortCollectionBookPageListWidget::OnPageDetailsUpdated(int32 AvailableSlots, int32 FilledSlots, int32 TotalSlots, EFortCollectionBookState State)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPageDetailsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPageListWidget", "OnPageDetailsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPageListWidget_OnPageDetailsUpdated Parms{};
 
@@ -1292,10 +1269,9 @@ void UFortCollectionBookPageListWidget::OnSlottedItemOperationComplete(const cla
 
 void UFortCollectionBookPageListWidget::SetupAsCategory(class UFortCollectionBookCategory* category)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupAsCategory");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPageListWidget", "SetupAsCategory");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPageListWidget_SetupAsCategory Parms{};
 
@@ -1312,10 +1288,9 @@ void UFortCollectionBookPageListWidget::SetupAsCategory(class UFortCollectionBoo
 
 void UFortCollectionBookPageListWidget::SetupAsPage(class UFortCollectionBookPage* Page)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupAsPage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPageListWidget", "SetupAsPage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPageListWidget_SetupAsPage Parms{};
 
@@ -1387,10 +1362,9 @@ void UFortCollectionBookPicker::NotifyPanelDeactivated()
 
 void UFortCollectionBookPicker::OnCollectComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPicker", "OnCollectComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1491,10 +1465,9 @@ void UFortCollectionBookPrimaryPanel::OnBackActionExecuted()
 
 void UFortCollectionBookPrimaryPanel::OnCollectionBookPageClicked(const class UFortCollectionBookPage* ClickedPage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookPageClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPrimaryPanel", "OnCollectionBookPageClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPrimaryPanel_OnCollectionBookPageClicked Parms{};
 
@@ -1516,10 +1489,9 @@ void UFortCollectionBookPrimaryPanel::OnCollectionBookPageClicked(const class UF
 
 void UFortCollectionBookPrimaryPanel::OnCollectionBookPageSelected(const class UFortCollectionBookPage* SelectedPage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookPageSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPrimaryPanel", "OnCollectionBookPageSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPrimaryPanel_OnCollectionBookPageSelected Parms{};
 
@@ -1541,10 +1513,9 @@ void UFortCollectionBookPrimaryPanel::OnCollectionBookPageSelected(const class U
 
 void UFortCollectionBookPrimaryPanel::OnCollectionBookSectionClicked(const class UFortCollectionBookSection* ClickedSection)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookSectionClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPrimaryPanel", "OnCollectionBookSectionClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPrimaryPanel_OnCollectionBookSectionClicked Parms{};
 
@@ -1591,10 +1562,9 @@ void UFortCollectionBookPrimaryPanel::OnInputMethodChanged(ECommonInputType Curr
 
 void UFortCollectionBookPrimaryPanel::OnSummonInfoPanelExecuted(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSummonInfoPanelExecuted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPrimaryPanel", "OnSummonInfoPanelExecuted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPrimaryPanel_OnSummonInfoPanelExecuted Parms{};
 
@@ -1643,10 +1613,9 @@ void UFortCollectionBookPrimaryPanel_Legacy::OnBackActionExecuted(bool* bPassThr
 
 void UFortCollectionBookPrimaryPanel_Legacy::OnCollectionBookPageClicked(const class UFortCollectionBookPage* ClickedPage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookPageClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPrimaryPanel_Legacy", "OnCollectionBookPageClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPrimaryPanel_Legacy_OnCollectionBookPageClicked Parms{};
 
@@ -1668,10 +1637,9 @@ void UFortCollectionBookPrimaryPanel_Legacy::OnCollectionBookPageClicked(const c
 
 void UFortCollectionBookPrimaryPanel_Legacy::OnCollectionBookPageSelected(const class UFortCollectionBookPage* SelectedPage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookPageSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPrimaryPanel_Legacy", "OnCollectionBookPageSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPrimaryPanel_Legacy_OnCollectionBookPageSelected Parms{};
 
@@ -1693,10 +1661,9 @@ void UFortCollectionBookPrimaryPanel_Legacy::OnCollectionBookPageSelected(const 
 
 void UFortCollectionBookPrimaryPanel_Legacy::OnCollectionBookSectionClicked(const class UFortCollectionBookSection* ClickedSection)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookSectionClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPrimaryPanel_Legacy", "OnCollectionBookSectionClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPrimaryPanel_Legacy_OnCollectionBookSectionClicked Parms{};
 
@@ -1743,10 +1710,9 @@ void UFortCollectionBookPrimaryPanel_Legacy::OnInputMethodChanged(ECommonInputTy
 
 void UFortCollectionBookPrimaryPanel_Legacy::OnSummonInfoPanelExecuted(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSummonInfoPanelExecuted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookPrimaryPanel_Legacy", "OnSummonInfoPanelExecuted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookPrimaryPanel_Legacy_OnSummonInfoPanelExecuted Parms{};
 
@@ -1769,10 +1735,9 @@ void UFortCollectionBookPrimaryPanel_Legacy::OnSummonInfoPanelExecuted(bool* bPa
 
 void UFortCollectionBookProgressionRewardDetailInspectWidget::OnXPRequiredChanged(int32 NewXPRequired)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnXPRequiredChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookProgressionRewardDetailInspectWidget", "OnXPRequiredChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookProgressionRewardDetailInspectWidget_OnXPRequiredChanged Parms{};
 
@@ -1858,10 +1823,9 @@ void UFortCollectionBookProgressionRewardsModalWidget::Dismiss()
 
 void UFortCollectionBookProgressionRewardsModalWidget::InspectItemBP(class UFortItem* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InspectItemBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookProgressionRewardsModalWidget", "InspectItemBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookProgressionRewardsModalWidget_InspectItemBP Parms{};
 
@@ -1880,10 +1844,9 @@ void UFortCollectionBookProgressionRewardsModalWidget::InspectItemBP(class UFort
 
 void UFortCollectionBookProgressionRewardsModalWidget::OnLevelProgressionSet(int32 CurrentLevel, float NextLvlPct, int32 MaxAchievedLevel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLevelProgressionSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookProgressionRewardsModalWidget", "OnLevelProgressionSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookProgressionRewardsModalWidget_OnLevelProgressionSet Parms{};
 
@@ -1978,10 +1941,9 @@ void UFortCollectionBookProgressWidget::HandleDetailsModalWidgetDeactivated()
 
 void UFortCollectionBookProgressWidget::OnCollectionBookLevelChanged(int32 NewLevel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookLevelChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookProgressWidget", "OnCollectionBookLevelChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookProgressWidget_OnCollectionBookLevelChanged Parms{};
 
@@ -2003,10 +1965,9 @@ void UFortCollectionBookProgressWidget::OnCollectionBookLevelChanged(int32 NewLe
 
 void UFortCollectionBookProgressWidget::OnCollectionBookLevelProgressionChanged(float NewCompletionPct)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookLevelProgressionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookProgressWidget", "OnCollectionBookLevelProgressionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookProgressWidget_OnCollectionBookLevelProgressionChanged Parms{};
 
@@ -2028,10 +1989,9 @@ void UFortCollectionBookProgressWidget::OnCollectionBookLevelProgressionChanged(
 
 void UFortCollectionBookProgressWidget::OnCollectionBookPageSelected(const class UFortCollectionBookPage* SelectedPage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookPageSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookProgressWidget", "OnCollectionBookPageSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookProgressWidget_OnCollectionBookPageSelected Parms{};
 
@@ -2053,10 +2013,9 @@ void UFortCollectionBookProgressWidget::OnCollectionBookPageSelected(const class
 
 void UFortCollectionBookProgressWidget::OnCollectionBookPreviewXPChange(float PreviewCompletionPct)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookPreviewXPChange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookProgressWidget", "OnCollectionBookPreviewXPChange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookProgressWidget_OnCollectionBookPreviewXPChange Parms{};
 
@@ -2264,10 +2223,9 @@ void UFortCollectionBookSectionPanel::OnResearchItemOperationComplete(const clas
 
 void UFortCollectionBookSectionPanel::OnSectionChanged(const class UFortCollectionBookSection* Section)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSectionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookSectionPanel", "OnSectionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookSectionPanel_OnSectionChanged Parms{};
 
@@ -2342,10 +2300,9 @@ void UFortCollectionBookSectionPanel::OnSlottedItemOperationComplete(const class
 
 void UFortCollectionBookSectionPanel::OnUnslotItemComplete(const class UFortItem* UnslottedItem, class FName SlotId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUnslotItemComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookSectionPanel", "OnUnslotItemComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookSectionPanel_OnUnslotItemComplete Parms{};
 
@@ -2549,10 +2506,9 @@ void UFortCollectionBookSectionPanel_Legacy::OnResearchItemOperationComplete(con
 
 void UFortCollectionBookSectionPanel_Legacy::OnSectionChanged(const class UFortCollectionBookSection* Section)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSectionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookSectionPanel_Legacy", "OnSectionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookSectionPanel_Legacy_OnSectionChanged Parms{};
 
@@ -2729,10 +2685,9 @@ void UFortCollectionBookSectionPanel_Legacy::OnUnslotItemActionExecuted(bool* bP
 
 void UFortCollectionBookSectionPanel_Legacy::OnUnslotItemComplete(const class UFortItem* UnslottedItem, class FName SlotId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUnslotItemComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookSectionPanel_Legacy", "OnUnslotItemComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookSectionPanel_Legacy_OnUnslotItemComplete Parms{};
 
@@ -2837,10 +2792,9 @@ void UFortCollectionBookSectionTileWidget::OnItemUnslotted(const class UFortAcco
 
 void UFortCollectionBookSectionTileWidget::OnSectionSlotUpdate(int32 NumFilledSlots, int32 NumSlots, EFortCollectionBookState SectionState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSectionSlotUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookSectionTileWidget", "OnSectionSlotUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookSectionTileWidget_OnSectionSlotUpdate Parms{};
 
@@ -2958,10 +2912,9 @@ void UFortCollectionBookSlotConfirmationModal::HandleSlotItemComplete(const clas
 
 void UFortCollectionBookSlotConfirmationModal::OnSlotItemRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSlotItemRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookSlotConfirmationModal", "OnSlotItemRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2972,10 +2925,9 @@ void UFortCollectionBookSlotConfirmationModal::OnSlotItemRequested()
 
 void UFortCollectionBookSlotConfirmationModal::OnSlotItemRequestedComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSlotItemRequestedComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookSlotConfirmationModal", "OnSlotItemRequestedComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3200,10 +3152,9 @@ void UFortCollectionBookSlotWidget::HandleUnslotItemComplete(const class UFortAc
 
 void UFortCollectionBookSlotWidget::OnItemCardUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemCardUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookSlotWidget", "OnItemCardUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3360,10 +3311,9 @@ bool UFortCollectionBookSlotWidget::IsItemSlotted() const
 
 void UFortCollectionBookWidget::OnCollectionBookPageClicked(const class UFortCollectionBookPage* ClickedPage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookPageClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookWidget", "OnCollectionBookPageClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookWidget_OnCollectionBookPageClicked Parms{};
 
@@ -3385,10 +3335,9 @@ void UFortCollectionBookWidget::OnCollectionBookPageClicked(const class UFortCol
 
 void UFortCollectionBookWidget::OnCollectionBookPageSelected(const class UFortCollectionBookPage* SelectedPage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookPageSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookWidget", "OnCollectionBookPageSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookWidget_OnCollectionBookPageSelected Parms{};
 
@@ -3410,10 +3359,9 @@ void UFortCollectionBookWidget::OnCollectionBookPageSelected(const class UFortCo
 
 void UFortCollectionBookWidget::OnCollectionBookSectionClicked(const class UFortCollectionBookSection* ClickedSection)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookSectionClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookWidget", "OnCollectionBookSectionClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookWidget_OnCollectionBookSectionClicked Parms{};
 
@@ -3498,10 +3446,9 @@ void UFortCollectionBookWidget::RequestToClose()
 
 void UFortCollectionBookWidget_Legacy::OnCollectionBookPageClicked(const class UFortCollectionBookPage* ClickedPage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookPageClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookWidget_Legacy", "OnCollectionBookPageClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookWidget_Legacy_OnCollectionBookPageClicked Parms{};
 
@@ -3523,10 +3470,9 @@ void UFortCollectionBookWidget_Legacy::OnCollectionBookPageClicked(const class U
 
 void UFortCollectionBookWidget_Legacy::OnCollectionBookPageSelected(const class UFortCollectionBookPage* SelectedPage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookPageSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookWidget_Legacy", "OnCollectionBookPageSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookWidget_Legacy_OnCollectionBookPageSelected Parms{};
 
@@ -3548,10 +3494,9 @@ void UFortCollectionBookWidget_Legacy::OnCollectionBookPageSelected(const class 
 
 void UFortCollectionBookWidget_Legacy::OnCollectionBookSectionClicked(const class UFortCollectionBookSection* ClickedSection)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectionBookSectionClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCollectionBookWidget_Legacy", "OnCollectionBookSectionClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCollectionBookWidget_Legacy_OnCollectionBookSectionClicked Parms{};
 
@@ -3739,10 +3684,9 @@ void UFortDirectAcquisitionWidgetBase::HandleAffiliateButtonClicked()
 
 void UFortDirectAcquisitionWidgetBase::IsTabsLayout(bool bShouldDisplayTabs)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsTabsLayout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDirectAcquisitionWidgetBase", "IsTabsLayout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDirectAcquisitionWidgetBase_IsTabsLayout Parms{};
 
@@ -3759,10 +3703,9 @@ void UFortDirectAcquisitionWidgetBase::IsTabsLayout(bool bShouldDisplayTabs)
 
 void UFortDirectAcquisitionWidgetBase::OnDisplayToast(const bool bDisplayToast)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDisplayToast");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDirectAcquisitionWidgetBase", "OnDisplayToast");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDirectAcquisitionWidgetBase_OnDisplayToast Parms{};
 
@@ -3898,10 +3841,9 @@ void UFortDirectAcquisitionWidgetBase_Legacy::HandleAffiliateButtonClicked()
 
 void UFortDirectAcquisitionWidgetBase_Legacy::IsTabsLayout(bool bShouldDisplayTabs)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsTabsLayout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDirectAcquisitionWidgetBase_Legacy", "IsTabsLayout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDirectAcquisitionWidgetBase_Legacy_IsTabsLayout Parms{};
 
@@ -3918,10 +3860,9 @@ void UFortDirectAcquisitionWidgetBase_Legacy::IsTabsLayout(bool bShouldDisplayTa
 
 void UFortDirectAcquisitionWidgetBase_Legacy::OnDisplayToast(const bool bDisplayToast)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDisplayToast");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDirectAcquisitionWidgetBase_Legacy", "OnDisplayToast");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDirectAcquisitionWidgetBase_Legacy_OnDisplayToast Parms{};
 
@@ -4137,10 +4078,9 @@ bool UFortExpeditionBuildSquadWidget::IsExpeditionValidToStart()
 
 void UFortExpeditionBuildSquadWidget::OnRefreshBuildSquadWidget()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRefreshBuildSquadWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionBuildSquadWidget", "OnRefreshBuildSquadWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -4156,10 +4096,9 @@ void UFortExpeditionBuildSquadWidget::OnRefreshBuildSquadWidget()
 
 void UFortExpeditionBuildSquadWidget::OnRequestClosePicker()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRequestClosePicker");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionBuildSquadWidget", "OnRequestClosePicker");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -4197,10 +4136,9 @@ void UFortExpeditionBuildSquadWidget::SetCurrentSquadId(class FName SquadID)
 
 void UFortExpeditionBuildSquadWidget::SetData(class UFortExpeditionItem* InItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionBuildSquadWidget", "SetData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionBuildSquadWidget_SetData Parms{};
 
@@ -4346,10 +4284,9 @@ void UFortExpeditionDetailsWidget::SetCurrentSquadId(class FName SquadID)
 
 void UFortExpeditionDetailsWidget::SetData(class UFortExpeditionItem* InItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionDetailsWidget", "SetData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionDetailsWidget_SetData Parms{};
 
@@ -4369,10 +4306,9 @@ void UFortExpeditionDetailsWidget::SetData(class UFortExpeditionItem* InItem)
 
 void UFortExpeditionExpiresWidget::OnExpeditionExpirationUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExpeditionExpirationUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionExpiresWidget", "OnExpeditionExpirationUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -4390,10 +4326,9 @@ void UFortExpeditionExpiresWidget::OnExpeditionExpirationUpdated()
 
 void UFortExpeditionExpiresWidget::SetData(class UFortExpeditionItem* InItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionExpiresWidget", "SetData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionExpiresWidget_SetData Parms{};
 
@@ -4413,10 +4348,9 @@ void UFortExpeditionExpiresWidget::SetData(class UFortExpeditionItem* InItem)
 
 void UFortExpeditionListItemWidget::OnItemChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionListItemWidget", "OnItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -4504,10 +4438,9 @@ class FText UFortExpeditionListViewWidget::GetExpeditionListSortName() const
 
 void UFortExpeditionMasterWidget::HandleAbandonExpeditionInput(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAbandonExpeditionInput");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionMasterWidget", "HandleAbandonExpeditionInput");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionMasterWidget_HandleAbandonExpeditionInput Parms{};
 
@@ -4525,10 +4458,9 @@ void UFortExpeditionMasterWidget::HandleAbandonExpeditionInput(bool* bPassThroug
 
 void UFortExpeditionMasterWidget::HandleBackInput(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleBackInput");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionMasterWidget", "HandleBackInput");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionMasterWidget_HandleBackInput Parms{};
 
@@ -4546,10 +4478,9 @@ void UFortExpeditionMasterWidget::HandleBackInput(bool* bPassThrough)
 
 void UFortExpeditionMasterWidget::HandleBuildExpeditionInput(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleBuildExpeditionInput");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionMasterWidget", "HandleBuildExpeditionInput");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionMasterWidget_HandleBuildExpeditionInput Parms{};
 
@@ -4567,10 +4498,9 @@ void UFortExpeditionMasterWidget::HandleBuildExpeditionInput(bool* bPassThrough)
 
 void UFortExpeditionMasterWidget::HandleCollectExpeditionInput(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleCollectExpeditionInput");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionMasterWidget", "HandleCollectExpeditionInput");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionMasterWidget_HandleCollectExpeditionInput Parms{};
 
@@ -4588,10 +4518,9 @@ void UFortExpeditionMasterWidget::HandleCollectExpeditionInput(bool* bPassThroug
 
 void UFortExpeditionMasterWidget::HandleSortInput(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSortInput");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionMasterWidget", "HandleSortInput");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionMasterWidget_HandleSortInput Parms{};
 
@@ -4678,10 +4607,9 @@ void UFortExpeditionOverviewWidget::HandleExpeditionTabSelected(class FName TabN
 
 void UFortExpeditionOverviewWidget::OnExpeditionOverviewRefresh()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExpeditionOverviewRefresh");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionOverviewWidget", "OnExpeditionOverviewRefresh");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -4699,10 +4627,9 @@ void UFortExpeditionOverviewWidget::OnExpeditionOverviewRefresh()
 
 void UFortExpeditionOverviewWidget::OnExpeditionTabSelected(const class FName& TabNameID)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExpeditionTabSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionOverviewWidget", "OnExpeditionTabSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionOverviewWidget_OnExpeditionTabSelected Parms{};
 
@@ -4769,10 +4696,9 @@ void UFortExpeditionPickVehicleWidget::HandleBackInput(bool* bPassThrough)
 
 void UFortExpeditionPickVehicleWidget::SetData(class UFortExpeditionItem* InItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionPickVehicleWidget", "SetData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionPickVehicleWidget_SetData Parms{};
 
@@ -4792,10 +4718,9 @@ void UFortExpeditionPickVehicleWidget::SetData(class UFortExpeditionItem* InItem
 
 void UFortExpeditionReturnsWidget::OnExpeditionInProgressUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExpeditionInProgressUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionReturnsWidget", "OnExpeditionInProgressUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -4813,10 +4738,9 @@ void UFortExpeditionReturnsWidget::OnExpeditionInProgressUpdated()
 
 void UFortExpeditionReturnsWidget::SetData(class UFortExpeditionItem* InItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionReturnsWidget", "SetData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionReturnsWidget_SetData Parms{};
 
@@ -4890,10 +4814,9 @@ void UFortExpeditionRewardsWidget::ProcessNextReward()
 
 void UFortExpeditionRewardsWidget::RefreshRewardsUI(const class UFortExpeditionItem* Expedition, bool bExpeditionSucceeded, const TArray<struct FFortItemInstanceQuantityPair>& Rewards)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RefreshRewardsUI");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionRewardsWidget", "RefreshRewardsUI");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExpeditionRewardsWidget_RefreshRewardsUI Parms{};
 
@@ -4934,10 +4857,9 @@ void UFortExpeditionSummaryWidget::BindInventoryDelegates()
 
 void UFortExpeditionSummaryWidget::OnRefreshSummaryWidget()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRefreshSummaryWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExpeditionSummaryWidget", "OnRefreshSummaryWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -5426,10 +5348,9 @@ int32 UFortExpeditionUtilities::TotalUnseenExpeditionsForTab(const class UWidget
 
 class UFortSquadSlotSelectorButton* UFortSquadSlotsView::CreateAndAddSquadSlotButton(const int32 SquadSlotIndex, const struct FHomebaseSquadSlot& SquadSlotDefinition, class UWidget** OutSquadSlotButtonHost)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CreateAndAddSquadSlotButton");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSlotsView", "CreateAndAddSquadSlotButton");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSquadSlotsView_CreateAndAddSquadSlotButton Parms{};
 
@@ -5816,10 +5737,9 @@ bool UFortSquadSlotsView::TryGetStaticSquadDataBP(struct FHomebaseSquad* OutSqua
 
 void UFortFeatureUnlockWidget::RefreshDataBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RefreshDataBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortFeatureUnlockWidget", "RefreshDataBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6193,10 +6113,9 @@ void UFortResultsWidgetSTW::HandleActionPickerCancel()
 
 void UFortResultsWidgetSTW::HandleActionSkip()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleActionSkip");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortResultsWidgetSTW", "HandleActionSkip");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6623,10 +6542,9 @@ TArray<EFortAutoMulchCategory> UFortItemAutoMulchActivatablePanel_STW::GetMulchC
 
 void UFortSquadSlotItemDetailElementWidget::HandlePostDifferentSquadSlotSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandlePostDifferentSquadSlotSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSlotItemDetailElementWidget", "HandlePostDifferentSquadSlotSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6747,10 +6665,9 @@ bool UFortSquadSlotItemDetailElementWidget::IsSquadSlotLockedBP() const
 
 void UFortSquadSlotSurvivorTraitMatchesDetailWidget::HandleTraitValuesUpdatedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTraitValuesUpdatedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSlotSurvivorTraitMatchesDetailWidget", "HandleTraitValuesUpdatedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6858,10 +6775,9 @@ void UFortItemCraftingOptionsActivatablePanel_STW::IncreaseSelectedQuantity()
 
 void UFortItemCraftingOptionsActivatablePanel_STW::OnBaseItemChanged(class UFortSchematicItem* NewBaseItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBaseItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemCraftingOptionsActivatablePanel_STW", "OnBaseItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemCraftingOptionsActivatablePanel_STW_OnBaseItemChanged Parms{};
 
@@ -6878,10 +6794,9 @@ void UFortItemCraftingOptionsActivatablePanel_STW::OnBaseItemChanged(class UFort
 
 void UFortItemCraftingOptionsActivatablePanel_STW::OnMaxQuantityChanged(int32 NewMaxQuantity)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMaxQuantityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemCraftingOptionsActivatablePanel_STW", "OnMaxQuantityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemCraftingOptionsActivatablePanel_STW_OnMaxQuantityChanged Parms{};
 
@@ -6898,10 +6813,9 @@ void UFortItemCraftingOptionsActivatablePanel_STW::OnMaxQuantityChanged(int32 Ne
 
 void UFortItemCraftingOptionsActivatablePanel_STW::OnSelectedQuantityChanged(int32 NewSelectedQuantity)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSelectedQuantityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemCraftingOptionsActivatablePanel_STW", "OnSelectedQuantityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemCraftingOptionsActivatablePanel_STW_OnSelectedQuantityChanged Parms{};
 
@@ -6918,10 +6832,9 @@ void UFortItemCraftingOptionsActivatablePanel_STW::OnSelectedQuantityChanged(int
 
 void UFortItemCraftingOptionsActivatablePanel_STW::OnTargetItemChanged(class UFortSchematicItem* NewTargetItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTargetItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemCraftingOptionsActivatablePanel_STW", "OnTargetItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemCraftingOptionsActivatablePanel_STW_OnTargetItemChanged Parms{};
 
@@ -7095,10 +7008,9 @@ void UFortItemCraftingOptionsActivatablePanel_STW::UpdateTierImages()
 
 class UFortPopupMenu* UFortItemDetailsActivatablePanel_STW::GetItemManagementViewPopup()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetItemManagementViewPopup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsActivatablePanel_STW", "GetItemManagementViewPopup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemDetailsActivatablePanel_STW_GetItemManagementViewPopup Parms{};
 
@@ -7113,10 +7025,9 @@ class UFortPopupMenu* UFortItemDetailsActivatablePanel_STW::GetItemManagementVie
 
 void UFortItemDetailsActivatablePanel_STW::HandleBack()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleBack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsActivatablePanel_STW", "HandleBack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7127,10 +7038,9 @@ void UFortItemDetailsActivatablePanel_STW::HandleBack()
 
 void UFortItemDetailsActivatablePanel_STW::HandleConsumeItemProgressChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleConsumeItemProgressChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsActivatablePanel_STW", "HandleConsumeItemProgressChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7141,10 +7051,9 @@ void UFortItemDetailsActivatablePanel_STW::HandleConsumeItemProgressChangedBP()
 
 void UFortItemDetailsActivatablePanel_STW::HandleDifferentItemToCompareSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentItemToCompareSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsActivatablePanel_STW", "HandleDifferentItemToCompareSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7155,10 +7064,9 @@ void UFortItemDetailsActivatablePanel_STW::HandleDifferentItemToCompareSetBP()
 
 void UFortItemDetailsActivatablePanel_STW::HandleDifferentItemToDetailSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentItemToDetailSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsActivatablePanel_STW", "HandleDifferentItemToDetailSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7215,10 +7123,9 @@ void UFortItemDetailsActivatablePanel_STW::SetInputActionEnabled(const struct FD
 
 void UFortSquadSelectorButton::HandleDifferentSquadSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentSquadSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSelectorButton", "HandleDifferentSquadSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7229,10 +7136,9 @@ void UFortSquadSelectorButton::HandleDifferentSquadSetBP()
 
 void UFortSquadSelectorButton::HandleSquadChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSquadChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSelectorButton", "HandleSquadChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7409,10 +7315,9 @@ bool UFortSurvivorSquadSelectorButton::TryGetSummaryStats(struct FFortSurvivorSq
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleCompare()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleCompare");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleCompare");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7423,10 +7328,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleCompare()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleConsumeItem()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleConsumeItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleConsumeItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7437,10 +7341,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleConsumeItem()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleCraft()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleCraft");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleCraft");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7451,10 +7354,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleCraft()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleCraftingOptions()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleCraftingOptions");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleCraftingOptions");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7465,10 +7367,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleCraftingOptions()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleDestroy()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDestroy");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleDestroy");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7479,10 +7380,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleDestroy()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleDrop()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDrop");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleDrop");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7493,10 +7393,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleDrop()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleEquip()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleEquip");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleEquip");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7507,10 +7406,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleEquip()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleInspect()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleInspect");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleInspect");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7521,10 +7419,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleInspect()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleMore()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMore");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleMore");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7535,10 +7432,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleMore()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleMulch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMulch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleMulch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7549,10 +7445,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleMulch()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleMulchNative()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMulchNative");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleMulchNative");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7590,10 +7485,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleOnActiveWidgetChanged(class
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleOpenCustomFilter()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleOpenCustomFilter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleOpenCustomFilter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7631,10 +7525,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleQuickbarContentsChanged(EFo
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleSort()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSort");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleSort");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7645,10 +7538,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleSort()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleSwitchPanel()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSwitchPanel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleSwitchPanel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7659,10 +7551,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleSwitchPanel()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleTransfer()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTransfer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleTransfer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7673,10 +7564,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleTransfer()
 
 void UFortItemDetailsModeActivatablePanel_STW::HandleWithdrawAll()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleWithdrawAll");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "HandleWithdrawAll");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7735,10 +7625,9 @@ void UFortItemDetailsModeActivatablePanel_STW::HandleWorldItemsChanged()
 
 bool UFortItemDetailsModeActivatablePanel_STW::MulchQuestComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"MulchQuestComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "MulchQuestComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemDetailsModeActivatablePanel_STW_MulchQuestComplete Parms{};
 
@@ -7867,10 +7756,9 @@ void UFortItemDetailsModeActivatablePanel_STW::RefreshSwitchPanelAction()
 
 void UFortItemDetailsModeActivatablePanel_STW::RefreshTransferActions()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RefreshTransferActions");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemDetailsModeActivatablePanel_STW", "RefreshTransferActions");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8210,10 +8098,9 @@ void UFortItemCompareModeActivatablePanel_STW::RegisterInputActions()
 
 void UFortItemMulchModeActivatablePanel_STW::HandleAutoMulch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAutoMulch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemMulchModeActivatablePanel_STW", "HandleAutoMulch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8224,10 +8111,9 @@ void UFortItemMulchModeActivatablePanel_STW::HandleAutoMulch()
 
 void UFortItemMulchModeActivatablePanel_STW::HandleInfo()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemMulchModeActivatablePanel_STW", "HandleInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8238,10 +8124,9 @@ void UFortItemMulchModeActivatablePanel_STW::HandleInfo()
 
 void UFortItemMulchModeActivatablePanel_STW::HandleLeaveInventory()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleLeaveInventory");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemMulchModeActivatablePanel_STW", "HandleLeaveInventory");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8328,10 +8213,9 @@ void UFortItemManagementCustomFilterModalWidget_STW::EnableAllFilters()
 
 void UFortItemManagementCustomFilterModalWidget_STW::OnBeginCommitCustomFilter()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBeginCommitCustomFilter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementCustomFilterModalWidget_STW", "OnBeginCommitCustomFilter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8342,10 +8226,9 @@ void UFortItemManagementCustomFilterModalWidget_STW::OnBeginCommitCustomFilter()
 
 void UFortItemManagementCustomFilterModalWidget_STW::OnCustomFilterSetUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCustomFilterSetUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementCustomFilterModalWidget_STW", "OnCustomFilterSetUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8358,10 +8241,9 @@ void UFortItemManagementCustomFilterModalWidget_STW::OnCustomFilterSetUpdated()
 
 void UFortItemManagementCustomFilterModalWidget_STW::OnEndCommitCustomFilter(bool bWasSuccessful)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEndCommitCustomFilter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementCustomFilterModalWidget_STW", "OnEndCommitCustomFilter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementCustomFilterModalWidget_STW_OnEndCommitCustomFilter Parms{};
 
@@ -8431,10 +8313,9 @@ bool UFortItemManagementCustomFilterModalWidget_STW::IsCustomFilterEnabled(EFort
 
 void UFortSquadSlotItemPickerTileButton::HandleItemSlottedToDifferentSquad(const struct FHomebaseSquadSlotId& SquadSlotId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemSlottedToDifferentSquad");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSlotItemPickerTileButton", "HandleItemSlottedToDifferentSquad");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSquadSlotItemPickerTileButton_HandleItemSlottedToDifferentSquad Parms{};
 
@@ -8449,10 +8330,9 @@ void UFortSquadSlotItemPickerTileButton::HandleItemSlottedToDifferentSquad(const
 
 void UFortSquadSlotItemPickerTileButton::HandleSlottingRestrictionReasonsChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSlottingRestrictionReasonsChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSlotItemPickerTileButton", "HandleSlottingRestrictionReasonsChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8630,10 +8510,9 @@ void UFortItemManagementInventoryPanel_STW::HandleCursorModeChanged(bool bCursor
 
 void UFortItemManagementInventoryPanel_STW::HandleCursorModeChangedBP(bool bCursorModeEnabled, class FName ActionName, class UUserWidget* CursorModeContentWidget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleCursorModeChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementInventoryPanel_STW", "HandleCursorModeChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementInventoryPanel_STW_HandleCursorModeChangedBP Parms{};
 
@@ -8669,10 +8548,9 @@ void UFortItemManagementInventoryPanel_STW::HandleCustomInventoryFilterChanged()
 
 void UFortItemManagementInventoryPanel_STW::HandleDifferentFilterSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentFilterSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementInventoryPanel_STW", "HandleDifferentFilterSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8683,10 +8561,9 @@ void UFortItemManagementInventoryPanel_STW::HandleDifferentFilterSetBP()
 
 void UFortItemManagementInventoryPanel_STW::HandleDifferentFrontendInventoryFilterSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentFrontendInventoryFilterSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementInventoryPanel_STW", "HandleDifferentFrontendInventoryFilterSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8697,10 +8574,9 @@ void UFortItemManagementInventoryPanel_STW::HandleDifferentFrontendInventoryFilt
 
 void UFortItemManagementInventoryPanel_STW::HandleDifferentItemManagementModeSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentItemManagementModeSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementInventoryPanel_STW", "HandleDifferentItemManagementModeSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8711,10 +8587,9 @@ void UFortItemManagementInventoryPanel_STW::HandleDifferentItemManagementModeSet
 
 void UFortItemManagementInventoryPanel_STW::HandleDifferentSortTypeSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentSortTypeSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementInventoryPanel_STW", "HandleDifferentSortTypeSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8777,10 +8652,9 @@ void UFortItemManagementInventoryPanel_STW::HandleFilterTabSelected(class FName 
 
 void UFortItemManagementInventoryPanel_STW::HandleFocusEquipSlotsBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleFocusEquipSlotsBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementInventoryPanel_STW", "HandleFocusEquipSlotsBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8837,10 +8711,9 @@ void UFortItemManagementInventoryPanel_STW::HandleItemBeginDrag(class UObject* I
 
 void UFortItemManagementInventoryPanel_STW::HandleQuickBarChangedBP(EFortQuickBars QuickBarType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleQuickBarChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementInventoryPanel_STW", "HandleQuickBarChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementInventoryPanel_STW_HandleQuickBarChangedBP Parms{};
 
@@ -8855,10 +8728,9 @@ void UFortItemManagementInventoryPanel_STW::HandleQuickBarChangedBP(EFortQuickBa
 
 void UFortItemManagementInventoryPanel_STW::HandleSetOfItemsToMulchChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSetOfItemsToMulchChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementInventoryPanel_STW", "HandleSetOfItemsToMulchChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8890,10 +8762,9 @@ void UFortItemManagementInventoryPanel_STW::MarkAllItemsAsSeen()
 
 void UFortItemManagementInventoryPanel_STW::OnMulchRestrictionTextShown(bool bShown)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMulchRestrictionTextShown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementInventoryPanel_STW", "OnMulchRestrictionTextShown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementInventoryPanel_STW_OnMulchRestrictionTextShown Parms{};
 
@@ -9275,10 +9146,9 @@ class UUserWidget* UFortItemManagementItemTileButton_STW::GetPopupMenu()
 
 void UFortItemManagementItemTileButton_STW::HandleDifferentItemManagementModeSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentItemManagementModeSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementItemTileButton_STW", "HandleDifferentItemManagementModeSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9291,10 +9161,9 @@ void UFortItemManagementItemTileButton_STW::HandleDifferentItemManagementModeSet
 
 void UFortItemManagementItemTileButton_STW::HandleEquipSlotChanged(int32 EquipSlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleEquipSlotChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementItemTileButton_STW", "HandleEquipSlotChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementItemTileButton_STW_HandleEquipSlotChanged Parms{};
 
@@ -9309,10 +9178,9 @@ void UFortItemManagementItemTileButton_STW::HandleEquipSlotChanged(int32 EquipSl
 
 void UFortItemManagementItemTileButton_STW::HandleHasItemToCompareDetailsWithChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleHasItemToCompareDetailsWithChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementItemTileButton_STW", "HandleHasItemToCompareDetailsWithChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9323,10 +9191,9 @@ void UFortItemManagementItemTileButton_STW::HandleHasItemToCompareDetailsWithCha
 
 void UFortItemManagementItemTileButton_STW::HandleHasItemToDetailChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleHasItemToDetailChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementItemTileButton_STW", "HandleHasItemToDetailChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9337,10 +9204,9 @@ void UFortItemManagementItemTileButton_STW::HandleHasItemToDetailChanged()
 
 void UFortItemManagementItemTileButton_STW::HandleItemChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementItemTileButton_STW", "HandleItemChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9351,10 +9217,9 @@ void UFortItemManagementItemTileButton_STW::HandleItemChangedBP()
 
 void UFortItemManagementItemTileButton_STW::HandleItemMulchStateChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemMulchStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementItemTileButton_STW", "HandleItemMulchStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9365,10 +9230,9 @@ void UFortItemManagementItemTileButton_STW::HandleItemMulchStateChanged()
 
 void UFortItemManagementItemTileButton_STW::HandleShowCollectionBookIndicatorChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleShowCollectionBookIndicatorChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementItemTileButton_STW", "HandleShowCollectionBookIndicatorChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9379,10 +9243,9 @@ void UFortItemManagementItemTileButton_STW::HandleShowCollectionBookIndicatorCha
 
 void UFortItemManagementItemTileButton_STW::HandleShowRefundIndicatorChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleShowRefundIndicatorChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementItemTileButton_STW", "HandleShowRefundIndicatorChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9542,10 +9405,9 @@ bool UFortItemManagementItemTileButton_STW::IsValidEquipSlotOverlayIndex(const i
 
 void UFortStatIcon::HandleDifferentAttributeSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentAttributeSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStatIcon", "HandleDifferentAttributeSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9606,10 +9468,9 @@ TArray<class UFortAmmoItemDefinition*> UFortItemManagementItemDetailsPanel_STW::
 
 void UFortItemManagementItemDetailsPanel_STW::HandleHasItemMarkedForMulchingChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleHasItemMarkedForMulchingChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementItemDetailsPanel_STW", "HandleHasItemMarkedForMulchingChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9620,10 +9481,9 @@ void UFortItemManagementItemDetailsPanel_STW::HandleHasItemMarkedForMulchingChan
 
 void UFortItemManagementItemDetailsPanel_STW::HandleHostSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleHostSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementItemDetailsPanel_STW", "HandleHostSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9653,10 +9513,9 @@ void UFortItemManagementMulchDetailsPanel_STW::CommitMulch()
 
 void UFortItemManagementMulchDetailsPanel_STW::HandleHostSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleHostSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementMulchDetailsPanel_STW", "HandleHostSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9667,10 +9526,9 @@ void UFortItemManagementMulchDetailsPanel_STW::HandleHostSet()
 
 void UFortItemManagementMulchDetailsPanel_STW::HandleSetOfItemsToMulchChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSetOfItemsToMulchChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementMulchDetailsPanel_STW", "HandleSetOfItemsToMulchChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9781,10 +9639,9 @@ bool UFortItemManagementMulchDetailsPanel_STW::IsSpaceAvailableForMulch() const
 
 void UFortLlamaStoreBase::HandleAddVBucks()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAddVBucks");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortLlamaStoreBase", "HandleAddVBucks");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9795,10 +9652,9 @@ void UFortLlamaStoreBase::HandleAddVBucks()
 
 void UFortLlamaStoreBase::HandleTencentDetails()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTencentDetails");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortLlamaStoreBase", "HandleTencentDetails");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9872,10 +9728,9 @@ void UFortLlamaStoreBase::SetupFocus()
 
 void UFortLlamaStoreBase::SwapToCardEnterState()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SwapToCardEnterState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortLlamaStoreBase", "SwapToCardEnterState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9886,10 +9741,9 @@ void UFortLlamaStoreBase::SwapToCardEnterState()
 
 void UFortItemManagementModeDetailsPanel_STW::HandleDifferentItemManagementModeSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentItemManagementModeSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementModeDetailsPanel_STW", "HandleDifferentItemManagementModeSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9900,10 +9754,9 @@ void UFortItemManagementModeDetailsPanel_STW::HandleDifferentItemManagementModeS
 
 void UFortItemManagementModeDetailsPanel_STW::HandleHostSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleHostSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementModeDetailsPanel_STW", "HandleHostSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -10085,10 +9938,9 @@ void UFortItemManagementScreen_STW::CycleSortType()
 
 void UFortItemManagementScreen_STW::DefaultActionRefresh()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"DefaultActionRefresh");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "DefaultActionRefresh");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -10270,10 +10122,9 @@ bool UFortItemManagementScreen_STW::GuardActionForReadOnlyWIFE()
 
 void UFortItemManagementScreen_STW::HandleConsumeItemBP(class UFortConsumableAccountItem* ConsumableItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleConsumeItemBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleConsumeItemBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementScreen_STW_HandleConsumeItemBP Parms{};
 
@@ -10292,10 +10143,9 @@ void UFortItemManagementScreen_STW::HandleConsumeItemBP(class UFortConsumableAcc
 
 void UFortItemManagementScreen_STW::HandleCraftAndSlotItemBP(class UFortSchematicItem* SchematicItem, EFortItemTier RequestedTier, int32 CraftCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleCraftAndSlotItemBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleCraftAndSlotItemBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementScreen_STW_HandleCraftAndSlotItemBP Parms{};
 
@@ -10316,10 +10166,9 @@ void UFortItemManagementScreen_STW::HandleCraftAndSlotItemBP(class UFortSchemati
 
 void UFortItemManagementScreen_STW::HandleCraftItemBP(class UFortSchematicItem* SchematicItem, EFortItemTier RequestedTier, int32 CraftCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleCraftItemBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleCraftItemBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementScreen_STW_HandleCraftItemBP Parms{};
 
@@ -10336,10 +10185,9 @@ void UFortItemManagementScreen_STW::HandleCraftItemBP(class UFortSchematicItem* 
 
 void UFortItemManagementScreen_STW::HandleDifferentItemManagementModeSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentItemManagementModeSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleDifferentItemManagementModeSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -10352,10 +10200,9 @@ void UFortItemManagementScreen_STW::HandleDifferentItemManagementModeSetBP()
 
 void UFortItemManagementScreen_STW::HandleDropItemBP(class UFortItem* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDropItemBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleDropItemBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementScreen_STW_HandleDropItemBP Parms{};
 
@@ -10372,10 +10219,9 @@ void UFortItemManagementScreen_STW::HandleDropItemBP(class UFortItem* Item)
 
 void UFortItemManagementScreen_STW::HandleEquipItemBP(class UFortItem* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleEquipItemBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleEquipItemBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementScreen_STW_HandleEquipItemBP Parms{};
 
@@ -10392,10 +10238,9 @@ void UFortItemManagementScreen_STW::HandleEquipItemBP(class UFortItem* Item)
 
 void UFortItemManagementScreen_STW::HandleInspectItemBP(class UFortItem* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleInspectItemBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleInspectItemBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementScreen_STW_HandleInspectItemBP Parms{};
 
@@ -10471,10 +10316,9 @@ void UFortItemManagementScreen_STW::HandleItemToDetailChanged(bool bItemChanged,
 
 void UFortItemManagementScreen_STW::HandleMoreButtonSelected(class FName MoreNameId, class UCommonButtonBase* NewButton)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMoreButtonSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleMoreButtonSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementScreen_STW_HandleMoreButtonSelected Parms{};
 
@@ -10492,10 +10336,9 @@ void UFortItemManagementScreen_STW::HandleMoreButtonSelected(class FName MoreNam
 
 void UFortItemManagementScreen_STW::HandleMulchQuantitySelection(class UFortItem* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMulchQuantitySelection");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleMulchQuantitySelection");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementScreen_STW_HandleMulchQuantitySelection Parms{};
 
@@ -10510,10 +10353,9 @@ void UFortItemManagementScreen_STW::HandleMulchQuantitySelection(class UFortItem
 
 void UFortItemManagementScreen_STW::HandleOpenAutoMulchOptionsBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleOpenAutoMulchOptionsBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleOpenAutoMulchOptionsBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -10526,10 +10368,9 @@ void UFortItemManagementScreen_STW::HandleOpenAutoMulchOptionsBP()
 
 void UFortItemManagementScreen_STW::HandleOpenCraftingOptionsBP(class UFortSchematicItem* SchematicItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleOpenCraftingOptionsBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleOpenCraftingOptionsBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementScreen_STW_HandleOpenCraftingOptionsBP Parms{};
 
@@ -10546,10 +10387,9 @@ void UFortItemManagementScreen_STW::HandleOpenCraftingOptionsBP(class UFortSchem
 
 void UFortItemManagementScreen_STW::HandleTransferItemBP(class UFortItem* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTransferItemBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "HandleTransferItemBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementScreen_STW_HandleTransferItemBP Parms{};
 
@@ -10856,10 +10696,9 @@ void UFortItemManagementScreen_STW::ShowMulchConfirmationModal()
 
 void UFortItemManagementScreen_STW::ShowWarningReadOnlyWIFE(bool Force)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowWarningReadOnlyWIFE");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemManagementScreen_STW", "ShowWarningReadOnlyWIFE");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemManagementScreen_STW_ShowWarningReadOnlyWIFE Parms{};
 
@@ -11145,10 +10984,9 @@ bool UFortItemManagementScreen_STW::IsScreenWIFE() const
 
 void UFortSurvivorSquadStatMatchesBase::AddStatMatch(class UFortSurvivorSquadStatMatchBase* SetBonus)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AddStatMatch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSurvivorSquadStatMatchesBase", "AddStatMatch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSurvivorSquadStatMatchesBase_AddStatMatch Parms{};
 
@@ -11163,10 +11001,9 @@ void UFortSurvivorSquadStatMatchesBase::AddStatMatch(class UFortSurvivorSquadSta
 
 void UFortSurvivorSquadStatMatchesBase::HandleDifferentSquadSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentSquadSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSurvivorSquadStatMatchesBase", "HandleDifferentSquadSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11385,10 +11222,9 @@ bool UMainMenu_STW::ShouldShowLeaveExperienceButton() const
 
 void UFortSquadStatValueWithIcon::HandleDifferentAttributeSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentAttributeSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadStatValueWithIcon", "HandleDifferentAttributeSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11495,10 +11331,9 @@ void UFortUIStateWidget_STWJoinServer::HandleMatchmakingStateChange(EMatchmaking
 
 void UFortUIStateWidget_STWJoinServer::OnShowTutorialDialog()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowTutorialDialog");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUIStateWidget_STWJoinServer", "OnShowTutorialDialog");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11534,10 +11369,9 @@ void UTopBar_STW::HandleInputMethodChanged(ECommonInputType Type)
 
 void UTopBar_STW::OnMainMenuClosed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMainMenuClosed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TopBar_STW", "OnMainMenuClosed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11548,10 +11382,9 @@ void UTopBar_STW::OnMainMenuClosed()
 
 void UTopBar_STW::OnMainMenuOpening()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMainMenuOpening");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TopBar_STW", "OnMainMenuOpening");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11565,10 +11398,9 @@ void UTopBar_STW::OnMainMenuOpening()
 
 void UTopBar_STW::OnShouldShowPhoenixDisplay(bool bShow, class UFortPhoenixSeasonDisplayInfo* PhoenixDisplayInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShouldShowPhoenixDisplay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TopBar_STW", "OnShouldShowPhoenixDisplay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TopBar_STW_OnShouldShowPhoenixDisplay Parms{};
 
@@ -11584,10 +11416,9 @@ void UTopBar_STW::OnShouldShowPhoenixDisplay(bool bShow, class UFortPhoenixSeaso
 
 void UTopBar_STW::OnSocialMenuOpened()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSocialMenuOpened");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TopBar_STW", "OnSocialMenuOpened");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11600,10 +11431,9 @@ void UTopBar_STW::OnSocialMenuOpened()
 
 void UTopBar_STW::SetOnlineFriendsCount(int32 NewOnlineFriendsCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetOnlineFriendsCount");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TopBar_STW", "SetOnlineFriendsCount");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TopBar_STW_SetOnlineFriendsCount Parms{};
 
@@ -11687,10 +11517,9 @@ struct FUniqueNetIdRepl UFortStatsOverviewDetailsBase::GetLocalPlayerId() const
 
 void UFortHeroLoadoutGadgetPicker::HandleDifferentTargetLoadoutSlotSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentTargetLoadoutSlotSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutGadgetPicker", "HandleDifferentTargetLoadoutSlotSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11780,10 +11609,9 @@ class FName UFortHeroLoadoutHeroPicker::GetCurrentlySelectedTab()
 
 void UFortHeroLoadoutHeroPicker::HandleDifferentTargetLoadoutSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentTargetLoadoutSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutHeroPicker", "HandleDifferentTargetLoadoutSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11821,10 +11649,9 @@ void UFortHeroLoadoutHeroPicker::HandleFilterTabSelected(class FName TabID)
 
 void UFortHeroLoadoutHeroPicker::HandleFilterTabSelectedBP(class FName TabID)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleFilterTabSelectedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutHeroPicker", "HandleFilterTabSelectedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHeroLoadoutHeroPicker_HandleFilterTabSelectedBP Parms{};
 
@@ -11918,10 +11745,9 @@ void UFortHeroLoadoutHeroPicker::UpdateSubFilterTabList(class FName FilterSelect
 
 void UFortHeroLoadoutHeroPicker::UpdateSubFilterVisibility(bool bVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateSubFilterVisibility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutHeroPicker", "UpdateSubFilterVisibility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHeroLoadoutHeroPicker_UpdateSubFilterVisibility Parms{};
 
@@ -11936,10 +11762,9 @@ void UFortHeroLoadoutHeroPicker::UpdateSubFilterVisibility(bool bVisible)
 
 void UFortTheaterSelect_Legacy::OnNavigationLeft()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationLeft");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTheaterSelect_Legacy", "OnNavigationLeft");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11950,10 +11775,9 @@ void UFortTheaterSelect_Legacy::OnNavigationLeft()
 
 void UFortTheaterSelect_Legacy::OnNavigationRight()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationRight");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTheaterSelect_Legacy", "OnNavigationRight");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12002,10 +11826,9 @@ bool UFortTheaterSelect_Legacy::GetTheaterRecommendedRatingRange(const class FSt
 
 class UWidget* UFortHeroLoadoutScreenBase::GetWidgetForFramingViewedItem()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetWidgetForFramingViewedItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenBase", "GetWidgetForFramingViewedItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHeroLoadoutScreenBase_GetWidgetForFramingViewedItem Parms{};
 
@@ -12020,10 +11843,9 @@ class UWidget* UFortHeroLoadoutScreenBase::GetWidgetForFramingViewedItem()
 
 void UFortHeroLoadoutScreenBase::HandleBackInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleBackInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenBase", "HandleBackInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12034,10 +11856,9 @@ void UFortHeroLoadoutScreenBase::HandleBackInputAction()
 
 void UFortHeroLoadoutScreenBase::HandleClearAllInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleClearAllInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenBase", "HandleClearAllInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12048,10 +11869,9 @@ void UFortHeroLoadoutScreenBase::HandleClearAllInputAction()
 
 void UFortHeroLoadoutScreenBase::HandleCyclePickerInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleCyclePickerInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenBase", "HandleCyclePickerInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12062,10 +11882,9 @@ void UFortHeroLoadoutScreenBase::HandleCyclePickerInputAction()
 
 void UFortHeroLoadoutScreenBase::HandleDetailsInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDetailsInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenBase", "HandleDetailsInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12076,10 +11895,9 @@ void UFortHeroLoadoutScreenBase::HandleDetailsInputAction()
 
 void UFortHeroLoadoutScreenBase::HandleHelpInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleHelpInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenBase", "HandleHelpInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12090,10 +11908,9 @@ void UFortHeroLoadoutScreenBase::HandleHelpInputAction()
 
 void UFortHeroLoadoutScreenBase::HandleInspectPickerInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleInspectPickerInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenBase", "HandleInspectPickerInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12104,10 +11921,9 @@ void UFortHeroLoadoutScreenBase::HandleInspectPickerInputAction()
 
 void UFortHeroLoadoutScreenBase::HandleInspectRootSlotsInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleInspectRootSlotsInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenBase", "HandleInspectRootSlotsInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12118,10 +11934,9 @@ void UFortHeroLoadoutScreenBase::HandleInspectRootSlotsInputAction()
 
 void UFortHeroLoadoutScreenBase::HandleShowAllStatsInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleShowAllStatsInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenBase", "HandleShowAllStatsInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12132,10 +11947,9 @@ void UFortHeroLoadoutScreenBase::HandleShowAllStatsInputAction()
 
 void UFortHeroLoadoutScreenBase::HandleToggleDescInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleToggleDescInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenBase", "HandleToggleDescInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12219,10 +12033,9 @@ void UFortHeroLoadoutScreenBase::OnVaultItemsViewed(const TArray<class UFortItem
 
 void UFortHeroLoadoutScreenBase::SetHeroLoadout(const class UFortCampaignHeroLoadoutItem* HeroLoadout)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetHeroLoadout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenBase", "SetHeroLoadout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHeroLoadoutScreenBase_SetHeroLoadout Parms{};
 
@@ -12339,10 +12152,9 @@ bool UFortHeroLoadoutScreenBase::IsLoadoutSwitchingAllowed() const
 
 void UFortLlamaStoreDetailsBase::OnOfferInfoChanged(int32 CurrentOfferRarity)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOfferInfoChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortLlamaStoreDetailsBase", "OnOfferInfoChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortLlamaStoreDetailsBase_OnOfferInfoChanged Parms{};
 
@@ -12376,10 +12188,9 @@ void UFortLlamaStoreDetailsBase::SetScrollWidget()
 
 void UFortLlamaStoreDetailsBase::StartUpgradingToGold()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StartUpgradingToGold");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortLlamaStoreDetailsBase", "StartUpgradingToGold");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12390,10 +12201,9 @@ void UFortLlamaStoreDetailsBase::StartUpgradingToGold()
 
 void UFortLlamaStoreDetailsBase::StartUpgradingToSilver()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StartUpgradingToSilver");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortLlamaStoreDetailsBase", "StartUpgradingToSilver");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12481,10 +12291,9 @@ int32 UFortLlamaStoreDetailsBase::GetNotInCollectionBookCount() const
 
 void UFortHeroLoadoutScreenLegacy::SetHeroLoadout(const class UFortCampaignHeroLoadoutItem* HeroLoadout)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetHeroLoadout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutScreenLegacy", "SetHeroLoadout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHeroLoadoutScreenLegacy_SetHeroLoadout Parms{};
 
@@ -12599,10 +12408,9 @@ bool UFortHeroLoadoutSlotButton::IsContextMenuOpen() const
 
 void UFortWorkerSetBonusIcon::HandleDifferentGameplayTagSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentGameplayTagSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortWorkerSetBonusIcon", "HandleDifferentGameplayTagSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12638,10 +12446,9 @@ void UFortWorkerSetBonusIcon::SetGameplayTag(const struct FGameplayTag& InGamepl
 
 void UFortHeroLoadoutTeamPerkPicker::HandleDifferentTargetLoadoutSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentTargetLoadoutSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutTeamPerkPicker", "HandleDifferentTargetLoadoutSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12728,10 +12535,9 @@ void UFortCampaignTabsScreenBase::HandleFeatureStateChanged(EFortUIFeature Chang
 
 void UFortCampaignTabsScreenBase::HandleMainTabCreated(class FName TabNameID, class UCommonButtonBase* TabButton)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMainTabCreated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCampaignTabsScreenBase", "HandleMainTabCreated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCampaignTabsScreenBase_HandleMainTabCreated Parms{};
 
@@ -12749,10 +12555,9 @@ void UFortCampaignTabsScreenBase::HandleMainTabCreated(class FName TabNameID, cl
 
 void UFortCampaignTabsScreenBase::HandleMainTabSelected(class FName TabNameID)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMainTabSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCampaignTabsScreenBase", "HandleMainTabSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCampaignTabsScreenBase_HandleMainTabSelected Parms{};
 
@@ -12794,10 +12599,9 @@ void UFortCampaignTabsScreenBase::HandleMainTabSelected_Native(class FName TabNa
 
 void UFortCampaignTabsScreenBase::UpdateItemShopButtonBang(const class FName Tab)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateItemShopButtonBang");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCampaignTabsScreenBase", "UpdateItemShopButtonBang");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCampaignTabsScreenBase_UpdateItemShopButtonBang Parms{};
 
@@ -12918,10 +12722,9 @@ void UFortCampaignTabsScreenBase_Legacy::HandleFeatureStateChanged(EFortUIFeatur
 
 void UFortCampaignTabsScreenBase_Legacy::HandleMainTabCreated(class FName TabNameID, class UCommonButtonBase* TabButton)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMainTabCreated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCampaignTabsScreenBase_Legacy", "HandleMainTabCreated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCampaignTabsScreenBase_Legacy_HandleMainTabCreated Parms{};
 
@@ -12939,10 +12742,9 @@ void UFortCampaignTabsScreenBase_Legacy::HandleMainTabCreated(class FName TabNam
 
 void UFortCampaignTabsScreenBase_Legacy::HandleMainTabSelected(class FName TabNameID)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMainTabSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCampaignTabsScreenBase_Legacy", "HandleMainTabSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCampaignTabsScreenBase_Legacy_HandleMainTabSelected Parms{};
 
@@ -12959,10 +12761,9 @@ void UFortCampaignTabsScreenBase_Legacy::HandleMainTabSelected(class FName TabNa
 
 bool UFortMissionSelect_STW::CanCaptureAcceptInput()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanCaptureAcceptInput");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionSelect_STW", "CanCaptureAcceptInput");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMissionSelect_STW_CanCaptureAcceptInput Parms{};
 
@@ -12977,10 +12778,9 @@ bool UFortMissionSelect_STW::CanCaptureAcceptInput()
 
 void UFortMissionSelect_STW::HandleBack()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleBack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionSelect_STW", "HandleBack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -12991,10 +12791,9 @@ void UFortMissionSelect_STW::HandleBack()
 
 void UFortMissionSelect_STW::HandleFindPinnedQuest()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleFindPinnedQuest");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionSelect_STW", "HandleFindPinnedQuest");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13005,10 +12804,9 @@ void UFortMissionSelect_STW::HandleFindPinnedQuest()
 
 void UFortMissionSelect_STW::HandleInputInfo()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleInputInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionSelect_STW", "HandleInputInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13019,10 +12817,9 @@ void UFortMissionSelect_STW::HandleInputInfo()
 
 void UFortMissionSelect_STW::HandleInputRewardsInfo()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleInputRewardsInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionSelect_STW", "HandleInputRewardsInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13113,10 +12910,9 @@ void UFortMissionSelect_STW::SetFindPinnedQuestActionEnabled(bool bEnabled)
 
 void UFortUpgradeTileBase::OnDataRefresh(bool bUpgrade)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDataRefresh");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeTileBase", "OnDataRefresh");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortUpgradeTileBase_OnDataRefresh Parms{};
 
@@ -13131,10 +12927,9 @@ void UFortUpgradeTileBase::OnDataRefresh(bool bUpgrade)
 
 void UFortStoreSummary::CloseSummaryScreen()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CloseSummaryScreen");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreSummary", "CloseSummaryScreen");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13166,10 +12961,9 @@ void UFortStoreSummary::FinalizeFavoriteStatus()
 
 void UFortStoreSummary::FocusSummary_BP(bool bSelectingChoices)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"FocusSummary_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreSummary", "FocusSummary_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortStoreSummary_FocusSummary_BP Parms{};
 
@@ -13211,10 +13005,9 @@ void UFortStoreSummary::HandleContextMenuOpenChanged(bool bIsOpen)
 
 void UFortStoreSummary::HandleContextMenuOpenChangedBP(bool bIsOpen)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleContextMenuOpenChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreSummary", "HandleContextMenuOpenChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortStoreSummary_HandleContextMenuOpenChangedBP Parms{};
 
@@ -13424,10 +13217,9 @@ class UUserWidget* UFortStoreSummaryItemButton::GetPopupMenu()
 
 void UFortStoreSummaryItemButton::HandleCachedCardSet_BP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleCachedCardSet_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreSummaryItemButton", "HandleCachedCardSet_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13438,10 +13230,9 @@ void UFortStoreSummaryItemButton::HandleCachedCardSet_BP()
 
 void UFortStoreSummaryItemButton::HandleItemMulchStateChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemMulchStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreSummaryItemButton", "HandleItemMulchStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13627,10 +13418,9 @@ class UUserWidget* UFortStoreSummaryItemButton_Legacy::GetPopupMenu()
 
 void UFortStoreSummaryItemButton_Legacy::HandleItemMulchStateChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemMulchStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreSummaryItemButton_Legacy", "HandleItemMulchStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13745,10 +13535,9 @@ class UStoreCardObject* UFortStoreSummaryItemButton_Legacy::GetStoreCardObject()
 
 void UFortStoreSummaryItemPopupMenu::HandleItemChanged(bool bItemChanged, bool bAmmoChanged, bool bIngredientsChanged)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreSummaryItemPopupMenu", "HandleItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortStoreSummaryItemPopupMenu_HandleItemChanged Parms{};
 
@@ -13813,10 +13602,9 @@ class UFortStoreSummaryItemButton* UFortStoreSummaryItemPopupMenu::GetHostButton
 
 void UFortStoreSummaryItemPopupMenu_Legacy::HandleItemChanged(bool bItemChanged, bool bAmmoChanged, bool bIngredientsChanged)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreSummaryItemPopupMenu_Legacy", "HandleItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortStoreSummaryItemPopupMenu_Legacy_HandleItemChanged Parms{};
 
@@ -13879,10 +13667,9 @@ class UFortStoreSummaryItemButton_Legacy* UFortStoreSummaryItemPopupMenu_Legacy:
 
 void UFortUpgradeScreenBase::BackAction(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BackAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeScreenBase", "BackAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortUpgradeScreenBase_BackAction Parms{};
 
@@ -13900,10 +13687,9 @@ void UFortUpgradeScreenBase::BackAction(bool* bPassThrough)
 
 void UFortUpgradeScreenBase::HandleRespec(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleRespec");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeScreenBase", "HandleRespec");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortUpgradeScreenBase_HandleRespec Parms{};
 
@@ -13921,10 +13707,9 @@ void UFortUpgradeScreenBase::HandleRespec(bool* bPassThrough)
 
 void UFortUpgradeScreenBase::HandleStartPreview(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleStartPreview");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeScreenBase", "HandleStartPreview");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortUpgradeScreenBase_HandleStartPreview Parms{};
 
@@ -13942,10 +13727,9 @@ void UFortUpgradeScreenBase::HandleStartPreview(bool* bPassThrough)
 
 void UFortUpgradeScreenBase::HandleStopPreview(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleStopPreview");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeScreenBase", "HandleStopPreview");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortUpgradeScreenBase_HandleStopPreview Parms{};
 
@@ -13986,10 +13770,9 @@ void UFortUpgradeScreenBase::HandleTabSelected(class FName TabID)
 
 void UFortUpgradeScreenBase::OnPurchaseNodeComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPurchaseNodeComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeScreenBase", "OnPurchaseNodeComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14000,10 +13783,9 @@ void UFortUpgradeScreenBase::OnPurchaseNodeComplete()
 
 void UFortUpgradeScreenBase::OnUpgradeInfoChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpgradeInfoChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeScreenBase", "OnUpgradeInfoChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14014,10 +13796,9 @@ void UFortUpgradeScreenBase::OnUpgradeInfoChanged()
 
 void UFortUpgradeScreenBase::OnUseUpgradesRespecTokenComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUseUpgradesRespecTokenComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeScreenBase", "OnUseUpgradesRespecTokenComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14204,10 +13985,9 @@ bool UFortUpgradeScreenBase::IsPreviewing() const
 
 void UFortStoreSummary_Legacy::CloseSummaryScreen()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CloseSummaryScreen");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreSummary_Legacy", "CloseSummaryScreen");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14264,10 +14044,9 @@ void UFortStoreSummary_Legacy::HandleContextMenuOpenChanged(bool bIsOpen)
 
 void UFortStoreSummary_Legacy::HandleContextMenuOpenChangedBP(bool bIsOpen)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleContextMenuOpenChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortStoreSummary_Legacy", "HandleContextMenuOpenChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortStoreSummary_Legacy_HandleContextMenuOpenChangedBP Parms{};
 
@@ -14454,10 +14233,9 @@ bool UFortStoreSummary_Legacy::GetIsInChoiceSelectionMode() const
 
 void UFortHeroLoadoutGadgetTileBase::OnGadgetUpdated(bool bIsValidGadget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGadgetUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutGadgetTileBase", "OnGadgetUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHeroLoadoutGadgetTileBase_OnGadgetUpdated Parms{};
 
@@ -14499,10 +14277,9 @@ void UFortHeroLoadoutGadgetTileBase::SetGadgetToRepresent(const class UFortGadge
 
 void UFortHeroLoadoutInGameScreenBase::BackAction(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BackAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutInGameScreenBase", "BackAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHeroLoadoutInGameScreenBase_BackAction Parms{};
 
@@ -14520,10 +14297,9 @@ void UFortHeroLoadoutInGameScreenBase::BackAction(bool* bPassThrough)
 
 void UFortHeroLoadoutInGameScreenBase::OnPerkWidgetAdded(class UGridSlot* GridSlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPerkWidgetAdded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutInGameScreenBase", "OnPerkWidgetAdded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHeroLoadoutInGameScreenBase_OnPerkWidgetAdded Parms{};
 
@@ -14540,10 +14316,9 @@ void UFortHeroLoadoutInGameScreenBase::OnPerkWidgetAdded(class UGridSlot* GridSl
 
 void UFortHeroLoadoutInGameScreenBase::ShowStats(bool* bPassThrough)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowStats");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutInGameScreenBase", "ShowStats");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHeroLoadoutInGameScreenBase_ShowStats Parms{};
 
@@ -14591,10 +14366,9 @@ class UFortGadgetItemDefinition* UFortHeroLoadoutInGameScreenBase::GetGadgetDefi
 
 void UFortHeroLoadoutPerkTileBase::OnPerkInitialized(EFortHeroPerkDisplayType InPerkType, bool bActive, bool bShowWarning)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPerkInitialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHeroLoadoutPerkTileBase", "OnPerkInitialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHeroLoadoutPerkTileBase_OnPerkInitialized Parms{};
 
@@ -14630,10 +14404,9 @@ void UFortAlterationModOptinScreenBase::ConvertItemAlterations()
 
 void UFortAlterationModOptinScreenBase::OnItemConversionComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemConversionComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAlterationModOptinScreenBase", "OnItemConversionComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14644,10 +14417,9 @@ void UFortAlterationModOptinScreenBase::OnItemConversionComplete()
 
 void UFortAlterationModOptinScreenBase::OnSetupItem()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetupItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAlterationModOptinScreenBase", "OnSetupItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14800,10 +14572,9 @@ void UFortAlterationModScreenBase::HandleBackAction(bool* bPassThrough)
 
 void UFortAlterationModScreenBase::OnAlterationModificationCompleted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAlterationModificationCompleted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAlterationModScreenBase", "OnAlterationModificationCompleted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14814,10 +14585,9 @@ void UFortAlterationModScreenBase::OnAlterationModificationCompleted()
 
 void UFortAlterationModScreenBase::OnAlterationModificationStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAlterationModificationStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAlterationModScreenBase", "OnAlterationModificationStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14830,10 +14600,9 @@ void UFortAlterationModScreenBase::OnAlterationModificationStarted()
 
 void UFortAlterationModScreenBase::OnAlterationModificationSucess(int32 ModifiedSlotIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAlterationModificationSucess");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAlterationModScreenBase", "OnAlterationModificationSucess");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAlterationModScreenBase_OnAlterationModificationSucess Parms{};
 
@@ -14850,10 +14619,9 @@ void UFortAlterationModScreenBase::OnAlterationModificationSucess(int32 Modified
 
 void UFortAlterationModScreenBase::OnAlterationOptionChanged(class UFortAlterationOption* CurrentAlterationOption)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAlterationOptionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAlterationModScreenBase", "OnAlterationOptionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAlterationModScreenBase_OnAlterationOptionChanged Parms{};
 
@@ -14870,10 +14638,9 @@ void UFortAlterationModScreenBase::OnAlterationOptionChanged(class UFortAlterati
 
 void UFortAlterationModScreenBase::OnItemSlotChanged(bool SelectedSlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemSlotChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAlterationModScreenBase", "OnItemSlotChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAlterationModScreenBase_OnItemSlotChanged Parms{};
 
@@ -14888,10 +14655,9 @@ void UFortAlterationModScreenBase::OnItemSlotChanged(bool SelectedSlot)
 
 void UFortAlterationModScreenBase::RefreshItemAndAlterationsBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RefreshItemAndAlterationsBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAlterationModScreenBase", "RefreshItemAndAlterationsBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14927,10 +14693,9 @@ void UFortAlterationModScreenBase::SetItemForAlterationsModding(class UFortAlter
 
 void UFortUpgradeDetailsBase::OnPurchaseComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPurchaseComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeDetailsBase", "OnPurchaseComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14941,10 +14706,9 @@ void UFortUpgradeDetailsBase::OnPurchaseComplete()
 
 void UFortUpgradeDetailsBase::OnScreenActive()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnScreenActive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeDetailsBase", "OnScreenActive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14957,10 +14721,9 @@ void UFortUpgradeDetailsBase::OnScreenActive()
 
 void UFortUpgradeDetailsBase::OnShowIcon(class UTexture2D* Icon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowIcon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeDetailsBase", "OnShowIcon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortUpgradeDetailsBase_OnShowIcon Parms{};
 
@@ -14975,10 +14738,9 @@ void UFortUpgradeDetailsBase::OnShowIcon(class UTexture2D* Icon)
 
 void UFortUpgradeDetailsBase::OnUpgradeToDetailChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpgradeToDetailChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeDetailsBase", "OnUpgradeToDetailChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -15052,10 +14814,9 @@ class UFortItemInspectCycleWidget* UFortItemInspectionScreen::GetCycleWidget()
 
 void UFortItemInspectionScreen::HandleDifferentInspectionModeSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentInspectionModeSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemInspectionScreen", "HandleDifferentInspectionModeSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -15066,10 +14827,9 @@ void UFortItemInspectionScreen::HandleDifferentInspectionModeSetBP()
 
 void UFortItemInspectionScreen::HandleDifferentItemToInspectSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentItemToInspectSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemInspectionScreen", "HandleDifferentItemToInspectSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -15080,10 +14840,9 @@ void UFortItemInspectionScreen::HandleDifferentItemToInspectSetBP()
 
 void UFortItemInspectionScreen::HandleIsPreviewingChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleIsPreviewingChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemInspectionScreen", "HandleIsPreviewingChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -15125,10 +14884,9 @@ void UFortItemInspectionScreen::HandleItemToInspectChanged(bool bItemChanged, bo
 
 void UFortItemInspectionScreen::HandleItemToInspectChangedBP(bool bWasFavoritedChanged)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemToInspectChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemInspectionScreen", "HandleItemToInspectChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemInspectionScreen_HandleItemToInspectChangedBP Parms{};
 
@@ -15162,10 +14920,9 @@ void UFortItemInspectionScreen::HandleItemToInspectDestroyed()
 
 void UFortItemInspectionScreen::HandleItemToInspectDestroyedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleItemToInspectDestroyedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemInspectionScreen", "HandleItemToInspectDestroyedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -15424,10 +15181,9 @@ bool UFortItemInspectionScreen::IsItemSlottedInCollectionBook(const class UFortI
 
 void UFortItemInspectCycleWidget::OnItemCycled(class UFortItem* OldItem, class UFortItem* NewItem, int32 OffsetFromPreviousItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemCycled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemInspectCycleWidget", "OnItemCycled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemInspectCycleWidget_OnItemCycled Parms{};
 
@@ -15604,10 +15360,9 @@ class UFortItem* UFortItemInspectCycleWidget::GetItemWithOffset_BP(int32 IndexOf
 
 void UFortAlterationOption::OnSetup()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAlterationOption", "OnSetup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -15835,10 +15590,9 @@ void UFortAlterationOptionsBase::HandleAlterationsOptionSelected(class UCommonBu
 
 void UFortAlterationOptionsBase::OnGenerateOption(EFortAlterationOptionType OptionType, class UFortAlterationOption* OptionWidget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGenerateOption");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAlterationOptionsBase", "OnGenerateOption");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAlterationOptionsBase_OnGenerateOption Parms{};
 
@@ -15856,10 +15610,9 @@ void UFortAlterationOptionsBase::OnGenerateOption(EFortAlterationOptionType Opti
 
 void UFortAlterationOptionsBase::OnItemChanged(bool bIntroAlterations)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAlterationOptionsBase", "OnItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAlterationOptionsBase_OnItemChanged Parms{};
 
@@ -16691,10 +16444,9 @@ class FText UFortMissionActivationInfoSTW::TimeSecondsToText(float InSeconds) co
 
 void UFortMissionActivationWidgetSTWPanel::InfoObjectUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InfoObjectUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionActivationWidgetSTWPanel", "InfoObjectUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -16709,10 +16461,9 @@ void UFortMissionActivationWidgetSTWPanel::InfoObjectUpdated()
 
 void UFortMissionActivationWidgetSTWPanel::OnActiveVoteChangedBP(EFortVoteType VoteType, bool bIsVoteActive, int32 VoteResult)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActiveVoteChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionActivationWidgetSTWPanel", "OnActiveVoteChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMissionActivationWidgetSTWPanel_OnActiveVoteChangedBP Parms{};
 
@@ -16731,10 +16482,9 @@ void UFortMissionActivationWidgetSTWPanel::OnActiveVoteChangedBP(EFortVoteType V
 
 void UFortMissionActivationWidgetSTWPanel::OnMultiplayerChangedBP(bool bIsMultiplayer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMultiplayerChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionActivationWidgetSTWPanel", "OnMultiplayerChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMissionActivationWidgetSTWPanel_OnMultiplayerChangedBP Parms{};
 
@@ -16752,10 +16502,9 @@ void UFortMissionActivationWidgetSTWPanel::OnMultiplayerChangedBP(bool bIsMultip
 
 void UFortMissionActivationWidgetSTWPanel::OnVoteLockoutChangedBP(EFortVoteType VoteType, bool bIsLocked)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnVoteLockoutChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionActivationWidgetSTWPanel", "OnVoteLockoutChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMissionActivationWidgetSTWPanel_OnVoteLockoutChangedBP Parms{};
 
@@ -16773,10 +16522,9 @@ void UFortMissionActivationWidgetSTWPanel::OnVoteLockoutChangedBP(EFortVoteType 
 
 void UFortMissionActivationWidgetSTWPanel::OnVoteUpdatedBP(EFortVoteType VoteType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnVoteUpdatedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionActivationWidgetSTWPanel", "OnVoteUpdatedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMissionActivationWidgetSTWPanel_OnVoteUpdatedBP Parms{};
 
@@ -16820,10 +16568,9 @@ void UFortMissionActivationWidgetSTWPanel::SetInfoObject(class UFortMissionActiv
 
 void UFortMissionActivationWidgetSTW::OnActiveVoteChangedBP(EFortVoteType VoteType, bool bIsVoteActive, int32 VoteResult)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActiveVoteChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionActivationWidgetSTW", "OnActiveVoteChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMissionActivationWidgetSTW_OnActiveVoteChangedBP Parms{};
 
@@ -16842,10 +16589,9 @@ void UFortMissionActivationWidgetSTW::OnActiveVoteChangedBP(EFortVoteType VoteTy
 
 void UFortMissionActivationWidgetSTW::OnMultiplayerChangedBP(bool bIsMultiplayer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMultiplayerChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionActivationWidgetSTW", "OnMultiplayerChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMissionActivationWidgetSTW_OnMultiplayerChangedBP Parms{};
 
@@ -16863,10 +16609,9 @@ void UFortMissionActivationWidgetSTW::OnMultiplayerChangedBP(bool bIsMultiplayer
 
 void UFortMissionActivationWidgetSTW::OnStateUpdated(EFortMissionActivationWidgetSTWState ActiveState, EFortMissionActivationWidgetSTWState PreviousState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStateUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionActivationWidgetSTW", "OnStateUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMissionActivationWidgetSTW_OnStateUpdated Parms{};
 
@@ -16885,10 +16630,9 @@ void UFortMissionActivationWidgetSTW::OnStateUpdated(EFortMissionActivationWidge
 
 void UFortMissionActivationWidgetSTW::OnVoteLockoutChangedBP(EFortVoteType VoteType, bool bIsLocked)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnVoteLockoutChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMissionActivationWidgetSTW", "OnVoteLockoutChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMissionActivationWidgetSTW_OnVoteLockoutChangedBP Parms{};
 
@@ -17218,10 +16962,9 @@ void UFortJournalQuestDetails::GetVisibleObjectives(TArray<class UFortQuestObjec
 
 void UFortJournalQuestDetails::HandleCurrentQuestChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleCurrentQuestChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortJournalQuestDetails", "HandleCurrentQuestChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17232,10 +16975,9 @@ void UFortJournalQuestDetails::HandleCurrentQuestChangedBP()
 
 void UFortJournalQuestDetails::OnEndSpokenDialog()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEndSpokenDialog");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortJournalQuestDetails", "OnEndSpokenDialog");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17324,10 +17066,9 @@ void UFortJournalQuestProgressBar::GetProgressDetails(class FText* OutNumerator,
 
 void UFortProgressArrowButton::OnArrowColorSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnArrowColorSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortProgressArrowButton", "OnArrowColorSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17340,10 +17081,9 @@ void UFortProgressArrowButton::OnArrowColorSet()
 
 void UFortProgressArrowButton::OnIsInteractiveSet(bool bIsInteractive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIsInteractiveSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortProgressArrowButton", "OnIsInteractiveSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortProgressArrowButton_OnIsInteractiveSet Parms{};
 
@@ -17358,10 +17098,9 @@ void UFortProgressArrowButton::OnIsInteractiveSet(bool bIsInteractive)
 
 void UFortProgressArrowButton::OnShadowColorSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShadowColorSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortProgressArrowButton", "OnShadowColorSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17399,10 +17138,9 @@ void UFortProgressArrowButton::UpdateArrowColor(const struct FSlateColor& Color,
 
 void UFortProgressArrowButton_Legacy::OnArrowColorSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnArrowColorSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortProgressArrowButton_Legacy", "OnArrowColorSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17415,10 +17153,9 @@ void UFortProgressArrowButton_Legacy::OnArrowColorSet()
 
 void UFortProgressArrowButton_Legacy::OnIsInteractiveSet(bool bIsInteractive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIsInteractiveSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortProgressArrowButton_Legacy", "OnIsInteractiveSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortProgressArrowButton_Legacy_OnIsInteractiveSet Parms{};
 
@@ -17433,10 +17170,9 @@ void UFortProgressArrowButton_Legacy::OnIsInteractiveSet(bool bIsInteractive)
 
 void UFortProgressArrowButton_Legacy::OnShadowColorSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShadowColorSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortProgressArrowButton_Legacy", "OnShadowColorSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17474,10 +17210,9 @@ void UFortProgressArrowButton_Legacy::UpdateArrowColor(const struct FSlateColor&
 
 void UFortQuestExpiresWidget::OnQuestExpirationUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQuestExpirationUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestExpiresWidget", "OnQuestExpirationUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -17495,10 +17230,9 @@ void UFortQuestExpiresWidget::OnQuestExpirationUpdated()
 
 void UFortQuestExpiresWidget::SetData(class UFortQuestItem* InItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestExpiresWidget", "SetData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestExpiresWidget_SetData Parms{};
 
@@ -17518,10 +17252,9 @@ void UFortQuestExpiresWidget::SetData(class UFortQuestItem* InItem)
 
 void UFortQuestMapCosmeticListWidget::UpdateCosmeticListDisplay()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCosmeticListDisplay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapCosmeticListWidget", "UpdateCosmeticListDisplay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17639,10 +17372,9 @@ void UFortQuestMapEventCallout::DeactivateCallout()
 
 void UFortQuestMapEventCallout::OnActivatePlayAnimation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActivatePlayAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout", "OnActivatePlayAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17653,10 +17385,9 @@ void UFortQuestMapEventCallout::OnActivatePlayAnimation()
 
 void UFortQuestMapEventCallout::OnDeactivatePlayAnimation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDeactivatePlayAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout", "OnDeactivatePlayAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17667,10 +17398,9 @@ void UFortQuestMapEventCallout::OnDeactivatePlayAnimation()
 
 void UFortQuestMapEventCallout::OnEventIndexChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventIndexChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout", "OnEventIndexChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17683,10 +17413,9 @@ void UFortQuestMapEventCallout::OnEventIndexChanged()
 
 void UFortQuestMapEventCallout::OnPlayFadeAnimation(bool bIsFadeOut)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayFadeAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout", "OnPlayFadeAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapEventCallout_OnPlayFadeAnimation Parms{};
 
@@ -17701,10 +17430,9 @@ void UFortQuestMapEventCallout::OnPlayFadeAnimation(bool bIsFadeOut)
 
 void UFortQuestMapEventCallout::OnResetCallout()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnResetCallout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout", "OnResetCallout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17715,10 +17443,9 @@ void UFortQuestMapEventCallout::OnResetCallout()
 
 void UFortQuestMapEventCallout::PlayCurrentMusic()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayCurrentMusic");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout", "PlayCurrentMusic");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17836,10 +17563,9 @@ void UFortQuestMapEventCallout::SetIsFaded(bool Faded)
 
 void UFortQuestMapEventCallout::StopCurrentMusic()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StopCurrentMusic");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout", "StopCurrentMusic");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18057,10 +17783,9 @@ void UFortQuestMapEventCallout_Legacy::DeactivateCallout()
 
 void UFortQuestMapEventCallout_Legacy::OnActivatePlayAnimation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActivatePlayAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout_Legacy", "OnActivatePlayAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18071,10 +17796,9 @@ void UFortQuestMapEventCallout_Legacy::OnActivatePlayAnimation()
 
 void UFortQuestMapEventCallout_Legacy::OnDeactivatePlayAnimation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDeactivatePlayAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout_Legacy", "OnDeactivatePlayAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18085,10 +17809,9 @@ void UFortQuestMapEventCallout_Legacy::OnDeactivatePlayAnimation()
 
 void UFortQuestMapEventCallout_Legacy::OnEventIndexChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventIndexChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout_Legacy", "OnEventIndexChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18101,10 +17824,9 @@ void UFortQuestMapEventCallout_Legacy::OnEventIndexChanged()
 
 void UFortQuestMapEventCallout_Legacy::OnPlayFadeAnimation(bool bIsFadeOut)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayFadeAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout_Legacy", "OnPlayFadeAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapEventCallout_Legacy_OnPlayFadeAnimation Parms{};
 
@@ -18119,10 +17841,9 @@ void UFortQuestMapEventCallout_Legacy::OnPlayFadeAnimation(bool bIsFadeOut)
 
 void UFortQuestMapEventCallout_Legacy::OnResetCallout()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnResetCallout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout_Legacy", "OnResetCallout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18133,10 +17854,9 @@ void UFortQuestMapEventCallout_Legacy::OnResetCallout()
 
 void UFortQuestMapEventCallout_Legacy::PlayCurrentMusic()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayCurrentMusic");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout_Legacy", "PlayCurrentMusic");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18254,10 +17974,9 @@ void UFortQuestMapEventCallout_Legacy::SetIsFaded(bool Faded)
 
 void UFortQuestMapEventCallout_Legacy::StopCurrentMusic()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StopCurrentMusic");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapEventCallout_Legacy", "StopCurrentMusic");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18560,10 +18279,9 @@ void UFortQuestMapNodeLayout_Legacy::HandleQuestIndexSelectionModelIndexChanged(
 
 void UFortQuestMapQuestTile::HandleQuestDataChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleQuestDataChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapQuestTile", "HandleQuestDataChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18576,10 +18294,9 @@ void UFortQuestMapQuestTile::HandleQuestDataChangedBP()
 
 void UFortQuestMapQuestTile::HandleSelectedChange(bool Selected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSelectedChange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapQuestTile", "HandleSelectedChange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapQuestTile_HandleSelectedChange Parms{};
 
@@ -18624,10 +18341,9 @@ void UFortQuestMapQuestTile::GetQuestNodeData(class UFortQuestItemDefinition** Q
 
 void UFortQuestMapQuestTile_Legacy::HandleQuestDataChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleQuestDataChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapQuestTile_Legacy", "HandleQuestDataChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18640,10 +18356,9 @@ void UFortQuestMapQuestTile_Legacy::HandleQuestDataChangedBP()
 
 void UFortQuestMapQuestTile_Legacy::HandleSelectedChange(bool Selected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSelectedChange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapQuestTile_Legacy", "HandleSelectedChange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapQuestTile_Legacy_HandleSelectedChange Parms{};
 
@@ -18709,10 +18424,9 @@ void UFortQuestMapScreen::CheckForNewMainQuest()
 
 void UFortQuestMapScreen::ClaimQuestRewards(const class UFortQuestItem* QuestItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ClaimQuestRewards");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen", "ClaimQuestRewards");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapScreen_ClaimQuestRewards Parms{};
 
@@ -18727,10 +18441,9 @@ void UFortQuestMapScreen::ClaimQuestRewards(const class UFortQuestItem* QuestIte
 
 void UFortQuestMapScreen::HandleBackInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleBackInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen", "HandleBackInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18741,10 +18454,9 @@ void UFortQuestMapScreen::HandleBackInputAction()
 
 void UFortQuestMapScreen::HandleEventCalloutDataChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleEventCalloutDataChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen", "HandleEventCalloutDataChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18774,10 +18486,9 @@ void UFortQuestMapScreen::HandleEventQuestMapActivate()
 
 void UFortQuestMapScreen::HandleMapModeSwitch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMapModeSwitch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen", "HandleMapModeSwitch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18815,10 +18526,9 @@ void UFortQuestMapScreen::HandleMapViewerNavigationRequest(EViewerNavigationDire
 
 void UFortQuestMapScreen::HandleQuestDetailsUpdated(class UFortQuestItem* QuestDefinition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleQuestDetailsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen", "HandleQuestDetailsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapScreen_HandleQuestDetailsUpdated Parms{};
 
@@ -18858,10 +18568,9 @@ void UFortQuestMapScreen::HandleQuestIndexSelectionModelChanged(bool bUpdateButt
 
 void UFortQuestMapScreen::HandleQuestPageChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleQuestPageChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen", "HandleQuestPageChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18919,10 +18628,9 @@ bool UFortQuestMapScreen::IsEventFlagActive(const class FString& EventFlag)
 
 void UFortQuestMapScreen::OnEventCalloutButtonClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventCalloutButtonClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen", "OnEventCalloutButtonClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18933,10 +18641,9 @@ void UFortQuestMapScreen::OnEventCalloutButtonClicked()
 
 void UFortQuestMapScreen::OnEventCalloutExpandChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventCalloutExpandChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen", "OnEventCalloutExpandChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18947,10 +18654,9 @@ void UFortQuestMapScreen::OnEventCalloutExpandChanged()
 
 void UFortQuestMapScreen::OnShowCurrentQuestInputActionValueChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowCurrentQuestInputActionValueChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen", "OnShowCurrentQuestInputActionValueChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19107,10 +18813,9 @@ void UFortQuestMapScreen::UpdateInputActionStates(bool bShowingCallout)
 
 void UFortQuestMapScreen::UpdateQuestMapMode(EQuestMapScreenMode QuestMapMode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateQuestMapMode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen", "UpdateQuestMapMode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapScreen_UpdateQuestMapMode Parms{};
 
@@ -19222,10 +18927,9 @@ void UFortQuestMapScreen_Legacy::CheckForNewMainQuest()
 
 void UFortQuestMapScreen_Legacy::HandleEventCalloutDataChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleEventCalloutDataChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen_Legacy", "HandleEventCalloutDataChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19255,10 +18959,9 @@ void UFortQuestMapScreen_Legacy::HandleEventQuestMapActivate()
 
 void UFortQuestMapScreen_Legacy::HandleMapModeSwitch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMapModeSwitch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen_Legacy", "HandleMapModeSwitch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19296,10 +18999,9 @@ void UFortQuestMapScreen_Legacy::HandleMapViewerNavigationRequest(EViewerNavigat
 
 void UFortQuestMapScreen_Legacy::HandleQuestDetailsUpdated(class UFortQuestItem* QuestDefinition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleQuestDetailsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen_Legacy", "HandleQuestDetailsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapScreen_Legacy_HandleQuestDetailsUpdated Parms{};
 
@@ -19339,10 +19041,9 @@ void UFortQuestMapScreen_Legacy::HandleQuestIndexSelectionModelChanged(bool bUpd
 
 void UFortQuestMapScreen_Legacy::HandleQuestPageChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleQuestPageChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen_Legacy", "HandleQuestPageChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19419,10 +19120,9 @@ bool UFortQuestMapScreen_Legacy::IsEventFlagActive(const class FString& EventFla
 
 void UFortQuestMapScreen_Legacy::OnEventCalloutButtonClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventCalloutButtonClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen_Legacy", "OnEventCalloutButtonClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19433,10 +19133,9 @@ void UFortQuestMapScreen_Legacy::OnEventCalloutButtonClicked()
 
 void UFortQuestMapScreen_Legacy::OnEventCalloutExpandChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventCalloutExpandChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen_Legacy", "OnEventCalloutExpandChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19474,10 +19173,9 @@ void UFortQuestMapScreen_Legacy::SetBeyondCutoffQuest(bool bBeyondCutoff)
 
 void UFortQuestMapScreen_Legacy::SetFindCurrentActionVisibility(EInputActionState ActionVisibility)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetFindCurrentActionVisibility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen_Legacy", "SetFindCurrentActionVisibility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapScreen_Legacy_SetFindCurrentActionVisibility Parms{};
 
@@ -19563,10 +19261,9 @@ void UFortQuestMapScreen_Legacy::ToggleQuestMapState()
 
 void UFortQuestMapScreen_Legacy::UpdateQuestMapMode(EQuestMapScreenMode QuestMapMode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateQuestMapMode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapScreen_Legacy", "UpdateQuestMapMode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapScreen_Legacy_UpdateQuestMapMode Parms{};
 
@@ -19678,10 +19375,9 @@ void UFortQuestMapViewer_Legacy::HandleLayoutOutroAnimationFinished()
 
 void UFortQuestMapViewer_Legacy::OnPlayLayoutFadeInAnimation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayLayoutFadeInAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapViewer_Legacy", "OnPlayLayoutFadeInAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19694,10 +19390,9 @@ void UFortQuestMapViewer_Legacy::OnPlayLayoutFadeInAnimation()
 
 void UFortQuestMapViewer_Legacy::OnPlayLayoutOutroAnimation(EViewerNavigationDirection TravelDirection)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayLayoutOutroAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapViewer_Legacy", "OnPlayLayoutOutroAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapViewer_Legacy_OnPlayLayoutOutroAnimation Parms{};
 
@@ -19715,10 +19410,9 @@ void UFortQuestMapViewer_Legacy::OnPlayLayoutOutroAnimation(EViewerNavigationDir
 
 void UFortQuestMapViewer_Legacy::OnTryUpdateUserWidgetColor(class UUserWidget* Widget, const struct FSlateColor& OverrideColor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTryUpdateUserWidgetColor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestMapViewer_Legacy", "OnTryUpdateUserWidgetColor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestMapViewer_Legacy_OnTryUpdateUserWidgetColor Parms{};
 
@@ -19772,10 +19466,9 @@ void UFortQuestPlayButton::AttemptToPlayQuest()
 
 void UFortQuestPlayButton::HandleLobbyDisconnected()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleLobbyDisconnected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestPlayButton", "HandleLobbyDisconnected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19788,10 +19481,9 @@ void UFortQuestPlayButton::HandleLobbyDisconnected()
 
 void UFortQuestPlayButton::HandleMatchmakingComplete(EMatchmakingCompleteResult Result)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMatchmakingComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestPlayButton", "HandleMatchmakingComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestPlayButton_HandleMatchmakingComplete Parms{};
 
@@ -19806,10 +19498,9 @@ void UFortQuestPlayButton::HandleMatchmakingComplete(EMatchmakingCompleteResult 
 
 void UFortQuestPlayButton::HandleMatchmakingStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleMatchmakingStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestPlayButton", "HandleMatchmakingStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19820,10 +19511,9 @@ void UFortQuestPlayButton::HandleMatchmakingStarted()
 
 void UFortQuestPlayButton::HandlePlayerStateChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandlePlayerStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestPlayButton", "HandlePlayerStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19834,10 +19524,9 @@ void UFortQuestPlayButton::HandlePlayerStateChanged()
 
 void UFortQuestPlayButton::OnContentMissing()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnContentMissing");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestPlayButton", "OnContentMissing");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19892,10 +19581,9 @@ void UFortQuestTreeItemWidget::HandleQuestsUpdated()
 
 void UFortQuestTreeItemWidget::OnQuestsUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQuestsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestTreeItemWidget", "OnQuestsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19908,10 +19596,9 @@ void UFortQuestTreeItemWidget::OnQuestsUpdated()
 
 void UFortQuestTreeItemWidget::SetupAsCategory(class UFortQuestCategory* category)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupAsCategory");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestTreeItemWidget", "SetupAsCategory");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestTreeItemWidget_SetupAsCategory Parms{};
 
@@ -19928,10 +19615,9 @@ void UFortQuestTreeItemWidget::SetupAsCategory(class UFortQuestCategory* categor
 
 void UFortQuestTreeItemWidget::SetupAsQuest(class UFortQuestItem* category)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupAsQuest");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestTreeItemWidget", "SetupAsQuest");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestTreeItemWidget_SetupAsQuest Parms{};
 
@@ -19965,10 +19651,9 @@ void UFortQuestTreeItemWidget_Legacy::HandleQuestsUpdated()
 
 void UFortQuestTreeItemWidget_Legacy::OnQuestsUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQuestsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestTreeItemWidget_Legacy", "OnQuestsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -19981,10 +19666,9 @@ void UFortQuestTreeItemWidget_Legacy::OnQuestsUpdated()
 
 void UFortQuestTreeItemWidget_Legacy::SetupAsCategory(class UFortQuestCategory* category)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupAsCategory");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestTreeItemWidget_Legacy", "SetupAsCategory");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestTreeItemWidget_Legacy_SetupAsCategory Parms{};
 
@@ -20001,10 +19685,9 @@ void UFortQuestTreeItemWidget_Legacy::SetupAsCategory(class UFortQuestCategory* 
 
 void UFortQuestTreeItemWidget_Legacy::SetupAsQuest(class UFortQuestItem* category)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupAsQuest");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestTreeItemWidget_Legacy", "SetupAsQuest");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestTreeItemWidget_Legacy_SetupAsQuest Parms{};
 
@@ -20044,10 +19727,9 @@ void UFortQuestScreen::AttemptToPlayQuest(class UFortQuestItem* QuestItem)
 
 void UFortQuestScreen::BP_HandleAbandonQuestAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleAbandonQuestAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestScreen", "BP_HandleAbandonQuestAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20058,10 +19740,9 @@ void UFortQuestScreen::BP_HandleAbandonQuestAction()
 
 void UFortQuestScreen::BP_HandleBackAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleBackAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestScreen", "BP_HandleBackAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20072,10 +19753,9 @@ void UFortQuestScreen::BP_HandleBackAction()
 
 void UFortQuestScreen::BP_HandleClaimRewardAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleClaimRewardAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestScreen", "BP_HandleClaimRewardAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20086,10 +19766,9 @@ void UFortQuestScreen::BP_HandleClaimRewardAction()
 
 void UFortQuestScreen::BP_HandlePinQuestAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandlePinQuestAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestScreen", "BP_HandlePinQuestAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20100,10 +19779,9 @@ void UFortQuestScreen::BP_HandlePinQuestAction()
 
 void UFortQuestScreen::BP_HandlePlayQuestAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandlePlayQuestAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestScreen", "BP_HandlePlayQuestAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20114,10 +19792,9 @@ void UFortQuestScreen::BP_HandlePlayQuestAction()
 
 void UFortQuestScreen::BP_HandleReplayIntroAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleReplayIntroAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestScreen", "BP_HandleReplayIntroAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20128,10 +19805,9 @@ void UFortQuestScreen::BP_HandleReplayIntroAction()
 
 void UFortQuestScreen::BP_HandleReplayOutroAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleReplayOutroAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestScreen", "BP_HandleReplayOutroAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20142,10 +19818,9 @@ void UFortQuestScreen::BP_HandleReplayOutroAction()
 
 void UFortQuestScreen::BP_HandleStopConversationAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleStopConversationAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestScreen", "BP_HandleStopConversationAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20156,10 +19831,9 @@ void UFortQuestScreen::BP_HandleStopConversationAction()
 
 void UFortQuestScreen::BP_HandleUnpinQuestAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleUnpinQuestAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestScreen", "BP_HandleUnpinQuestAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20172,10 +19846,9 @@ void UFortQuestScreen::BP_HandleUnpinQuestAction()
 
 void UFortQuestScreen::BP_SetInitialQuestToSelect(class UFortQuestItem* QuestItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetInitialQuestToSelect");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestScreen", "BP_SetInitialQuestToSelect");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestScreen_BP_SetInitialQuestToSelect Parms{};
 
@@ -20190,10 +19863,9 @@ void UFortQuestScreen::BP_SetInitialQuestToSelect(class UFortQuestItem* QuestIte
 
 void UFortQuestScreen::OnContentMissing()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnContentMissing");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestScreen", "OnContentMissing");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20348,10 +20020,9 @@ int32 UFortResearchMenuBase::GetClaimableResearchPointEstimate()
 
 void UFortResearchMenuBase::HandleBack()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleBack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortResearchMenuBase", "HandleBack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20362,10 +20033,9 @@ void UFortResearchMenuBase::HandleBack()
 
 void UFortResearchMenuBase::HandleResearchDetails()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleResearchDetails");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortResearchMenuBase", "HandleResearchDetails");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20376,10 +20046,9 @@ void UFortResearchMenuBase::HandleResearchDetails()
 
 void UFortResearchMenuBase::HandleRespec()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleRespec");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortResearchMenuBase", "HandleRespec");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20390,10 +20059,9 @@ void UFortResearchMenuBase::HandleRespec()
 
 void UFortResearchMenuBase::OnPurchaseResearchLevelCompleted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPurchaseResearchLevelCompleted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortResearchMenuBase", "OnPurchaseResearchLevelCompleted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20404,10 +20072,9 @@ void UFortResearchMenuBase::OnPurchaseResearchLevelCompleted()
 
 void UFortResearchMenuBase::OnPurchaseResearchLevelStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPurchaseResearchLevelStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortResearchMenuBase", "OnPurchaseResearchLevelStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20418,10 +20085,9 @@ void UFortResearchMenuBase::OnPurchaseResearchLevelStarted()
 
 void UFortResearchMenuBase::OnUseResearchRespecTokenComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUseResearchRespecTokenComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortResearchMenuBase", "OnUseResearchRespecTokenComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20476,10 +20142,9 @@ void UFortResearchMenuBase::SetupInputHandlers()
 
 void UFortResearchMenuBase::SetupLegacyInputHandlers()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupLegacyInputHandlers");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortResearchMenuBase", "SetupLegacyInputHandlers");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20559,10 +20224,9 @@ int32 UFortResearchMenuBase::GetResearchRespecTokenCount() const
 
 void UFortResearchStatTileWidget::OnStatChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStatChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortResearchStatTileWidget", "OnStatChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21013,10 +20677,9 @@ void UFortRewardNotificationSubWidget::IsPrimaryActionHidden(bool* bHidden)
 
 void UFortRewardNotificationSubWidget::OnActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationSubWidget", "OnActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21027,10 +20690,9 @@ void UFortRewardNotificationSubWidget::OnActivated()
 
 void UFortRewardNotificationSubWidget::OnDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationSubWidget", "OnDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21041,10 +20703,9 @@ void UFortRewardNotificationSubWidget::OnDeactivated()
 
 void UFortRewardNotificationSubWidget::OnNavigationDown()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationDown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationSubWidget", "OnNavigationDown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21055,10 +20716,9 @@ void UFortRewardNotificationSubWidget::OnNavigationDown()
 
 void UFortRewardNotificationSubWidget::OnNavigationLeft()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationLeft");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationSubWidget", "OnNavigationLeft");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21069,10 +20729,9 @@ void UFortRewardNotificationSubWidget::OnNavigationLeft()
 
 void UFortRewardNotificationSubWidget::OnNavigationRight()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationRight");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationSubWidget", "OnNavigationRight");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21083,10 +20742,9 @@ void UFortRewardNotificationSubWidget::OnNavigationRight()
 
 void UFortRewardNotificationSubWidget::OnNavigationUp()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationUp");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationSubWidget", "OnNavigationUp");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21097,10 +20755,9 @@ void UFortRewardNotificationSubWidget::OnNavigationUp()
 
 void UFortRewardNotificationSubWidget::OnPrimaryAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPrimaryAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationSubWidget", "OnPrimaryAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21272,10 +20929,9 @@ void UFortRewardNotificationSubWidget::TransitionIn()
 
 void UFortRewardNotificationSubWidget::TransitionInBegin()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"TransitionInBegin");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationSubWidget", "TransitionInBegin");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21305,10 +20961,9 @@ void UFortRewardNotificationSubWidget::TransitionOut()
 
 void UFortRewardNotificationSubWidget::TransitionOutBegin()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"TransitionOutBegin");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationSubWidget", "TransitionOutBegin");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21411,10 +21066,9 @@ void UStWHUD::HandleCursorModeChanged(bool bCursorModeEnabled, class FName Actio
 
 void UStWHUD::HandleManagementTabsOpen_BP(class UCommonActivatableWidget* ManagementScreen)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleManagementTabsOpen_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("StWHUD", "HandleManagementTabsOpen_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::StWHUD_HandleManagementTabsOpen_BP Parms{};
 
@@ -21506,10 +21160,9 @@ void UStWHUD::NativeHandleWeaponEquipped(class AFortWeapon* NewWeapon, class AFo
 
 void UStWHUD::OnAutoHideBuildingMaterialsChanged(bool bGetAutoHideBuildingMaterials)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAutoHideBuildingMaterialsChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("StWHUD", "OnAutoHideBuildingMaterialsChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::StWHUD_OnAutoHideBuildingMaterialsChanged Parms{};
 
@@ -21526,10 +21179,9 @@ void UStWHUD::OnAutoHideBuildingMaterialsChanged(bool bGetAutoHideBuildingMateri
 
 void UStWHUD::OnHUDScaleChanged(float HUDScale)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHUDScaleChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("StWHUD", "OnHUDScaleChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::StWHUD_OnHUDScaleChanged Parms{};
 
@@ -21573,10 +21225,9 @@ void UFortRewardExpeditionWidget::CollectExpedition(class UFortExpeditionItem* E
 
 void UFortRewardExpeditionWidget::OnCollectExpeditionCompleted(const class UFortExpeditionItem* Expedition, bool bSucceeded, const TArray<struct FFortItemInstanceQuantityPair>& Rewards)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCollectExpeditionCompleted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardExpeditionWidget", "OnCollectExpeditionCompleted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortRewardExpeditionWidget_OnCollectExpeditionCompleted Parms{};
 
@@ -21593,10 +21244,9 @@ void UFortRewardExpeditionWidget::OnCollectExpeditionCompleted(const class UFort
 
 void UFortRewardInfoButton::HandleDifferentItemOrQuantitySetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentItemOrQuantitySetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardInfoButton", "HandleDifferentItemOrQuantitySetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21659,10 +21309,9 @@ void UFortRewardInfoButton::SetShowDescription(bool bInShowDescription)
 
 void UFortRewardInfoButton::SetShowDescriptionBP(bool bInShowDescription)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetShowDescriptionBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardInfoButton", "SetShowDescriptionBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortRewardInfoButton_SetShowDescriptionBP Parms{};
 
@@ -22403,10 +22052,9 @@ void UFortRewardNotificationWidget::HideMulchConfirmationModal()
 
 void UFortRewardNotificationWidget::InspectItem(class UFortItem* ItemToInspect, int32 QuantityOverride)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InspectItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "InspectItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortRewardNotificationWidget_InspectItem Parms{};
 
@@ -22537,10 +22185,9 @@ void UFortRewardNotificationWidget::NotifyPanelDeactivated()
 
 void UFortRewardNotificationWidget::OnMulchCompleted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMulchCompleted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnMulchCompleted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22551,10 +22198,9 @@ void UFortRewardNotificationWidget::OnMulchCompleted()
 
 void UFortRewardNotificationWidget::OnNavigationDown()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationDown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnNavigationDown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22565,10 +22211,9 @@ void UFortRewardNotificationWidget::OnNavigationDown()
 
 void UFortRewardNotificationWidget::OnNavigationLeft()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationLeft");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnNavigationLeft");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22579,10 +22224,9 @@ void UFortRewardNotificationWidget::OnNavigationLeft()
 
 void UFortRewardNotificationWidget::OnNavigationRight()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationRight");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnNavigationRight");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22593,10 +22237,9 @@ void UFortRewardNotificationWidget::OnNavigationRight()
 
 void UFortRewardNotificationWidget::OnNavigationUp()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationUp");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnNavigationUp");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22609,10 +22252,9 @@ void UFortRewardNotificationWidget::OnNavigationUp()
 
 void UFortRewardNotificationWidget::OnPopulateChoiceRewards(const TArray<struct FFortItemInstanceQuantityPair>& ItemList)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateChoiceRewards");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnPopulateChoiceRewards");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortRewardNotificationWidget_OnPopulateChoiceRewards Parms{};
 
@@ -22629,10 +22271,9 @@ void UFortRewardNotificationWidget::OnPopulateChoiceRewards(const TArray<struct 
 
 void UFortRewardNotificationWidget::OnPopulateExpeditionReward(const class UFortRewardExpeditionData* ExpeditionReward)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateExpeditionReward");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnPopulateExpeditionReward");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortRewardNotificationWidget_OnPopulateExpeditionReward Parms{};
 
@@ -22649,10 +22290,9 @@ void UFortRewardNotificationWidget::OnPopulateExpeditionReward(const class UFort
 
 void UFortRewardNotificationWidget::OnPopulateGiftBoxReward(const class UFortRewardGiftBoxData* GiftBoxReward)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateGiftBoxReward");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnPopulateGiftBoxReward");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortRewardNotificationWidget_OnPopulateGiftBoxReward Parms{};
 
@@ -22669,10 +22309,9 @@ void UFortRewardNotificationWidget::OnPopulateGiftBoxReward(const class UFortRew
 
 void UFortRewardNotificationWidget::OnPopulateNewQuestReward(const class UFortRewardEpicQuestData* QuestReward)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateNewQuestReward");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnPopulateNewQuestReward");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortRewardNotificationWidget_OnPopulateNewQuestReward Parms{};
 
@@ -22687,10 +22326,9 @@ void UFortRewardNotificationWidget::OnPopulateNewQuestReward(const class UFortRe
 
 void UFortRewardNotificationWidget::OnPrimaryActionDisabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPrimaryActionDisabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnPrimaryActionDisabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22701,10 +22339,9 @@ void UFortRewardNotificationWidget::OnPrimaryActionDisabled()
 
 void UFortRewardNotificationWidget::OnPrimaryActionEnabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPrimaryActionEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnPrimaryActionEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22715,10 +22352,9 @@ void UFortRewardNotificationWidget::OnPrimaryActionEnabled()
 
 void UFortRewardNotificationWidget::OnPrimaryActionHidden()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPrimaryActionHidden");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnPrimaryActionHidden");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22731,10 +22367,9 @@ void UFortRewardNotificationWidget::OnPrimaryActionHidden()
 
 void UFortRewardNotificationWidget::OnPrimaryActionTextChanged(const class FText& Text)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPrimaryActionTextChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnPrimaryActionTextChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortRewardNotificationWidget_OnPrimaryActionTextChanged Parms{};
 
@@ -22751,10 +22386,9 @@ void UFortRewardNotificationWidget::OnPrimaryActionTextChanged(const class FText
 
 void UFortRewardNotificationWidget::OnRewardsClaimed(const TArray<struct FFortItemInstanceQuantityPair>& ItemList)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRewardsClaimed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnRewardsClaimed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortRewardNotificationWidget_OnRewardsClaimed Parms{};
 
@@ -22769,10 +22403,9 @@ void UFortRewardNotificationWidget::OnRewardsClaimed(const TArray<struct FFortIt
 
 void UFortRewardNotificationWidget::OnRewardsClaimFailed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRewardsClaimFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnRewardsClaimFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22783,10 +22416,9 @@ void UFortRewardNotificationWidget::OnRewardsClaimFailed()
 
 void UFortRewardNotificationWidget::OnRewardsScreenClosed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRewardsScreenClosed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRewardNotificationWidget", "OnRewardsScreenClosed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22991,10 +22623,9 @@ bool UFortDefenderSquadSelectorButton::TryGetTheaterUniqueId(class FString* OutT
 
 void UFortSquadIcon::HandleDifferentSquadSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentSquadSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadIcon", "HandleDifferentSquadSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23033,10 +22664,9 @@ void UFortSquadIcon::SetSquad(const class FName& InName)
 
 void UFortSquadLandingPageDefenderSquadDetails::HandleAddDefenderSquadMemberBP(const class FName& SquadID, int32 Index_0)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAddDefenderSquadMemberBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadLandingPageDefenderSquadDetails", "HandleAddDefenderSquadMemberBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSquadLandingPageDefenderSquadDetails_HandleAddDefenderSquadMemberBP Parms{};
 
@@ -23054,10 +22684,9 @@ void UFortSquadLandingPageDefenderSquadDetails::HandleAddDefenderSquadMemberBP(c
 
 void UFortSquadLandingPageDefenderSquadDetails::HandleDefenderSquadInfoSetBP(const struct FFortLandingPageDefenderSummaryInfo& DefenderSummaryInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDefenderSquadInfoSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadLandingPageDefenderSquadDetails", "HandleDefenderSquadInfoSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSquadLandingPageDefenderSquadDetails_HandleDefenderSquadInfoSetBP Parms{};
 
@@ -23124,10 +22753,9 @@ void UFortSquadLandingPageDefenderSquadDetailsLocked::SetDefenderSquadInfo(const
 
 void UFortSquadLandingPageDefenderSummary::HandleAddDefenderSquadDetailsBP(const struct FFortLandingPageDefenderSummaryInfo& DefenderSummaryInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAddDefenderSquadDetailsBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadLandingPageDefenderSummary", "HandleAddDefenderSquadDetailsBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSquadLandingPageDefenderSummary_HandleAddDefenderSquadDetailsBP Parms{};
 
@@ -23144,10 +22772,9 @@ void UFortSquadLandingPageDefenderSummary::HandleAddDefenderSquadDetailsBP(const
 
 void UFortSquadLandingPageDefenderSummary::HandleAddLockedDefenderSquadDetailsBP(const struct FFortLandingPageDefenderSummaryInfo& DefenderSummaryInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAddLockedDefenderSquadDetailsBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadLandingPageDefenderSummary", "HandleAddLockedDefenderSquadDetailsBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSquadLandingPageDefenderSummary_HandleAddLockedDefenderSquadDetailsBP Parms{};
 
@@ -23162,10 +22789,9 @@ void UFortSquadLandingPageDefenderSummary::HandleAddLockedDefenderSquadDetailsBP
 
 void UFortSquadLandingPageDefenderSummary::HandleClearDefenderSquadDetailsBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleClearDefenderSquadDetailsBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadLandingPageDefenderSummary", "HandleClearDefenderSquadDetailsBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23178,10 +22804,9 @@ void UFortSquadLandingPageDefenderSummary::HandleClearDefenderSquadDetailsBP()
 
 void UFortSquadLandingPageSurvivorSummary::HandleAddSetBonusSummaryLineItemBP(const struct FFortAttributeModifierAccumulation& AttributeModifierAccumulation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAddSetBonusSummaryLineItemBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadLandingPageSurvivorSummary", "HandleAddSetBonusSummaryLineItemBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSquadLandingPageSurvivorSummary_HandleAddSetBonusSummaryLineItemBP Parms{};
 
@@ -23196,10 +22821,9 @@ void UFortSquadLandingPageSurvivorSummary::HandleAddSetBonusSummaryLineItemBP(co
 
 void UFortSquadLandingPageSurvivorSummary::HandleClearSetBonusSummaryLineItemsBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleClearSetBonusSummaryLineItemsBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadLandingPageSurvivorSummary", "HandleClearSetBonusSummaryLineItemsBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23286,10 +22910,9 @@ void UFortSquadManagementScreenBase::HandleCyclePickerSortInputAction()
 
 void UFortSquadManagementScreenBase::HandleDifferentSquadSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentSquadSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadManagementScreenBase", "HandleDifferentSquadSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23382,10 +23005,9 @@ void UFortSquadManagementScreenBase::HandleManageInputAction()
 
 void UFortSquadManagementScreenBase::HandleNextSquadInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleNextSquadInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadManagementScreenBase", "HandleNextSquadInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23471,10 +23093,9 @@ void UFortSquadManagementScreenBase::HandlePickerSelectionCommitted(class UFortI
 
 void UFortSquadManagementScreenBase::HandlePreviousSquadInputAction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandlePreviousSquadInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadManagementScreenBase", "HandlePreviousSquadInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23523,10 +23144,9 @@ void UFortSquadManagementScreenBase::HandleShouldAutoSlotSurvivorSquadsChanged()
 
 void UFortSquadManagementScreenBase::HandleSquadSlotPickerHidden()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSquadSlotPickerHidden");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadManagementScreenBase", "HandleSquadSlotPickerHidden");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23537,10 +23157,9 @@ void UFortSquadManagementScreenBase::HandleSquadSlotPickerHidden()
 
 void UFortSquadManagementScreenBase::HandleSquadSlotPickerShown()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSquadSlotPickerShown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadManagementScreenBase", "HandleSquadSlotPickerShown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23551,10 +23170,9 @@ void UFortSquadManagementScreenBase::HandleSquadSlotPickerShown()
 
 void UFortSquadManagementScreenBase::HandleSquadStateChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSquadStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadManagementScreenBase", "HandleSquadStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23724,10 +23342,9 @@ void UFortSquadManagementScreenBase::SetupInputHandlers()
 
 void UFortSquadManagementScreenBase::ShowWarningReadOnlyWIFE(bool Force)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowWarningReadOnlyWIFE");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadManagementScreenBase", "ShowWarningReadOnlyWIFE");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSquadManagementScreenBase_ShowWarningReadOnlyWIFE Parms{};
 
@@ -23961,10 +23578,9 @@ bool UFortSquadManagementScreenBase::TryGetStaticSquadDataBP(struct FHomebaseSqu
 
 void UFortSquadSlotDetailsPanel::HandleDifferentSquadSlotSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDifferentSquadSlotSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSlotDetailsPanel", "HandleDifferentSquadSlotSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23975,10 +23591,9 @@ void UFortSquadSlotDetailsPanel::HandleDifferentSquadSlotSetBP()
 
 void UFortSquadSlotDetailsPanel::HandleSquadSlotRestrictionFactorsChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSquadSlotRestrictionFactorsChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSlotDetailsPanel", "HandleSquadSlotRestrictionFactorsChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23989,10 +23604,9 @@ void UFortSquadSlotDetailsPanel::HandleSquadSlotRestrictionFactorsChangedBP()
 
 void UFortSquadSlotDetailsPanel::HandleSquadSlotStateChangedBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSquadSlotStateChangedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSlotDetailsPanel", "HandleSquadSlotStateChangedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -24478,10 +24092,9 @@ class UUserWidget* UFortSquadSlotSelectorButton::GetPopupMenu()
 
 void UFortSquadSlotSelectorButton::HandlePostDifferentSquadSlotSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandlePostDifferentSquadSlotSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSlotSelectorButton", "HandlePostDifferentSquadSlotSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -24492,10 +24105,9 @@ void UFortSquadSlotSelectorButton::HandlePostDifferentSquadSlotSetBP()
 
 void UFortSquadSlotSelectorButton::HandlePreDifferentSquadSlotSetBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandlePreDifferentSquadSlotSetBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSlotSelectorButton", "HandlePreDifferentSquadSlotSetBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -24552,10 +24164,9 @@ void UFortSquadSlotSelectorButton::SetIdOfSquadSlotToManageBP(const class FName&
 
 void UFortSquadSlotSelectorButton::SquadSlotWidgetUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SquadSlotWidgetUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadSlotSelectorButton", "SquadSlotWidgetUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -24807,10 +24418,9 @@ bool UFortSquadSlotWidget::IsSquadSlotLockedBP() const
 
 void UFortSquadStatsWidgetBase::HandlePowerRatingChanged_BP(bool bHasTeamMebers)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandlePowerRatingChanged_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadStatsWidgetBase", "HandlePowerRatingChanged_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSquadStatsWidgetBase_HandlePowerRatingChanged_BP Parms{};
 
@@ -24825,10 +24435,9 @@ void UFortSquadStatsWidgetBase::HandlePowerRatingChanged_BP(bool bHasTeamMebers)
 
 void UFortSquadStatsWidgetBase::HandleSquadSlottingPreviewStateChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSquadSlottingPreviewStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadStatsWidgetBase", "HandleSquadSlottingPreviewStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -24905,10 +24514,9 @@ struct FUniqueNetIdRepl UFortSquadStatsWidgetBase::GetLocalPlayerId() const
 
 class UFortSquadSelectorButton* UFortSquadTypeLandingPageBase::CreateAndAddSquadButton(const class FName& SquadID)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CreateAndAddSquadButton");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadTypeLandingPageBase", "CreateAndAddSquadButton");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSquadTypeLandingPageBase_CreateAndAddSquadButton Parms{};
 
@@ -24972,10 +24580,9 @@ void UFortSquadTypeLandingPageBase::HandlePendingNavigationOp()
 
 void UFortSquadTypeLandingPageBase::ShowWarningReadOnlyWIFE(bool Force)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowWarningReadOnlyWIFE");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSquadTypeLandingPageBase", "ShowWarningReadOnlyWIFE");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSquadTypeLandingPageBase_ShowWarningReadOnlyWIFE Parms{};
 
@@ -25019,10 +24626,9 @@ bool UFortSquadTypeLandingPageBase::IsScreenWIFE() const
 
 void UFortSurvivorSquadManagementScreen::PlayFeedbackForSlottingPerson(class UFortWorker* Worker, int32 SlotIndex, const struct FFortSurvivorSquadSlottingFeedbackData& FeedbackData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayFeedbackForSlottingPerson");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSurvivorSquadManagementScreen", "PlayFeedbackForSlottingPerson");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSurvivorSquadManagementScreen_PlayFeedbackForSlottingPerson Parms{};
 
@@ -25039,10 +24645,9 @@ void UFortSurvivorSquadManagementScreen::PlayFeedbackForSlottingPerson(class UFo
 
 void UFortSurvivorSquadManagementScreen::ShowHelpDialog()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowHelpDialog");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSurvivorSquadManagementScreen", "ShowHelpDialog");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -25053,10 +24658,9 @@ void UFortSurvivorSquadManagementScreen::ShowHelpDialog()
 
 void UFortSurvivorSquadManagementScreen::UpdateCycleButtons()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCycleButtons");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSurvivorSquadManagementScreen", "UpdateCycleButtons");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -25069,10 +24673,9 @@ void UFortSurvivorSquadManagementScreen::UpdateCycleButtons()
 
 void UFortSurvivorSquadStatMatchBase::OnStatMatchUpdated(const struct FFortUISurvivorSquadStatMatch& UpdatedMatch)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStatMatchUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSurvivorSquadStatMatchBase", "OnStatMatchUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSurvivorSquadStatMatchBase_OnStatMatchUpdated Parms{};
 
@@ -25175,10 +24778,9 @@ void UFortLlamaStoreBase_Legacy::SetupFocus()
 
 void UFortLlamaStoreBase_Legacy::SwapToCardEnterState()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SwapToCardEnterState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortLlamaStoreBase_Legacy", "SwapToCardEnterState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -25189,10 +24791,9 @@ void UFortLlamaStoreBase_Legacy::SwapToCardEnterState()
 
 void UFortLlamaStoreInspectionScreen::BP_BackOutFromItemViewMode()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_BackOutFromItemViewMode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortLlamaStoreInspectionScreen", "BP_BackOutFromItemViewMode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -25205,10 +24806,9 @@ void UFortLlamaStoreInspectionScreen::BP_BackOutFromItemViewMode()
 
 void UFortLlamaStoreInspectionScreen::BP_CheckViewVaultItem(class UFortItem* ItemToCheck)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CheckViewVaultItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortLlamaStoreInspectionScreen", "BP_CheckViewVaultItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortLlamaStoreInspectionScreen_BP_CheckViewVaultItem Parms{};
 
@@ -25226,10 +24826,9 @@ void UFortLlamaStoreInspectionScreen::BP_CheckViewVaultItem(class UFortItem* Ite
 
 void UFortLlamaStoreInspectionScreen::BP_InspectFortItem(class UFortItem* ItemToInspect, bool bForChoice)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_InspectFortItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortLlamaStoreInspectionScreen", "BP_InspectFortItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortLlamaStoreInspectionScreen_BP_InspectFortItem Parms{};
 
@@ -25452,10 +25051,9 @@ bool UFortLlamaStoreInspectionScreen::IsItemChoicePack(class UObject* ItemToChec
 
 void UFortTheaterSelect::OnNavigationLeft()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationLeft");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTheaterSelect", "OnNavigationLeft");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -25466,10 +25064,9 @@ void UFortTheaterSelect::OnNavigationLeft()
 
 void UFortTheaterSelect::OnNavigationRight()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNavigationRight");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTheaterSelect", "OnNavigationRight");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -26030,10 +25627,9 @@ void UFortUpgradeScreenBase_Legacy::HandleTabSelected(class FName TabID)
 
 void UFortUpgradeScreenBase_Legacy::OnPurchaseNodeComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPurchaseNodeComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeScreenBase_Legacy", "OnPurchaseNodeComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -26044,10 +25640,9 @@ void UFortUpgradeScreenBase_Legacy::OnPurchaseNodeComplete()
 
 void UFortUpgradeScreenBase_Legacy::OnUpgradeInfoChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpgradeInfoChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeScreenBase_Legacy", "OnUpgradeInfoChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -26058,10 +25653,9 @@ void UFortUpgradeScreenBase_Legacy::OnUpgradeInfoChanged()
 
 void UFortUpgradeScreenBase_Legacy::OnUseUpgradesRespecTokenComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUseUpgradesRespecTokenComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeScreenBase_Legacy", "OnUseUpgradesRespecTokenComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -26231,10 +25825,9 @@ bool UFortUpgradeScreenBase_Legacy::IsPreviewing() const
 
 void UFortUpgradeTileBase_Legacy::OnDataRefresh(bool bUpgrade)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDataRefresh");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeTileBase_Legacy", "OnDataRefresh");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortUpgradeTileBase_Legacy_OnDataRefresh Parms{};
 

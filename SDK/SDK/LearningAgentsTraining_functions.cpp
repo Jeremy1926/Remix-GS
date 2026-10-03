@@ -2166,10 +2166,9 @@ class ULearningAgentsTrainingEnvironment* ULearningAgentsTrainingEnvironment::Ma
 
 void ULearningAgentsTrainingEnvironment::GatherAgentCompletion(ELearningAgentsCompletion* OutCompletion, const int32 AgentId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GatherAgentCompletion");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsTrainingEnvironment", "GatherAgentCompletion");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsTrainingEnvironment_GatherAgentCompletion Parms{};
 
@@ -2195,10 +2194,9 @@ void ULearningAgentsTrainingEnvironment::GatherAgentCompletion(ELearningAgentsCo
 
 void ULearningAgentsTrainingEnvironment::GatherAgentCompletions(TArray<ELearningAgentsCompletion>* OutCompletions, const TArray<int32>& AgentIds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GatherAgentCompletions");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsTrainingEnvironment", "GatherAgentCompletions");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsTrainingEnvironment_GatherAgentCompletions Parms{};
 
@@ -2224,10 +2222,9 @@ void ULearningAgentsTrainingEnvironment::GatherAgentCompletions(TArray<ELearning
 
 void ULearningAgentsTrainingEnvironment::GatherAgentReward(float* OutReward, const int32 AgentId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GatherAgentReward");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsTrainingEnvironment", "GatherAgentReward");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsTrainingEnvironment_GatherAgentReward Parms{};
 
@@ -2253,10 +2250,9 @@ void ULearningAgentsTrainingEnvironment::GatherAgentReward(float* OutReward, con
 
 void ULearningAgentsTrainingEnvironment::GatherAgentRewards(TArray<float>* OutRewards, const TArray<int32>& AgentIds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GatherAgentRewards");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsTrainingEnvironment", "GatherAgentRewards");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsTrainingEnvironment_GatherAgentRewards Parms{};
 
@@ -2319,10 +2315,9 @@ void ULearningAgentsTrainingEnvironment::GatherRewards()
 
 void ULearningAgentsTrainingEnvironment::ResetAgentEpisode(const int32 AgentId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ResetAgentEpisode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsTrainingEnvironment", "ResetAgentEpisode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsTrainingEnvironment_ResetAgentEpisode Parms{};
 
@@ -2344,10 +2339,9 @@ void ULearningAgentsTrainingEnvironment::ResetAgentEpisode(const int32 AgentId)
 
 void ULearningAgentsTrainingEnvironment::ResetAgentEpisodes(const TArray<int32>& AgentIds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ResetAgentEpisodes");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LearningAgentsTrainingEnvironment", "ResetAgentEpisodes");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LearningAgentsTrainingEnvironment_ResetAgentEpisodes Parms{};
 

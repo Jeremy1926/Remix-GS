@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UJunoBarnAssignmentListEntry::OnBarnAssignmentObjectSet(class UJunoBarnAssignmentListObject* NewBarnAssignmentListObject)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBarnAssignmentObjectSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBarnAssignmentListEntry", "OnBarnAssignmentObjectSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBarnAssignmentListEntry_OnBarnAssignmentObjectSet Parms{};
 
@@ -428,10 +427,9 @@ void UJunoVillageTamingHubScreen::HandleRemoveVillageConfirmed()
 
 void UJunoVillageTamingHubScreen::OnCompleteEntriesUpdated(int32 CompletedEntries, int32 TotalEntries)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCompleteEntriesUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoVillageTamingHubScreen", "OnCompleteEntriesUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoVillageTamingHubScreen_OnCompleteEntriesUpdated Parms{};
 
@@ -449,10 +447,9 @@ void UJunoVillageTamingHubScreen::OnCompleteEntriesUpdated(int32 CompletedEntrie
 
 void UJunoVillageTamingLevelRewardsColumn::SetIsExpanded(bool bIsExpanded)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetIsExpanded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoVillageTamingLevelRewardsColumn", "SetIsExpanded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoVillageTamingLevelRewardsColumn_SetIsExpanded Parms{};
 
@@ -475,10 +472,9 @@ void UJunoVillageTamingLevelRewardsColumn::SetIsExpanded(bool bIsExpanded)
 
 void UJunoVillageTamingLevelRewardsColumn::SetVillageRewardEntryInfo(const struct FJunoVillageTamingLevelRewardsColumnInfo& InVillageTamingLevelRewardsColumnInfo, const struct FJunoVillageUIData& InParentVillageUIData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetVillageRewardEntryInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoVillageTamingLevelRewardsColumn", "SetVillageRewardEntryInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoVillageTamingLevelRewardsColumn_SetVillageRewardEntryInfo Parms{};
 
@@ -501,10 +497,9 @@ void UJunoVillageTamingLevelRewardsColumn::SetVillageRewardEntryInfo(const struc
 
 void UJunoVillageTamingLevelRewardsEntry::SetExpanded(bool bInIsExpanded)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetExpanded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoVillageTamingLevelRewardsEntry", "SetExpanded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoVillageTamingLevelRewardsEntry_SetExpanded Parms{};
 
@@ -522,10 +517,9 @@ void UJunoVillageTamingLevelRewardsEntry::SetExpanded(bool bInIsExpanded)
 
 void UJunoVillageTamingLevelRewardsEntry::SetVillageRewardEntryInfo(const struct FJunoVillageTamingLevelRewardsEntryInfo& InVillageTamingLevelRewardsEntryInfo, const struct FJunoVillageUIData& InParentVillageUIData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetVillageRewardEntryInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoVillageTamingLevelRewardsEntry", "SetVillageRewardEntryInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoVillageTamingLevelRewardsEntry_SetVillageRewardEntryInfo Parms{};
 
@@ -546,10 +540,9 @@ void UJunoVillageTamingLevelRewardsEntry::SetVillageRewardEntryInfo(const struct
 
 void UJunoVillageTamingLevelRewardsScreen::OnRewardsFilledOut()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRewardsFilledOut");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoVillageTamingLevelRewardsScreen", "OnRewardsFilledOut");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -560,10 +553,9 @@ void UJunoVillageTamingLevelRewardsScreen::OnRewardsFilledOut()
 
 void UJunoVillageTamingLevelRewardsScreen::RefreshPointsProgressBars()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RefreshPointsProgressBars");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoVillageTamingLevelRewardsScreen", "RefreshPointsProgressBars");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -577,10 +569,9 @@ void UJunoVillageTamingLevelRewardsScreen::RefreshPointsProgressBars()
 
 void UJunoVillageTamingVillagerEntry::SetVillagerInfo(const struct FJunoVillageTamingVillagerEntryInfo& InVillagerInfo, const struct FJunoVillageUIData& InParentVillageUIData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetVillagerInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoVillageTamingVillagerEntry", "SetVillagerInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoVillageTamingVillagerEntry_SetVillagerInfo Parms{};
 
@@ -603,10 +594,9 @@ void UJunoVillageTamingVillagerEntry::SetVillagerInfo(const struct FJunoVillageT
 
 void UJunoBarnAssignmentScreen::OnSelectionChanged(const class UJunoBarnAssignmentListObject* InSelectedListObject)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSelectionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBarnAssignmentScreen", "OnSelectionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBarnAssignmentScreen_OnSelectionChanged Parms{};
 
@@ -673,10 +663,9 @@ bool UJunoBarnAssignmentScreen::GetVillageHasSlotForAnimal() const
 
 void UJunoBarnNameAnimalScreen::UpdateIsProcessingNameVisuals(bool bIsProcessingName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateIsProcessingNameVisuals");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBarnNameAnimalScreen", "UpdateIsProcessingNameVisuals");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBarnNameAnimalScreen_UpdateIsProcessingNameVisuals Parms{};
 
@@ -693,10 +682,9 @@ void UJunoBarnNameAnimalScreen::UpdateIsProcessingNameVisuals(bool bIsProcessing
 
 void UJunoBarnProcessorScreen::SetupAnimalInfo(const struct FActiveCampCreatureEntry& Data)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupAnimalInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBarnProcessorScreen", "SetupAnimalInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBarnProcessorScreen_SetupAnimalInfo Parms{};
 
@@ -711,10 +699,9 @@ void UJunoBarnProcessorScreen::SetupAnimalInfo(const struct FActiveCampCreatureE
 
 void UJunoBarnProcessorScreen::ShowLoadingState()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowLoadingState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBarnProcessorScreen", "ShowLoadingState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -728,10 +715,9 @@ void UJunoBarnProcessorScreen::ShowLoadingState()
 
 void UJunoTamingMapMarkerIconScreen::SetMarkerNameText(bool bIsTown, const class FText& Name_0)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetMarkerNameText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoTamingMapMarkerIconScreen", "SetMarkerNameText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoTamingMapMarkerIconScreen_SetMarkerNameText Parms{};
 
@@ -749,10 +735,9 @@ void UJunoTamingMapMarkerIconScreen::SetMarkerNameText(bool bIsTown, const class
 
 void UJunoTamingMapMarkerIconScreen::SetPreviewMarkerMaterial(bool bIsTown)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetPreviewMarkerMaterial");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoTamingMapMarkerIconScreen", "SetPreviewMarkerMaterial");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoTamingMapMarkerIconScreen_SetPreviewMarkerMaterial Parms{};
 
@@ -819,10 +804,9 @@ bool UJunoTamingMapMarkerMenuContainer::GetIsInCabinMode() const
 
 void UJunoTamingMapMarkerNameScreen::SetMarkerNameText(const class FText& Name_0)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetMarkerNameText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoTamingMapMarkerNameScreen", "SetMarkerNameText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoTamingMapMarkerNameScreen_SetMarkerNameText Parms{};
 
@@ -839,10 +823,9 @@ void UJunoTamingMapMarkerNameScreen::SetMarkerNameText(const class FText& Name_0
 
 void UJunoTamingMapMarkerNameScreen::UpdateIsProcessingNameVisuals(bool bIsProcessingName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateIsProcessingNameVisuals");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoTamingMapMarkerNameScreen", "UpdateIsProcessingNameVisuals");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoTamingMapMarkerNameScreen_UpdateIsProcessingNameVisuals Parms{};
 
@@ -897,10 +880,9 @@ void UJunoVillageTamingVillagersScreen::HandleAskToLeaveConfirmed()
 
 void UJunoVillageTamingVillagersScreen::OnEntryHovered(class UJunoVillageTamingVillagerEntry* Entry)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEntryHovered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoVillageTamingVillagersScreen", "OnEntryHovered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoVillageTamingVillagersScreen_OnEntryHovered Parms{};
 

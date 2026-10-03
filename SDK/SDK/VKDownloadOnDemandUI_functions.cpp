@@ -87,10 +87,9 @@ void UDownloadOnDemandAddProjectModal::HandleDownloadLinkIdTextChanged(const cla
 
 void UDownloadOnDemandAddProjectModal::UpdateLightningViolator(ESlateVisibility InVisibility, const class FText& InText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateLightningViolator");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DownloadOnDemandAddProjectModal", "UpdateLightningViolator");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DownloadOnDemandAddProjectModal_UpdateLightningViolator Parms{};
 
@@ -106,10 +105,9 @@ void UDownloadOnDemandAddProjectModal::UpdateLightningViolator(ESlateVisibility 
 
 void UDownloadOnDemandProjectTile::OnLabelUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLabelUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DownloadOnDemandProjectTile", "OnLabelUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

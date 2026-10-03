@@ -67,10 +67,9 @@ void UAssembledMeshUserComponent::GatherAndAssignAssembledMeshParts()
 
 class USkeletalMeshComponent* UAssembledMeshUserComponent::GetAttachToComponent()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAttachToComponent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AssembledMeshUserComponent", "GetAttachToComponent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AssembledMeshUserComponent_GetAttachToComponent Parms{};
 

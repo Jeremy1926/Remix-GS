@@ -48,10 +48,9 @@ void UFortControllerComponent_CreativeMatchmaking::OnCreativeReadyCheckStatusCha
 
 void UFortCreativeMatchmakingFeedback::BP_OnCreativeReadyCheckStatusChanged(EInGameReadyCheckStatus InGameReadyCheckStatus)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCreativeReadyCheckStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCreativeMatchmakingFeedback", "BP_OnCreativeReadyCheckStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCreativeMatchmakingFeedback_BP_OnCreativeReadyCheckStatusChanged Parms{};
 
@@ -142,10 +141,9 @@ void UFortCreativeMatchmakingFeedback::HoldReleased()
 
 void UFortCreativeMatchmakingFeedback::OnCancelNotification()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCancelNotification");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCreativeMatchmakingFeedback", "OnCancelNotification");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -183,10 +181,9 @@ void UFortCreativeMatchmakingFeedback::OnCreativeReadyCheckStatusChanged(EInGame
 
 void UFortCreativeMatchmakingFeedback::OnLockStateChanged(bool bLockState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLockStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCreativeMatchmakingFeedback", "OnLockStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCreativeMatchmakingFeedback_OnLockStateChanged Parms{};
 
@@ -201,10 +198,9 @@ void UFortCreativeMatchmakingFeedback::OnLockStateChanged(bool bLockState)
 
 void UFortCreativeMatchmakingFeedback::OnMatchmakingStatusTextUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMatchmakingStatusTextUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCreativeMatchmakingFeedback", "OnMatchmakingStatusTextUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -234,10 +230,9 @@ void UFortCreativeMatchmakingFeedback::OnOutroFinished()
 
 void UFortCreativeMatchmakingFeedback::OnTakeActionNotification()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTakeActionNotification");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCreativeMatchmakingFeedback", "OnTakeActionNotification");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -248,10 +243,9 @@ void UFortCreativeMatchmakingFeedback::OnTakeActionNotification()
 
 void UFortCreativeMatchmakingFeedback::OnUserStartedHoldActionNotification()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUserStartedHoldActionNotification");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCreativeMatchmakingFeedback", "OnUserStartedHoldActionNotification");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -262,10 +256,9 @@ void UFortCreativeMatchmakingFeedback::OnUserStartedHoldActionNotification()
 
 void UFortCreativeMatchmakingFeedback::PlayIntro()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayIntro");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCreativeMatchmakingFeedback", "PlayIntro");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -276,10 +269,9 @@ void UFortCreativeMatchmakingFeedback::PlayIntro()
 
 void UFortCreativeMatchmakingFeedback::PlayOutro()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayOutro");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCreativeMatchmakingFeedback", "PlayOutro");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -428,10 +420,9 @@ bool UFortCreativeMatchmakingFeedback::IsPartyLeader() const
 
 void UFortMatchmakingPortalCountdown::FinishTimer()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"FinishTimer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMatchmakingPortalCountdown", "FinishTimer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -461,10 +452,9 @@ void UFortMatchmakingPortalCountdown::HandleCancelClicked()
 
 void UFortMatchmakingPortalCountdown::StartCountdown()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StartCountdown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMatchmakingPortalCountdown", "StartCountdown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -475,10 +465,9 @@ void UFortMatchmakingPortalCountdown::StartCountdown()
 
 void UFortMatchmakingPortalPopup::BindOverlapEvents()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BindOverlapEvents");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMatchmakingPortalPopup", "BindOverlapEvents");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -493,10 +482,9 @@ void UFortMatchmakingPortalPopup::BindOverlapEvents()
 
 bool UFortMatchmakingPortalPopup::GetIslandData(struct FMatchmakingPortalPopupData* OutIslandData, class UHeaderDescriptionHUDComponent* HUDComponent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetIslandData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMatchmakingPortalPopup", "GetIslandData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMatchmakingPortalPopup_GetIslandData Parms{};
 
@@ -574,10 +562,9 @@ void UFortMatchmakingPortalPopup::HandleLoadScreenChanged(class AFortPlayerContr
 
 void UFortMatchmakingPortalPopup::HandleOnPortalDetailsVisibilityCheck(bool bShowWidget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleOnPortalDetailsVisibilityCheck");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMatchmakingPortalPopup", "HandleOnPortalDetailsVisibilityCheck");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMatchmakingPortalPopup_HandleOnPortalDetailsVisibilityCheck Parms{};
 
@@ -638,10 +625,9 @@ void UFortMatchmakingPortalPopup::HandleWidgetUpdate()
 
 bool UFortMatchmakingPortalPopup::IsInteractingDeviceAMatchmakingPortal()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsInteractingDeviceAMatchmakingPortal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMatchmakingPortalPopup", "IsInteractingDeviceAMatchmakingPortal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMatchmakingPortalPopup_IsInteractingDeviceAMatchmakingPortal Parms{};
 
@@ -656,10 +642,9 @@ bool UFortMatchmakingPortalPopup::IsInteractingDeviceAMatchmakingPortal()
 
 void UFortMatchmakingPortalPopup::OnLockStateChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLockStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMatchmakingPortalPopup", "OnLockStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -673,10 +658,9 @@ void UFortMatchmakingPortalPopup::OnLockStateChanged()
 
 void UFortMatchmakingPortalPopup::OnPlayerCanInteractChanged(const bool bPlayerCanInteract, const class FText& Message)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerCanInteractChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMatchmakingPortalPopup", "OnPlayerCanInteractChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMatchmakingPortalPopup_OnPlayerCanInteractChanged Parms{};
 
@@ -695,10 +679,9 @@ void UFortMatchmakingPortalPopup::OnPlayerCanInteractChanged(const bool bPlayerC
 
 void UFortMatchmakingPortalPopup::OnShowPortalPopup(const bool bShow, const bool bAnimate)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowPortalPopup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMatchmakingPortalPopup", "OnShowPortalPopup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMatchmakingPortalPopup_OnShowPortalPopup Parms{};
 
@@ -716,10 +699,9 @@ void UFortMatchmakingPortalPopup::OnShowPortalPopup(const bool bShow, const bool
 
 void UFortMatchmakingPortalPopup::UpdateVisuals(const class UHeaderDescriptionHUDComponent* HUDComponent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateVisuals");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMatchmakingPortalPopup", "UpdateVisuals");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMatchmakingPortalPopup_UpdateVisuals Parms{};
 
@@ -737,10 +719,9 @@ void UFortMatchmakingPortalPopup::UpdateVisuals(const class UHeaderDescriptionHU
 
 class UFortAthenaCreativeMatchmakingWidget* UFortMatchmakingPortalPopup::GetMatchmakingFeedbackWidget(const class UCommonActivatableWidget* MatchmakingFeedbackContainer) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetMatchmakingFeedbackWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMatchmakingPortalPopup", "GetMatchmakingFeedbackWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMatchmakingPortalPopup_GetMatchmakingFeedbackWidget Parms{};
 
@@ -785,10 +766,9 @@ bool UFortMatchmakingPortalPopup::HasActivityToShow() const
 
 void UFortModalBackground::OnPreviewImageChanged(const bool bIsLoading, const class UTexture* InTexture)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreviewImageChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortModalBackground", "OnPreviewImageChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortModalBackground_OnPreviewImageChanged Parms{};
 

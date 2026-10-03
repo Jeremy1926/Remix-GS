@@ -27,10 +27,9 @@ SDK_NAMESPACE_START
 
 void AWheelGrenadeWheel::HandleDamaged(float Damage, const struct FGameplayTagContainer& InTags, const struct FGameplayEffectContextHandle& EffectContext, class AController* EventInstigator, class AActor* DamageCauser)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDamaged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("WheelGrenadeWheel", "HandleDamaged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::WheelGrenadeWheel_HandleDamaged Parms{};
 
@@ -55,10 +54,9 @@ void AWheelGrenadeWheel::HandleDamaged(float Damage, const struct FGameplayTagCo
 
 void AWheelGrenadeWheel::HandleOutOfHealth(const float InDamage, const struct FGameplayTagContainer& InTags, const struct FGameplayEffectContextHandle& InEffectContext, class AController* InEventInstigator, class AActor* InDamageCauser)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleOutOfHealth");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("WheelGrenadeWheel", "HandleOutOfHealth");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::WheelGrenadeWheel_HandleOutOfHealth Parms{};
 

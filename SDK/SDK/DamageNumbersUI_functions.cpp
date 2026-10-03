@@ -58,10 +58,9 @@ void UCommonUserWidget_DamageNumbers::OnDamageDealt(double InDamage, class AActo
 
 void UCommonUserWidget_DamageNumbers::OnShieldBreak(bool bIsOvershield)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShieldBreak");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonUserWidget_DamageNumbers", "OnShieldBreak");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonUserWidget_DamageNumbers_OnShieldBreak Parms{};
 

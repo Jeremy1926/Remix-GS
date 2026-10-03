@@ -100,10 +100,9 @@ class ULegacyCameraShake* ULegacyCameraShake::StartLegacyCameraShakeFromSource(c
 
 void ULegacyCameraShake::BlueprintUpdateCameraShake(float DeltaTime, float Alpha, const struct FMinimalViewInfo& POV, struct FMinimalViewInfo* ModifiedPOV)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintUpdateCameraShake");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LegacyCameraShake", "BlueprintUpdateCameraShake");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LegacyCameraShake_BlueprintUpdateCameraShake Parms{};
 
@@ -125,10 +124,9 @@ void ULegacyCameraShake::BlueprintUpdateCameraShake(float DeltaTime, float Alpha
 
 void ULegacyCameraShake::ReceivePlayShake(float Scale)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePlayShake");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LegacyCameraShake", "ReceivePlayShake");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LegacyCameraShake_ReceivePlayShake Parms{};
 
@@ -145,10 +143,9 @@ void ULegacyCameraShake::ReceivePlayShake(float Scale)
 
 void ULegacyCameraShake::ReceiveStopShake(bool bImmediately)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveStopShake");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LegacyCameraShake", "ReceiveStopShake");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LegacyCameraShake_ReceiveStopShake Parms{};
 
@@ -165,10 +162,9 @@ void ULegacyCameraShake::ReceiveStopShake(bool bImmediately)
 
 bool ULegacyCameraShake::ReceiveIsFinished() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveIsFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LegacyCameraShake", "ReceiveIsFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LegacyCameraShake_ReceiveIsFinished Parms{};
 

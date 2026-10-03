@@ -195,10 +195,9 @@ void UJunoCodexEntrySlot::HandleOnMenuOpenChanged(bool bIsOpen)
 
 void UJunoCodexEntrySlot::OnEnterContextMenuMode(bool bIsCurrentlySelectedSlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEnterContextMenuMode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexEntrySlot", "OnEnterContextMenuMode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCodexEntrySlot_OnEnterContextMenuMode Parms{};
 
@@ -213,10 +212,9 @@ void UJunoCodexEntrySlot::OnEnterContextMenuMode(bool bIsCurrentlySelectedSlot)
 
 void UJunoCodexEntrySlot::OnLeaveContextMenuMode()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLeaveContextMenuMode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexEntrySlot", "OnLeaveContextMenuMode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -229,10 +227,9 @@ void UJunoCodexEntrySlot::OnLeaveContextMenuMode()
 
 void UJunoCodexEntrySlot::OnLoadCharacterIcon(const TSoftObjectPtr<class UTexture2D>& Image)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLoadCharacterIcon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexEntrySlot", "OnLoadCharacterIcon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCodexEntrySlot_OnLoadCharacterIcon Parms{};
 
@@ -249,10 +246,9 @@ void UJunoCodexEntrySlot::OnLoadCharacterIcon(const TSoftObjectPtr<class UTextur
 
 void UJunoCodexEntrySlot::OnTrackedChanged(bool bIsTracked)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTrackedChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexEntrySlot", "OnTrackedChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCodexEntrySlot_OnTrackedChanged Parms{};
 
@@ -269,10 +265,9 @@ void UJunoCodexEntrySlot::OnTrackedChanged(bool bIsTracked)
 
 void UJunoCodexEntrySlot::SetIsViewed(bool bIsViewed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetIsViewed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexEntrySlot", "SetIsViewed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCodexEntrySlot_SetIsViewed Parms{};
 
@@ -289,10 +284,9 @@ void UJunoCodexEntrySlot::SetIsViewed(bool bIsViewed)
 
 void UJunoCodexEntrySlot::SetItemKnown(const struct FJunoCodexEntry& CodexEntry)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetItemKnown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexEntrySlot", "SetItemKnown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCodexEntrySlot_SetItemKnown Parms{};
 
@@ -307,10 +301,9 @@ void UJunoCodexEntrySlot::SetItemKnown(const struct FJunoCodexEntry& CodexEntry)
 
 void UJunoCodexEntrySlot::SetUnknown()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetUnknown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexEntrySlot", "SetUnknown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -321,10 +314,9 @@ void UJunoCodexEntrySlot::SetUnknown()
 
 void UJunoCodexScreen::ClearItemDetails()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ClearItemDetails");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexScreen", "ClearItemDetails");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -362,10 +354,9 @@ void UJunoCodexScreen::HandleCategoryTabSelected(class FName TabID)
 
 void UJunoCodexScreen::OnCharacterNameLoaded(const class FText& CharacterName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCharacterNameLoaded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexScreen", "OnCharacterNameLoaded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCodexScreen_OnCharacterNameLoaded Parms{};
 
@@ -382,10 +373,9 @@ void UJunoCodexScreen::OnCharacterNameLoaded(const class FText& CharacterName)
 
 void UJunoCodexScreen::OnLargeImageLoadedFromAMS(const TSoftObjectPtr<class UTexture2D>& LargeImage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLargeImageLoadedFromAMS");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexScreen", "OnLargeImageLoadedFromAMS");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCodexScreen_OnLargeImageLoadedFromAMS Parms{};
 
@@ -400,10 +390,9 @@ void UJunoCodexScreen::OnLargeImageLoadedFromAMS(const TSoftObjectPtr<class UTex
 
 void UJunoCodexScreen::OnLoadingComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLoadingComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexScreen", "OnLoadingComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -414,10 +403,9 @@ void UJunoCodexScreen::OnLoadingComplete()
 
 void UJunoCodexScreen::OnLoadingStart()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLoadingStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexScreen", "OnLoadingStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -428,10 +416,9 @@ void UJunoCodexScreen::OnLoadingStart()
 
 void UJunoCodexScreen::OnTrackedRecipeStateChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTrackedRecipeStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexScreen", "OnTrackedRecipeStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -444,10 +431,9 @@ void UJunoCodexScreen::OnTrackedRecipeStateChanged()
 
 void UJunoCodexScreen::SetRecipeHeaderText(const class FText& OverrideText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetRecipeHeaderText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexScreen", "SetRecipeHeaderText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCodexScreen_SetRecipeHeaderText Parms{};
 
@@ -465,10 +451,9 @@ void UJunoCodexScreen::SetRecipeHeaderText(const class FText& OverrideText)
 
 void UJunoCodexScreen::SetRecipeHeaderTextFromCraftingStation(const struct FGameplayTag& SourceObjectTag, const class FText& CraftingStationName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetRecipeHeaderTextFromCraftingStation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexScreen", "SetRecipeHeaderTextFromCraftingStation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCodexScreen_SetRecipeHeaderTextFromCraftingStation Parms{};
 
@@ -490,10 +475,9 @@ void UJunoCodexScreen::SetRecipeHeaderTextFromCraftingStation(const struct FGame
 
 void UJunoCodexScreen::UpdateItemDetails(const struct FJunoCodexEntry& Entry, const class UFortItemDefinition* ItemDefinition, bool bIsKnown, const class FText& SubCategoryUnknownText, bool bIsLoadingLargeImage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateItemDetails");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCodexScreen", "UpdateItemDetails");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCodexScreen_UpdateItemDetails Parms{};
 

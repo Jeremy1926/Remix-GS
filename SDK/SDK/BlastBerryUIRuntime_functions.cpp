@@ -78,10 +78,9 @@ void UBlastBerryInstantRebootWidget::HandleRespawnEventsStopped()
 
 void UBlastBerryInstantRebootWidget::OnRespawnEventsStopped()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRespawnEventsStopped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BlastBerryInstantRebootWidget", "OnRespawnEventsStopped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -94,10 +93,9 @@ void UBlastBerryInstantRebootWidget::OnRespawnEventsStopped()
 
 void UBlastBerryInstantRebootWidget::OnWidgetActiveChanged(bool bIsActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWidgetActiveChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BlastBerryInstantRebootWidget", "OnWidgetActiveChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BlastBerryInstantRebootWidget_OnWidgetActiveChanged Parms{};
 
@@ -160,10 +158,9 @@ void UBlastBerryPlayerInfoRespawn::HandleRespawnTimeReplicated(class AFortPlayer
 
 void UBlastBerryPlayerInfoRespawn::OnTickDown(float TimeRemaining)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTickDown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BlastBerryPlayerInfoRespawn", "OnTickDown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BlastBerryPlayerInfoRespawn_OnTickDown Parms{};
 
@@ -178,10 +175,9 @@ void UBlastBerryPlayerInfoRespawn::OnTickDown(float TimeRemaining)
 
 void UBlastBerryPlayerInfoRespawn::OnTimeEnded()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTimeEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BlastBerryPlayerInfoRespawn", "OnTimeEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -192,10 +188,9 @@ void UBlastBerryPlayerInfoRespawn::OnTimeEnded()
 
 void UBlastBerryPlayerInfoRespawn::OnTimerCancelled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTimerCancelled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BlastBerryPlayerInfoRespawn", "OnTimerCancelled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

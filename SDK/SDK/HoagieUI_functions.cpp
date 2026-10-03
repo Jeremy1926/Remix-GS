@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UFortHoagieVehicleReticle::OnSetupComplete(bool bVehicleUsesFuelSystem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetupComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicleReticle", "OnSetupComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicleReticle_OnSetupComplete Parms{};
 

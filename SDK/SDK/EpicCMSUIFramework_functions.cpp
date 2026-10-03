@@ -92,10 +92,9 @@ void UEpicCMSTileCarousel::BeginAutoScrolling()
 
 void UEpicCMSTileCarousel::HandleTilePageAdded(class UWidget* TileWidget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTilePageAdded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EpicCMSTileCarousel", "HandleTilePageAdded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EpicCMSTileCarousel_HandleTilePageAdded Parms{};
 
@@ -117,10 +116,9 @@ void UEpicCMSTileCarousel::HandleTilePageAdded(class UWidget* TileWidget)
 
 void UEpicCMSTileCarousel::NavigationVisibilityChanged(bool bShowNavigation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"NavigationVisibilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EpicCMSTileCarousel", "NavigationVisibilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EpicCMSTileCarousel_NavigationVisibilityChanged Parms{};
 

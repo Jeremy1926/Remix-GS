@@ -30,10 +30,9 @@ SDK_NAMESPACE_START
 
 void UXpEverywhereAccoladesWidget::AccoladeTriggered(const int32 XpValue, const class FText& SimulatedName, const class FText& SimulatedText, const TSoftObjectPtr<class UTexture2D>& PreviewImage, const EFortSimulatedXPSize SimulatedXpSize, const EFortAccoladeType AccoladeType, const TSoftObjectPtr<class USoundCue>& SoundCue, const EFortAccoladeTierType AccoladeTier)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AccoladeTriggered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpEverywhereAccoladesWidget", "AccoladeTriggered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::XpEverywhereAccoladesWidget_AccoladeTriggered Parms{};
 
@@ -74,10 +73,9 @@ void UXpEverywhereAccoladesWidget::CloseWidget()
 
 void UXpEverywhereAccoladesWidget::OnEventAdded()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventAdded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpEverywhereAccoladesWidget", "OnEventAdded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -88,10 +86,9 @@ void UXpEverywhereAccoladesWidget::OnEventAdded()
 
 void UXpEverywhereAccoladesWidget::OnStompedByOtherWidget()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStompedByOtherWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpEverywhereAccoladesWidget", "OnStompedByOtherWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -110,10 +107,9 @@ void UXpEverywhereAccoladesWidget::OnStompedByOtherWidget()
 
 void UXpEverywhereAccoladesWidget::OpenWidget(const class UFortAccoladeItemDefinition* AccoladeDef, const int32 XpValue, const class FText& DisplayName, const TSoftObjectPtr<class UTexture2D>& AccoladeLargePreviewImageOverride, const class FText& SimulatedName, const class FText& SimulatedText, const EFortSimulatedXPSize SimulatedXpSize)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OpenWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpEverywhereAccoladesWidget", "OpenWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::XpEverywhereAccoladesWidget_OpenWidget Parms{};
 
@@ -182,10 +178,9 @@ void UXpEverywhereBar::DoneUpdatingXpBar()
 
 void UXpEverywhereBar::OnXpBarInitialized(int32 CurrentXP, int32 CurrentLevel, int32 CurrentRemainingRestXP)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnXpBarInitialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpEverywhereBar", "OnXpBarInitialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::XpEverywhereBar_OnXpBarInitialized Parms{};
 
@@ -208,10 +203,9 @@ void UXpEverywhereBar::OnXpBarInitialized(int32 CurrentXP, int32 CurrentLevel, i
 
 void UXpEverywhereBar::OnXpBarUpdated(int32 ShownXP, int32 ShownLevel, int32 NewDesiredXP, int32 NewDesiredLevel, int32 NewRemainingRestXP)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnXpBarUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpEverywhereBar", "OnXpBarUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::XpEverywhereBar_OnXpBarUpdated Parms{};
 
@@ -279,10 +273,9 @@ void UXpEverywhereLevelUpWidget::DoneLevelingUp()
 
 void UXpEverywhereLevelUpWidget::OnShowWidget(const int32 NewLevel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpEverywhereLevelUpWidget", "OnShowWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::XpEverywhereLevelUpWidget_OnShowWidget Parms{};
 
@@ -356,10 +349,9 @@ void UXpEverywhereReticleWidget::HandleProfileUpdated()
 
 void UXpEverywhereReticleWidget::UpdateRestXP(int32 RestXpRemaining)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateRestXP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpEverywhereReticleWidget", "UpdateRestXP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::XpEverywhereReticleWidget_UpdateRestXP Parms{};
 
@@ -378,10 +370,9 @@ void UXpEverywhereReticleWidget::UpdateRestXP(int32 RestXpRemaining)
 
 void UXpEverywhereReticleWidget::UpdateXPAmount(int32 NewAmount, class USoundCue* Cue, const EFortSimulatedXPSize SimulatedXpSize)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateXPAmount");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpEverywhereReticleWidget", "UpdateXPAmount");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::XpEverywhereReticleWidget_UpdateXPAmount Parms{};
 
@@ -400,10 +391,9 @@ void UXpEverywhereReticleWidget::UpdateXPAmount(int32 NewAmount, class USoundCue
 
 void UXpEverywhereReticleWidget::UpdateXPSource(const class FText& NewSourceText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateXPSource");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("XpEverywhereReticleWidget", "UpdateXPSource");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::XpEverywhereReticleWidget_UpdateXPSource Parms{};
 

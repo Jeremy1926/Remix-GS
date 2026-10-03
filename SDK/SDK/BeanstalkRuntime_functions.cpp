@@ -48,10 +48,9 @@ const TMap<struct FBeanAudioKey, struct FBeanAudioSet> UBeanAudioDataAsset::GetS
 
 void ABeanCharacter::BP_OnBeanLocalInteractFailed(class AActor* Interactable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnBeanLocalInteractFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BeanCharacter", "BP_OnBeanLocalInteractFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BeanCharacter_BP_OnBeanLocalInteractFailed Parms{};
 

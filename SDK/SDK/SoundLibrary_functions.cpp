@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void USoundLibraryContext::OnAddedToActor(const class AActor* InActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAddedToActor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SoundLibraryContext", "OnAddedToActor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SoundLibraryContext_OnAddedToActor Parms{};
 
@@ -48,10 +47,9 @@ void USoundLibraryContext::OnAddedToActor(const class AActor* InActor)
 
 void USoundLibraryContext::OnRemovedFromActor(const class AActor* InActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRemovedFromActor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SoundLibraryContext", "OnRemovedFromActor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SoundLibraryContext_OnRemovedFromActor Parms{};
 
@@ -75,10 +73,9 @@ void USoundLibraryContext::OnRemovedFromActor(const class AActor* InActor)
 
 bool USoundLibraryContext::Play(const struct FSoundLibraryContextEventInput& InEventData, TArray<class UAudioComponent*>* OutComponents)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Play");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SoundLibraryContext", "Play");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SoundLibraryContext_Play Parms{};
 
@@ -106,10 +103,9 @@ bool USoundLibraryContext::Play(const struct FSoundLibraryContextEventInput& InE
 
 bool USoundLibraryContext::CreateEventName(struct FGameplayTag& OutEventName) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CreateEventName");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SoundLibraryContext", "CreateEventName");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SoundLibraryContext_CreateEventName Parms{};
 
@@ -136,10 +132,9 @@ bool USoundLibraryContext::CreateEventName(struct FGameplayTag& OutEventName) co
 
 bool USoundLibraryContext::GatherActorTargets(TArray<class AActor*>& OutActors) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GatherActorTargets");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SoundLibraryContext", "GatherActorTargets");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SoundLibraryContext_GatherActorTargets Parms{};
 
@@ -377,10 +372,9 @@ bool USoundLibraryComponent::IsEventActive(const struct FGameplayTag& InEventNam
 
 void USoundLibraryComponent::OnEventPlayed(const struct FGameplayTag& InEventName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventPlayed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SoundLibraryComponent", "OnEventPlayed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SoundLibraryComponent_OnEventPlayed Parms{};
 
@@ -397,10 +391,9 @@ void USoundLibraryComponent::OnEventPlayed(const struct FGameplayTag& InEventNam
 
 void USoundLibraryComponent::OnEventStopped(const struct FGameplayTag& InEventName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventStopped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SoundLibraryComponent", "OnEventStopped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SoundLibraryComponent_OnEventStopped Parms{};
 
@@ -418,10 +411,9 @@ void USoundLibraryComponent::OnEventStopped(const struct FGameplayTag& InEventNa
 
 void USoundLibraryComponent::OnSoundPlayed(const struct FGameplayTag& InEventName, class UAudioComponent* InComponent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSoundPlayed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SoundLibraryComponent", "OnSoundPlayed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SoundLibraryComponent_OnSoundPlayed Parms{};
 
@@ -446,10 +438,9 @@ void USoundLibraryComponent::OnSoundPlayed(const struct FGameplayTag& InEventNam
 
 void USoundLibraryComponent::OnSoundStopped(const struct FGameplayTag& InEventName, class UAudioComponent* InComponent, bool* bStopped)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSoundStopped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SoundLibraryComponent", "OnSoundStopped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SoundLibraryComponent_OnSoundStopped Parms{};
 

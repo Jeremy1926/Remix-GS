@@ -86,10 +86,9 @@ void AFortAthenaMutator_SplitStorm::OnSafeZonePhaseChanged()
 
 void AFortAthenaMutator_SplitStorm::SetProxyCenter(const struct FVector& NewCenter)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetProxyCenter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaMutator_SplitStorm", "SetProxyCenter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaMutator_SplitStorm_SetProxyCenter Parms{};
 
@@ -111,10 +110,9 @@ void AFortAthenaMutator_SplitStorm::SetProxyCenter(const struct FVector& NewCent
 
 void AFortAthenaMutator_SplitStorm::SetProxyRadius(const float NewRadius)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetProxyRadius");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaMutator_SplitStorm", "SetProxyRadius");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaMutator_SplitStorm_SetProxyRadius Parms{};
 

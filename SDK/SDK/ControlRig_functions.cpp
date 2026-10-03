@@ -6345,10 +6345,9 @@ void UControlRigComponent::Initialize()
 
 void UControlRigComponent::OnPostConstruction(class UControlRigComponent* Component)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPostConstruction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControlRigComponent", "OnPostConstruction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControlRigComponent_OnPostConstruction Parms{};
 
@@ -6370,10 +6369,9 @@ void UControlRigComponent::OnPostConstruction(class UControlRigComponent* Compon
 
 void UControlRigComponent::OnPostForwardsSolve(class UControlRigComponent* Component)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPostForwardsSolve");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControlRigComponent", "OnPostForwardsSolve");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControlRigComponent_OnPostForwardsSolve Parms{};
 
@@ -6395,10 +6393,9 @@ void UControlRigComponent::OnPostForwardsSolve(class UControlRigComponent* Compo
 
 void UControlRigComponent::OnPostInitialize(class UControlRigComponent* Component)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPostInitialize");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControlRigComponent", "OnPostInitialize");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControlRigComponent_OnPostInitialize Parms{};
 
@@ -6420,10 +6417,9 @@ void UControlRigComponent::OnPostInitialize(class UControlRigComponent* Componen
 
 void UControlRigComponent::OnPreConstruction(class UControlRigComponent* Component)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreConstruction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControlRigComponent", "OnPreConstruction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControlRigComponent_OnPreConstruction Parms{};
 
@@ -6445,10 +6441,9 @@ void UControlRigComponent::OnPreConstruction(class UControlRigComponent* Compone
 
 void UControlRigComponent::OnPreForwardsSolve(class UControlRigComponent* Component)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreForwardsSolve");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControlRigComponent", "OnPreForwardsSolve");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControlRigComponent_OnPreForwardsSolve Parms{};
 
@@ -6470,10 +6465,9 @@ void UControlRigComponent::OnPreForwardsSolve(class UControlRigComponent* Compon
 
 void UControlRigComponent::OnPreInitialize(class UControlRigComponent* Component)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreInitialize");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControlRigComponent", "OnPreInitialize");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControlRigComponent_OnPreInitialize Parms{};
 
@@ -7048,10 +7042,9 @@ void AControlRigControlActor::ResetControlActor()
 
 void AControlRigShapeActor::OnEnabledChanged(bool bIsEnabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEnabledChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControlRigShapeActor", "OnEnabledChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControlRigShapeActor_OnEnabledChanged Parms{};
 
@@ -7068,10 +7061,9 @@ void AControlRigShapeActor::OnEnabledChanged(bool bIsEnabled)
 
 void AControlRigShapeActor::OnHoveredChanged(bool bIsSelected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHoveredChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControlRigShapeActor", "OnHoveredChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControlRigShapeActor_OnHoveredChanged Parms{};
 
@@ -7088,10 +7080,9 @@ void AControlRigShapeActor::OnHoveredChanged(bool bIsSelected)
 
 void AControlRigShapeActor::OnManipulatingChanged(bool bIsManipulating)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnManipulatingChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControlRigShapeActor", "OnManipulatingChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControlRigShapeActor_OnManipulatingChanged Parms{};
 
@@ -7108,10 +7099,9 @@ void AControlRigShapeActor::OnManipulatingChanged(bool bIsManipulating)
 
 void AControlRigShapeActor::OnSelectionChanged(bool bIsSelected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSelectionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControlRigShapeActor", "OnSelectionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControlRigShapeActor_OnSelectionChanged Parms{};
 
@@ -7128,10 +7118,9 @@ void AControlRigShapeActor::OnSelectionChanged(bool bIsSelected)
 
 void AControlRigShapeActor::OnTransformChanged(const struct FTransform& NewTransform)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransformChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControlRigShapeActor", "OnTransformChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControlRigShapeActor_OnTransformChanged Parms{};
 

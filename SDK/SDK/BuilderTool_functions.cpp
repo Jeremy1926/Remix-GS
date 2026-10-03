@@ -239,10 +239,9 @@ void ABuilderTool::MulticastStartInteractionOnRemoteClientsSoft(class UBuilderTo
 
 void ABuilderTool::ReceiveInteractionEnded(class UBuilderToolBehavior* Behavior)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveInteractionEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuilderTool", "ReceiveInteractionEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuilderTool_ReceiveInteractionEnded Parms{};
 
@@ -259,10 +258,9 @@ void ABuilderTool::ReceiveInteractionEnded(class UBuilderToolBehavior* Behavior)
 
 void ABuilderTool::ReceiveInteractionStarted(class UBuilderToolBehavior* Behavior)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveInteractionStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuilderTool", "ReceiveInteractionStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuilderTool_ReceiveInteractionStarted Parms{};
 
@@ -579,10 +577,9 @@ void UBuilderToolBehavior::PlayGameplayAbility(const TSubclassOf<class UFortGame
 
 void UBuilderToolBehavior::ReceiveClearInteractionOnRemoteClient()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveClearInteractionOnRemoteClient");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuilderToolBehavior", "ReceiveClearInteractionOnRemoteClient");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -593,10 +590,9 @@ void UBuilderToolBehavior::ReceiveClearInteractionOnRemoteClient()
 
 void UBuilderToolBehavior::ReceiveEndInteraction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveEndInteraction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuilderToolBehavior", "ReceiveEndInteraction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -609,10 +605,9 @@ void UBuilderToolBehavior::ReceiveEndInteraction()
 
 void UBuilderToolBehavior::ReceiveExitInteraction(const bool bClearInteraction)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveExitInteraction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuilderToolBehavior", "ReceiveExitInteraction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuilderToolBehavior_ReceiveExitInteraction Parms{};
 
@@ -629,10 +624,9 @@ void UBuilderToolBehavior::ReceiveExitInteraction(const bool bClearInteraction)
 
 void UBuilderToolBehavior::ReceiveSpawnedActor(class AActor* SpawnedActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveSpawnedActor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuilderToolBehavior", "ReceiveSpawnedActor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuilderToolBehavior_ReceiveSpawnedActor Parms{};
 
@@ -650,10 +644,9 @@ void UBuilderToolBehavior::ReceiveSpawnedActor(class AActor* SpawnedActor)
 
 void UBuilderToolBehavior::ReceiveStartInteractionOnClient(const TArray<struct FBuilderToolSelectedActor>& Actors, const struct FGuid& Guid)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveStartInteractionOnClient");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuilderToolBehavior", "ReceiveStartInteractionOnClient");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuilderToolBehavior_ReceiveStartInteractionOnClient Parms{};
 
@@ -672,10 +665,9 @@ void UBuilderToolBehavior::ReceiveStartInteractionOnClient(const TArray<struct F
 
 void UBuilderToolBehavior::ReceiveStartInteractionOnRemoteClient(const TArray<struct FBuilderToolSelectedActor>& Actors, const struct FGuid& Guid)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveStartInteractionOnRemoteClient");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuilderToolBehavior", "ReceiveStartInteractionOnRemoteClient");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuilderToolBehavior_ReceiveStartInteractionOnRemoteClient Parms{};
 
@@ -694,10 +686,9 @@ void UBuilderToolBehavior::ReceiveStartInteractionOnRemoteClient(const TArray<st
 
 void UBuilderToolBehavior::ReceiveStartInteractionOnServer(const TArray<struct FBuilderToolSelectedActor>& Actors, const struct FGuid& Guid)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveStartInteractionOnServer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuilderToolBehavior", "ReceiveStartInteractionOnServer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuilderToolBehavior_ReceiveStartInteractionOnServer Parms{};
 
@@ -713,10 +704,9 @@ void UBuilderToolBehavior::ReceiveStartInteractionOnServer(const TArray<struct F
 
 void UBuilderToolBehavior::ReceiveTickInteraction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveTickInteraction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuilderToolBehavior", "ReceiveTickInteraction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -727,10 +717,9 @@ void UBuilderToolBehavior::ReceiveTickInteraction()
 
 void UBuilderToolBehavior::ReceiveTriggerInteraction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveTriggerInteraction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuilderToolBehavior", "ReceiveTriggerInteraction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

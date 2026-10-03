@@ -311,10 +311,9 @@ void UFortPlayerAnimInstance_MotorcycleRider::HandleStartWheelie()
 
 void AFortMotorcycleVehicle::BP_OnCancelChargingJump()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCancelChargingJump");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnCancelChargingJump");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -327,10 +326,9 @@ void AFortMotorcycleVehicle::BP_OnCancelChargingJump()
 
 void AFortMotorcycleVehicle::BP_OnChargingJump(const float JumpChargeFactor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnChargingJump");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnChargingJump");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMotorcycleVehicle_BP_OnChargingJump Parms{};
 
@@ -345,10 +343,9 @@ void AFortMotorcycleVehicle::BP_OnChargingJump(const float JumpChargeFactor)
 
 void AFortMotorcycleVehicle::BP_OnFailWheelie()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnFailWheelie");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnFailWheelie");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -359,10 +356,9 @@ void AFortMotorcycleVehicle::BP_OnFailWheelie()
 
 void AFortMotorcycleVehicle::BP_OnFinishAirTrick()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnFinishAirTrick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnFinishAirTrick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -375,10 +371,9 @@ void AFortMotorcycleVehicle::BP_OnFinishAirTrick()
 
 void AFortMotorcycleVehicle::BP_OnJump(const float JumpChargeFactor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnJump");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnJump");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMotorcycleVehicle_BP_OnJump Parms{};
 
@@ -393,10 +388,9 @@ void AFortMotorcycleVehicle::BP_OnJump(const float JumpChargeFactor)
 
 void AFortMotorcycleVehicle::BP_OnLandStoppie()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnLandStoppie");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnLandStoppie");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -407,10 +401,9 @@ void AFortMotorcycleVehicle::BP_OnLandStoppie()
 
 void AFortMotorcycleVehicle::BP_OnLandWheelie()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnLandWheelie");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnLandWheelie");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -421,10 +414,9 @@ void AFortMotorcycleVehicle::BP_OnLandWheelie()
 
 void AFortMotorcycleVehicle::BP_OnReleaseStoppie()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnReleaseStoppie");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnReleaseStoppie");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -435,10 +427,9 @@ void AFortMotorcycleVehicle::BP_OnReleaseStoppie()
 
 void AFortMotorcycleVehicle::BP_OnReleaseWheelie()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnReleaseWheelie");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnReleaseWheelie");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -451,10 +442,9 @@ void AFortMotorcycleVehicle::BP_OnReleaseWheelie()
 
 void AFortMotorcycleVehicle::BP_OnStartAirTrick(const EFortMotorcycleAirTrickType TrickType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStartAirTrick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnStartAirTrick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMotorcycleVehicle_BP_OnStartAirTrick Parms{};
 
@@ -469,10 +459,9 @@ void AFortMotorcycleVehicle::BP_OnStartAirTrick(const EFortMotorcycleAirTrickTyp
 
 void AFortMotorcycleVehicle::BP_OnStartChargingJump()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStartChargingJump");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnStartChargingJump");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -483,10 +472,9 @@ void AFortMotorcycleVehicle::BP_OnStartChargingJump()
 
 void AFortMotorcycleVehicle::BP_OnStartStoppie()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStartStoppie");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnStartStoppie");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -497,10 +485,9 @@ void AFortMotorcycleVehicle::BP_OnStartStoppie()
 
 void AFortMotorcycleVehicle::BP_OnStartWheelie()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStartWheelie");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMotorcycleVehicle", "BP_OnStartWheelie");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

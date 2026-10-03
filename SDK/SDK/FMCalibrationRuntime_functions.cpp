@@ -58,10 +58,9 @@ void UBeatmatchCalibrationHelper::CalcCalibrationResult(const TArray<float>& Sam
 
 void UFMCalibrationControllerComponent::DisplayCalibrationWidget()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"DisplayCalibrationWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMCalibrationControllerComponent", "DisplayCalibrationWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

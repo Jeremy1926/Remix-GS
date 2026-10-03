@@ -49,10 +49,9 @@ class USparksInstrumentAnimations* USparksAnimationSubsystem::GetLoadedSparksAni
 
 void USparksBaseLayerAnimInstance::BP_OnSetInstrumentPSC(class USparksInstrumentAnimPawnComponent* OldInstrumentPSC, class USparksInstrumentAnimPawnComponent* NewInstrumentPSC)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnSetInstrumentPSC");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksBaseLayerAnimInstance", "BP_OnSetInstrumentPSC");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksBaseLayerAnimInstance_BP_OnSetInstrumentPSC Parms{};
 
@@ -145,10 +144,9 @@ bool USparksBaseLayerAnimInstance::GetIsRoaming() const
 
 void USparksInstrumentAnimInstance::BP_OnCosmeticInstrumentTypeChanged(ESparksInstrumentType NewInstrument)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCosmeticInstrumentTypeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksInstrumentAnimInstance", "BP_OnCosmeticInstrumentTypeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksInstrumentAnimInstance_BP_OnCosmeticInstrumentTypeChanged Parms{};
 
@@ -165,10 +163,9 @@ void USparksInstrumentAnimInstance::BP_OnCosmeticInstrumentTypeChanged(ESparksIn
 
 void USparksInstrumentAnimInstance::BP_OnLipSyncAssetChanged(const class UAnimSequence* NewLipSyncAsset)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnLipSyncAssetChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksInstrumentAnimInstance", "BP_OnLipSyncAssetChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksInstrumentAnimInstance_BP_OnLipSyncAssetChanged Parms{};
 
@@ -185,10 +182,9 @@ void USparksInstrumentAnimInstance::BP_OnLipSyncAssetChanged(const class UAnimSe
 
 void USparksInstrumentAnimInstance::BP_OnMidiEventDataParsed(const TScriptInterface<class IMidiEventDriverInterface>& EventDriver)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnMidiEventDataParsed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksInstrumentAnimInstance", "BP_OnMidiEventDataParsed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksInstrumentAnimInstance_BP_OnMidiEventDataParsed Parms{};
 
@@ -205,10 +201,9 @@ void USparksInstrumentAnimInstance::BP_OnMidiEventDataParsed(const TScriptInterf
 
 void USparksInstrumentAnimInstance::BP_OnMidiEventDriverChanged(const TScriptInterface<class IMidiEventDriverInterface>& NewMidiEventDriver)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnMidiEventDriverChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksInstrumentAnimInstance", "BP_OnMidiEventDriverChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksInstrumentAnimInstance_BP_OnMidiEventDriverChanged Parms{};
 
@@ -226,10 +221,9 @@ void USparksInstrumentAnimInstance::BP_OnMidiEventDriverChanged(const TScriptInt
 
 void USparksInstrumentAnimInstance::BP_OnSetInstrumentPSC(class USparksInstrumentAnimPawnComponent* OldInstrumentPSC, class USparksInstrumentAnimPawnComponent* NewInstrumentPSC)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnSetInstrumentPSC");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksInstrumentAnimInstance", "BP_OnSetInstrumentPSC");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksInstrumentAnimInstance_BP_OnSetInstrumentPSC Parms{};
 
@@ -245,10 +239,9 @@ void USparksInstrumentAnimInstance::BP_OnSetInstrumentPSC(class USparksInstrumen
 
 void USparksInstrumentAnimInstance::BP_SparksDebugUpdate()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SparksDebugUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksInstrumentAnimInstance", "BP_SparksDebugUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -318,10 +311,9 @@ TSubclassOf<class USparksInstrumentAnimInstance> USparksInstrumentAnimations::Ge
 
 bool USparksInstrumentAnimPawnComponent::CanSwapToInstrument(ESparksInstrumentType NewInstrumentType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanSwapToInstrument");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksInstrumentAnimPawnComponent", "CanSwapToInstrument");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksInstrumentAnimPawnComponent_CanSwapToInstrument Parms{};
 
@@ -565,10 +557,9 @@ void USparksInstrumentAnimPawnComponent::SetMusicClock(class UMusicClockComponen
 
 void USparksInstrumentAnimPawnComponent::SwapCosmeticInstrument(ESparksInstrumentType NewInstrumentType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SwapCosmeticInstrument");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksInstrumentAnimPawnComponent", "SwapCosmeticInstrument");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksInstrumentAnimPawnComponent_SwapCosmeticInstrument Parms{};
 
@@ -954,10 +945,9 @@ class ASparksMusicPlayspace* USparksInstrumentAnimPawnComponent::GetSparksPlaysp
 
 ESparksInstrumentType USparksInstrumentAnimPawnComponent::GetTrackInstrumentType() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetTrackInstrumentType");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksInstrumentAnimPawnComponent", "GetTrackInstrumentType");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksInstrumentAnimPawnComponent_GetTrackInstrumentType Parms{};
 
@@ -999,10 +989,9 @@ bool USparksInstrumentAnimPawnComponent::IsInstrumentAnimationLayerLinked() cons
 
 bool USparksInstrumentAnimPawnComponent::IsUsable() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsUsable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksInstrumentAnimPawnComponent", "IsUsable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksInstrumentAnimPawnComponent_IsUsable Parms{};
 

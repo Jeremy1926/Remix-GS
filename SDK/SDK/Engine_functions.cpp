@@ -777,10 +777,9 @@ void AActor::K2_DetachFromActor(EDetachmentRule LocationRule, EDetachmentRule Ro
 
 void AActor::K2_OnBecomeViewTarget(class APlayerController* PC)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnBecomeViewTarget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "K2_OnBecomeViewTarget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_K2_OnBecomeViewTarget Parms{};
 
@@ -797,10 +796,9 @@ void AActor::K2_OnBecomeViewTarget(class APlayerController* PC)
 
 void AActor::K2_OnEndViewTarget(class APlayerController* PC)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnEndViewTarget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "K2_OnEndViewTarget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_K2_OnEndViewTarget Parms{};
 
@@ -815,10 +813,9 @@ void AActor::K2_OnEndViewTarget(class APlayerController* PC)
 
 void AActor::K2_OnReset()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnReset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "K2_OnReset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1255,10 +1252,9 @@ void AActor::PrestreamTextures(float Seconds, bool bEnableStreaming, int32 Cinem
 
 void AActor::ReceiveActorBeginCursorOver()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveActorBeginCursorOver");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveActorBeginCursorOver");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1271,10 +1267,9 @@ void AActor::ReceiveActorBeginCursorOver()
 
 void AActor::ReceiveActorBeginOverlap(class AActor* OtherActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveActorBeginOverlap");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveActorBeginOverlap");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveActorBeginOverlap Parms{};
 
@@ -1289,10 +1284,9 @@ void AActor::ReceiveActorBeginOverlap(class AActor* OtherActor)
 
 void AActor::ReceiveActorEndCursorOver()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveActorEndCursorOver");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveActorEndCursorOver");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1305,10 +1299,9 @@ void AActor::ReceiveActorEndCursorOver()
 
 void AActor::ReceiveActorEndOverlap(class AActor* OtherActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveActorEndOverlap");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveActorEndOverlap");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveActorEndOverlap Parms{};
 
@@ -1325,10 +1318,9 @@ void AActor::ReceiveActorEndOverlap(class AActor* OtherActor)
 
 void AActor::ReceiveActorOnClicked(const struct FKey& ButtonPressed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveActorOnClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveActorOnClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveActorOnClicked Parms{};
 
@@ -1345,10 +1337,9 @@ void AActor::ReceiveActorOnClicked(const struct FKey& ButtonPressed)
 
 void AActor::ReceiveActorOnInputTouchBegin(const ETouchIndex FingerIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveActorOnInputTouchBegin");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveActorOnInputTouchBegin");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveActorOnInputTouchBegin Parms{};
 
@@ -1365,10 +1356,9 @@ void AActor::ReceiveActorOnInputTouchBegin(const ETouchIndex FingerIndex)
 
 void AActor::ReceiveActorOnInputTouchEnd(const ETouchIndex FingerIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveActorOnInputTouchEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveActorOnInputTouchEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveActorOnInputTouchEnd Parms{};
 
@@ -1385,10 +1375,9 @@ void AActor::ReceiveActorOnInputTouchEnd(const ETouchIndex FingerIndex)
 
 void AActor::ReceiveActorOnInputTouchEnter(const ETouchIndex FingerIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveActorOnInputTouchEnter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveActorOnInputTouchEnter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveActorOnInputTouchEnter Parms{};
 
@@ -1405,10 +1394,9 @@ void AActor::ReceiveActorOnInputTouchEnter(const ETouchIndex FingerIndex)
 
 void AActor::ReceiveActorOnInputTouchLeave(const ETouchIndex FingerIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveActorOnInputTouchLeave");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveActorOnInputTouchLeave");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveActorOnInputTouchLeave Parms{};
 
@@ -1425,10 +1413,9 @@ void AActor::ReceiveActorOnInputTouchLeave(const ETouchIndex FingerIndex)
 
 void AActor::ReceiveActorOnReleased(const struct FKey& ButtonReleased)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveActorOnReleased");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveActorOnReleased");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveActorOnReleased Parms{};
 
@@ -1448,10 +1435,9 @@ void AActor::ReceiveActorOnReleased(const struct FKey& ButtonReleased)
 
 void AActor::ReceiveAnyDamage(float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, class AActor* DamageCauser)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveAnyDamage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveAnyDamage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveAnyDamage Parms{};
 
@@ -1472,10 +1458,9 @@ void AActor::ReceiveAnyDamage(float Damage, const class UDamageType* DamageType,
 
 void AActor::ReceiveAsyncPhysicsTick(float DeltaSeconds, float SimSeconds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveAsyncPhysicsTick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveAsyncPhysicsTick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveAsyncPhysicsTick Parms{};
 
@@ -1491,10 +1476,9 @@ void AActor::ReceiveAsyncPhysicsTick(float DeltaSeconds, float SimSeconds)
 
 void AActor::ReceiveBeginPlay()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveBeginPlay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveBeginPlay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1505,10 +1489,9 @@ void AActor::ReceiveBeginPlay()
 
 void AActor::ReceiveDestroyed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveDestroyed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveDestroyed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1521,10 +1504,9 @@ void AActor::ReceiveDestroyed()
 
 void AActor::ReceiveEndPlay(EEndPlayReason EndPlayReason)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveEndPlay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveEndPlay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveEndPlay Parms{};
 
@@ -1548,10 +1530,9 @@ void AActor::ReceiveEndPlay(EEndPlayReason EndPlayReason)
 
 void AActor::ReceiveHit(class UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, const struct FVector& HitLocation, const struct FVector& HitNormal, const struct FVector& NormalImpulse, const struct FHitResult& Hit)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveHit");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveHit");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveHit Parms{};
 
@@ -1584,10 +1565,9 @@ void AActor::ReceiveHit(class UPrimitiveComponent* MyComp, class AActor* Other, 
 
 void AActor::ReceivePointDamage(float Damage, const class UDamageType* DamageType, const struct FVector& HitLocation, const struct FVector& HitNormal, class UPrimitiveComponent* HitComponent, class FName BoneName, const struct FVector& ShotFromDirection, class AController* InstigatedBy, class AActor* DamageCauser, const struct FHitResult& HitInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePointDamage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceivePointDamage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceivePointDamage Parms{};
 
@@ -1618,10 +1598,9 @@ void AActor::ReceivePointDamage(float Damage, const class UDamageType* DamageTyp
 
 void AActor::ReceiveRadialDamage(float DamageReceived, const class UDamageType* DamageType, const struct FVector& Origin, const struct FHitResult& HitInfo, class AController* InstigatedBy, class AActor* DamageCauser)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveRadialDamage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveRadialDamage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveRadialDamage Parms{};
 
@@ -1643,10 +1622,9 @@ void AActor::ReceiveRadialDamage(float DamageReceived, const class UDamageType* 
 
 void AActor::ReceiveTick(float DeltaSeconds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveTick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "ReceiveTick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Actor_ReceiveTick Parms{};
 
@@ -2205,10 +2183,9 @@ void AActor::TearOff()
 
 void AActor::UserConstructionScript()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UserConstructionScript");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Actor", "UserConstructionScript");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3929,10 +3906,9 @@ void AController::Possess(class APawn* InPawn)
 
 void AController::ReceiveInstigatedAnyDamage(float Damage, const class UDamageType* DamageType, class AActor* DamagedActor, class AActor* DamageCauser)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveInstigatedAnyDamage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Controller", "ReceiveInstigatedAnyDamage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Controller_ReceiveInstigatedAnyDamage Parms{};
 
@@ -3952,10 +3928,9 @@ void AController::ReceiveInstigatedAnyDamage(float Damage, const class UDamageTy
 
 void AController::ReceivePossess(class APawn* PossessedPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePossess");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Controller", "ReceivePossess");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Controller_ReceivePossess Parms{};
 
@@ -3972,10 +3947,9 @@ void AController::ReceivePossess(class APawn* PossessedPawn)
 
 void AController::ReceiveUnPossess(class APawn* UnpossessedPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveUnPossess");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Controller", "ReceiveUnPossess");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Controller_ReceiveUnPossess Parms{};
 
@@ -4952,10 +4926,9 @@ void AHUD::PreviousDebugTarget()
 
 void AHUD::ReceiveDrawHUD(int32 SizeX, int32 SizeY)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveDrawHUD");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HUD", "ReceiveDrawHUD");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HUD_ReceiveDrawHUD Parms{};
 
@@ -4973,10 +4946,9 @@ void AHUD::ReceiveDrawHUD(int32 SizeX, int32 SizeY)
 
 void AHUD::ReceiveHitBoxBeginCursorOver(const class FName BoxName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveHitBoxBeginCursorOver");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HUD", "ReceiveHitBoxBeginCursorOver");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HUD_ReceiveHitBoxBeginCursorOver Parms{};
 
@@ -4993,10 +4965,9 @@ void AHUD::ReceiveHitBoxBeginCursorOver(const class FName BoxName)
 
 void AHUD::ReceiveHitBoxClick(const class FName BoxName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveHitBoxClick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HUD", "ReceiveHitBoxClick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HUD_ReceiveHitBoxClick Parms{};
 
@@ -5013,10 +4984,9 @@ void AHUD::ReceiveHitBoxClick(const class FName BoxName)
 
 void AHUD::ReceiveHitBoxEndCursorOver(const class FName BoxName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveHitBoxEndCursorOver");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HUD", "ReceiveHitBoxEndCursorOver");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HUD_ReceiveHitBoxEndCursorOver Parms{};
 
@@ -5033,10 +5003,9 @@ void AHUD::ReceiveHitBoxEndCursorOver(const class FName BoxName)
 
 void AHUD::ReceiveHitBoxRelease(const class FName BoxName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveHitBoxRelease");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HUD", "ReceiveHitBoxRelease");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HUD_ReceiveHitBoxRelease Parms{};
 
@@ -6034,10 +6003,9 @@ void ASkeletalMeshActor::OnRep_ReplicatedPhysAsset()
 
 void UAnimInstance::BlueprintBeginPlay()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintBeginPlay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimInstance", "BlueprintBeginPlay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6048,10 +6016,9 @@ void UAnimInstance::BlueprintBeginPlay()
 
 void UAnimInstance::BlueprintInitializeAnimation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintInitializeAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimInstance", "BlueprintInitializeAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6062,10 +6029,9 @@ void UAnimInstance::BlueprintInitializeAnimation()
 
 void UAnimInstance::BlueprintLinkedAnimationLayersInitialized()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintLinkedAnimationLayersInitialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimInstance", "BlueprintLinkedAnimationLayersInitialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6076,10 +6042,9 @@ void UAnimInstance::BlueprintLinkedAnimationLayersInitialized()
 
 void UAnimInstance::BlueprintPostEvaluateAnimation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintPostEvaluateAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimInstance", "BlueprintPostEvaluateAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6092,10 +6057,9 @@ void UAnimInstance::BlueprintPostEvaluateAnimation()
 
 void UAnimInstance::BlueprintThreadSafeUpdateAnimation(float DeltaTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintThreadSafeUpdateAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimInstance", "BlueprintThreadSafeUpdateAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimInstance_BlueprintThreadSafeUpdateAnimation Parms{};
 
@@ -6112,10 +6076,9 @@ void UAnimInstance::BlueprintThreadSafeUpdateAnimation(float DeltaTime)
 
 void UAnimInstance::BlueprintUpdateAnimation(float DeltaTimeX)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintUpdateAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimInstance", "BlueprintUpdateAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimInstance_BlueprintUpdateAnimation Parms{};
 
@@ -9243,10 +9206,9 @@ void APlayerState::OnRep_UniqueId()
 
 void APlayerState::ReceiveCopyProperties(class APlayerState* NewPlayerState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveCopyProperties");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PlayerState", "ReceiveCopyProperties");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PlayerState_ReceiveCopyProperties Parms{};
 
@@ -9263,10 +9225,9 @@ void APlayerState::ReceiveCopyProperties(class APlayerState* NewPlayerState)
 
 void APlayerState::ReceiveOverrideWith(class APlayerState* OldPlayerState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveOverrideWith");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PlayerState", "ReceiveOverrideWith");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PlayerState_ReceiveOverrideWith Parms{};
 
@@ -9697,10 +9658,9 @@ void UActorComponent::OnRep_IsActive()
 
 void UActorComponent::ReceiveAsyncPhysicsTick(float DeltaSeconds, float SimSeconds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveAsyncPhysicsTick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ActorComponent", "ReceiveAsyncPhysicsTick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ActorComponent_ReceiveAsyncPhysicsTick Parms{};
 
@@ -9716,10 +9676,9 @@ void UActorComponent::ReceiveAsyncPhysicsTick(float DeltaSeconds, float SimSecon
 
 void UActorComponent::ReceiveBeginPlay()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveBeginPlay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ActorComponent", "ReceiveBeginPlay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9732,10 +9691,9 @@ void UActorComponent::ReceiveBeginPlay()
 
 void UActorComponent::ReceiveEndPlay(EEndPlayReason EndPlayReason)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveEndPlay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ActorComponent", "ReceiveEndPlay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ActorComponent_ReceiveEndPlay Parms{};
 
@@ -9752,10 +9710,9 @@ void UActorComponent::ReceiveEndPlay(EEndPlayReason EndPlayReason)
 
 void UActorComponent::ReceiveTick(float DeltaSeconds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveTick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ActorComponent", "ReceiveTick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ActorComponent_ReceiveTick Parms{};
 
@@ -21626,10 +21583,9 @@ class UCameraModifier* APlayerCameraManager::AddNewCameraModifier(TSubclassOf<cl
 
 bool APlayerCameraManager::BlueprintUpdateCamera(class AActor* CameraTarget, struct FVector* NewCameraLocation, struct FRotator* NewCameraRotation, float* NewCameraFOV)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintUpdateCamera");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PlayerCameraManager", "BlueprintUpdateCamera");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PlayerCameraManager_BlueprintUpdateCamera Parms{};
 
@@ -21702,10 +21658,9 @@ class UCameraModifier* APlayerCameraManager::FindCameraModifierByClass(TSubclass
 
 void APlayerCameraManager::OnPhotographyMultiPartCaptureEnd()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPhotographyMultiPartCaptureEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PlayerCameraManager", "OnPhotographyMultiPartCaptureEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -21721,10 +21676,9 @@ void APlayerCameraManager::OnPhotographyMultiPartCaptureEnd()
 
 void APlayerCameraManager::OnPhotographyMultiPartCaptureStart()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPhotographyMultiPartCaptureStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PlayerCameraManager", "OnPhotographyMultiPartCaptureStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -21740,10 +21694,9 @@ void APlayerCameraManager::OnPhotographyMultiPartCaptureStart()
 
 void APlayerCameraManager::OnPhotographySessionEnd()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPhotographySessionEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PlayerCameraManager", "OnPhotographySessionEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -21759,10 +21712,9 @@ void APlayerCameraManager::OnPhotographySessionEnd()
 
 void APlayerCameraManager::OnPhotographySessionStart()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPhotographySessionStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PlayerCameraManager", "OnPhotographySessionStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -21783,10 +21735,9 @@ void APlayerCameraManager::OnPhotographySessionStart()
 
 void APlayerCameraManager::PhotographyCameraModify(const struct FVector& NewCameraLocation, const struct FVector& PreviousCameraLocation, const struct FVector& OriginalCameraLocation, struct FVector* ResultCameraLocation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PhotographyCameraModify");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PlayerCameraManager", "PhotographyCameraModify");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PlayerCameraManager_PhotographyCameraModify Parms{};
 
@@ -22563,10 +22514,9 @@ void APawn::PawnMakeNoise(float Loudness, const struct FVector& NoiseLocation, b
 
 void APawn::ReceiveControllerChanged(class AController* OldController, class AController* NewController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveControllerChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Pawn", "ReceiveControllerChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Pawn_ReceiveControllerChanged Parms{};
 
@@ -22584,10 +22534,9 @@ void APawn::ReceiveControllerChanged(class AController* OldController, class ACo
 
 void APawn::ReceivePossessed(class AController* NewController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePossessed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Pawn", "ReceivePossessed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Pawn_ReceivePossessed Parms{};
 
@@ -22602,10 +22551,9 @@ void APawn::ReceivePossessed(class AController* NewController)
 
 void APawn::ReceiveRestarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveRestarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Pawn", "ReceiveRestarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22618,10 +22566,9 @@ void APawn::ReceiveRestarted()
 
 void APawn::ReceiveUnpossessed(class AController* OldController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveUnpossessed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Pawn", "ReceiveUnpossessed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Pawn_ReceiveUnpossessed Parms{};
 
@@ -31046,10 +30993,9 @@ TArray<struct FScriptTypedElementHandle> UTypedElementCommonActions::PasteNormal
 
 float UAnimNotify::GetDefaultTriggerWeightThreshold() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetDefaultTriggerWeightThreshold");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotify", "GetDefaultTriggerWeightThreshold");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotify_GetDefaultTriggerWeightThreshold Parms{};
 
@@ -31071,10 +31017,9 @@ float UAnimNotify::GetDefaultTriggerWeightThreshold() const
 
 class FString UAnimNotify::GetNotifyName() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetNotifyName");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotify", "GetNotifyName");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotify_GetNotifyName Parms{};
 
@@ -31099,10 +31044,9 @@ class FString UAnimNotify::GetNotifyName() const
 
 bool UAnimNotify::Received_Notify(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, const struct FAnimNotifyEventReference& EventReference) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Received_Notify");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotify", "Received_Notify");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotify_Received_Notify Parms{};
 
@@ -31123,10 +31067,9 @@ bool UAnimNotify::Received_Notify(class USkeletalMeshComponent* MeshComp, class 
 
 float UAnimNotifyState::GetDefaultTriggerWeightThreshold() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetDefaultTriggerWeightThreshold");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotifyState", "GetDefaultTriggerWeightThreshold");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotifyState_GetDefaultTriggerWeightThreshold Parms{};
 
@@ -31148,10 +31091,9 @@ float UAnimNotifyState::GetDefaultTriggerWeightThreshold() const
 
 class FString UAnimNotifyState::GetNotifyName() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetNotifyName");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotifyState", "GetNotifyName");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotifyState_GetNotifyName Parms{};
 
@@ -31177,10 +31119,9 @@ class FString UAnimNotifyState::GetNotifyName() const
 
 bool UAnimNotifyState::Received_NotifyBegin(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, float TotalDuration, const struct FAnimNotifyEventReference& EventReference) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Received_NotifyBegin");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotifyState", "Received_NotifyBegin");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotifyState_Received_NotifyBegin Parms{};
 
@@ -31205,10 +31146,9 @@ bool UAnimNotifyState::Received_NotifyBegin(class USkeletalMeshComponent* MeshCo
 
 bool UAnimNotifyState::Received_NotifyEnd(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, const struct FAnimNotifyEventReference& EventReference) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Received_NotifyEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotifyState", "Received_NotifyEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotifyState_Received_NotifyEnd Parms{};
 
@@ -31233,10 +31173,9 @@ bool UAnimNotifyState::Received_NotifyEnd(class USkeletalMeshComponent* MeshComp
 
 bool UAnimNotifyState::Received_NotifyTick(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, float FrameDeltaTime, const struct FAnimNotifyEventReference& EventReference) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Received_NotifyTick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotifyState", "Received_NotifyTick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotifyState_Received_NotifyTick Parms{};
 
@@ -31751,10 +31690,9 @@ TArray<class UDataLayerInstance*> UDataLayerManager::GetDataLayerInstances() con
 
 void UCheatManagerExtension::AddedToCheatManager()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AddedToCheatManager");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CheatManagerExtension", "AddedToCheatManager");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -31770,10 +31708,9 @@ void UCheatManagerExtension::AddedToCheatManager()
 
 void UCheatManagerExtension::RemovedFromCheatManager()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RemovedFromCheatManager");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CheatManagerExtension", "RemovedFromCheatManager");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -32151,10 +32088,9 @@ bool ULocalPlayerSaveGame::AsyncSaveGameToSlotForLocalPlayer()
 
 void ULocalPlayerSaveGame::OnPostLoad()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPostLoad");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LocalPlayerSaveGame", "OnPostLoad");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -32167,10 +32103,9 @@ void ULocalPlayerSaveGame::OnPostLoad()
 
 void ULocalPlayerSaveGame::OnPostSave(bool bSuccess)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPostSave");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LocalPlayerSaveGame", "OnPostSave");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LocalPlayerSaveGame_OnPostSave Parms{};
 
@@ -32185,10 +32120,9 @@ void ULocalPlayerSaveGame::OnPostSave(bool bSuccess)
 
 void ULocalPlayerSaveGame::OnPreSave()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreSave");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LocalPlayerSaveGame", "OnPreSave");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -32199,10 +32133,9 @@ void ULocalPlayerSaveGame::OnPreSave()
 
 void ULocalPlayerSaveGame::OnResetToDefault()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnResetToDefault");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LocalPlayerSaveGame", "OnResetToDefault");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -32563,10 +32496,9 @@ void UAutoRTFMTestObject::OnComponentPhysicsStateChanged(class UPrimitiveCompone
 
 bool AGameModeBase::CanSpectate(class APlayerController* Viewer, class APlayerState* ViewTarget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanSpectate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "CanSpectate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_CanSpectate Parms{};
 
@@ -32621,10 +32553,9 @@ void AGameModeBase::ChangeName(class AController* Controller, const class FStrin
 
 class AActor* AGameModeBase::ChoosePlayerStart(class AController* Player)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ChoosePlayerStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "ChoosePlayerStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_ChoosePlayerStart Parms{};
 
@@ -32650,10 +32581,9 @@ class AActor* AGameModeBase::ChoosePlayerStart(class AController* Player)
 
 class AActor* AGameModeBase::FindPlayerStart(class AController* Player, const class FString& IncomingName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"FindPlayerStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "FindPlayerStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_FindPlayerStart Parms{};
 
@@ -32679,10 +32609,9 @@ class AActor* AGameModeBase::FindPlayerStart(class AController* Player, const cl
 
 class UClass* AGameModeBase::GetDefaultPawnClassForController(class AController* InController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetDefaultPawnClassForController");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "GetDefaultPawnClassForController");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_GetDefaultPawnClassForController Parms{};
 
@@ -32756,10 +32685,9 @@ int32 AGameModeBase::GetNumSpectators()
 
 void AGameModeBase::HandleStartingNewPlayer(class APlayerController* NewPlayer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleStartingNewPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "HandleStartingNewPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_HandleStartingNewPlayer Parms{};
 
@@ -32781,10 +32709,9 @@ void AGameModeBase::HandleStartingNewPlayer(class APlayerController* NewPlayer)
 
 void AGameModeBase::InitializeHUDForPlayer(class APlayerController* NewPlayer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InitializeHUDForPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "InitializeHUDForPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_InitializeHUDForPlayer Parms{};
 
@@ -32807,10 +32734,9 @@ void AGameModeBase::InitializeHUDForPlayer(class APlayerController* NewPlayer)
 
 void AGameModeBase::InitStartSpot(class AActor* StartSpot, class AController* NewPlayer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InitStartSpot");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "InitStartSpot");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_InitStartSpot Parms{};
 
@@ -32865,10 +32791,9 @@ class AActor* AGameModeBase::K2_FindPlayerStart(class AController* Player, const
 
 void AGameModeBase::K2_OnChangeName(class AController* Other, const class FString& NewName, bool bNameChange)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnChangeName");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "K2_OnChangeName");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_K2_OnChangeName Parms{};
 
@@ -32887,10 +32812,9 @@ void AGameModeBase::K2_OnChangeName(class AController* Other, const class FStrin
 
 void AGameModeBase::K2_OnLogout(class AController* ExitingController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnLogout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "K2_OnLogout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_K2_OnLogout Parms{};
 
@@ -32907,10 +32831,9 @@ void AGameModeBase::K2_OnLogout(class AController* ExitingController)
 
 void AGameModeBase::K2_OnRestartPlayer(class AController* NewPlayer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnRestartPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "K2_OnRestartPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_K2_OnRestartPlayer Parms{};
 
@@ -32928,10 +32851,9 @@ void AGameModeBase::K2_OnRestartPlayer(class AController* NewPlayer)
 
 void AGameModeBase::K2_OnSwapPlayerControllers(class APlayerController* OldPC, class APlayerController* NewPC)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnSwapPlayerControllers");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "K2_OnSwapPlayerControllers");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_K2_OnSwapPlayerControllers Parms{};
 
@@ -32949,10 +32871,9 @@ void AGameModeBase::K2_OnSwapPlayerControllers(class APlayerController* OldPC, c
 
 void AGameModeBase::K2_PostLogin(class APlayerController* NewPlayer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_PostLogin");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "K2_PostLogin");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_K2_PostLogin Parms{};
 
@@ -32970,10 +32891,9 @@ void AGameModeBase::K2_PostLogin(class APlayerController* NewPlayer)
 
 bool AGameModeBase::PlayerCanRestart(class APlayerController* Player)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayerCanRestart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "PlayerCanRestart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_PlayerCanRestart Parms{};
 
@@ -33115,10 +33035,9 @@ void AGameModeBase::ReturnToMainMenuHost()
 
 bool AGameModeBase::ShouldReset(class AActor* ActorToReset)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldReset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "ShouldReset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_ShouldReset Parms{};
 
@@ -33144,10 +33063,9 @@ bool AGameModeBase::ShouldReset(class AActor* ActorToReset)
 
 class APawn* AGameModeBase::SpawnDefaultPawnAtTransform(class AController* NewPlayer, const struct FTransform& SpawnTransform)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SpawnDefaultPawnAtTransform");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "SpawnDefaultPawnAtTransform");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_SpawnDefaultPawnAtTransform Parms{};
 
@@ -33174,10 +33092,9 @@ class APawn* AGameModeBase::SpawnDefaultPawnAtTransform(class AController* NewPl
 
 class APawn* AGameModeBase::SpawnDefaultPawnFor(class AController* NewPlayer, class AActor* StartSpot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SpawnDefaultPawnFor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "SpawnDefaultPawnFor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_SpawnDefaultPawnFor Parms{};
 
@@ -33272,10 +33189,9 @@ bool AGameModeBase::HasMatchStarted() const
 
 bool AGameModeBase::MustSpectate(class APlayerController* NewPlayerController) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"MustSpectate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameModeBase", "MustSpectate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameModeBase_MustSpectate Parms{};
 
@@ -35102,10 +35018,9 @@ void UInputDeviceProperty::ApplyDeviceProperty(const struct FPlatformUserId& Use
 
 void UInputDeviceProperty::EvaluateDeviceProperty(const struct FPlatformUserId& PlatformUser, const struct FInputDeviceId& DeviceID, const float DeltaTime, const float duration)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EvaluateDeviceProperty");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InputDeviceProperty", "EvaluateDeviceProperty");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InputDeviceProperty_EvaluateDeviceProperty Parms{};
 
@@ -35132,10 +35047,9 @@ void UInputDeviceProperty::EvaluateDeviceProperty(const struct FPlatformUserId& 
 
 void UInputDeviceProperty::ResetDeviceProperty(const struct FPlatformUserId& PlatformUser, const struct FInputDeviceId& DeviceID, bool bForceReset)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ResetDeviceProperty");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InputDeviceProperty", "ResetDeviceProperty");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InputDeviceProperty_ResetDeviceProperty Parms{};
 
@@ -35987,10 +35901,9 @@ bool UExporter::RunAssetExportTasks(const TArray<class UAssetExportTask*>& Expor
 
 bool UExporter::ScriptRunAssetExportTask(class UAssetExportTask* Task)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptRunAssetExportTask");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Exporter", "ScriptRunAssetExportTask");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Exporter_ScriptRunAssetExportTask Parms{};
 
@@ -36492,10 +36405,9 @@ bool UDataLayerInstance::IsVisible() const
 
 class UParticleSystem* UAnimNotifyState_Trail::OverridePSTemplate(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OverridePSTemplate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotifyState_Trail", "OverridePSTemplate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotifyState_Trail_OverridePSTemplate Parms{};
 
@@ -43049,10 +42961,9 @@ struct FLinearColor ULightComponentBase::GetLightColor() const
 
 void UCameraModifier::BlueprintModifyCamera(float DeltaTime, const struct FVector& ViewLocation, const struct FRotator& ViewRotation, float FOV, struct FVector* NewViewLocation, struct FRotator* NewViewRotation, float* NewFOV)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintModifyCamera");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CameraModifier", "BlueprintModifyCamera");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CameraModifier_BlueprintModifyCamera Parms{};
 
@@ -43083,10 +42994,9 @@ void UCameraModifier::BlueprintModifyCamera(float DeltaTime, const struct FVecto
 
 void UCameraModifier::BlueprintModifyPostProcess(float DeltaTime, float* PostProcessBlendWeight, struct FPostProcessSettings* PostProcessSettings)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintModifyPostProcess");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CameraModifier", "BlueprintModifyPostProcess");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CameraModifier_BlueprintModifyPostProcess Parms{};
 
@@ -43319,10 +43229,9 @@ void UCanvasRenderTarget2D::GetSize(int32* Width, int32* Height)
 
 void UCanvasRenderTarget2D::ReceiveUpdate(class UCanvas* Canvas, int32 Width, int32 Height)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CanvasRenderTarget2D", "ReceiveUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CanvasRenderTarget2D_ReceiveUpdate Parms{};
 
@@ -56741,10 +56650,9 @@ void ACharacter::Jump()
 
 void ACharacter::K2_OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnEndCrouch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Character", "K2_OnEndCrouch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Character_K2_OnEndCrouch Parms{};
 
@@ -56765,10 +56673,9 @@ void ACharacter::K2_OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAd
 
 void ACharacter::K2_OnMovementModeChanged(EMovementMode PrevMovementMode, EMovementMode NewMovementMode, uint8 PrevCustomMode, uint8 NewCustomMode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnMovementModeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Character", "K2_OnMovementModeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Character_K2_OnMovementModeChanged Parms{};
 
@@ -56789,10 +56696,9 @@ void ACharacter::K2_OnMovementModeChanged(EMovementMode PrevMovementMode, EMovem
 
 void ACharacter::K2_OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnStartCrouch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Character", "K2_OnStartCrouch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Character_K2_OnStartCrouch Parms{};
 
@@ -56810,10 +56716,9 @@ void ACharacter::K2_OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeight
 
 void ACharacter::K2_UpdateCustomMovement(float DeltaTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_UpdateCustomMovement");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Character", "K2_UpdateCustomMovement");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Character_K2_UpdateCustomMovement Parms{};
 
@@ -56857,10 +56762,9 @@ void ACharacter::LaunchCharacter(const struct FVector& LaunchVelocity, bool bXYO
 
 void ACharacter::OnJumped()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnJumped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Character", "OnJumped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -56878,10 +56782,9 @@ void ACharacter::OnJumped()
 
 void ACharacter::OnLanded(const struct FHitResult& Hit)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLanded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Character", "OnLanded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Character_OnLanded Parms{};
 
@@ -56900,10 +56803,9 @@ void ACharacter::OnLanded(const struct FHitResult& Hit)
 
 void ACharacter::OnLaunched(const struct FVector& LaunchVelocity, bool bXYOverride, bool bZOverride)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLaunched");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Character", "OnLaunched");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Character_OnLaunched Parms{};
 
@@ -57001,10 +56903,9 @@ void ACharacter::OnRep_RootMotion()
 
 void ACharacter::OnWalkingOffLedge(const struct FVector& PreviousFloorImpactNormal, const struct FVector& PreviousFloorContactNormal, const struct FVector& PreviousLocation, float TimeDelta)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWalkingOffLedge");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Character", "OnWalkingOffLedge");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Character_OnWalkingOffLedge Parms{};
 
@@ -57480,10 +57381,9 @@ bool ACharacter::CanJump() const
 
 bool ACharacter::CanJumpInternal() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanJumpInternal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("Character", "CanJumpInternal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::Character_CanJumpInternal Parms{};
 
@@ -58457,10 +58357,9 @@ void UCheatManager::PlayersOnly()
 
 void UCheatManager::ReceiveEndPlay()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveEndPlay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CheatManager", "ReceiveEndPlay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -58471,10 +58370,9 @@ void UCheatManager::ReceiveEndPlay()
 
 void UCheatManager::ReceiveInitCheatManager()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveInitCheatManager");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CheatManager", "ReceiveInitCheatManager");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -68914,10 +68812,9 @@ const class UScriptStruct* UDataTableFunctionLibrary::GetDataTableRowStruct(cons
 
 void ADebugCameraController::ReceiveOnActivate(class APlayerController* OriginalPC)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveOnActivate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DebugCameraController", "ReceiveOnActivate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DebugCameraController_ReceiveOnActivate Parms{};
 
@@ -68937,10 +68834,9 @@ void ADebugCameraController::ReceiveOnActivate(class APlayerController* Original
 
 void ADebugCameraController::ReceiveOnActorSelected(class AActor* NewSelectedActor, const struct FVector& SelectHitLocation, const struct FVector& SelectHitNormal, const struct FHitResult& Hit)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveOnActorSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DebugCameraController", "ReceiveOnActorSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DebugCameraController_ReceiveOnActorSelected Parms{};
 
@@ -68960,10 +68856,9 @@ void ADebugCameraController::ReceiveOnActorSelected(class AActor* NewSelectedAct
 
 void ADebugCameraController::ReceiveOnDeactivate(class APlayerController* RestoredPC)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveOnDeactivate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DebugCameraController", "ReceiveOnDeactivate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DebugCameraController_ReceiveOnDeactivate Parms{};
 
@@ -71434,10 +71329,9 @@ bool UInputDeviceSubsystem::IsPropertyActive(const struct FInputDevicePropertyHa
 
 void ALevelScriptActor::LevelReset()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"LevelReset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LevelScriptActor", "LevelReset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -71512,10 +71406,9 @@ void ALevelScriptActor::SetCinematicMode(bool bCinematicMode, bool bHidePlayer, 
 
 void ALevelScriptActor::WorldOriginLocationChanged(const struct FIntVector& OldOriginLocation, const struct FIntVector& NewOriginLocation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"WorldOriginLocationChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LevelScriptActor", "WorldOriginLocationChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LevelScriptActor_WorldOriginLocationChanged Parms{};
 
@@ -71659,10 +71552,9 @@ void UGameInstance::DebugRemovePlayer(int32 ControllerId)
 
 void UGameInstance::HandleNetworkError(ENetworkFailure FailureType, bool bIsServer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleNetworkError");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameInstance", "HandleNetworkError");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameInstance_HandleNetworkError Parms{};
 
@@ -71680,10 +71572,9 @@ void UGameInstance::HandleNetworkError(ENetworkFailure FailureType, bool bIsServ
 
 void UGameInstance::HandleTravelError(ETravelFailure FailureType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTravelError");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameInstance", "HandleTravelError");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameInstance_HandleTravelError Parms{};
 
@@ -71698,10 +71589,9 @@ void UGameInstance::HandleTravelError(ETravelFailure FailureType)
 
 void UGameInstance::ReceiveInit()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveInit");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameInstance", "ReceiveInit");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -71712,10 +71602,9 @@ void UGameInstance::ReceiveInit()
 
 void UGameInstance::ReceiveShutdown()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveShutdown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameInstance", "ReceiveShutdown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -71766,10 +71655,9 @@ void AGameMode::EndMatch()
 
 void AGameMode::K2_OnSetMatchState(class FName NewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnSetMatchState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameMode", "K2_OnSetMatchState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameMode_K2_OnSetMatchState Parms{};
 
@@ -71786,10 +71674,9 @@ void AGameMode::K2_OnSetMatchState(class FName NewState)
 
 bool AGameMode::ReadyToEndMatch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReadyToEndMatch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameMode", "ReadyToEndMatch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameMode_ReadyToEndMatch Parms{};
 
@@ -71811,10 +71698,9 @@ bool AGameMode::ReadyToEndMatch()
 
 bool AGameMode::ReadyToStartMatch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReadyToStartMatch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameMode", "ReadyToStartMatch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameMode_ReadyToStartMatch Parms{};
 
@@ -124680,10 +124566,9 @@ class UVOIPTalker* UVOIPTalker::CreateTalkerForPlayer(class APlayerState* Owning
 
 void UVOIPTalker::BPOnTalkingBegin(class UAudioComponent* AudioComponent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BPOnTalkingBegin");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VOIPTalker", "BPOnTalkingBegin");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VOIPTalker_BPOnTalkingBegin Parms{};
 
@@ -124703,10 +124588,9 @@ void UVOIPTalker::BPOnTalkingBegin(class UAudioComponent* AudioComponent)
 
 void UVOIPTalker::BPOnTalkingEnd()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BPOnTalkingEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VOIPTalker", "BPOnTalkingEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;

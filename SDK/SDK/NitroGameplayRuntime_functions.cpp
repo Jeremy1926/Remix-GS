@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void UFortGA_NitroBashBase::BP_OnVehicleDestroyedBuiding()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVehicleDestroyedBuiding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGA_NitroBashBase", "BP_OnVehicleDestroyedBuiding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -37,10 +36,9 @@ void UFortGA_NitroBashBase::BP_OnVehicleDestroyedBuiding()
 
 void UFortGA_NitroBashBase::BP_TryChangeBashState(bool IsBashable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_TryChangeBashState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGA_NitroBashBase", "BP_TryChangeBashState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGA_NitroBashBase_BP_TryChangeBashState Parms{};
 
@@ -101,10 +99,9 @@ float UFortGA_NitroBashBase::GetOwnerSpeed() const
 
 void AFortGCNL_Nitro_Active_Base::UpdateCurrentSpeed(float NewCurrentSpeed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCurrentSpeed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGCNL_Nitro_Active_Base", "UpdateCurrentSpeed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGCNL_Nitro_Active_Base_UpdateCurrentSpeed Parms{};
 
@@ -145,10 +142,9 @@ void AFortGCNL_Nitro_Active_Base::UpdateDurationAndVFXParameters()
 
 void AFortGCNL_Nitro_Active_Base::UpdateRemainingDuration(float NewRemainingDuration)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateRemainingDuration");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGCNL_Nitro_Active_Base", "UpdateRemainingDuration");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGCNL_Nitro_Active_Base_UpdateRemainingDuration Parms{};
 

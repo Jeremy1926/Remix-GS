@@ -26,10 +26,9 @@ SDK_NAMESPACE_START
 
 void ABeanFortPlayerMannequin::BP_UpdateCosmeticMaterials(const class UBeanCosmeticItemDefinitionBase* BeanCD, class UMaterialInstanceDynamic* MaterialBody, class UMaterialInstanceDynamic* MaterialCostume, class UMaterialInstanceDynamic* MaterialHead)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateCosmeticMaterials");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BeanFortPlayerMannequin", "BP_UpdateCosmeticMaterials");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BeanFortPlayerMannequin_BP_UpdateCosmeticMaterials Parms{};
 
@@ -52,10 +51,9 @@ void ABeanFortPlayerMannequin::BP_UpdateCosmeticMaterials(const class UBeanCosme
 
 void UFortCosmeticStep_ApplyBeanCD::BP_UpdateCosmeticMaterials(const class UBeanCosmeticItemDefinitionBase* BeanCD, class UMaterialInstanceDynamic* MaterialBody, class UMaterialInstanceDynamic* MaterialCostume, class UMaterialInstanceDynamic* MaterialHead) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateCosmeticMaterials");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCosmeticStep_ApplyBeanCD", "BP_UpdateCosmeticMaterials");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCosmeticStep_ApplyBeanCD_BP_UpdateCosmeticMaterials Parms{};
 

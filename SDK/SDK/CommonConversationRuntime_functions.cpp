@@ -52,10 +52,9 @@ struct FLinearColor UConversationNode::GetDebugParticipantColor(const struct FGa
 
 void UConversationChoiceNode::FillChoice(const struct FConversationContext& Context, struct FClientConversationOptionEntry* ChoiceEntry) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"FillChoice");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ConversationChoiceNode", "FillChoice");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ConversationChoiceNode_FillChoice Parms{};
 
@@ -557,10 +556,9 @@ class UConversationInstance* UConversationLibrary::StartConversationFromGraph(co
 
 void UConversationTaskNode::ExecuteClientEffects(const struct FConversationContext& Context) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ExecuteClientEffects");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ConversationTaskNode", "ExecuteClientEffects");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ConversationTaskNode_ExecuteClientEffects Parms{};
 
@@ -583,10 +581,9 @@ void UConversationTaskNode::ExecuteClientEffects(const struct FConversationConte
 
 struct FConversationTaskResult UConversationTaskNode::ExecuteTaskNode(const struct FConversationContext& Context) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ExecuteTaskNode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ConversationTaskNode", "ExecuteTaskNode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ConversationTaskNode_ExecuteTaskNode Parms{};
 
@@ -611,10 +608,9 @@ struct FConversationTaskResult UConversationTaskNode::ExecuteTaskNode(const stru
 
 void UConversationTaskNode::GatherStaticExtraData(const struct FConversationContext& Context, TArray<struct FConversationNodeParameterPair>* InOutExtraData) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GatherStaticExtraData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ConversationTaskNode", "GatherStaticExtraData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ConversationTaskNode_GatherStaticExtraData Parms{};
 
@@ -640,10 +636,9 @@ void UConversationTaskNode::GatherStaticExtraData(const struct FConversationCont
 
 bool UConversationTaskNode::GetNodeBodyColor(struct FLinearColor* BodyColor) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetNodeBodyColor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ConversationTaskNode", "GetNodeBodyColor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ConversationTaskNode_GetNodeBodyColor Parms{};
 
@@ -669,10 +664,9 @@ bool UConversationTaskNode::GetNodeBodyColor(struct FLinearColor* BodyColor) con
 
 EConversationRequirementResult UConversationTaskNode::IsRequirementSatisfied(const struct FConversationContext& Context) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsRequirementSatisfied");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ConversationTaskNode", "IsRequirementSatisfied");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ConversationTaskNode_IsRequirementSatisfied Parms{};
 
@@ -1029,10 +1023,9 @@ bool UConversationParticipantComponent::IsInActiveConversation() const
 
 EConversationRequirementResult UConversationRequirementNode::IsRequirementSatisfied(const struct FConversationContext& Context) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsRequirementSatisfied");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ConversationRequirementNode", "IsRequirementSatisfied");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ConversationRequirementNode_IsRequirementSatisfied Parms{};
 
@@ -1056,10 +1049,9 @@ EConversationRequirementResult UConversationRequirementNode::IsRequirementSatisf
 
 void UConversationSideEffectNode::ClientCauseSideEffect(const struct FConversationContext& Context) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ClientCauseSideEffect");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ConversationSideEffectNode", "ClientCauseSideEffect");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ConversationSideEffectNode_ClientCauseSideEffect Parms{};
 
@@ -1081,10 +1073,9 @@ void UConversationSideEffectNode::ClientCauseSideEffect(const struct FConversati
 
 void UConversationSideEffectNode::ServerCauseSideEffect(const struct FConversationContext& Context) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ServerCauseSideEffect");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ConversationSideEffectNode", "ServerCauseSideEffect");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ConversationSideEffectNode_ServerCauseSideEffect Parms{};
 

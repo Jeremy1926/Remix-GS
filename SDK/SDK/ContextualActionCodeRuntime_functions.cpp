@@ -42,10 +42,9 @@ void UFortMovementMode_ExtLogicBaseSwinging::OnOwnerDBNO()
 
 void AFortSwingingObject::OnEndSwing_BP(class AFortPlayerPawn* AttachedActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEndSwing_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSwingingObject", "OnEndSwing_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSwingingObject_OnEndSwing_BP Parms{};
 
@@ -62,10 +61,9 @@ void AFortSwingingObject::OnEndSwing_BP(class AFortPlayerPawn* AttachedActor)
 
 void AFortSwingingObject::OnStartSwing_BP(class AFortPlayerPawn* AttachedActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartSwing_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSwingingObject", "OnStartSwing_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSwingingObject_OnStartSwing_BP Parms{};
 
@@ -80,10 +78,9 @@ void AFortSwingingObject::OnStartSwing_BP(class AFortPlayerPawn* AttachedActor)
 
 void UHijackerComponent::BP_OnCleanup()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCleanup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HijackerComponent", "BP_OnCleanup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -94,10 +91,9 @@ void UHijackerComponent::BP_OnCleanup()
 
 void UHijackerComponent::BP_OnCompleteHijack()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCompleteHijack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HijackerComponent", "BP_OnCompleteHijack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -108,10 +104,9 @@ void UHijackerComponent::BP_OnCompleteHijack()
 
 void UHijackerComponent::BP_OnHijackCancelled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnHijackCancelled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HijackerComponent", "BP_OnHijackCancelled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -122,10 +117,9 @@ void UHijackerComponent::BP_OnHijackCancelled()
 
 void UHijackerComponent::BP_OnHijackInterrupted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnHijackInterrupted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HijackerComponent", "BP_OnHijackInterrupted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -136,10 +130,9 @@ void UHijackerComponent::BP_OnHijackInterrupted()
 
 void UHijackerComponent::BP_OnStartHijack()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStartHijack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HijackerComponent", "BP_OnStartHijack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -318,10 +311,9 @@ bool UHijackerComponent::TryHijack(class AActor* VehicleTarget, const struct FIn
 
 void UHijackerComponent::BP_CanCompleteHijack(bool* OutCanCompleteHijack) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CanCompleteHijack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HijackerComponent", "BP_CanCompleteHijack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HijackerComponent_BP_CanCompleteHijack Parms{};
 
@@ -339,10 +331,9 @@ void UHijackerComponent::BP_CanCompleteHijack(bool* OutCanCompleteHijack) const
 
 void UHijackerComponent::BP_CanStartHijack(bool* OutCanStartHijack) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CanStartHijack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HijackerComponent", "BP_CanStartHijack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HijackerComponent_BP_CanStartHijack Parms{};
 
@@ -363,10 +354,9 @@ void UHijackerComponent::BP_CanStartHijack(bool* OutCanStartHijack) const
 
 void UHijackerComponent::BP_GetThrownVelocity(class AActor* DamageCauser, const float Damage, const struct FVector& EventLocation, struct FVector* OutVelocity) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetThrownVelocity");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HijackerComponent", "BP_GetThrownVelocity");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HijackerComponent_BP_GetThrownVelocity Parms{};
 
@@ -476,10 +466,9 @@ void URappellingComponent::OnCapsuleHit(const class UPrimitiveComponent* HitComp
 
 void URappellingComponent::OnEndRappelling()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEndRappelling");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RappellingComponent", "OnEndRappelling");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -490,10 +479,9 @@ void URappellingComponent::OnEndRappelling()
 
 void URappellingComponent::OnInvalidTargeting()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInvalidTargeting");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RappellingComponent", "OnInvalidTargeting");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -552,10 +540,9 @@ void URappellingComponent::OnRep_RappellingState()
 
 void URappellingComponent::OnStartRappelling()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartRappelling");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RappellingComponent", "OnStartRappelling");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -566,10 +553,9 @@ void URappellingComponent::OnStartRappelling()
 
 void URappellingComponent::OnValidTargeting()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnValidTargeting");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RappellingComponent", "OnValidTargeting");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -729,10 +715,9 @@ void USwingingObjectComponent::AttachToObject_Server(class AFortSwingingObject* 
 
 void USwingingObjectComponent::BP_OnEndSwing()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnEndSwing");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SwingingObjectComponent", "BP_OnEndSwing");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -743,10 +728,9 @@ void USwingingObjectComponent::BP_OnEndSwing()
 
 void USwingingObjectComponent::BP_OnStartSwing()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStartSwing");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SwingingObjectComponent", "BP_OnStartSwing");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -829,10 +813,9 @@ void USwingingObjectComponent::OnRep_SwingingObject()
 
 void USwingingObjectComponent::BP_CanStartSwing(class AFortSwingingObject* SwingTarget, bool* bCanStartSwing) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CanStartSwing");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SwingingObjectComponent", "BP_CanStartSwing");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SwingingObjectComponent_BP_CanStartSwing Parms{};
 

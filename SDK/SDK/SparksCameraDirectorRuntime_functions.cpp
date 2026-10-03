@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void USparksCameraDebugWidget::ClearAll()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ClearAll");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDebugWidget", "ClearAll");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -35,10 +34,9 @@ void USparksCameraDebugWidget::ClearAll()
 
 void USparksCameraDebugWidget::ClearCurrent()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ClearCurrent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDebugWidget", "ClearCurrent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -52,10 +50,9 @@ void USparksCameraDebugWidget::ClearCurrent()
 
 void USparksCameraDebugWidget::LogToScreen(const class FString& Data, ESparksCameraLogType Type)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"LogToScreen");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDebugWidget", "LogToScreen");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDebugWidget_LogToScreen Parms{};
 
@@ -73,10 +70,9 @@ void USparksCameraDebugWidget::LogToScreen(const class FString& Data, ESparksCam
 
 void USparksCameraDebugWidget::SetEventRouter(class UGameplayEventRouterComponent* EventRouter)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetEventRouter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDebugWidget", "SetEventRouter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDebugWidget_SetEventRouter Parms{};
 
@@ -93,10 +89,9 @@ void USparksCameraDebugWidget::SetEventRouter(class UGameplayEventRouterComponen
 
 void USparksCameraDebugWidget::SetPerformanceMap(class USparksPerformanceMap* Map)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetPerformanceMap");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDebugWidget", "SetPerformanceMap");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDebugWidget_SetPerformanceMap Parms{};
 
@@ -113,10 +108,9 @@ void USparksCameraDebugWidget::SetPerformanceMap(class USparksPerformanceMap* Ma
 
 void USparksCameraDebugWidget::SetProgress(float Pct)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetProgress");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDebugWidget", "SetProgress");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDebugWidget_SetProgress Parms{};
 
@@ -818,10 +812,9 @@ class USparksCameraDirectorSequenceGenerator* USparksCameraDirectorConfig::FindB
 
 bool USparksCameraDirectorConfig::GenerateEntry(const struct FSparksPerformanceMapSection& Section, struct FSparksCameraDirectorSequenceEntry* OutEntry)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GenerateEntry");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDirectorConfig", "GenerateEntry");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDirectorConfig_GenerateEntry Parms{};
 
@@ -850,10 +843,9 @@ bool USparksCameraDirectorConfig::GenerateEntry(const struct FSparksPerformanceM
 
 bool USparksCameraDirectorConfig::GenerateSequence(const struct FSparksPerformanceMapSection& Section, struct FSparksCameraDirectorSequence* OutSequence)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GenerateSequence");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDirectorConfig", "GenerateSequence");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDirectorConfig_GenerateSequence Parms{};
 
@@ -1596,10 +1588,9 @@ int32 USparksCameraPluginDataProvider::GetStaticShotCount() const
 
 bool USparksCameraShotSelectRuleBase::ChooseShot(const struct FSparksPerformanceMapSection& Section, struct FSparksCameraDirectorSequenceEntry* OutShot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ChooseShot");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraShotSelectRuleBase", "ChooseShot");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraShotSelectRuleBase_ChooseShot Parms{};
 
@@ -1627,10 +1618,9 @@ bool USparksCameraShotSelectRuleBase::ChooseShot(const struct FSparksPerformance
 
 bool USparksCameraShotSelectRuleBase::Init(class USparksCameraShotPool* InPool)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Init");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraShotSelectRuleBase", "Init");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraShotSelectRuleBase_Init Parms{};
 
@@ -1654,10 +1644,9 @@ bool USparksCameraShotSelectRuleBase::Init(class USparksCameraShotPool* InPool)
 
 bool USparksCameraShotSelectRuleBase::Reset()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Reset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraShotSelectRuleBase", "Reset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraShotSelectRuleBase_Reset Parms{};
 
@@ -1706,10 +1695,9 @@ int32 USparksCameraShotSelectRuleBase::GetShotCount() const
 
 bool USparksCameraPoolSelectRuleBase::ChooseExitShot(const struct FSparksPerformanceMapSection& Section, struct FSparksCameraDirectorSequenceEntry* OutShot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ChooseExitShot");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraPoolSelectRuleBase", "ChooseExitShot");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraPoolSelectRuleBase_ChooseExitShot Parms{};
 
@@ -1738,10 +1726,9 @@ bool USparksCameraPoolSelectRuleBase::ChooseExitShot(const struct FSparksPerform
 
 bool USparksCameraPoolSelectRuleBase::ChooseIntroShot(const struct FSparksPerformanceMapSection& Section, struct FSparksCameraDirectorSequenceEntry* OutShot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ChooseIntroShot");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraPoolSelectRuleBase", "ChooseIntroShot");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraPoolSelectRuleBase_ChooseIntroShot Parms{};
 
@@ -1770,10 +1757,9 @@ bool USparksCameraPoolSelectRuleBase::ChooseIntroShot(const struct FSparksPerfor
 
 bool USparksCameraPoolSelectRuleBase::ChooseShot(const struct FSparksPerformanceMapSection& Section, struct FSparksCameraDirectorSequenceEntry* OutShot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ChooseShot");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraPoolSelectRuleBase", "ChooseShot");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraPoolSelectRuleBase_ChooseShot Parms{};
 
@@ -1801,10 +1787,9 @@ bool USparksCameraPoolSelectRuleBase::ChooseShot(const struct FSparksPerformance
 
 bool USparksCameraPoolSelectRuleBase::Init(const struct FSparksCameraSectionWrapper& Section)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Init");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraPoolSelectRuleBase", "Init");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraPoolSelectRuleBase_Init Parms{};
 
@@ -1828,10 +1813,9 @@ bool USparksCameraPoolSelectRuleBase::Init(const struct FSparksCameraSectionWrap
 
 bool USparksCameraPoolSelectRuleBase::Reset()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Reset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraPoolSelectRuleBase", "Reset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraPoolSelectRuleBase_Reset Parms{};
 
@@ -1906,10 +1890,9 @@ int32 USparksCameraPoolSelectRuleBase::GetShotCount() const
 
 ESparksSectionGeneratorResult USparksCameraDirectorSequenceGenerator::GenerateEntry(const struct FSparksPerformanceMapSection& Section, class USparksCameraPluginDataProvider* DataProvider, struct FSparksCameraDirectorSequenceEntry* OutEntry)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GenerateEntry");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDirectorSequenceGenerator", "GenerateEntry");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDirectorSequenceGenerator_GenerateEntry Parms{};
 
@@ -1940,10 +1923,9 @@ ESparksSectionGeneratorResult USparksCameraDirectorSequenceGenerator::GenerateEn
 
 ESparksSectionGeneratorResult USparksCameraDirectorSequenceGenerator::GenerateExitEntry(const struct FSparksPerformanceMapSection& Section, class USparksCameraPluginDataProvider* DataProvider, struct FSparksCameraDirectorSequenceEntry* OutEntry)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GenerateExitEntry");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDirectorSequenceGenerator", "GenerateExitEntry");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDirectorSequenceGenerator_GenerateExitEntry Parms{};
 
@@ -1974,10 +1956,9 @@ ESparksSectionGeneratorResult USparksCameraDirectorSequenceGenerator::GenerateEx
 
 ESparksSectionGeneratorResult USparksCameraDirectorSequenceGenerator::GenerateIntroEntry(const struct FSparksPerformanceMapSection& Section, class USparksCameraPluginDataProvider* DataProvider, struct FSparksCameraDirectorSequenceEntry* OutEntry)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GenerateIntroEntry");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDirectorSequenceGenerator", "GenerateIntroEntry");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDirectorSequenceGenerator_GenerateIntroEntry Parms{};
 
@@ -2008,10 +1989,9 @@ ESparksSectionGeneratorResult USparksCameraDirectorSequenceGenerator::GenerateIn
 
 ESparksSectionGeneratorResult USparksCameraDirectorSequenceGenerator::GenerateSequence(const struct FSparksPerformanceMapSection& Section, class USparksCameraPluginDataProvider* DataProvider, struct FSparksCameraDirectorSequence* OutSequence)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GenerateSequence");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDirectorSequenceGenerator", "GenerateSequence");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDirectorSequenceGenerator_GenerateSequence Parms{};
 
@@ -2066,10 +2046,9 @@ const struct FSparksCameraFilter USparksCameraDirectorSequenceGenerator::GetFilt
 
 bool USparksCameraDirectorSequenceGenerator::Init(const struct FSparksCameraSectionWrapper& InPool, class USparksCameraDirectorConfig* Config)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Init");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDirectorSequenceGenerator", "Init");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDirectorSequenceGenerator_Init Parms{};
 
@@ -2094,10 +2073,9 @@ bool USparksCameraDirectorSequenceGenerator::Init(const struct FSparksCameraSect
 
 bool USparksCameraDirectorSequenceGenerator::Reset()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Reset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCameraDirectorSequenceGenerator", "Reset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCameraDirectorSequenceGenerator_Reset Parms{};
 

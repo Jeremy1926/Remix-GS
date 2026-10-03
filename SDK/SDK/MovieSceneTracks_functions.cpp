@@ -44,10 +44,9 @@ struct FTransform IMovieSceneTransformOrigin::BP_GetTransformOrigin() const
 
 void UMovieSceneReplaceableActorBinding_BPBase::BP_InitReplaceableBinding(class UObject* SourceObject, class UMovieScene* OwnerMovieScene)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_InitReplaceableBinding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MovieSceneReplaceableActorBinding_BPBase", "BP_InitReplaceableBinding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MovieSceneReplaceableActorBinding_BPBase_BP_InitReplaceableBinding Parms{};
 
@@ -71,10 +70,9 @@ void UMovieSceneReplaceableActorBinding_BPBase::BP_InitReplaceableBinding(class 
 
 struct FMovieSceneBindingResolveResult UMovieSceneReplaceableActorBinding_BPBase::BP_ResolveRuntimeBinding(const struct FMovieSceneBindingResolveContext& ResolveContext) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_ResolveRuntimeBinding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MovieSceneReplaceableActorBinding_BPBase", "BP_ResolveRuntimeBinding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MovieSceneReplaceableActorBinding_BPBase_BP_ResolveRuntimeBinding Parms{};
 
@@ -94,10 +92,9 @@ struct FMovieSceneBindingResolveResult UMovieSceneReplaceableActorBinding_BPBase
 
 bool UMovieSceneReplaceableActorBinding_BPBase::BP_SupportsBindingCreationFromObject(const class UObject* SourceObject) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SupportsBindingCreationFromObject");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MovieSceneReplaceableActorBinding_BPBase", "BP_SupportsBindingCreationFromObject");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MovieSceneReplaceableActorBinding_BPBase_BP_SupportsBindingCreationFromObject Parms{};
 

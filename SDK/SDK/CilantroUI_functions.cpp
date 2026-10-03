@@ -97,10 +97,9 @@ void UFortPlaytimeBlock::LaunchSupportURL()
 
 void UFortPlaytimeBlock::OnReturnFocusFromTakeover()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnReturnFocusFromTakeover");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlaytimeBlock", "OnReturnFocusFromTakeover");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -193,10 +192,9 @@ void UFortPlaytimeManagementScreen::ExitScreen()
 
 void UFortPlaytimeManagementScreen::OnPlaytimeScheduleRequested()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlaytimeScheduleRequested");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlaytimeManagementScreen", "OnPlaytimeScheduleRequested");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -272,10 +270,9 @@ class FText UFortPlaytimeManagementScreen::GetTimezoneText() const
 
 void UFortPlaytimeScheduleWidget::OnScheduleTextsUpdated(const TArray<struct FPlaytimeScheduleEntryData>& UpdatedScheduleEntries)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnScheduleTextsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlaytimeScheduleWidget", "OnScheduleTextsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlaytimeScheduleWidget_OnScheduleTextsUpdated Parms{};
 
@@ -292,10 +289,9 @@ void UFortPlaytimeScheduleWidget::OnScheduleTextsUpdated(const TArray<struct FPl
 
 void UFortViewTimeLimitPanel::OnSidebarVisibilityChanged(bool bIsVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSidebarVisibilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortViewTimeLimitPanel", "OnSidebarVisibilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortViewTimeLimitPanel_OnSidebarVisibilityChanged Parms{};
 
@@ -915,10 +911,9 @@ void UTimeReportsManagementScreen::ExitScreen()
 
 void UFortPlaytimePinActivatableWidget::OnUserPinProvided(const class FString& UserPin)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUserPinProvided");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlaytimePinActivatableWidget", "OnUserPinProvided");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlaytimePinActivatableWidget_OnUserPinProvided Parms{};
 

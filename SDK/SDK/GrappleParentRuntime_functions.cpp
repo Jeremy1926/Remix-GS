@@ -43,10 +43,9 @@ void UFortCameraModifier_Swinging::RemoveSelfFromCameraManager()
 
 void UFortCameraModifier_Swinging::CalculateDynamicMultipliers(float* OutFOVBoundsMultiplier, float* OutBoostOffsetMultiplier) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CalculateDynamicMultipliers");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCameraModifier_Swinging", "CalculateDynamicMultipliers");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCameraModifier_Swinging_CalculateDynamicMultipliers Parms{};
 

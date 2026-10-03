@@ -48,10 +48,9 @@ void UFortAIFaunaAnimInstance::CalculateLookAtAlpha(bool bForceDisableLookAt, fl
 
 void UFortAIFaunaAnimInstance::FinishFootPhaseStopUpdate()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"FinishFootPhaseStopUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIFaunaAnimInstance", "FinishFootPhaseStopUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -67,10 +66,9 @@ void UFortAIFaunaAnimInstance::FinishFootPhaseStopUpdate()
 
 void UFortAIFaunaAnimInstance::UpdateBackwardsPlayRate()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateBackwardsPlayRate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIFaunaAnimInstance", "UpdateBackwardsPlayRate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -86,10 +84,9 @@ void UFortAIFaunaAnimInstance::UpdateBackwardsPlayRate()
 
 void UFortAIFaunaAnimInstance::UpdateBackwardVelocity()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateBackwardVelocity");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIFaunaAnimInstance", "UpdateBackwardVelocity");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -105,10 +102,9 @@ void UFortAIFaunaAnimInstance::UpdateBackwardVelocity()
 
 void UFortAIFaunaAnimInstance::UpdateBodyRoll()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateBodyRoll");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIFaunaAnimInstance", "UpdateBodyRoll");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -124,10 +120,9 @@ void UFortAIFaunaAnimInstance::UpdateBodyRoll()
 
 void UFortAIFaunaAnimInstance::UpdateBoostPlayRate()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateBoostPlayRate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIFaunaAnimInstance", "UpdateBoostPlayRate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -143,10 +138,9 @@ void UFortAIFaunaAnimInstance::UpdateBoostPlayRate()
 
 void UFortAIFaunaAnimInstance::UpdateFootPhaseStop()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateFootPhaseStop");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIFaunaAnimInstance", "UpdateFootPhaseStop");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -162,10 +156,9 @@ void UFortAIFaunaAnimInstance::UpdateFootPhaseStop()
 
 void UFortAIFaunaAnimInstance::UpdatePlayLandAdditive()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdatePlayLandAdditive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIFaunaAnimInstance", "UpdatePlayLandAdditive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -181,10 +174,9 @@ void UFortAIFaunaAnimInstance::UpdatePlayLandAdditive()
 
 void UFortAIFaunaAnimInstance::UpdateRidingMovePlayRate()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateRidingMovePlayRate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIFaunaAnimInstance", "UpdateRidingMovePlayRate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -200,10 +192,9 @@ void UFortAIFaunaAnimInstance::UpdateRidingMovePlayRate()
 
 void UFortAIFaunaAnimInstance::UpdateSwimmingYaw()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateSwimmingYaw");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIFaunaAnimInstance", "UpdateSwimmingYaw");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -219,10 +210,9 @@ void UFortAIFaunaAnimInstance::UpdateSwimmingYaw()
 
 void UFortAIFaunaAnimInstance::UpdateTurnAngleStored()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateTurnAngleStored");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIFaunaAnimInstance", "UpdateTurnAngleStored");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;

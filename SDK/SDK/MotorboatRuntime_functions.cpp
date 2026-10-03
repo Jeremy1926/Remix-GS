@@ -100,10 +100,9 @@ void AFortMeatballVehicle::LandShakeEnd()
 
 void AFortMeatballVehicle::OnBoostFailed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMeatballVehicle", "OnBoostFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -114,10 +113,9 @@ void AFortMeatballVehicle::OnBoostFailed()
 
 void AFortMeatballVehicle::OnBoostFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMeatballVehicle", "OnBoostFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -128,10 +126,9 @@ void AFortMeatballVehicle::OnBoostFinished()
 
 void AFortMeatballVehicle::OnBoostReady()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostReady");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMeatballVehicle", "OnBoostReady");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -142,10 +139,9 @@ void AFortMeatballVehicle::OnBoostReady()
 
 void AFortMeatballVehicle::OnBoostStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMeatballVehicle", "OnBoostStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -159,10 +155,9 @@ void AFortMeatballVehicle::OnBoostStarted()
 
 void AFortMeatballVehicle::ShowCooldownCue(class AFortPlayerPawn* Pawn, float duration)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowCooldownCue");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMeatballVehicle", "ShowCooldownCue");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMeatballVehicle_ShowCooldownCue Parms{};
 
@@ -182,10 +177,9 @@ void AFortMeatballVehicle::ShowCooldownCue(class AFortPlayerPawn* Pawn, float du
 
 void AFortMeatballVehicle::SmashedThroughBuildingPiece(const struct FVector& ImpactPoint, const struct FVector& ImpactNormal, const class ABuildingActor* BuildingHitActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SmashedThroughBuildingPiece");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMeatballVehicle", "SmashedThroughBuildingPiece");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMeatballVehicle_SmashedThroughBuildingPiece Parms{};
 

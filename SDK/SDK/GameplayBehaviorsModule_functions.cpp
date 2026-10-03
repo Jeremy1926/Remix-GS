@@ -104,10 +104,9 @@ void UGameplayBehavior::K2_EndBehavior(class AActor* Avatar)
 
 void UGameplayBehavior::K2_OnFinished(class AActor* Avatar, bool bWasInterrupted)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayBehavior", "K2_OnFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayBehavior_K2_OnFinished Parms{};
 
@@ -126,10 +125,9 @@ void UGameplayBehavior::K2_OnFinished(class AActor* Avatar, bool bWasInterrupted
 
 void UGameplayBehavior::K2_OnFinishedCharacter(class ACharacter* Avatar, bool bWasInterrupted)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnFinishedCharacter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayBehavior", "K2_OnFinishedCharacter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayBehavior_K2_OnFinishedCharacter Parms{};
 
@@ -148,10 +146,9 @@ void UGameplayBehavior::K2_OnFinishedCharacter(class ACharacter* Avatar, bool bW
 
 void UGameplayBehavior::K2_OnFinishedPawn(class APawn* Avatar, bool bWasInterrupted)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnFinishedPawn");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayBehavior", "K2_OnFinishedPawn");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayBehavior_K2_OnFinishedPawn Parms{};
 
@@ -171,10 +168,9 @@ void UGameplayBehavior::K2_OnFinishedPawn(class APawn* Avatar, bool bWasInterrup
 
 void UGameplayBehavior::K2_OnTriggered(class AActor* Avatar, const class UGameplayBehaviorConfig* Config, class AActor* SmartObjectOwner)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnTriggered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayBehavior", "K2_OnTriggered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayBehavior_K2_OnTriggered Parms{};
 
@@ -195,10 +191,9 @@ void UGameplayBehavior::K2_OnTriggered(class AActor* Avatar, const class UGamepl
 
 void UGameplayBehavior::K2_OnTriggeredCharacter(class ACharacter* Avatar, const class UGameplayBehaviorConfig* Config, class AActor* SmartObjectOwner)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnTriggeredCharacter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayBehavior", "K2_OnTriggeredCharacter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayBehavior_K2_OnTriggeredCharacter Parms{};
 
@@ -219,10 +214,9 @@ void UGameplayBehavior::K2_OnTriggeredCharacter(class ACharacter* Avatar, const 
 
 void UGameplayBehavior::K2_OnTriggeredPawn(class APawn* Avatar, const class UGameplayBehaviorConfig* Config, class AActor* SmartObjectOwner)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnTriggeredPawn");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayBehavior", "K2_OnTriggeredPawn");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayBehavior_K2_OnTriggeredPawn Parms{};
 

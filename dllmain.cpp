@@ -23,7 +23,7 @@ void Main()
     *(int32_t*)(ImageBase + 0x12A8B1D8) = 2;
     *(bool*)(ImageBase + 0x12C18DC8) = false;
     *(uint32_t*)(ImageBase + 0x12D6E070) = 1;
-
+    
     auto FortInventoryName = FName(L"/Script/FortniteGame.FortInventory");
 
     for (auto& FilterConfig : UObjectReplicationBridgeConfig::GetDefaultObj()->FilterConfigs)

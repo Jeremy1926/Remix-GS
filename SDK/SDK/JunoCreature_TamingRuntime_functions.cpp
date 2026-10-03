@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void UJunoControllerComponent_Taming::BP_HandleBarnInteractionEnded()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleBarnInteractionEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoControllerComponent_Taming", "BP_HandleBarnInteractionEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -35,10 +34,9 @@ void UJunoControllerComponent_Taming::BP_HandleBarnInteractionEnded()
 
 void UJunoControllerComponent_Taming::BP_HandleBarnInteractionStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleBarnInteractionStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoControllerComponent_Taming", "BP_HandleBarnInteractionStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

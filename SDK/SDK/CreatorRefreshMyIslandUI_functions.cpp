@@ -103,10 +103,9 @@ struct FSlateBrush UFortCreativeMyIslandSideNavWidget::GetIconForInputAction(boo
 
 void UFortCreativeMyIslandSideNavWidget::OnClearSearchInput()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnClearSearchInput");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCreativeMyIslandSideNavWidget", "OnClearSearchInput");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -119,10 +118,9 @@ void UFortCreativeMyIslandSideNavWidget::OnClearSearchInput()
 
 void UFortCreativeMyIslandSideNavWidget::OnClearSearchProgress(float Progress)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnClearSearchProgress");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCreativeMyIslandSideNavWidget", "OnClearSearchProgress");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCreativeMyIslandSideNavWidget_OnClearSearchProgress Parms{};
 
@@ -137,10 +135,9 @@ void UFortCreativeMyIslandSideNavWidget::OnClearSearchProgress(float Progress)
 
 void UFortCreativeMyIslandSideNavWidget::OnSearchInput()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSearchInput");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCreativeMyIslandSideNavWidget", "OnSearchInput");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

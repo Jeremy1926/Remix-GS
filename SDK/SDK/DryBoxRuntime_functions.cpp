@@ -42,10 +42,9 @@ void UNyxGlassWeaponComponent_Swinging::EndSwingingSession()
 
 bool UNyxGlassWeaponComponent_Swinging::IsAttacking()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsAttacking");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NyxGlassWeaponComponent_Swinging", "IsAttacking");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NyxGlassWeaponComponent_Swinging_IsAttacking Parms{};
 
@@ -188,10 +187,9 @@ void UNyxGlassWeaponComponent_Swinging::OnNyxGlassStateChanged(const ENyxGlassSt
 
 void UNyxGlassWeaponComponent_Swinging::OnServerTargetingDataReceived()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnServerTargetingDataReceived");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NyxGlassWeaponComponent_Swinging", "OnServerTargetingDataReceived");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -204,10 +202,9 @@ void UNyxGlassWeaponComponent_Swinging::OnServerTargetingDataReceived()
 
 void UNyxGlassWeaponComponent_Swinging::OnTargetingComplete(const struct FNyxGlassTargetingData& TargetingData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTargetingComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NyxGlassWeaponComponent_Swinging", "OnTargetingComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NyxGlassWeaponComponent_Swinging_OnTargetingComplete Parms{};
 
@@ -293,10 +290,9 @@ void UNyxGlassWeaponComponent_Swinging::Server_SetTargetingData(const struct FNy
 
 bool UNyxGlassWeaponComponent_Swinging::ShouldUpdateTargeting()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldUpdateTargeting");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NyxGlassWeaponComponent_Swinging", "ShouldUpdateTargeting");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NyxGlassWeaponComponent_Swinging_ShouldUpdateTargeting Parms{};
 
@@ -311,10 +307,9 @@ bool UNyxGlassWeaponComponent_Swinging::ShouldUpdateTargeting()
 
 void UNyxGlassWeaponComponent_Swinging::UpdateRopeVFX()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateRopeVFX");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NyxGlassWeaponComponent_Swinging", "UpdateRopeVFX");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -352,10 +347,9 @@ float UNyxGlassWeaponComponent_Swinging::CalcInitialAccelerationAlpha() const
 
 ENyxGlassSlashSubstate UNyxGlassWeaponComponent_Swinging::GetNyxGlassSlashSubstate() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetNyxGlassSlashSubstate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NyxGlassWeaponComponent_Swinging", "GetNyxGlassSlashSubstate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NyxGlassWeaponComponent_Swinging_GetNyxGlassSlashSubstate Parms{};
 
@@ -372,10 +366,9 @@ ENyxGlassSlashSubstate UNyxGlassWeaponComponent_Swinging::GetNyxGlassSlashSubsta
 
 ENyxGlassState UNyxGlassWeaponComponent_Swinging::GetNyxGlassState() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetNyxGlassState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NyxGlassWeaponComponent_Swinging", "GetNyxGlassState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NyxGlassWeaponComponent_Swinging_GetNyxGlassState Parms{};
 
@@ -392,10 +385,9 @@ ENyxGlassState UNyxGlassWeaponComponent_Swinging::GetNyxGlassState() const
 
 void UNyxGlassWeaponComponent_Swinging::OnVelocityCalculated(const struct FNyxGlassVelocityMetadata& VelocityMetadata) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnVelocityCalculated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NyxGlassWeaponComponent_Swinging", "OnVelocityCalculated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NyxGlassWeaponComponent_Swinging_OnVelocityCalculated Parms{};
 

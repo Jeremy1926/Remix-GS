@@ -102,10 +102,9 @@ int32 UAtomColorLUTAtlas::GetLUTIndex(class UTexture2D* InTexture) const
 
 void UAtomGeometryAssemblyComponent::K2_OnBeginAssemble()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnBeginAssemble");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AtomGeometryAssemblyComponent", "K2_OnBeginAssemble");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -116,10 +115,9 @@ void UAtomGeometryAssemblyComponent::K2_OnBeginAssemble()
 
 void UAtomGeometryAssemblyComponent::K2_OnBeginDisassemble()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnBeginDisassemble");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AtomGeometryAssemblyComponent", "K2_OnBeginDisassemble");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -130,10 +128,9 @@ void UAtomGeometryAssemblyComponent::K2_OnBeginDisassemble()
 
 void UAtomGeometryAssemblyComponent::K2_OnFullyAssembled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnFullyAssembled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AtomGeometryAssemblyComponent", "K2_OnFullyAssembled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -144,10 +141,9 @@ void UAtomGeometryAssemblyComponent::K2_OnFullyAssembled()
 
 void UAtomGeometryAssemblyComponent::K2_OnFullyDisassembled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnFullyDisassembled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AtomGeometryAssemblyComponent", "K2_OnFullyDisassembled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -161,10 +157,9 @@ void UAtomGeometryAssemblyComponent::K2_OnFullyDisassembled()
 
 void UAtomGeometryAssemblyComponent::K2_UpdateVisuals(float CurrentRate, float CurrentProgress)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_UpdateVisuals");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AtomGeometryAssemblyComponent", "K2_UpdateVisuals");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AtomGeometryAssemblyComponent_K2_UpdateVisuals Parms{};
 
@@ -3411,10 +3406,9 @@ void UAtomModelProcessor::IncrementProgress(int32 NumSteps, const class FString&
 
 class FString UAtomModelProcessor::OnGetProcessModelTargetAssetPath(class UAtomModel* Model, const struct FAtomModelPartsCollection& AtomModelPartsCollection)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGetProcessModelTargetAssetPath");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AtomModelProcessor", "OnGetProcessModelTargetAssetPath");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AtomModelProcessor_OnGetProcessModelTargetAssetPath Parms{};
 
@@ -3438,10 +3432,9 @@ class FString UAtomModelProcessor::OnGetProcessModelTargetAssetPath(class UAtomM
 
 class FString UAtomModelProcessor::OnGetProcessPrimitiveTargetAssetPath(class UAtomModel* Model, class UAtomPrimitive* Primitive, const struct FAtomModelPartsCollection& AtomModelPartsCollection, const struct FAtomOnProcessPrimitiveSettings& Settings)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGetProcessPrimitiveTargetAssetPath");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AtomModelProcessor", "OnGetProcessPrimitiveTargetAssetPath");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AtomModelProcessor_OnGetProcessPrimitiveTargetAssetPath Parms{};
 
@@ -3466,10 +3459,9 @@ class FString UAtomModelProcessor::OnGetProcessPrimitiveTargetAssetPath(class UA
 
 class FString UAtomModelProcessor::OnGetTargetAssetPath(class UAtomModel* Model, class UAtomPrimitive* Primitive, const struct FAtomModelPartsCollection& AtomModelPartsCollection)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGetTargetAssetPath");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AtomModelProcessor", "OnGetTargetAssetPath");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AtomModelProcessor_OnGetTargetAssetPath Parms{};
 
@@ -3493,10 +3485,9 @@ class FString UAtomModelProcessor::OnGetTargetAssetPath(class UAtomModel* Model,
 
 struct FAtomProcessorResult UAtomModelProcessor::OnProcessModel(class UAtomModel* Model, const struct FAtomModelPartsCollection& AtomModelPartsCollection, const TArray<TSoftObjectPtr<class UObject>>& ExistingObjects)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnProcessModel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AtomModelProcessor", "OnProcessModel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AtomModelProcessor_OnProcessModel Parms{};
 
@@ -3521,10 +3512,9 @@ struct FAtomProcessorResult UAtomModelProcessor::OnProcessModel(class UAtomModel
 
 struct FAtomProcessorResult UAtomModelProcessor::OnProcessPrimitive(class UAtomModel* DummyModel, class UAtomPrimitive* Primitive, const struct FAtomModelPartsCollection& AtomModelPartsCollection, const struct FAtomOnProcessPrimitiveSettings& Settings)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnProcessPrimitive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AtomModelProcessor", "OnProcessPrimitive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AtomModelProcessor_OnProcessPrimitive Parms{};
 

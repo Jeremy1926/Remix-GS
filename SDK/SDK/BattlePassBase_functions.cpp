@@ -42,10 +42,9 @@ void UFortBattlePassCustomSkinPageTab::EnableTabActions()
 
 void UFortBattlePassCustomSkinTab::BP_ShowBang(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_ShowBang");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassCustomSkinTab", "BP_ShowBang");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassCustomSkinTab_BP_ShowBang Parms{};
 
@@ -87,10 +86,9 @@ void UFortBattlePassCustomSkinTab::SetIcon(TSoftObjectPtr<class UObject> LazyObj
 
 void UBattlePassLandingPageButton::OnDisplayDetailsUpdated(const struct FBattlePassLandingPageButtonDisplayDetails& NewDisplayDetails)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDisplayDetailsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassLandingPageButton", "OnDisplayDetailsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassLandingPageButton_OnDisplayDetailsUpdated Parms{};
 
@@ -107,10 +105,9 @@ void UBattlePassLandingPageButton::OnDisplayDetailsUpdated(const struct FBattleP
 
 void UBattlePassLandingPageButton::OnSetTileImageMaterial(class UMaterialInstance* Material)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetTileImageMaterial");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassLandingPageButton", "OnSetTileImageMaterial");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassLandingPageButton_OnSetTileImageMaterial Parms{};
 
@@ -125,10 +122,9 @@ void UBattlePassLandingPageButton::OnSetTileImageMaterial(class UMaterialInstanc
 
 void UBattlePassLandingPageButton::OnShowDisplayDetails()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowDisplayDetails");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassLandingPageButton", "OnShowDisplayDetails");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -141,10 +137,9 @@ void UBattlePassLandingPageButton::OnShowDisplayDetails()
 
 void UBattlePassLandingPageButton::OnSubscriptionOwnershipUpdated(const bool bOwnsSubsciption)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSubscriptionOwnershipUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassLandingPageButton", "OnSubscriptionOwnershipUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassLandingPageButton_OnSubscriptionOwnershipUpdated Parms{};
 
@@ -161,10 +156,9 @@ void UBattlePassLandingPageButton::OnSubscriptionOwnershipUpdated(const bool bOw
 
 void UBattlePassLandingPageButton::OnSubscriptionTextureLoaded(class UTexture2D* Texture)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSubscriptionTextureLoaded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassLandingPageButton", "OnSubscriptionTextureLoaded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassLandingPageButton_OnSubscriptionTextureLoaded Parms{};
 
@@ -233,10 +227,9 @@ void UFortBattlePassCustomSkinCategoryTile::FocusTile(const int32 Index_0)
 
 void UFortBattlePassCustomSkinCategoryTile::OnLockedProgressUpdated(const int32 CurrentlyOwnedBeforeCategory, const int32 TotalRewardsBeforeCategory, const float LockedProgress)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLockedProgressUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassCustomSkinCategoryTile", "OnLockedProgressUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassCustomSkinCategoryTile_OnLockedProgressUpdated Parms{};
 
@@ -255,10 +248,9 @@ void UFortBattlePassCustomSkinCategoryTile::OnLockedProgressUpdated(const int32 
 
 void UFortBattlePassCustomSkinCategoryTile::OnLockedStateChanged(const bool bCategoryLocked)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLockedStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassCustomSkinCategoryTile", "OnLockedStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassCustomSkinCategoryTile_OnLockedStateChanged Parms{};
 
@@ -277,10 +269,9 @@ void UFortBattlePassCustomSkinCategoryTile::OnLockedStateChanged(const bool bCat
 
 void UFortBattlePassCustomSkinCategoryTile::OnOwnedTilesUpdated(const int32 CurrentlyOwnedRewards, const int32 TotalRewards, const float CategoryProgress)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOwnedTilesUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassCustomSkinCategoryTile", "OnOwnedTilesUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassCustomSkinCategoryTile_OnOwnedTilesUpdated Parms{};
 
@@ -349,10 +340,9 @@ void UFortBattlePassBulkBuyPageBase::HandleUserScrolled(float ScrollAmount)
 
 void UFortBattlePassBulkBuyPageBase::OnCostChanged(const int32 Cost)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCostChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassBulkBuyPageBase", "OnCostChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassBulkBuyPageBase_OnCostChanged Parms{};
 
@@ -370,10 +360,9 @@ void UFortBattlePassBulkBuyPageBase::OnCostChanged(const int32 Cost)
 
 void UFortBattlePassBulkBuyPageBase::OnPageRangeChanged(const int32 FromPage, const int32 ToPage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPageRangeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassBulkBuyPageBase", "OnPageRangeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassBulkBuyPageBase_OnPageRangeChanged Parms{};
 
@@ -391,10 +380,9 @@ void UFortBattlePassBulkBuyPageBase::OnPageRangeChanged(const int32 FromPage, co
 
 void UFortBattlePassBulkBuyPageBase::OnRewardCountChanged(const int32 Count)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRewardCountChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassBulkBuyPageBase", "OnRewardCountChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassBulkBuyPageBase_OnRewardCountChanged Parms{};
 
@@ -411,10 +399,9 @@ void UFortBattlePassBulkBuyPageBase::OnRewardCountChanged(const int32 Count)
 
 void UFortBattlePassCheckBoxButton::OnStateChanged(const bool bNewIsChecked)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassCheckBoxButton", "OnStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassCheckBoxButton_OnStateChanged Parms{};
 
@@ -587,10 +574,9 @@ TArray<struct FSeasonCurrencyMcpData> UFortBattlePassContext::GetSeasonalCurrenc
 
 void UFortBattlePassResourcesWidgetBase::OnShowMoreInfo(bool bShouldShowMoreInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowMoreInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassResourcesWidgetBase", "OnShowMoreInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassResourcesWidgetBase_OnShowMoreInfo Parms{};
 
@@ -626,10 +612,9 @@ void UFortBattlePassResourcesWidgetBase::ShowResourcesInfoModal()
 
 void UFortBattlePassDynamicIcon::OnBattlePassInfoUpdated(const bool bOwnsBattlePass) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBattlePassInfoUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassDynamicIcon", "OnBattlePassInfoUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassDynamicIcon_OnBattlePassInfoUpdated Parms{};
 
@@ -727,10 +712,9 @@ bool UFortBattlePassPurchaseResourcesWidget::IsReloadMtxEnabled()
 
 void UFortBattlePassPurchaseResourcesWidget::OnAmountChangeButtonClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAmountChangeButtonClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassPurchaseResourcesWidget", "OnAmountChangeButtonClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -741,10 +725,9 @@ void UFortBattlePassPurchaseResourcesWidget::OnAmountChangeButtonClicked()
 
 void UFortBattlePassPurchaseResourcesWidget::OnOfferUnavailable()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOfferUnavailable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassPurchaseResourcesWidget", "OnOfferUnavailable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -758,10 +741,9 @@ void UFortBattlePassPurchaseResourcesWidget::OnOfferUnavailable()
 
 void UFortBattlePassPurchaseResourcesWidget::OnPurchaseAmountChanged(const int32 NewAmount, const int32 LevelsLeft)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPurchaseAmountChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassPurchaseResourcesWidget", "OnPurchaseAmountChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassPurchaseResourcesWidget_OnPurchaseAmountChanged Parms{};
 
@@ -779,10 +761,9 @@ void UFortBattlePassPurchaseResourcesWidget::OnPurchaseAmountChanged(const int32
 
 void UFortBattlePassPurchaseResourcesWidget::OnTotalPriceChanged(const int32 NewPrice)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTotalPriceChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassPurchaseResourcesWidget", "OnTotalPriceChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassPurchaseResourcesWidget_OnTotalPriceChanged Parms{};
 
@@ -799,10 +780,9 @@ void UFortBattlePassPurchaseResourcesWidget::OnTotalPriceChanged(const int32 New
 
 void UFortBattlePassPurchaseResourcesWidget::OnUpdatePageUnlockText(const class FText& PageUnlockText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdatePageUnlockText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassPurchaseResourcesWidget", "OnUpdatePageUnlockText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassPurchaseResourcesWidget_OnUpdatePageUnlockText Parms{};
 
@@ -817,10 +797,9 @@ void UFortBattlePassPurchaseResourcesWidget::OnUpdatePageUnlockText(const class 
 
 void UFortBattlePassRewardGrid::OnPageSelected()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPageSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassRewardGrid", "OnPageSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -831,10 +810,9 @@ void UFortBattlePassRewardGrid::OnPageSelected()
 
 void UFortBattlePassRewardGrid::OnPageUnselected()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPageUnselected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassRewardGrid", "OnPageUnselected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -847,10 +825,9 @@ void UFortBattlePassRewardGrid::OnPageUnselected()
 
 void UFortBattlePassRewardGridHeader::OnBattlePassLevelSet(const int32 BattlePassLevel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBattlePassLevelSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassRewardGridHeader", "OnBattlePassLevelSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassRewardGridHeader_OnBattlePassLevelSet Parms{};
 
@@ -870,10 +847,9 @@ void UFortBattlePassRewardGridHeader::OnBattlePassLevelSet(const int32 BattlePas
 
 void UFortBattlePassRewardGridHeader::OnPageLocked(const int32 RequiredLevel, const int32 RequiredRewards, const bool IsTimeLocked, const struct FTimespan& TimeRemaining)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPageLocked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassRewardGridHeader", "OnPageLocked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassRewardGridHeader_OnPageLocked Parms{};
 
@@ -893,10 +869,9 @@ void UFortBattlePassRewardGridHeader::OnPageLocked(const int32 RequiredLevel, co
 
 void UFortBattlePassRewardGridHeader::OnPageNumberSet(const int32 InPageNumber)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPageNumberSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassRewardGridHeader", "OnPageNumberSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassRewardGridHeader_OnPageNumberSet Parms{};
 
@@ -914,10 +889,9 @@ void UFortBattlePassRewardGridHeader::OnPageNumberSet(const int32 InPageNumber)
 
 void UFortBattlePassRewardGridHeader::OnPageUnlocked(const int32 PurchasedRewards, const int32 TotalRewards)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPageUnlocked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassRewardGridHeader", "OnPageUnlocked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassRewardGridHeader_OnPageUnlocked Parms{};
 
@@ -935,10 +909,9 @@ void UFortBattlePassRewardGridHeader::OnPageUnlocked(const int32 PurchasedReward
 
 void UFortBattlePassRewardGridHeader::OnSetPageCustomName(const class FText& CustomName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetPageCustomName");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassRewardGridHeader", "OnSetPageCustomName");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassRewardGridHeader_OnSetPageCustomName Parms{};
 
@@ -955,10 +928,9 @@ void UFortBattlePassRewardGridHeader::OnSetPageCustomName(const class FText& Cus
 
 void UFortBattlePassRewardGridHeader::OnSetPageType(const ERewardPageType PageType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetPageType");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassRewardGridHeader", "OnSetPageType");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassRewardGridHeader_OnSetPageType Parms{};
 
@@ -998,10 +970,9 @@ int32 UFortBattlePassRewardGridHeader::GetPageNumber() const
 
 void UFortBattlePassRewardTrack::OnPageSelected()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPageSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassRewardTrack", "OnPageSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1012,10 +983,9 @@ void UFortBattlePassRewardTrack::OnPageSelected()
 
 void UFortBattlePassRewardTrack::OnPageUnselected()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPageUnselected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassRewardTrack", "OnPageUnselected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1026,10 +996,9 @@ void UFortBattlePassRewardTrack::OnPageUnselected()
 
 void UFortBattlePassTileBase::OnPeeked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPeeked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTileBase", "OnPeeked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1040,10 +1009,9 @@ void UFortBattlePassTileBase::OnPeeked()
 
 void UFortBattlePassTileBase::OnRevealed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRevealed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTileBase", "OnRevealed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1056,10 +1024,9 @@ void UFortBattlePassTileBase::OnRevealed()
 
 void UFortBattlePassTileBase::OnSetRequiresBattlePass(const bool bRequiresBP)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetRequiresBattlePass");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTileBase", "OnSetRequiresBattlePass");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassTileBase_OnSetRequiresBattlePass Parms{};
 
@@ -1074,10 +1041,9 @@ void UFortBattlePassTileBase::OnSetRequiresBattlePass(const bool bRequiresBP)
 
 void UFortBattlePassTileBase::OnSetTileColors()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetTileColors");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTileBase", "OnSetTileColors");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1090,10 +1056,9 @@ void UFortBattlePassTileBase::OnSetTileColors()
 
 void UFortBattlePassTileBase::OnSizeChanged(const struct FVector2D& NewSize)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSizeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTileBase", "OnSizeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassTileBase_OnSizeChanged Parms{};
 
@@ -1110,10 +1075,9 @@ void UFortBattlePassTileBase::OnSizeChanged(const struct FVector2D& NewSize)
 
 void UFortBattlePassTileBase::OnStateChanged(const EBattlePassTileAvailabilityStates NewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTileBase", "OnStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassTileBase_OnStateChanged Parms{};
 
@@ -1307,10 +1271,9 @@ bool UFortBattlePassTileBase::IsOwned() const
 
 void UFortBattlePassTile::OnAffordabilityChanged(const bool bHasEnougCurrency)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAffordabilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTile", "OnAffordabilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassTile_OnAffordabilityChanged Parms{};
 
@@ -1325,10 +1288,9 @@ void UFortBattlePassTile::OnAffordabilityChanged(const bool bHasEnougCurrency)
 
 void UFortBattlePassTile::OnHighlighted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHighlighted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTile", "OnHighlighted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1343,10 +1305,9 @@ void UFortBattlePassTile::OnHighlighted()
 
 void UFortBattlePassTile::OnLockedProgressUpdated(const float Progress, const int32 CurrentlyOwnedRewards, const int32 NeededRewards)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLockedProgressUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTile", "OnLockedProgressUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassTile_OnLockedProgressUpdated Parms{};
 
@@ -1368,10 +1329,9 @@ void UFortBattlePassTile::OnLockedProgressUpdated(const float Progress, const in
 
 void UFortBattlePassTile::OnLockedStateUpdated(const bool OwnsBattlePass, const bool ParentUnlocked, const bool HasRemainingPrerequisites, const bool bIsDelayed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLockedStateUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTile", "OnLockedStateUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassTile_OnLockedStateUpdated Parms{};
 
@@ -1389,10 +1349,9 @@ void UFortBattlePassTile::OnLockedStateUpdated(const bool OwnsBattlePass, const 
 
 void UFortBattlePassTile::OnPreviewed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreviewed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTile", "OnPreviewed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1406,10 +1365,9 @@ void UFortBattlePassTile::OnPreviewed()
 
 void UFortBattlePassTile::OnSetCurrencyAndPrice(const EBattlePassCurrencyType Currency, const int32 Price)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetCurrencyAndPrice");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTile", "OnSetCurrencyAndPrice");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassTile_OnSetCurrencyAndPrice Parms{};
 
@@ -1428,10 +1386,9 @@ void UFortBattlePassTile::OnSetCurrencyAndPrice(const EBattlePassCurrencyType Cu
 
 void UFortBattlePassTile::OnSetTrack(const bool bIsFreeTrack, const bool bOwnsBattlePass)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetTrack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTile", "OnSetTrack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassTile_OnSetTrack Parms{};
 
@@ -1447,10 +1404,9 @@ void UFortBattlePassTile::OnSetTrack(const bool bIsFreeTrack, const bool bOwnsBa
 
 void UFortBattlePassTile::OnTilePreviewCycled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTilePreviewCycled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTile", "OnTilePreviewCycled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1461,10 +1417,9 @@ void UFortBattlePassTile::OnTilePreviewCycled()
 
 void UFortBattlePassTile::OnUnhighlighted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUnhighlighted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTile", "OnUnhighlighted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1475,10 +1430,9 @@ void UFortBattlePassTile::OnUnhighlighted()
 
 void UFortBattlePassTile::OnUnpreviewed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUnpreviewed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTile", "OnUnpreviewed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1539,10 +1493,9 @@ bool UFortBattlePassTile::IsAffordable() const
 
 void UFortBattlePassTutorialTooltip::HideTooltip()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HideTooltip");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTutorialTooltip", "HideTooltip");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1603,10 +1556,9 @@ void UFortBattlePassTutorialTooltip::SetTooltipEnabled(const bool bEnable)
 
 void UFortBattlePassTutorialTooltip::ShowTooltip()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowTooltip");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTutorialTooltip", "ShowTooltip");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1619,10 +1571,9 @@ void UFortBattlePassTutorialTooltip::ShowTooltip()
 
 void URebootRallyQuestPanel::OnRebootRallyEligibilityUpdated(bool bEligible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRebootRallyEligibilityUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RebootRallyQuestPanel", "OnRebootRallyEligibilityUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RebootRallyQuestPanel_OnRebootRallyEligibilityUpdated Parms{};
 

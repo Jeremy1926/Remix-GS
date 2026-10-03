@@ -788,10 +788,9 @@ void AFMInWorldKnobActorBase::CopyAttributesFromOtherKnob(class AFMInWorldKnobAc
 
 void AFMInWorldKnobActorBase::CopyAttributesFromOtherKnobInternal(class AFMInWorldKnobActorBase* OtherKnob)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CopyAttributesFromOtherKnobInternal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "CopyAttributesFromOtherKnobInternal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_CopyAttributesFromOtherKnobInternal Parms{};
 
@@ -886,10 +885,9 @@ class FText AFMInWorldKnobActorBase::GetCurrentValueLabel()
 
 void AFMInWorldKnobActorBase::HitComponentUpdated(class USceneComponent* NewHitComponent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HitComponentUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "HitComponentUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_HitComponentUpdated Parms{};
 
@@ -1085,10 +1083,9 @@ void AFMInWorldKnobActorBase::RecalculateModulation()
 
 void AFMInWorldKnobActorBase::ReceiveOnWidgetViewModelSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveOnWidgetViewModelSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "ReceiveOnWidgetViewModelSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1126,10 +1123,9 @@ void AFMInWorldKnobActorBase::ResetToDefaultValue(class APlayerController* Playe
 
 void AFMInWorldKnobActorBase::SetCurrentKnobPosition(float KnobPosition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetCurrentKnobPosition");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "SetCurrentKnobPosition");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_SetCurrentKnobPosition Parms{};
 
@@ -1226,10 +1222,9 @@ void AFMInWorldKnobActorBase::SetModulatorPortCablesHidden(bool bNewHidden)
 
 void AFMInWorldKnobActorBase::SetNumberOptions(int32 NumberOptions)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetNumberOptions");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "SetNumberOptions");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_SetNumberOptions Parms{};
 
@@ -1302,10 +1297,9 @@ void AFMInWorldKnobActorBase::SetOverrideOptionLabels(const TArray<class FText>&
 
 void AFMInWorldKnobActorBase::SetSelectedIndex(int32 Index_0, bool SnapToSelection)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetSelectedIndex");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "SetSelectedIndex");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_SetSelectedIndex Parms{};
 
@@ -1328,10 +1322,9 @@ void AFMInWorldKnobActorBase::SetSelectedIndex(int32 Index_0, bool SnapToSelecti
 
 void AFMInWorldKnobActorBase::SetTitle(const class FText& Title)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetTitle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "SetTitle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_SetTitle Parms{};
 
@@ -1378,10 +1371,9 @@ void AFMInWorldKnobActorBase::SetWidgetViewModel(class UFabricInteractableViewMo
 
 void AFMInWorldKnobActorBase::StartTrackingInput(class APlayerController* PlayerController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StartTrackingInput");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "StartTrackingInput");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_StartTrackingInput Parms{};
 
@@ -1396,10 +1388,9 @@ void AFMInWorldKnobActorBase::StartTrackingInput(class APlayerController* Player
 
 void AFMInWorldKnobActorBase::StopTrackingInput()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StopTrackingInput");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "StopTrackingInput");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1412,10 +1403,9 @@ void AFMInWorldKnobActorBase::StopTrackingInput()
 
 void AFMInWorldKnobActorBase::UpdateDisplayOnlyVisuals(bool bDisplayOnly)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateDisplayOnlyVisuals");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "UpdateDisplayOnlyVisuals");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_UpdateDisplayOnlyVisuals Parms{};
 
@@ -1437,10 +1427,9 @@ void AFMInWorldKnobActorBase::UpdateDisplayOnlyVisuals(bool bDisplayOnly)
 
 void AFMInWorldKnobActorBase::UpdateEnabledVisuals(bool bEnabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateEnabledVisuals");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "UpdateEnabledVisuals");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_UpdateEnabledVisuals Parms{};
 
@@ -1462,10 +1451,9 @@ void AFMInWorldKnobActorBase::UpdateEnabledVisuals(bool bEnabled)
 
 void AFMInWorldKnobActorBase::UpdateFocusVisuals(bool bFocused)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateFocusVisuals");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "UpdateFocusVisuals");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_UpdateFocusVisuals Parms{};
 
@@ -1487,10 +1475,9 @@ void AFMInWorldKnobActorBase::UpdateFocusVisuals(bool bFocused)
 
 void AFMInWorldKnobActorBase::UpdateInteractableVisuals(bool bInteractable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateInteractableVisuals");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "UpdateInteractableVisuals");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_UpdateInteractableVisuals Parms{};
 
@@ -1540,10 +1527,9 @@ bool AFMInWorldKnobActorBase::GetConsumeInteractionFromChildInteractable(class A
 
 class UClass* AFMInWorldKnobActorBase::GetCopyClassInternal() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCopyClassInternal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "GetCopyClassInternal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_GetCopyClassInternal Parms{};
 
@@ -1565,10 +1551,9 @@ class UClass* AFMInWorldKnobActorBase::GetCopyClassInternal() const
 
 TSubclassOf<class UUserWidget> AFMInWorldKnobActorBase::GetCopyWidgetClassInternal() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCopyWidgetClassInternal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobActorBase", "GetCopyWidgetClassInternal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobActorBase_GetCopyWidgetClassInternal Parms{};
 
@@ -2285,10 +2270,9 @@ void UFMInWorldKnobOptionsBaseComponent::SetAllOptionsToCurrentOverride(bool bSa
 
 bool UFMInWorldKnobOptionsComponent::ActorHasValidControllerBP(class AActor* Actor, class AFortPlayerPawn** OutFortPlayerPawn, class APlayerController** OutPlayerController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ActorHasValidControllerBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FMInWorldKnobOptionsComponent", "ActorHasValidControllerBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FMInWorldKnobOptionsComponent_ActorHasValidControllerBP Parms{};
 

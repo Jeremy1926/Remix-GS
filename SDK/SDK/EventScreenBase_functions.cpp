@@ -42,10 +42,9 @@ void UFortEventModalBase::CloseModal()
 
 void UFortEventMoreInfoGroup::OnEventScreenDataSet(const class UFortEventScreenData* InEventScreenData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventScreenDataSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventMoreInfoGroup", "OnEventScreenDataSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventMoreInfoGroup_OnEventScreenDataSet Parms{};
 
@@ -62,10 +61,9 @@ void UFortEventMoreInfoGroup::OnEventScreenDataSet(const class UFortEventScreenD
 
 void UFortEventMoreInfoGroup::OnIconLoaded(const class UObject* Icon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIconLoaded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventMoreInfoGroup", "OnIconLoaded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventMoreInfoGroup_OnIconLoaded Parms{};
 
@@ -83,10 +81,9 @@ void UFortEventMoreInfoGroup::OnIconLoaded(const class UObject* Icon)
 
 void UFortEventMoreInfoGroup::OnSetGroupText(const class FText& Header, const class FText& Body)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetGroupText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventMoreInfoGroup", "OnSetGroupText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventMoreInfoGroup_OnSetGroupText Parms{};
 
@@ -104,10 +101,9 @@ void UFortEventMoreInfoGroup::OnSetGroupText(const class FText& Header, const cl
 
 void UFortEventMoreInfoModal::OnEventScreenDataSet(const class UFortEventScreenData* InEventScreenData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventScreenDataSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventMoreInfoModal", "OnEventScreenDataSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventMoreInfoModal_OnEventScreenDataSet Parms{};
 
@@ -124,10 +120,9 @@ void UFortEventMoreInfoModal::OnEventScreenDataSet(const class UFortEventScreenD
 
 void UFortEventMoreInfoModal::OnKeyArtLoaded(const class UObject* Icon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnKeyArtLoaded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventMoreInfoModal", "OnKeyArtLoaded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventMoreInfoModal_OnKeyArtLoaded Parms{};
 
@@ -142,10 +137,9 @@ void UFortEventMoreInfoModal::OnKeyArtLoaded(const class UObject* Icon)
 
 void UFortEventMoreInfoModal::OnModalBackout()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnModalBackout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventMoreInfoModal", "OnModalBackout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -160,10 +154,9 @@ void UFortEventMoreInfoModal::OnModalBackout()
 
 void UFortEventMoreInfoModal::SetModalText(const class FText& Header, const class FText& SubHeader, const class FText& Legal)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetModalText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventMoreInfoModal", "SetModalText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventMoreInfoModal_SetModalText Parms{};
 
@@ -205,10 +198,9 @@ const class UFortEventScreenData* UFortEventMoreInfoModal::GetEventScreenData() 
 
 void UFortEventPurchaseLevelsModal::OnAmountChangeButtonClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAmountChangeButtonClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventPurchaseLevelsModal", "OnAmountChangeButtonClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -221,10 +213,9 @@ void UFortEventPurchaseLevelsModal::OnAmountChangeButtonClicked()
 
 void UFortEventPurchaseLevelsModal::OnCMSTextApplied(const class FText& LegalText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCMSTextApplied");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventPurchaseLevelsModal", "OnCMSTextApplied");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventPurchaseLevelsModal_OnCMSTextApplied Parms{};
 
@@ -241,10 +232,9 @@ void UFortEventPurchaseLevelsModal::OnCMSTextApplied(const class FText& LegalTex
 
 void UFortEventPurchaseLevelsModal::OnEventScreenDataSet(const class UFortEventScreenData* InEventScreenData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventScreenDataSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventPurchaseLevelsModal", "OnEventScreenDataSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventPurchaseLevelsModal_OnEventScreenDataSet Parms{};
 
@@ -264,10 +254,9 @@ void UFortEventPurchaseLevelsModal::OnEventScreenDataSet(const class UFortEventS
 
 void UFortEventPurchaseLevelsModal::OnPurchaseAmountChanged(const int32 TotalPrice, const int32 LevelQuantity, const int32 PurchaseQuantity, const int32 ResourceQuantity)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPurchaseAmountChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventPurchaseLevelsModal", "OnPurchaseAmountChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventPurchaseLevelsModal_OnPurchaseAmountChanged Parms{};
 
@@ -313,10 +302,9 @@ const class UFortEventScreenData* UFortEventPurchaseLevelsModal::GetEventScreenD
 
 void UFortPurchasePremiumTrackBody::OnPopulate(const int32 BodyIndex, const class FText& BodyText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPurchasePremiumTrackBody", "OnPopulate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPurchasePremiumTrackBody_OnPopulate Parms{};
 
@@ -335,10 +323,9 @@ void UFortPurchasePremiumTrackBody::OnPopulate(const int32 BodyIndex, const clas
 
 void UFortEventPurchasePremiumTrackModal::OnCMSTextApplied(const class FText& HeaderText, const class FText& LegalText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCMSTextApplied");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventPurchasePremiumTrackModal", "OnCMSTextApplied");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventPurchasePremiumTrackModal_OnCMSTextApplied Parms{};
 
@@ -356,10 +343,9 @@ void UFortEventPurchasePremiumTrackModal::OnCMSTextApplied(const class FText& He
 
 void UFortEventPurchasePremiumTrackModal::OnEventScreenDataSet(const class UFortEventScreenData* InEventScreenData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventScreenDataSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventPurchasePremiumTrackModal", "OnEventScreenDataSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventPurchasePremiumTrackModal_OnEventScreenDataSet Parms{};
 
@@ -376,10 +362,9 @@ void UFortEventPurchasePremiumTrackModal::OnEventScreenDataSet(const class UFort
 
 void UFortEventPurchasePremiumTrackModal::OnPriceSet(const int32 Price)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPriceSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventPurchasePremiumTrackModal", "OnPriceSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventPurchasePremiumTrackModal_OnPriceSet Parms{};
 
@@ -421,10 +406,9 @@ const class UFortEventScreenData* UFortEventPurchasePremiumTrackModal::GetEventS
 
 void UFortEventRewardTracksWidget::BPOnEventScreenDataSet(const class UFortEventScreenData* InEventScreenData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BPOnEventScreenDataSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardTracksWidget", "BPOnEventScreenDataSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardTracksWidget_BPOnEventScreenDataSet Parms{};
 
@@ -446,10 +430,9 @@ void UFortEventRewardTracksWidget::BPOnEventScreenDataSet(const class UFortEvent
 
 void UFortEventRewardTracksWidget::BPOnSetRewardItem(const int32 RequiredProgress, const int32 RemainingProgress, const float RewardProgressPercent, const float PreviewProgressPercent, const float OverallProgressPercent, const bool bInPreviewMode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BPOnSetRewardItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardTracksWidget", "BPOnSetRewardItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardTracksWidget_BPOnSetRewardItem Parms{};
 
@@ -471,10 +454,9 @@ void UFortEventRewardTracksWidget::BPOnSetRewardItem(const int32 RequiredProgres
 
 void UFortEventRewardTracksWidget::BPSetAllRewardsCollected(const bool bAllCollected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BPSetAllRewardsCollected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardTracksWidget", "BPSetAllRewardsCollected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardTracksWidget_BPSetAllRewardsCollected Parms{};
 
@@ -491,10 +473,9 @@ void UFortEventRewardTracksWidget::BPSetAllRewardsCollected(const bool bAllColle
 
 void UFortEventRewardTracksWidget::BPSetProgressPercent(const float Percent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BPSetProgressPercent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardTracksWidget", "BPSetProgressPercent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardTracksWidget_BPSetProgressPercent Parms{};
 
@@ -511,10 +492,9 @@ void UFortEventRewardTracksWidget::BPSetProgressPercent(const float Percent)
 
 void UFortEventRewardWidget::OnEventScreenDataSet(const class UFortEventScreenData* InEventScreenData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventScreenDataSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "OnEventScreenDataSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_OnEventScreenDataSet Parms{};
 
@@ -531,10 +511,9 @@ void UFortEventRewardWidget::OnEventScreenDataSet(const class UFortEventScreenDa
 
 void UFortEventRewardWidget::OnInputMethodChanged(const ECommonInputType NewInputType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputMethodChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "OnInputMethodChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_OnInputMethodChanged Parms{};
 
@@ -549,10 +528,9 @@ void UFortEventRewardWidget::OnInputMethodChanged(const ECommonInputType NewInpu
 
 void UFortEventRewardWidget::OnRewardWidgetReset()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRewardWidgetReset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "OnRewardWidgetReset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -570,10 +548,9 @@ void UFortEventRewardWidget::OnRewardWidgetReset()
 
 void UFortEventRewardWidget::OnSetRewardItem(const int32 RequiredProgress, const int32 RemainingProgress, const float RewardProgressPercent, const float PreviewProgressPercent, const float OverallProgressPercent, const bool bInPreviewMode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetRewardItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "OnSetRewardItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_OnSetRewardItem Parms{};
 
@@ -595,10 +572,9 @@ void UFortEventRewardWidget::OnSetRewardItem(const int32 RequiredProgress, const
 
 void UFortEventRewardWidget::SetAllRewardsCollected(const bool bAllCollected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetAllRewardsCollected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "SetAllRewardsCollected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_SetAllRewardsCollected Parms{};
 
@@ -615,10 +591,9 @@ void UFortEventRewardWidget::SetAllRewardsCollected(const bool bAllCollected)
 
 void UFortEventRewardWidget::SetCustomItemIcon(const class UTexture2D* CustomItemIcon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetCustomItemIcon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "SetCustomItemIcon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_SetCustomItemIcon Parms{};
 
@@ -635,10 +610,9 @@ void UFortEventRewardWidget::SetCustomItemIcon(const class UTexture2D* CustomIte
 
 void UFortEventRewardWidget::SetDoubleWidth(const bool bDoubleWidth)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetDoubleWidth");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "SetDoubleWidth");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_SetDoubleWidth Parms{};
 
@@ -655,10 +629,9 @@ void UFortEventRewardWidget::SetDoubleWidth(const bool bDoubleWidth)
 
 void UFortEventRewardWidget::SetInPremiumUpgradeState(const bool bHighlighted)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetInPremiumUpgradeState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "SetInPremiumUpgradeState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_SetInPremiumUpgradeState Parms{};
 
@@ -675,10 +648,9 @@ void UFortEventRewardWidget::SetInPremiumUpgradeState(const bool bHighlighted)
 
 void UFortEventRewardWidget::SetInPreviewedState(const bool bPreviewed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetInPreviewedState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "SetInPreviewedState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_SetInPreviewedState Parms{};
 
@@ -695,10 +667,9 @@ void UFortEventRewardWidget::SetInPreviewedState(const bool bPreviewed)
 
 void UFortEventRewardWidget::SetInPreviewSelectedState(const bool bSelected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetInPreviewSelectedState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "SetInPreviewSelectedState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_SetInPreviewSelectedState Parms{};
 
@@ -715,10 +686,9 @@ void UFortEventRewardWidget::SetInPreviewSelectedState(const bool bSelected)
 
 void UFortEventRewardWidget::SetInSelectedState(const bool bSelected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetInSelectedState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "SetInSelectedState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_SetInSelectedState Parms{};
 
@@ -735,10 +705,9 @@ void UFortEventRewardWidget::SetInSelectedState(const bool bSelected)
 
 void UFortEventRewardWidget::SetIsBannerItem(const bool bIsBanner)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetIsBannerItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "SetIsBannerItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_SetIsBannerItem Parms{};
 
@@ -755,10 +724,9 @@ void UFortEventRewardWidget::SetIsBannerItem(const bool bIsBanner)
 
 void UFortEventRewardWidget::SetProgressPercent(const float Percent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetProgressPercent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "SetProgressPercent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_SetProgressPercent Parms{};
 
@@ -776,10 +744,9 @@ void UFortEventRewardWidget::SetProgressPercent(const float Percent)
 
 void UFortEventRewardWidget::SetTrackData(const struct FEventScreenTrackData& TrackData, const bool bIsOwned)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetTrackData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventRewardWidget", "SetTrackData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventRewardWidget_SetTrackData Parms{};
 
@@ -975,10 +942,9 @@ class UWidget* UFortEventScreenBase::HandleUpsellPromptNavigateUpEvent(EUINaviga
 
 void UFortEventScreenBase::OnCalendarEventEnded(const class FString& EventName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCalendarEventEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "OnCalendarEventEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenBase_OnCalendarEventEnded Parms{};
 
@@ -995,10 +961,9 @@ void UFortEventScreenBase::OnCalendarEventEnded(const class FString& EventName)
 
 void UFortEventScreenBase::OnCalendarEventStarted(const class FString& EventName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCalendarEventStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "OnCalendarEventStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenBase_OnCalendarEventStarted Parms{};
 
@@ -1013,10 +978,9 @@ void UFortEventScreenBase::OnCalendarEventStarted(const class FString& EventName
 
 void UFortEventScreenBase::OnFirstViewAfterCompletion()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFirstViewAfterCompletion");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "OnFirstViewAfterCompletion");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1030,10 +994,9 @@ void UFortEventScreenBase::OnFirstViewAfterCompletion()
 
 void UFortEventScreenBase::OnRewardPreviewItemChanged(const class UFortAccountItemDefinition* Item, const bool bFreeTrack)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRewardPreviewItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "OnRewardPreviewItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenBase_OnRewardPreviewItemChanged Parms{};
 
@@ -1049,10 +1012,9 @@ void UFortEventScreenBase::OnRewardPreviewItemChanged(const class UFortAccountIt
 
 void UFortEventScreenBase::OnRewardTrackReady()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRewardTrackReady");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "OnRewardTrackReady");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1066,10 +1028,9 @@ void UFortEventScreenBase::OnRewardTrackReady()
 
 void UFortEventScreenBase::OnScreenViewChanged(const EEventScreenView PrevScreenView, const EEventScreenView NewScreenView)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnScreenViewChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "OnScreenViewChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenBase_OnScreenViewChanged Parms{};
 
@@ -1087,10 +1048,9 @@ void UFortEventScreenBase::OnScreenViewChanged(const EEventScreenView PrevScreen
 
 void UFortEventScreenBase::OnSetBonusInfo(const struct FBonusInfoMiniTagData& BonusInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetBonusInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "OnSetBonusInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenBase_OnSetBonusInfo Parms{};
 
@@ -1105,10 +1065,9 @@ void UFortEventScreenBase::OnSetBonusInfo(const struct FBonusInfoMiniTagData& Bo
 
 void UFortEventScreenBase::RegisterLayoutSlots()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RegisterLayoutSlots");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "RegisterLayoutSlots");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1121,10 +1080,9 @@ void UFortEventScreenBase::RegisterLayoutSlots()
 
 void UFortEventScreenBase::SetItemShopCallout(const class FText& ItemShopCalloutText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetItemShopCallout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "SetItemShopCallout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenBase_SetItemShopCallout Parms{};
 
@@ -1141,10 +1099,9 @@ void UFortEventScreenBase::SetItemShopCallout(const class FText& ItemShopCallout
 
 void UFortEventScreenBase::SetItemShopOfferInfoVisibility(bool bIsVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetItemShopOfferInfoVisibility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "SetItemShopOfferInfoVisibility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenBase_SetItemShopOfferInfoVisibility Parms{};
 
@@ -1161,10 +1118,9 @@ void UFortEventScreenBase::SetItemShopOfferInfoVisibility(bool bIsVisible)
 
 void UFortEventScreenBase::SetRewardTrackLegal(const class FText& LegalText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetRewardTrackLegal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "SetRewardTrackLegal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenBase_SetRewardTrackLegal Parms{};
 
@@ -1182,10 +1138,9 @@ void UFortEventScreenBase::SetRewardTrackLegal(const class FText& LegalText)
 
 void UFortEventScreenBase::UpdateVariantCounter(int32 CurrentVariantIndex, int32 TotalNumVariants)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateVariantCounter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenBase", "UpdateVariantCounter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenBase_UpdateVariantCounter Parms{};
 
@@ -1456,10 +1411,9 @@ const class UFortEventScreenData* UEventScreenListView::GetEventScreenData() con
 
 void UFortEventScreenTeaser::BP_SetCountdownTimeRemaining(const struct FTimespan& TimeRemaining)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetCountdownTimeRemaining");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenTeaser", "BP_SetCountdownTimeRemaining");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenTeaser_BP_SetCountdownTimeRemaining Parms{};
 
@@ -1501,10 +1455,9 @@ void UFortEventScreenTeaser::HandleActiveSeasonDataChanged(const TArray<class FS
 
 void UFortEventScreenTeaser::OnCalendarEventEnded(const class FString& EventName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCalendarEventEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenTeaser", "OnCalendarEventEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenTeaser_OnCalendarEventEnded Parms{};
 
@@ -1521,10 +1474,9 @@ void UFortEventScreenTeaser::OnCalendarEventEnded(const class FString& EventName
 
 void UFortEventScreenTeaser::OnCalendarEventStarted(const class FString& EventName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCalendarEventStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventScreenTeaser", "OnCalendarEventStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventScreenTeaser_OnCalendarEventStarted Parms{};
 
@@ -1570,10 +1522,9 @@ bool UFortEventScreenTeaser::IsCalendarEventActive(const class FString& EventNam
 
 void UFortEventTokenCollectionWidget::OnRefreshIcon(const bool IsCollected, const bool bIsFirstViewAfterCollection)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRefreshIcon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTokenCollectionWidget", "OnRefreshIcon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTokenCollectionWidget_OnRefreshIcon Parms{};
 
@@ -1591,10 +1542,9 @@ void UFortEventTokenCollectionWidget::OnRefreshIcon(const bool IsCollected, cons
 
 void UFortEventTrackerModule::OnModuleInitialized(const class UFortEventScreenData* InEventScreenData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnModuleInitialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule", "OnModuleInitialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_OnModuleInitialized Parms{};
 
@@ -1637,10 +1587,9 @@ const class UFortEventScreenData* UFortEventTrackerModule::GetEventScreenData() 
 
 void UFortEventTrackerModule_EventDetails::OnPopulateEventDetailsText(const class FText& OutEventName, const class FText& OutEventDescription)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateEventDetailsText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_EventDetails", "OnPopulateEventDetailsText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_EventDetails_OnPopulateEventDetailsText Parms{};
 
@@ -1659,10 +1608,9 @@ void UFortEventTrackerModule_EventDetails::OnPopulateEventDetailsText(const clas
 
 void UFortEventTrackerModule_EventDetails::UpdateEventTimeRemaining(const class FText& EventTimeRemainingText, const struct FTimespan& TimeRemaining)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateEventTimeRemaining");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_EventDetails", "UpdateEventTimeRemaining");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_EventDetails_UpdateEventTimeRemaining Parms{};
 
@@ -1681,10 +1629,9 @@ void UFortEventTrackerModule_EventDetails::UpdateEventTimeRemaining(const class 
 
 void UFortEventTrackerModule_Header::OnPopulateEventResourceHeader(const class FText& Header, const int32 ResourceValue)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateEventResourceHeader");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_Header", "OnPopulateEventResourceHeader");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_Header_OnPopulateEventResourceHeader Parms{};
 
@@ -1702,10 +1649,9 @@ void UFortEventTrackerModule_Header::OnPopulateEventResourceHeader(const class F
 
 void UFortEventTrackerModule_Header::OnPopulateEventResourceStarterHeader(const class FText& Header)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateEventResourceStarterHeader");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_Header", "OnPopulateEventResourceStarterHeader");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_Header_OnPopulateEventResourceStarterHeader Parms{};
 
@@ -1722,10 +1668,9 @@ void UFortEventTrackerModule_Header::OnPopulateEventResourceStarterHeader(const 
 
 void UFortEventTrackerModule_RewardDetails::OnPopulateCompletedReward(const TArray<class FText>& RewardNames)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateCompletedReward");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_RewardDetails", "OnPopulateCompletedReward");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_RewardDetails_OnPopulateCompletedReward Parms{};
 
@@ -1743,10 +1688,9 @@ void UFortEventTrackerModule_RewardDetails::OnPopulateCompletedReward(const TArr
 
 void UFortEventTrackerModule_RewardDetails::OnPopulateNextRewardDetails(const TArray<class FText>& RewardNames, const int32 ResourceNeeded)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateNextRewardDetails");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_RewardDetails", "OnPopulateNextRewardDetails");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_RewardDetails_OnPopulateNextRewardDetails Parms{};
 
@@ -1791,10 +1735,9 @@ bool UFortEventTrackerModule_RewardDetails::IsPremiumTrackOwned() const
 
 void UFortEventTrackerModule_RewardRemaining::OnPopulateRemaining(const int32 ResourceNeeded, const int32 TotalResourceRequired, const bool bRequiresPremiumTrackPurchase)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateRemaining");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_RewardRemaining", "OnPopulateRemaining");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_RewardRemaining_OnPopulateRemaining Parms{};
 
@@ -1814,10 +1757,9 @@ void UFortEventTrackerModule_RewardRemaining::OnPopulateRemaining(const int32 Re
 
 void UFortEventTrackerModule_ProgressiveRewards::OnPopulateCompletionMessage(const bool bIsComplete, const class FText& CompletionText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateCompletionMessage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_ProgressiveRewards", "OnPopulateCompletionMessage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_ProgressiveRewards_OnPopulateCompletionMessage Parms{};
 
@@ -1835,10 +1777,9 @@ void UFortEventTrackerModule_ProgressiveRewards::OnPopulateCompletionMessage(con
 
 void UFortEventTrackerModule_Collection::OnGatherTokenCollectionWidgets(TArray<class UFortEventTokenCollectionWidget*>* OutCollectionWidgets) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGatherTokenCollectionWidgets");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_Collection", "OnGatherTokenCollectionWidgets");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_Collection_OnGatherTokenCollectionWidgets Parms{};
 
@@ -1856,10 +1797,9 @@ void UFortEventTrackerModule_Collection::OnGatherTokenCollectionWidgets(TArray<c
 
 void UFortEventTrackerModule_Banner::OnCTACompleted(const bool bIsComplete)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCTACompleted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_Banner", "OnCTACompleted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_Banner_OnCTACompleted Parms{};
 
@@ -1876,10 +1816,9 @@ void UFortEventTrackerModule_Banner::OnCTACompleted(const bool bIsComplete)
 
 void UFortEventTrackerModule_Banner::OnPopulateBannerText(const class FText& BannerText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateBannerText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_Banner", "OnPopulateBannerText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_Banner_OnPopulateBannerText Parms{};
 
@@ -1896,10 +1835,9 @@ void UFortEventTrackerModule_Banner::OnPopulateBannerText(const class FText& Ban
 
 void UFortEventTrackerModule_Banner::OnPopulateHeaderCTAText(const class FText& HeaderCTAText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateHeaderCTAText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_Banner", "OnPopulateHeaderCTAText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_Banner_OnPopulateHeaderCTAText Parms{};
 
@@ -1916,10 +1854,9 @@ void UFortEventTrackerModule_Banner::OnPopulateHeaderCTAText(const class FText& 
 
 void UFortEventTrackerModule_PremiumUpsell::OnIconLoaded(const class UTexture* LoadedTexture)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIconLoaded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_PremiumUpsell", "OnIconLoaded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_PremiumUpsell_OnIconLoaded Parms{};
 
@@ -1937,10 +1874,9 @@ void UFortEventTrackerModule_PremiumUpsell::OnIconLoaded(const class UTexture* L
 
 void UFortEventTrackerModule_PremiumUpsell::OnPopulateText(const class FText& HeaderText, const class FText& BodyText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_PremiumUpsell", "OnPopulateText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_PremiumUpsell_OnPopulateText Parms{};
 
@@ -1983,10 +1919,9 @@ bool UFortEventTrackerModule_PremiumUpsell::IsPremiumTrackOwned() const
 
 void UFortEventTrackerModule_CustomText::OnPopulateText(const class FText& CustomText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventTrackerModule_CustomText", "OnPopulateText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventTrackerModule_CustomText_OnPopulateText Parms{};
 

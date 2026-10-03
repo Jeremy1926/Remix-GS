@@ -122,10 +122,9 @@ void UDelMarAudioCheatManager::DelMarStopMusic()
 
 void UDelMarAudioProximityComponentBase::BP_StartProximity()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_StartProximity");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarAudioProximityComponentBase", "BP_StartProximity");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -136,10 +135,9 @@ void UDelMarAudioProximityComponentBase::BP_StartProximity()
 
 void UDelMarAudioProximityComponentBase::BP_StopProximity()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_StopProximity");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarAudioProximityComponentBase", "BP_StopProximity");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -153,10 +151,9 @@ void UDelMarAudioProximityComponentBase::BP_StopProximity()
 
 void UDelMarAudioProximityComponentBase::BP_Update(const class APlayerCameraManager* Camera, const class ADelMarVehicle* Vehicle)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_Update");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarAudioProximityComponentBase", "BP_Update");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarAudioProximityComponentBase_BP_Update Parms{};
 
@@ -240,10 +237,9 @@ float UDelMarAudioProximityComponent::GetObjectScale() const
 
 void UDelMarAudioPassbyComponent::BP_StartPassby(class AActor* Instigator, const float PassbySpeed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_StartPassby");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarAudioPassbyComponent", "BP_StartPassby");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarAudioPassbyComponent_BP_StartPassby Parms{};
 
@@ -259,10 +255,9 @@ void UDelMarAudioPassbyComponent::BP_StartPassby(class AActor* Instigator, const
 
 void UDelMarAudioPassbyComponent::BP_StopPassby()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_StopPassby");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarAudioPassbyComponent", "BP_StopPassby");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -573,10 +568,9 @@ void UDelMarAudioStatePlayspaceComponent::HandleVehicleTurboStopped()
 
 void UDelMarCrowdAudioManager::BP_OnApproachingFinishLine()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnApproachingFinishLine");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCrowdAudioManager", "BP_OnApproachingFinishLine");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -589,10 +583,9 @@ void UDelMarCrowdAudioManager::BP_OnApproachingFinishLine()
 
 void UDelMarCrowdAudioManager::BP_OnGameplayStateChanged(const struct FGameplayTag& NewStateTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnGameplayStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCrowdAudioManager", "BP_OnGameplayStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCrowdAudioManager_BP_OnGameplayStateChanged Parms{};
 
@@ -607,10 +600,9 @@ void UDelMarCrowdAudioManager::BP_OnGameplayStateChanged(const struct FGameplayT
 
 void UDelMarCrowdAudioManager::BP_OnPlayerFinishedRace()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnPlayerFinishedRace");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCrowdAudioManager", "BP_OnPlayerFinishedRace");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -623,10 +615,9 @@ void UDelMarCrowdAudioManager::BP_OnPlayerFinishedRace()
 
 void UDelMarCrowdAudioManager::BP_OnRaceModeChanged(const struct FGameplayTag& NewRaceModeTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnRaceModeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCrowdAudioManager", "BP_OnRaceModeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCrowdAudioManager_BP_OnRaceModeChanged Parms{};
 
@@ -643,10 +634,9 @@ void UDelMarCrowdAudioManager::BP_OnRaceModeChanged(const struct FGameplayTag& N
 
 void UDelMarCrowdAudioManager::BP_OnRacerStateChanged(const struct FGameplayTag& NewStateTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnRacerStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCrowdAudioManager", "BP_OnRacerStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCrowdAudioManager_BP_OnRacerStateChanged Parms{};
 
@@ -661,10 +651,9 @@ void UDelMarCrowdAudioManager::BP_OnRacerStateChanged(const struct FGameplayTag&
 
 void UDelMarCrowdAudioManager::BP_OnVehicleDemolished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVehicleDemolished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCrowdAudioManager", "BP_OnVehicleDemolished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -677,10 +666,9 @@ void UDelMarCrowdAudioManager::BP_OnVehicleDemolished()
 
 void UDelMarRaceMusicManager::BP_OnCountdownTimeSet(const float TimeUntilRunStart)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCountdownTimeSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarRaceMusicManager", "BP_OnCountdownTimeSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarRaceMusicManager_BP_OnCountdownTimeSet Parms{};
 
@@ -697,10 +685,9 @@ void UDelMarRaceMusicManager::BP_OnCountdownTimeSet(const float TimeUntilRunStar
 
 void UDelMarRaceMusicManager::BP_OnGameplayStateChanged(const struct FGameplayTag& NewStateTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnGameplayStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarRaceMusicManager", "BP_OnGameplayStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarRaceMusicManager_BP_OnGameplayStateChanged Parms{};
 
@@ -715,10 +702,9 @@ void UDelMarRaceMusicManager::BP_OnGameplayStateChanged(const struct FGameplayTa
 
 void UDelMarRaceMusicManager::BP_OnPlayerFinishedRace()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnPlayerFinishedRace");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarRaceMusicManager", "BP_OnPlayerFinishedRace");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -731,10 +717,9 @@ void UDelMarRaceMusicManager::BP_OnPlayerFinishedRace()
 
 void UDelMarRaceMusicManager::BP_OnRaceModeChanged(const struct FGameplayTag& NewModeTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnRaceModeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarRaceMusicManager", "BP_OnRaceModeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarRaceMusicManager_BP_OnRaceModeChanged Parms{};
 
@@ -751,10 +736,9 @@ void UDelMarRaceMusicManager::BP_OnRaceModeChanged(const struct FGameplayTag& Ne
 
 void UDelMarRaceMusicManager::BP_OnRacerStateChanged(const struct FGameplayTag& NewStateTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnRacerStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarRaceMusicManager", "BP_OnRacerStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarRaceMusicManager_BP_OnRacerStateChanged Parms{};
 

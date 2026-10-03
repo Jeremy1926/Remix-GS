@@ -975,10 +975,9 @@ void UJunoDropSplitModal::HandleQuantityChanged(EJunoContextMenuAction InActionT
 
 void UJunoDropSplitModal::OnOperationSet(EJunoContextMenuAction ActionType, const class FText& ActionText, int32 StackCount, int32 QuantityDisplayMultiplier)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOperationSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoDropSplitModal", "OnOperationSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoDropSplitModal_OnOperationSet Parms{};
 
@@ -998,10 +997,9 @@ void UJunoDropSplitModal::OnOperationSet(EJunoContextMenuAction ActionType, cons
 
 TSet<EJunoContextMenuAction> UJunoContextMenu::GetAllAvailableActions()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAllAvailableActions");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoContextMenu", "GetAllAvailableActions");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoContextMenu_GetAllAvailableActions Parms{};
 
@@ -1044,10 +1042,9 @@ void UJunoContextMenu::HandleContextEntrySelected(EJunoContextMenuAction MenuAct
 
 void UJunoContextMenu::OnAddMenuEntry(EJunoContextMenuAction MenuAction, bool bDisabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAddMenuEntry");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoContextMenu", "OnAddMenuEntry");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoContextMenu_OnAddMenuEntry Parms{};
 
@@ -1063,10 +1060,9 @@ void UJunoContextMenu::OnAddMenuEntry(EJunoContextMenuAction MenuAction, bool bD
 
 void UJunoContextMenu::OnShowQuantitySelectorState()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowQuantitySelectorState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoContextMenu", "OnShowQuantitySelectorState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

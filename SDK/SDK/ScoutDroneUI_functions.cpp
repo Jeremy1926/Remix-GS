@@ -96,10 +96,9 @@ float UScoutDroneHUD::GetTargetConfirmationTime()
 
 void UScoutDroneHUD::OnDroneDismissAbilityUsed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDroneDismissAbilityUsed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDroneDismissAbilityUsed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -112,10 +111,9 @@ void UScoutDroneHUD::OnDroneDismissAbilityUsed()
 
 void UScoutDroneHUD::OnDroneEnergyChanged(float EnergyPercentage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDroneEnergyChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDroneEnergyChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ScoutDroneHUD_OnDroneEnergyChanged Parms{};
 
@@ -133,10 +131,9 @@ void UScoutDroneHUD::OnDroneEnergyChanged(float EnergyPercentage)
 
 void UScoutDroneHUD::OnDroneHealthUpdated(float HealthPercentage, float CurrentHealth)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDroneHealthUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDroneHealthUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ScoutDroneHUD_OnDroneHealthUpdated Parms{};
 
@@ -152,10 +149,9 @@ void UScoutDroneHUD::OnDroneHealthUpdated(float HealthPercentage, float CurrentH
 
 void UScoutDroneHUD::OnDroneInteractAbilityEnd()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDroneInteractAbilityEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDroneInteractAbilityEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -166,10 +162,9 @@ void UScoutDroneHUD::OnDroneInteractAbilityEnd()
 
 void UScoutDroneHUD::OnDroneInteractAbilityUsed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDroneInteractAbilityUsed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDroneInteractAbilityUsed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -180,10 +175,9 @@ void UScoutDroneHUD::OnDroneInteractAbilityUsed()
 
 void UScoutDroneHUD::OnDroneMarkAbilityEnd()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDroneMarkAbilityEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDroneMarkAbilityEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -194,10 +188,9 @@ void UScoutDroneHUD::OnDroneMarkAbilityEnd()
 
 void UScoutDroneHUD::OnDroneMarkAbilityUsed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDroneMarkAbilityUsed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDroneMarkAbilityUsed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -208,10 +201,9 @@ void UScoutDroneHUD::OnDroneMarkAbilityUsed()
 
 void UScoutDroneHUD::OnDronePickUpAbilityEnd()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDronePickUpAbilityEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDronePickUpAbilityEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -222,10 +214,9 @@ void UScoutDroneHUD::OnDronePickUpAbilityEnd()
 
 void UScoutDroneHUD::OnDronePickUpAbilityUsed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDronePickUpAbilityUsed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDronePickUpAbilityUsed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -236,10 +227,9 @@ void UScoutDroneHUD::OnDronePickUpAbilityUsed()
 
 void UScoutDroneHUD::OnDronePickUpTargetsAvailable()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDronePickUpTargetsAvailable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDronePickUpTargetsAvailable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -250,10 +240,9 @@ void UScoutDroneHUD::OnDronePickUpTargetsAvailable()
 
 void UScoutDroneHUD::OnDronePickUpTargetsEmpty()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDronePickUpTargetsEmpty");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDronePickUpTargetsEmpty");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -267,10 +256,9 @@ void UScoutDroneHUD::OnDronePickUpTargetsEmpty()
 
 void UScoutDroneHUD::OnDroneSignalDataUpdated(float DistanceFromPlayer, float SignalPercentage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDroneSignalDataUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDroneSignalDataUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ScoutDroneHUD_OnDroneSignalDataUpdated Parms{};
 
@@ -286,10 +274,9 @@ void UScoutDroneHUD::OnDroneSignalDataUpdated(float DistanceFromPlayer, float Si
 
 void UScoutDroneHUD::OnDroneSpeedBoostAbilityEnd()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDroneSpeedBoostAbilityEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDroneSpeedBoostAbilityEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -300,10 +287,9 @@ void UScoutDroneHUD::OnDroneSpeedBoostAbilityEnd()
 
 void UScoutDroneHUD::OnDroneSpeedBoostAbilityUsed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDroneSpeedBoostAbilityUsed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnDroneSpeedBoostAbilityUsed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -314,10 +300,9 @@ void UScoutDroneHUD::OnDroneSpeedBoostAbilityUsed()
 
 void UScoutDroneHUD::OnOwningPlayerDamaged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOwningPlayerDamaged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnOwningPlayerDamaged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -330,10 +315,9 @@ void UScoutDroneHUD::OnOwningPlayerDamaged()
 
 void UScoutDroneHUD::OnReticleChangeAbilityActivated(const struct FGameplayTag& UpdatedTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnReticleChangeAbilityActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnReticleChangeAbilityActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ScoutDroneHUD_OnReticleChangeAbilityActivated Parms{};
 
@@ -350,10 +334,9 @@ void UScoutDroneHUD::OnReticleChangeAbilityActivated(const struct FGameplayTag& 
 
 void UScoutDroneHUD::OnTargetingStatusChanged(const struct FScoutDroneStatusData& StatusData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTargetingStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneHUD", "OnTargetingStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ScoutDroneHUD_OnTargetingStatusChanged Parms{};
 
@@ -393,10 +376,9 @@ class AFortScoutDrone* UScoutDroneHUD::GetControlledDrone() const
 
 void UScoutDroneTetherIndicator::BP_OnEnterSignalLossRange()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnEnterSignalLossRange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneTetherIndicator", "BP_OnEnterSignalLossRange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -407,10 +389,9 @@ void UScoutDroneTetherIndicator::BP_OnEnterSignalLossRange()
 
 void UScoutDroneTetherIndicator::BP_OnEnterWarningRange()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnEnterWarningRange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneTetherIndicator", "BP_OnEnterWarningRange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -421,10 +402,9 @@ void UScoutDroneTetherIndicator::BP_OnEnterWarningRange()
 
 void UScoutDroneTetherIndicator::BP_OnExitWarningRange()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnExitWarningRange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneTetherIndicator", "BP_OnExitWarningRange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -437,10 +417,9 @@ void UScoutDroneTetherIndicator::BP_OnExitWarningRange()
 
 void UScoutDroneTetherIndicator::BP_WhileInWarningRange(float SignalIntensityPercentage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_WhileInWarningRange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneTetherIndicator", "BP_WhileInWarningRange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ScoutDroneTetherIndicator_BP_WhileInWarningRange Parms{};
 
@@ -480,10 +459,9 @@ class AFortScoutDrone* UScoutDroneTetherIndicator::GetControlledDrone() const
 
 void AScoutDroneUIDirector::BP_OnScoutDroneDeployed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnScoutDroneDeployed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneUIDirector", "BP_OnScoutDroneDeployed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -494,10 +472,9 @@ void AScoutDroneUIDirector::BP_OnScoutDroneDeployed()
 
 void AScoutDroneUIDirector::BP_OnScoutDroneDismissed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnScoutDroneDismissed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScoutDroneUIDirector", "BP_OnScoutDroneDismissed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

@@ -43,10 +43,9 @@ void UNearestNeighborOptimizedNetwork::Empty()
 
 bool UNearestNeighborOptimizedNetworkLoader::LoadOptimizedNetwork(const class FString& OnnxPath)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"LoadOptimizedNetwork");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NearestNeighborOptimizedNetworkLoader", "LoadOptimizedNetwork");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NearestNeighborOptimizedNetworkLoader_LoadOptimizedNetwork Parms{};
 

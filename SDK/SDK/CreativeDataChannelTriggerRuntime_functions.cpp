@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void ACreativeDataChannelTarget::FireEvent(class FName EventName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"FireEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CreativeDataChannelTarget", "FireEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CreativeDataChannelTarget_FireEvent Parms{};
 

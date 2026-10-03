@@ -867,10 +867,9 @@ bool UContextualAnimSceneAsset::Query(class FName Role, struct FContextualAnimQu
 
 bool UContextualAnimSelectionCriterion_Blueprint::BP_DoesQuerierPassCondition(const struct FContextualAnimSceneBindingContext& Primary, const struct FContextualAnimSceneBindingContext& Querier) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_DoesQuerierPassCondition");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ContextualAnimSelectionCriterion_Blueprint", "BP_DoesQuerierPassCondition");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ContextualAnimSelectionCriterion_Blueprint_BP_DoesQuerierPassCondition Parms{};
 

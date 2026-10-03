@@ -67,10 +67,9 @@ void UPilgrimBattleStage_PlacementDisplay::OnBeatEvent(int32 BeatNumber, int32 B
 
 void UPilgrimBattleStage_PlacementDisplay::PositionCutoffMarker()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PositionCutoffMarker");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStage_PlacementDisplay", "PositionCutoffMarker");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -102,10 +101,9 @@ void UPilgrimBattleStage_PlacementDisplay::RefreshPlacementDisplay()
 
 void UPilgrimBattleStage_PlacementDisplay::SetLocalPlayerScore(float CurrentScore)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetLocalPlayerScore");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStage_PlacementDisplay", "SetLocalPlayerScore");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimBattleStage_PlacementDisplay_SetLocalPlayerScore Parms{};
 
@@ -122,10 +120,9 @@ void UPilgrimBattleStage_PlacementDisplay::SetLocalPlayerScore(float CurrentScor
 
 void UPilgrimBattleStage_PlacementDisplay::UpdateCutoffMarker(float InCutoffScore)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCutoffMarker");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStage_PlacementDisplay", "UpdateCutoffMarker");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimBattleStage_PlacementDisplay_UpdateCutoffMarker Parms{};
 
@@ -142,10 +139,9 @@ void UPilgrimBattleStage_PlacementDisplay::UpdateCutoffMarker(float InCutoffScor
 
 class UWidgetAnimation* UPilgrimBattleStage_TeamPlacementEntry::GetFromAboveAnim()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetFromAboveAnim");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStage_TeamPlacementEntry", "GetFromAboveAnim");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimBattleStage_TeamPlacementEntry_GetFromAboveAnim Parms{};
 
@@ -162,10 +158,9 @@ class UWidgetAnimation* UPilgrimBattleStage_TeamPlacementEntry::GetFromAboveAnim
 
 class UWidgetAnimation* UPilgrimBattleStage_TeamPlacementEntry::GetFromBelowAnim()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetFromBelowAnim");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStage_TeamPlacementEntry", "GetFromBelowAnim");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimBattleStage_TeamPlacementEntry_GetFromBelowAnim Parms{};
 
@@ -180,10 +175,9 @@ class UWidgetAnimation* UPilgrimBattleStage_TeamPlacementEntry::GetFromBelowAnim
 
 void UPilgrimBattleStage_TeamPlacementEntry::SetAsCondensed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetAsCondensed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStage_TeamPlacementEntry", "SetAsCondensed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -194,10 +188,9 @@ void UPilgrimBattleStage_TeamPlacementEntry::SetAsCondensed()
 
 void UPilgrimBattleStage_TeamPlacementEntry::SetAsFeatured()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetAsFeatured");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStage_TeamPlacementEntry", "SetAsFeatured");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -208,10 +201,9 @@ void UPilgrimBattleStage_TeamPlacementEntry::SetAsFeatured()
 
 void UPilgrimBattleStage_TeamPlacementEntry::SetAsPip()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetAsPip");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStage_TeamPlacementEntry", "SetAsPip");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -222,10 +214,9 @@ void UPilgrimBattleStage_TeamPlacementEntry::SetAsPip()
 
 void UPilgrimBattleStage_TeamPlacementEntry::SetAsPlayer()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetAsPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStage_TeamPlacementEntry", "SetAsPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -241,10 +232,9 @@ void UPilgrimBattleStage_TeamPlacementEntry::SetAsPlayer()
 
 void UPilgrimBattleStage_TeamPlacementEntry::Setup(const struct FBattleStageBandState& BandState, int32 BandRank, bool bIsProgressing, bool bSongEndWarning)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Setup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStage_TeamPlacementEntry", "Setup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimBattleStage_TeamPlacementEntry_Setup Parms{};
 
@@ -262,10 +252,9 @@ void UPilgrimBattleStage_TeamPlacementEntry::Setup(const struct FBattleStageBand
 
 void UPilgrimBattleStage_TeamPlacementEntry::UpdateBackground()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateBackground");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBattleStage_TeamPlacementEntry", "UpdateBackground");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

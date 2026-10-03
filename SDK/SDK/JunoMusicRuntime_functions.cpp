@@ -398,10 +398,9 @@ class FString UJunoMusicControllerSubsystem::GetCollectedString(class FName Para
 
 void UJunoMusicDataCollector::BP_OnRegistered(class UMetasoundParameterPack* AggregatedData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnRegistered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoMusicDataCollector", "BP_OnRegistered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoMusicDataCollector_BP_OnRegistered Parms{};
 
@@ -416,10 +415,9 @@ void UJunoMusicDataCollector::BP_OnRegistered(class UMetasoundParameterPack* Agg
 
 void UJunoMusicDataCollector::BP_OnUnregistered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnUnregistered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoMusicDataCollector", "BP_OnUnregistered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -433,10 +431,9 @@ void UJunoMusicDataCollector::BP_OnUnregistered()
 
 void UJunoMusicDataCollector::BP_OnUpdate(float DeltaSeconds, class UMetasoundParameterPack* AggregatedData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoMusicDataCollector", "BP_OnUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoMusicDataCollector_BP_OnUpdate Parms{};
 
@@ -477,10 +474,9 @@ void UJunoMusicDataCollector_Combat::SetThreatLevelMultiplier(const float InThre
 
 void UJunoMusicPlayspaceProbe::BP_OnRegistered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnRegistered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoMusicPlayspaceProbe", "BP_OnRegistered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -491,10 +487,9 @@ void UJunoMusicPlayspaceProbe::BP_OnRegistered()
 
 void UJunoMusicPlayspaceProbe::BP_OnUnregistered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnUnregistered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoMusicPlayspaceProbe", "BP_OnUnregistered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -507,10 +502,9 @@ void UJunoMusicPlayspaceProbe::BP_OnUnregistered()
 
 void UJunoMusicPlayspaceProbe::BP_OnUpdate(float DeltaSeconds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoMusicPlayspaceProbe", "BP_OnUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoMusicPlayspaceProbe_BP_OnUpdate Parms{};
 

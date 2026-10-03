@@ -73,10 +73,9 @@ void UFocusButton::HandleEventModeFocusingChanged(bool bIsEventModeFocusing)
 
 void UFortEventModeEmotesWidget::OnFocusAvailableChanged(bool bIsFocusAvailable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFocusAvailableChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventModeEmotesWidget", "OnFocusAvailableChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventModeEmotesWidget_OnFocusAvailableChanged Parms{};
 
@@ -93,10 +92,9 @@ void UFortEventModeEmotesWidget::OnFocusAvailableChanged(bool bIsFocusAvailable)
 
 void UFortEventModeEmotesWidget::OnFocusStateChanged(bool bIsFocusing)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFocusStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEventModeEmotesWidget", "OnFocusStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEventModeEmotesWidget_OnFocusStateChanged Parms{};
 

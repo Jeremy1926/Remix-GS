@@ -182,10 +182,9 @@ TArray<class FName> UJunoControllerRequirement_HasCompletedQuestObjective::Edito
 
 void UJunoConversationTaskNode_Speech::PlayClientVoiceLine(const struct FConversationContext& Context, const struct FJunoContextualMessageQueryResult& MessageParams) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayClientVoiceLine");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoConversationTaskNode_Speech", "PlayClientVoiceLine");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoConversationTaskNode_Speech_PlayClientVoiceLine Parms{};
 

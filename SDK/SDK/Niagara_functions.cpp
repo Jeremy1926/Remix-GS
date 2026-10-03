@@ -46,10 +46,9 @@ class UNiagaraSystem* UNiagaraBaselineController::GetSystem()
 
 void UNiagaraBaselineController::OnBeginTest()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBeginTest");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NiagaraBaselineController", "OnBeginTest");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -67,10 +66,9 @@ void UNiagaraBaselineController::OnBeginTest()
 
 void UNiagaraBaselineController::OnEndTest(const struct FNiagaraPerfBaselineStats& Stats)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEndTest");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NiagaraBaselineController", "OnEndTest");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NiagaraBaselineController_OnEndTest Parms{};
 
@@ -92,10 +90,9 @@ void UNiagaraBaselineController::OnEndTest(const struct FNiagaraPerfBaselineStat
 
 void UNiagaraBaselineController::OnOwnerTick(float DeltaTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOwnerTick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NiagaraBaselineController", "OnOwnerTick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NiagaraBaselineController_OnOwnerTick Parms{};
 
@@ -117,10 +114,9 @@ void UNiagaraBaselineController::OnOwnerTick(float DeltaTime)
 
 bool UNiagaraBaselineController::OnTickTest()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTickTest");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NiagaraBaselineController", "OnTickTest");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NiagaraBaselineController_OnTickTest Parms{};
 
@@ -1069,10 +1065,9 @@ class UNiagaraDataChannelWriter* UNiagaraDataChannelHandler::GetDataChannelWrite
 
 void UNiagaraPreviewAxis::ApplyToPreview(class UNiagaraComponent* PreviewComponent, int32 PreviewIndex, bool bIsXAxis, class FString* OutLabelText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ApplyToPreview");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NiagaraPreviewAxis", "ApplyToPreview");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NiagaraPreviewAxis_ApplyToPreview Parms{};
 
@@ -1099,10 +1094,9 @@ void UNiagaraPreviewAxis::ApplyToPreview(class UNiagaraComponent* PreviewCompone
 
 int32 UNiagaraPreviewAxis::Num()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Num");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NiagaraPreviewAxis", "Num");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NiagaraPreviewAxis_Num Parms{};
 
@@ -6569,10 +6563,9 @@ void UNiagaraParameterCollectionInstance::SetVectorParameter(const class FString
 
 void ANiagaraPreviewBase::SetLabelText(const class FText& InXAxisText, const class FText& InYAxisText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetLabelText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NiagaraPreviewBase", "SetLabelText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NiagaraPreviewBase_SetLabelText Parms{};
 
@@ -6590,10 +6583,9 @@ void ANiagaraPreviewBase::SetLabelText(const class FText& InXAxisText, const cla
 
 void ANiagaraPreviewBase::SetSystem(class UNiagaraSystem* InSystem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetSystem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NiagaraPreviewBase", "SetSystem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NiagaraPreviewBase_SetSystem Parms{};
 

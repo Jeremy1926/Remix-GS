@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UBattlePassLandingPageS32::OnBattlePassSubscriptionAllowed(const bool bSubscriptionAllowed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBattlePassSubscriptionAllowed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassLandingPageS32", "OnBattlePassSubscriptionAllowed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassLandingPageS32_OnBattlePassSubscriptionAllowed Parms{};
 
@@ -71,10 +70,9 @@ class UWidget* UBattlePassRewardPageS32::HandleRewardTracksBoundaryNavigation(EU
 
 void UBattlePassRewardPageS32::OnInitForPageType(const ERewardPageType InRewardPageType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInitForPageType");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassRewardPageS32", "OnInitForPageType");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassRewardPageS32_OnInitForPageType Parms{};
 
@@ -91,10 +89,9 @@ void UBattlePassRewardPageS32::OnInitForPageType(const ERewardPageType InRewardP
 
 void UBattlePassRewardPageS32::OnInputMethodChanged(const ECommonInputType InputType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputMethodChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassRewardPageS32", "OnInputMethodChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassRewardPageS32_OnInputMethodChanged Parms{};
 
@@ -111,10 +108,9 @@ void UBattlePassRewardPageS32::OnInputMethodChanged(const ECommonInputType Input
 
 void UBattlePassRewardPageS32::OnLoadingScreenSelectedChanged(bool bIsSelected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLoadingScreenSelectedChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassRewardPageS32", "OnLoadingScreenSelectedChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassRewardPageS32_OnLoadingScreenSelectedChanged Parms{};
 
@@ -132,10 +128,9 @@ void UBattlePassRewardPageS32::OnLoadingScreenSelectedChanged(bool bIsSelected)
 
 void UBattlePassRewardPageS32::OnPageChanged(const int32 PageNumber, const int32 RewardPageTotal)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPageChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassRewardPageS32", "OnPageChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassRewardPageS32_OnPageChanged Parms{};
 
@@ -295,10 +290,9 @@ void UBattlePassScreenS32::HandleSwitcherVisibilityShown()
 
 void UBattlePassScreenS32::OnBattlePassGiftingAllowed(const bool bGiftingAllowed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBattlePassGiftingAllowed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnBattlePassGiftingAllowed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnBattlePassGiftingAllowed Parms{};
 
@@ -313,10 +307,9 @@ void UBattlePassScreenS32::OnBattlePassGiftingAllowed(const bool bGiftingAllowed
 
 void UBattlePassScreenS32::OnBattlePassOwned()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBattlePassOwned");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnBattlePassOwned");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -332,10 +325,9 @@ void UBattlePassScreenS32::OnBattlePassOwned()
 
 void UBattlePassScreenS32::OnCreateViewRewardCard(const class UFortItemVM* ItemVM, const class UFortItemDefinition* EffectiveActivedef, const TArray<struct FMcpVariantChannelInfo>& Variants, bool bForceEffectiveImage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCreateViewRewardCard");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnCreateViewRewardCard");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnCreateViewRewardCard Parms{};
 
@@ -355,10 +347,9 @@ void UBattlePassScreenS32::OnCreateViewRewardCard(const class UFortItemVM* ItemV
 
 void UBattlePassScreenS32::OnGameModeCompatibilityTagUpdate(const class UFortItemVM* FortItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGameModeCompatibilityTagUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnGameModeCompatibilityTagUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnGameModeCompatibilityTagUpdate Parms{};
 
@@ -373,10 +364,9 @@ void UBattlePassScreenS32::OnGameModeCompatibilityTagUpdate(const class UFortIte
 
 void UBattlePassScreenS32::OnHideItemDetails()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHideItemDetails");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnHideItemDetails");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -389,10 +379,9 @@ void UBattlePassScreenS32::OnHideItemDetails()
 
 void UBattlePassScreenS32::OnInsufficientFunds(const EBattlePassCurrencyType CurrencyType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInsufficientFunds");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnInsufficientFunds");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnInsufficientFunds Parms{};
 
@@ -409,10 +398,9 @@ void UBattlePassScreenS32::OnInsufficientFunds(const EBattlePassCurrencyType Cur
 
 void UBattlePassScreenS32::OnInsufficientResource(const class UFortPersistentResourceItemDefinition* PersistentResource)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInsufficientResource");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnInsufficientResource");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnInsufficientResource Parms{};
 
@@ -429,10 +417,9 @@ void UBattlePassScreenS32::OnInsufficientResource(const class UFortPersistentRes
 
 void UBattlePassScreenS32::OnItemDelayed(const struct FTimespan& Delay)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemDelayed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnItemDelayed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnItemDelayed Parms{};
 
@@ -447,10 +434,9 @@ void UBattlePassScreenS32::OnItemDelayed(const struct FTimespan& Delay)
 
 void UBattlePassScreenS32::OnItemDetailsClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemDetailsClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnItemDetailsClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -464,10 +450,9 @@ void UBattlePassScreenS32::OnItemDetailsClicked()
 
 void UBattlePassScreenS32::OnItemVmCardUpdate(const struct FExpandedItemVM& ItemVMs, const class UAthenaSeasonItemEntryBase* EntrySelected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemVmCardUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnItemVmCardUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnItemVmCardUpdate Parms{};
 
@@ -486,10 +471,9 @@ void UBattlePassScreenS32::OnItemVmCardUpdate(const struct FExpandedItemVM& Item
 
 void UBattlePassScreenS32::OnJunoCustomBannerUpdate(TSubclassOf<class UUserWidget> BannerClassReference, const TArray<class UFortItemVM*>& ItemVMs)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnJunoCustomBannerUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnJunoCustomBannerUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnJunoCustomBannerUpdate Parms{};
 
@@ -510,10 +494,9 @@ void UBattlePassScreenS32::OnJunoCustomBannerUpdate(TSubclassOf<class UUserWidge
 
 void UBattlePassScreenS32::OnSetBaseRewardsInfo(const int32 OwnedRewards, const int32 TotalRewards, const int32 CompletedPages, const int32 TotalPages)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetBaseRewardsInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetBaseRewardsInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetBaseRewardsInfo Parms{};
 
@@ -533,10 +516,9 @@ void UBattlePassScreenS32::OnSetBaseRewardsInfo(const int32 OwnedRewards, const 
 
 void UBattlePassScreenS32::OnSetBonusInfo(const struct FBonusInfoMiniTagData& BonusInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetBonusInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetBonusInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetBonusInfo Parms{};
 
@@ -559,10 +541,9 @@ void UBattlePassScreenS32::OnSetBonusInfo(const struct FBonusInfoMiniTagData& Bo
 
 void UBattlePassScreenS32::OnSetBonusRewardsInfo(const bool bIsUnlocked, const int32 OwnedRewards, const int32 TotalRewards, const int32 CompletedPages, const int32 TotalPages, const int32 ClaimedOutfits, const int32 TotalOutfits)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetBonusRewardsInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetBonusRewardsInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetBonusRewardsInfo Parms{};
 
@@ -587,10 +568,9 @@ void UBattlePassScreenS32::OnSetBonusRewardsInfo(const bool bIsUnlocked, const i
 
 void UBattlePassScreenS32::OnSetCoverPageData(const class FText& Title, const class FText& Description, const bool bPageComplete)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetCoverPageData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetCoverPageData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetCoverPageData Parms{};
 
@@ -613,10 +593,9 @@ void UBattlePassScreenS32::OnSetCoverPageData(const class FText& Title, const cl
 
 void UBattlePassScreenS32::OnSetCrewInfo(bool bIsNextMonthRewards, const class FText& MonthText, const struct FTimespan& NextMonthlyRewardTimespan, const class FText& CharacterDisplayName, const class FText& CharacterDescription)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetCrewInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetCrewInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetCrewInfo Parms{};
 
@@ -637,10 +616,9 @@ void UBattlePassScreenS32::OnSetCrewInfo(bool bIsNextMonthRewards, const class F
 
 void UBattlePassScreenS32::OnSetEquipButtonEnable(bool bIsEnable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetEquipButtonEnable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetEquipButtonEnable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetEquipButtonEnable Parms{};
 
@@ -658,10 +636,9 @@ void UBattlePassScreenS32::OnSetEquipButtonEnable(bool bIsEnable)
 
 void UBattlePassScreenS32::OnSetItemPrice(const int32 Cost, const EBattlePassCurrencyType CurrencyType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetItemPrice");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetItemPrice");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetItemPrice Parms{};
 
@@ -683,10 +660,9 @@ void UBattlePassScreenS32::OnSetItemPrice(const int32 Cost, const EBattlePassCur
 
 void UBattlePassScreenS32::OnSetPrerequisiteInfo(const class FText& Description, const int32 CurrentAmount, const int32 NeededAmount, EBattlePassRewardPrerequisiteType PrerequisiteType, const bool bShowPrerequisiteLock)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetPrerequisiteInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetPrerequisiteInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetPrerequisiteInfo Parms{};
 
@@ -711,10 +687,9 @@ void UBattlePassScreenS32::OnSetPrerequisiteInfo(const class FText& Description,
 
 void UBattlePassScreenS32::OnSetQuestRewardsInfo(const struct FTimespan& DelayTimespan, const int32 OwnedRewards, const int32 TotalRewards, const int32 CompletedPages, const int32 TotalPages)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetQuestRewardsInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetQuestRewardsInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetQuestRewardsInfo Parms{};
 
@@ -736,10 +711,9 @@ void UBattlePassScreenS32::OnSetQuestRewardsInfo(const struct FTimespan& DelayTi
 
 void UBattlePassScreenS32::OnSetResourcePrice(const int32 Cost, const class UFortPersistentResourceItemDefinition* PersistentResource)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetResourcePrice");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetResourcePrice");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetResourcePrice Parms{};
 
@@ -758,10 +732,9 @@ void UBattlePassScreenS32::OnSetResourcePrice(const int32 Cost, const class UFor
 
 void UBattlePassScreenS32::OnSetWarningToolTip(const ERewardWarningTooltipType32& WarningTooltipType, const class FText& Description)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetWarningToolTip");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetWarningToolTip");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetWarningToolTip Parms{};
 
@@ -785,10 +758,9 @@ void UBattlePassScreenS32::OnSetWarningToolTip(const ERewardWarningTooltipType32
 
 void UBattlePassScreenS32::OnSetWeeklyRewardsInfo(const struct FTimespan& DelayTimespan, const int32 AvailableRewards, const int32 OwnedRewards, const int32 TotalRewards, const int32 AvailablePages, const int32 CompletedPages, const int32 TotalPages)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetWeeklyRewardsInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnSetWeeklyRewardsInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnSetWeeklyRewardsInfo Parms{};
 
@@ -811,10 +783,9 @@ void UBattlePassScreenS32::OnSetWeeklyRewardsInfo(const struct FTimespan& DelayT
 
 void UBattlePassScreenS32::OnTransitionItemDetails(const bool bTransitionForward)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionItemDetails");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnTransitionItemDetails");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnTransitionItemDetails Parms{};
 
@@ -831,10 +802,9 @@ void UBattlePassScreenS32::OnTransitionItemDetails(const bool bTransitionForward
 
 void UBattlePassScreenS32::OnUpdateBattlePassRequiredBar(const bool bPassRequiredVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateBattlePassRequiredBar");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnUpdateBattlePassRequiredBar");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnUpdateBattlePassRequiredBar Parms{};
 
@@ -851,10 +821,9 @@ void UBattlePassScreenS32::OnUpdateBattlePassRequiredBar(const bool bPassRequire
 
 void UBattlePassScreenS32::OnUpdateOwnedOrEquippedTag(const class FText& StatusText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateOwnedOrEquippedTag");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnUpdateOwnedOrEquippedTag");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnUpdateOwnedOrEquippedTag Parms{};
 
@@ -872,10 +841,9 @@ void UBattlePassScreenS32::OnUpdateOwnedOrEquippedTag(const class FText& StatusT
 
 void UBattlePassScreenS32::OnUpdateStatusBar(const class FText& StatusText, const EBattlePassStatusBarTypeS32& BarType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateStatusBar");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "OnUpdateStatusBar");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassScreenS32_OnUpdateStatusBar Parms{};
 
@@ -910,10 +878,9 @@ void UBattlePassScreenS32::OverviewShowAnimationFinished()
 
 void UBattlePassScreenS32::SetFocusToFirstItemDetailsCard()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetFocusToFirstItemDetailsCard");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassScreenS32", "SetFocusToFirstItemDetailsCard");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1001,10 +968,9 @@ bool UBattlePassScreenS32::IsSeasonalCustomizationItemOwned() const
 
 void UFortBattlePassResourcesWidgetS32::OnBattleStarRewardsSet(const int32 Rewards)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBattleStarRewardsSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassResourcesWidgetS32", "OnBattleStarRewardsSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassResourcesWidgetS32_OnBattleStarRewardsSet Parms{};
 
@@ -1021,10 +987,9 @@ void UFortBattlePassResourcesWidgetS32::OnBattleStarRewardsSet(const int32 Rewar
 
 void UFortBattlePassResourcesWidgetS32::OnStylePointsRewardsSet(const int32 Rewards)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStylePointsRewardsSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassResourcesWidgetS32", "OnStylePointsRewardsSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBattlePassResourcesWidgetS32_OnStylePointsRewardsSet Parms{};
 
@@ -1039,10 +1004,9 @@ void UFortBattlePassResourcesWidgetS32::OnStylePointsRewardsSet(const int32 Rewa
 
 void UFortBattlePassTutorialTooltipS32::HideTooltip()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HideTooltip");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTutorialTooltipS32", "HideTooltip");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1078,10 +1042,9 @@ void UFortBattlePassTutorialTooltipS32::SetText(const class FText& Text)
 
 void UFortBattlePassTutorialTooltipS32::ShowTooltip()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowTooltip");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBattlePassTutorialTooltipS32", "ShowTooltip");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

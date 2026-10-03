@@ -161,10 +161,9 @@ void UFabricAudioBridgeComponent::SyncAudioToMetaSound(class USoundWave* InAudio
 
 class UTimelineComponent* AFabricButtonBase::GetCloseTimeline()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCloseTimeline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "GetCloseTimeline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricButtonBase_GetCloseTimeline Parms{};
 
@@ -186,10 +185,9 @@ class UTimelineComponent* AFabricButtonBase::GetCloseTimeline()
 
 class UTimelineComponent* AFabricButtonBase::GetOpenTimeline()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetOpenTimeline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "GetOpenTimeline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricButtonBase_GetOpenTimeline Parms{};
 
@@ -209,10 +207,9 @@ class UTimelineComponent* AFabricButtonBase::GetOpenTimeline()
 
 void AFabricButtonBase::HandleButtonClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "HandleButtonClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -228,10 +225,9 @@ void AFabricButtonBase::HandleButtonClicked()
 
 void AFabricButtonBase::HandleButtonDoubleClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonDoubleClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "HandleButtonDoubleClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -247,10 +243,9 @@ void AFabricButtonBase::HandleButtonDoubleClicked()
 
 void AFabricButtonBase::HandleButtonHovered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonHovered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "HandleButtonHovered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -266,10 +261,9 @@ void AFabricButtonBase::HandleButtonHovered()
 
 void AFabricButtonBase::HandleButtonPressed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonPressed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "HandleButtonPressed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -285,10 +279,9 @@ void AFabricButtonBase::HandleButtonPressed()
 
 void AFabricButtonBase::HandleButtonReleased()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonReleased");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "HandleButtonReleased");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -304,10 +297,9 @@ void AFabricButtonBase::HandleButtonReleased()
 
 void AFabricButtonBase::HandleButtonUnhovered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonUnhovered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "HandleButtonUnhovered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -423,10 +415,9 @@ bool AFabricButtonBase::IsToggledOn()
 
 void AFabricButtonBase::OnButtonClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnButtonClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "OnButtonClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -442,10 +433,9 @@ void AFabricButtonBase::OnButtonClicked()
 
 void AFabricButtonBase::OnButtonDoubleClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnButtonDoubleClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "OnButtonDoubleClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -461,10 +451,9 @@ void AFabricButtonBase::OnButtonDoubleClicked()
 
 void AFabricButtonBase::OnButtonPressed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnButtonPressed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "OnButtonPressed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -480,10 +469,9 @@ void AFabricButtonBase::OnButtonPressed()
 
 void AFabricButtonBase::OnButtonReleased()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnButtonReleased");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "OnButtonReleased");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -499,10 +487,9 @@ void AFabricButtonBase::OnButtonReleased()
 
 void AFabricButtonBase::OnDisabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDisabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "OnDisabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -518,10 +505,9 @@ void AFabricButtonBase::OnDisabled()
 
 void AFabricButtonBase::OnEnabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "OnEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -537,10 +523,9 @@ void AFabricButtonBase::OnEnabled()
 
 void AFabricButtonBase::OnHovered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHovered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "OnHovered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -558,10 +543,9 @@ void AFabricButtonBase::OnHovered()
 
 void AFabricButtonBase::OnToggleStateChanged(bool bIsToggled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnToggleStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "OnToggleStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricButtonBase_OnToggleStateChanged Parms{};
 
@@ -581,10 +565,9 @@ void AFabricButtonBase::OnToggleStateChanged(bool bIsToggled)
 
 void AFabricButtonBase::OnUnhovered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUnhovered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonBase", "OnUnhovered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -698,10 +681,9 @@ void AFabricButtonBase::SwapToggle()
 
 void UFabricButtonComponentBase::ConstructButton()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ConstructButton");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "ConstructButton");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -719,10 +701,9 @@ void UFabricButtonComponentBase::ConstructButton()
 
 class UTimelineComponent* UFabricButtonComponentBase::GetCloseTimeline()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCloseTimeline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "GetCloseTimeline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricButtonComponentBase_GetCloseTimeline Parms{};
 
@@ -744,10 +725,9 @@ class UTimelineComponent* UFabricButtonComponentBase::GetCloseTimeline()
 
 class UTimelineComponent* UFabricButtonComponentBase::GetOpenTimeline()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetOpenTimeline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "GetOpenTimeline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricButtonComponentBase_GetOpenTimeline Parms{};
 
@@ -767,10 +747,9 @@ class UTimelineComponent* UFabricButtonComponentBase::GetOpenTimeline()
 
 void UFabricButtonComponentBase::HandleButtonClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "HandleButtonClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -786,10 +765,9 @@ void UFabricButtonComponentBase::HandleButtonClicked()
 
 void UFabricButtonComponentBase::HandleButtonDoubleClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonDoubleClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "HandleButtonDoubleClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -805,10 +783,9 @@ void UFabricButtonComponentBase::HandleButtonDoubleClicked()
 
 void UFabricButtonComponentBase::HandleButtonHovered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonHovered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "HandleButtonHovered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -824,10 +801,9 @@ void UFabricButtonComponentBase::HandleButtonHovered()
 
 void UFabricButtonComponentBase::HandleButtonPressed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonPressed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "HandleButtonPressed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -843,10 +819,9 @@ void UFabricButtonComponentBase::HandleButtonPressed()
 
 void UFabricButtonComponentBase::HandleButtonReleased()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonReleased");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "HandleButtonReleased");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -862,10 +837,9 @@ void UFabricButtonComponentBase::HandleButtonReleased()
 
 void UFabricButtonComponentBase::HandleButtonUnhovered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleButtonUnhovered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "HandleButtonUnhovered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -981,10 +955,9 @@ bool UFabricButtonComponentBase::IsToggledOn()
 
 void UFabricButtonComponentBase::OnButtonClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnButtonClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "OnButtonClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1000,10 +973,9 @@ void UFabricButtonComponentBase::OnButtonClicked()
 
 void UFabricButtonComponentBase::OnButtonDoubleClicked()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnButtonDoubleClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "OnButtonDoubleClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1019,10 +991,9 @@ void UFabricButtonComponentBase::OnButtonDoubleClicked()
 
 void UFabricButtonComponentBase::OnButtonPressed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnButtonPressed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "OnButtonPressed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1038,10 +1009,9 @@ void UFabricButtonComponentBase::OnButtonPressed()
 
 void UFabricButtonComponentBase::OnButtonReleased()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnButtonReleased");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "OnButtonReleased");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1057,10 +1027,9 @@ void UFabricButtonComponentBase::OnButtonReleased()
 
 void UFabricButtonComponentBase::OnDisabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDisabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "OnDisabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1076,10 +1045,9 @@ void UFabricButtonComponentBase::OnDisabled()
 
 void UFabricButtonComponentBase::OnEnabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "OnEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1095,10 +1063,9 @@ void UFabricButtonComponentBase::OnEnabled()
 
 void UFabricButtonComponentBase::OnHovered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHovered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "OnHovered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1116,10 +1083,9 @@ void UFabricButtonComponentBase::OnHovered()
 
 void UFabricButtonComponentBase::OnToggleStateChanged(bool bIsToggled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnToggleStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "OnToggleStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricButtonComponentBase_OnToggleStateChanged Parms{};
 
@@ -1139,10 +1105,9 @@ void UFabricButtonComponentBase::OnToggleStateChanged(bool bIsToggled)
 
 void UFabricButtonComponentBase::OnUnhovered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUnhovered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricButtonComponentBase", "OnUnhovered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -2004,10 +1969,9 @@ bool UFabricModulatable::IsParamModulated(const class FString& Param) const
 
 void UFabricFloatProviderBase::ReceiveTick(float DeltaSeconds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveTick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricFloatProviderBase", "ReceiveTick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricFloatProviderBase_ReceiveTick Parms{};
 
@@ -3898,10 +3862,9 @@ void AFabricInteractionTool::OnRep_ServerTriggerPressed()
 
 void AFabricInteractionTool::OnSplineUpdated(EFabricInteractionToolStates NewInteractionState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSplineUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricInteractionTool", "OnSplineUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricInteractionTool_OnSplineUpdated Parms{};
 
@@ -4320,10 +4283,9 @@ void UFabricMeshProviderBase::SetReferenceMesh(const struct FFabricMeshProviderM
 
 bool UFabricMetaSoundPatchWrapper::AddToGraphOnFirstConnect()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AddToGraphOnFirstConnect");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricMetaSoundPatchWrapper", "AddToGraphOnFirstConnect");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricMetaSoundPatchWrapper_AddToGraphOnFirstConnect Parms{};
 
@@ -4446,10 +4408,9 @@ void UFabricMetaSoundPatchWrapper::NeedsParameterPackUpdate()
 
 void UFabricMetaSoundPatchWrapper::OnAddedToManagerGraph(class UFabricMetaSoundManagerComponent* Manager)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAddedToManagerGraph");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricMetaSoundPatchWrapper", "OnAddedToManagerGraph");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricMetaSoundPatchWrapper_OnAddedToManagerGraph Parms{};
 
@@ -10294,10 +10255,9 @@ struct FVector2D UFabricStepSequencerGridComponent::GetGridSquareSize(const int3
 
 void UFabricStepSequencerGridSquareComponent::OnContinuationControl_EndInteraction(class APlayerController* Controller)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnContinuationControl_EndInteraction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricStepSequencerGridSquareComponent", "OnContinuationControl_EndInteraction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricStepSequencerGridSquareComponent_OnContinuationControl_EndInteraction Parms{};
 
@@ -10314,10 +10274,9 @@ void UFabricStepSequencerGridSquareComponent::OnContinuationControl_EndInteracti
 
 void UFabricStepSequencerGridSquareComponent::OnContinuationControl_StartInteraction(class APlayerController* Controller)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnContinuationControl_StartInteraction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricStepSequencerGridSquareComponent", "OnContinuationControl_StartInteraction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricStepSequencerGridSquareComponent_OnContinuationControl_StartInteraction Parms{};
 

@@ -210,10 +210,9 @@ class UTargetingSubsystem* UTargetingTask::GetTargetingSubsystem(const struct FT
 
 bool USimpleTargetingFilterTask::BP_ShouldFilterTarget(const struct FTargetingRequestHandle& TargetingHandle, const struct FTargetingDefaultResultData& TargetData) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_ShouldFilterTarget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SimpleTargetingFilterTask", "BP_ShouldFilterTarget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SimpleTargetingFilterTask_BP_ShouldFilterTarget Parms{};
 
@@ -294,10 +293,9 @@ bool USimpleTargetingSelectionTask::AddTargetActor(const struct FTargetingReques
 
 void USimpleTargetingSelectionTask::SelectTargets(const struct FTargetingRequestHandle& TargetingHandle, const struct FTargetingSourceContext& SourceContext) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SelectTargets");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SimpleTargetingSelectionTask", "SelectTargets");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SimpleTargetingSelectionTask_SelectTargets Parms{};
 
@@ -322,10 +320,9 @@ void USimpleTargetingSelectionTask::SelectTargets(const struct FTargetingRequest
 
 float USimpleTargetingSortTask::BP_GetScoreForTarget(const struct FTargetingRequestHandle& TargetingHandle, const struct FTargetingDefaultResultData& TargetData) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetScoreForTarget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SimpleTargetingSortTask", "BP_GetScoreForTarget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SimpleTargetingSortTask_BP_GetScoreForTarget Parms{};
 
@@ -346,10 +343,9 @@ float USimpleTargetingSortTask::BP_GetScoreForTarget(const struct FTargetingRequ
 
 struct FVector UTargetingSelectionTask_AOE::GetSourceLocation(const struct FTargetingRequestHandle& TargetingHandle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSourceLocation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_AOE", "GetSourceLocation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_AOE_GetSourceLocation Parms{};
 
@@ -374,10 +370,9 @@ struct FVector UTargetingSelectionTask_AOE::GetSourceLocation(const struct FTarg
 
 struct FVector UTargetingSelectionTask_AOE::GetSourceOffset(const struct FTargetingRequestHandle& TargetingHandle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSourceOffset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_AOE", "GetSourceOffset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_AOE_GetSourceOffset Parms{};
 
@@ -402,10 +397,9 @@ struct FVector UTargetingSelectionTask_AOE::GetSourceOffset(const struct FTarget
 
 struct FQuat UTargetingSelectionTask_AOE::GetSourceRotation(const struct FTargetingRequestHandle& TargetingHandle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSourceRotation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_AOE", "GetSourceRotation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_AOE_GetSourceRotation Parms{};
 
@@ -430,10 +424,9 @@ struct FQuat UTargetingSelectionTask_AOE::GetSourceRotation(const struct FTarget
 
 void UTargetingSelectionTask_Trace::GetAdditionalActorsToIgnore(const struct FTargetingRequestHandle& TargetingHandle, TArray<class AActor*>* OutAdditionalActorsToIgnore) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAdditionalActorsToIgnore");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_Trace", "GetAdditionalActorsToIgnore");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_Trace_GetAdditionalActorsToIgnore Parms{};
 
@@ -459,10 +452,9 @@ void UTargetingSelectionTask_Trace::GetAdditionalActorsToIgnore(const struct FTa
 
 struct FVector UTargetingSelectionTask_Trace::GetSourceLocation(const struct FTargetingRequestHandle& TargetingHandle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSourceLocation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_Trace", "GetSourceLocation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_Trace_GetSourceLocation Parms{};
 
@@ -487,10 +479,9 @@ struct FVector UTargetingSelectionTask_Trace::GetSourceLocation(const struct FTa
 
 struct FVector UTargetingSelectionTask_Trace::GetSourceOffset(const struct FTargetingRequestHandle& TargetingHandle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSourceOffset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_Trace", "GetSourceOffset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_Trace_GetSourceOffset Parms{};
 
@@ -515,10 +506,9 @@ struct FVector UTargetingSelectionTask_Trace::GetSourceOffset(const struct FTarg
 
 struct FVector UTargetingSelectionTask_Trace::GetSweptTraceBoxHalfExtents(const struct FTargetingRequestHandle& TargetingHandle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSweptTraceBoxHalfExtents");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_Trace", "GetSweptTraceBoxHalfExtents");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_Trace_GetSweptTraceBoxHalfExtents Parms{};
 
@@ -543,10 +533,9 @@ struct FVector UTargetingSelectionTask_Trace::GetSweptTraceBoxHalfExtents(const 
 
 float UTargetingSelectionTask_Trace::GetSweptTraceCapsuleHalfHeight(const struct FTargetingRequestHandle& TargetingHandle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSweptTraceCapsuleHalfHeight");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_Trace", "GetSweptTraceCapsuleHalfHeight");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_Trace_GetSweptTraceCapsuleHalfHeight Parms{};
 
@@ -571,10 +560,9 @@ float UTargetingSelectionTask_Trace::GetSweptTraceCapsuleHalfHeight(const struct
 
 float UTargetingSelectionTask_Trace::GetSweptTraceRadius(const struct FTargetingRequestHandle& TargetingHandle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSweptTraceRadius");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_Trace", "GetSweptTraceRadius");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_Trace_GetSweptTraceRadius Parms{};
 
@@ -599,10 +587,9 @@ float UTargetingSelectionTask_Trace::GetSweptTraceRadius(const struct FTargeting
 
 struct FRotator UTargetingSelectionTask_Trace::GetSweptTraceRotation(const struct FTargetingRequestHandle& TargetingHandle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSweptTraceRotation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_Trace", "GetSweptTraceRotation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_Trace_GetSweptTraceRotation Parms{};
 
@@ -627,10 +614,9 @@ struct FRotator UTargetingSelectionTask_Trace::GetSweptTraceRotation(const struc
 
 struct FVector UTargetingSelectionTask_Trace::GetTraceDirection(const struct FTargetingRequestHandle& TargetingHandle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetTraceDirection");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_Trace", "GetTraceDirection");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_Trace_GetTraceDirection Parms{};
 
@@ -655,10 +641,9 @@ struct FVector UTargetingSelectionTask_Trace::GetTraceDirection(const struct FTa
 
 float UTargetingSelectionTask_Trace::GetTraceLength(const struct FTargetingRequestHandle& TargetingHandle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetTraceLength");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TargetingSelectionTask_Trace", "GetTraceLength");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TargetingSelectionTask_Trace_GetTraceLength Parms{};
 

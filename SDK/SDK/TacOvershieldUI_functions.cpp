@@ -24,10 +24,9 @@ SDK_NAMESPACE_START
 
 void UTacOvershieldPlayerInfoWidget::OnOvershieldStateChanged(float Overshield, float OvershieldMax)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOvershieldStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TacOvershieldPlayerInfoWidget", "OnOvershieldStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TacOvershieldPlayerInfoWidget_OnOvershieldStateChanged Parms{};
 
@@ -45,10 +44,9 @@ void UTacOvershieldPlayerInfoWidget::OnOvershieldStateChanged(float Overshield, 
 
 void UTacOvershieldPlayerInfoWidget::OnPlayerStateSet(class AFortPlayerStateAthena* InPlayerState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerStateSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TacOvershieldPlayerInfoWidget", "OnPlayerStateSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TacOvershieldPlayerInfoWidget_OnPlayerStateSet Parms{};
 

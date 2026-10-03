@@ -138,10 +138,9 @@ class FText UFortTemporaryItemsRow::GetCategoryText(const EAthenaCustomizationCa
 
 void UFortTemporaryItemsScreenItemInfo::OnDataSet(bool bValidItem, bool bIsSubscribed, bool IsOwned)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDataSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTemporaryItemsScreenItemInfo", "OnDataSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortTemporaryItemsScreenItemInfo_OnDataSet Parms{};
 
@@ -210,10 +209,9 @@ void UFortTemporaryItemsTileButton::SetupRewardItem(const class UFortAccountItem
 
 void UBattlePassCrewPurchaseButton::OnCurrencyUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCurrencyUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassCrewPurchaseButton", "OnCurrencyUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -227,10 +225,9 @@ void UBattlePassCrewPurchaseButton::OnCurrencyUpdated()
 
 void UBattlePassCrewPurchaseContainer::OnContentStateUpdated(EBattlePassCrewContentState InState, bool bInScreenOpened)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnContentStateUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassCrewPurchaseContainer", "OnContentStateUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassCrewPurchaseContainer_OnContentStateUpdated Parms{};
 
@@ -248,10 +245,9 @@ void UBattlePassCrewPurchaseContainer::OnContentStateUpdated(EBattlePassCrewCont
 
 void UBattlePassCrewPurchaseContainer::OnTriggerIntroAnimation(bool bCanClaimRewards)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTriggerIntroAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassCrewPurchaseContainer", "OnTriggerIntroAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassCrewPurchaseContainer_OnTriggerIntroAnimation Parms{};
 
@@ -266,10 +262,9 @@ void UBattlePassCrewPurchaseContainer::OnTriggerIntroAnimation(bool bCanClaimRew
 
 void UBattlePassPurchaseScreen::OnPurchaseConfirmed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPurchaseConfirmed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassPurchaseScreen", "OnPurchaseConfirmed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -282,10 +277,9 @@ void UBattlePassPurchaseScreen::OnPurchaseConfirmed()
 
 void UBattlePassPurchaseScreen::OnPurchaseStateChanged(EBattlePassPurchaseState InCurrentState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPurchaseStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassPurchaseScreen", "OnPurchaseStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassPurchaseScreen_OnPurchaseStateChanged Parms{};
 
@@ -302,10 +296,9 @@ void UBattlePassPurchaseScreen::OnPurchaseStateChanged(EBattlePassPurchaseState 
 
 void UBattlePassPurchaseScreen::OnSetNavButtonNotificationText(const class FText& NotificationText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetNavButtonNotificationText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassPurchaseScreen", "OnSetNavButtonNotificationText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassPurchaseScreen_OnSetNavButtonNotificationText Parms{};
 
@@ -322,10 +315,9 @@ void UBattlePassPurchaseScreen::OnSetNavButtonNotificationText(const class FText
 
 void UBattlePassPurchaseScreen::OnSetScreenInteractable(bool bInteractable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetScreenInteractable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassPurchaseScreen", "OnSetScreenInteractable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassPurchaseScreen_OnSetScreenInteractable Parms{};
 
@@ -342,10 +334,9 @@ void UBattlePassPurchaseScreen::OnSetScreenInteractable(bool bInteractable)
 
 void UBattlePassPurchaseScreen::OnShowNavButtonNotification(const bool bShowNotification)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowNavButtonNotification");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BattlePassPurchaseScreen", "OnShowNavButtonNotification");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BattlePassPurchaseScreen_OnShowNavButtonNotification Parms{};
 
@@ -409,10 +400,9 @@ class UCrewAsyncActions* UCrewAsyncActions::PurchaseSubscription(const class UUs
 
 void UCrewMultiSubscriptionAlertModal::OnSetHowToCancelURL(const class FString& MoreInfoUrl)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetHowToCancelURL");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CrewMultiSubscriptionAlertModal", "OnSetHowToCancelURL");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CrewMultiSubscriptionAlertModal_OnSetHowToCancelURL Parms{};
 
@@ -429,10 +419,9 @@ void UCrewMultiSubscriptionAlertModal::OnSetHowToCancelURL(const class FString& 
 
 void UCrewPurchaseScreen::BeginProgress(const class FText& ProgressLabel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BeginProgress");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CrewPurchaseScreen", "BeginProgress");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CrewPurchaseScreen_BeginProgress Parms{};
 
@@ -447,10 +436,9 @@ void UCrewPurchaseScreen::BeginProgress(const class FText& ProgressLabel)
 
 void UCrewPurchaseScreen::EndProgress()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EndProgress");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CrewPurchaseScreen", "EndProgress");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -661,10 +649,9 @@ void UCrewPurchaseScreen::HandleToBattlePassClicked()
 
 void UCrewPurchaseScreen::OnContainerTabVisibilityUpdated(const bool bTabsVisible, const float SpacingAdjustmentForTabs)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnContainerTabVisibilityUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CrewPurchaseScreen", "OnContainerTabVisibilityUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CrewPurchaseScreen_OnContainerTabVisibilityUpdated Parms{};
 
@@ -682,10 +669,9 @@ void UCrewPurchaseScreen::OnContainerTabVisibilityUpdated(const bool bTabsVisibl
 
 void UCrewPurchaseScreen::OnSetManagementModeEnabled(const bool bEnabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetManagementModeEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CrewPurchaseScreen", "OnSetManagementModeEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CrewPurchaseScreen_OnSetManagementModeEnabled Parms{};
 
@@ -702,10 +688,9 @@ void UCrewPurchaseScreen::OnSetManagementModeEnabled(const bool bEnabled)
 
 void UCrewPurchaseScreen::OnSetNavButtonNotificationText(const class FText& NotificationText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetNavButtonNotificationText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CrewPurchaseScreen", "OnSetNavButtonNotificationText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CrewPurchaseScreen_OnSetNavButtonNotificationText Parms{};
 
@@ -722,10 +707,9 @@ void UCrewPurchaseScreen::OnSetNavButtonNotificationText(const class FText& Noti
 
 void UCrewPurchaseScreen::OnShowNavButtonNotification(const bool bShowNotification)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowNavButtonNotification");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CrewPurchaseScreen", "OnShowNavButtonNotification");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CrewPurchaseScreen_OnShowNavButtonNotification Parms{};
 
@@ -784,10 +768,9 @@ void UCrewPurchaseScreen::RequestTabTileMoreInfo(const ESubscriptionContentTab S
 
 void UCrewPurchaseScreen::ShowDefaultData()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowDefaultData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CrewPurchaseScreen", "ShowDefaultData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -825,10 +808,9 @@ bool UCrewPurchaseScreen::CanUseContinueMembershipCTA() const
 
 void UCrewSubscriptionContentContainer::OnTabSelected(int32 TabIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTabSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CrewSubscriptionContentContainer", "OnTabSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CrewSubscriptionContentContainer_OnTabSelected Parms{};
 
@@ -846,10 +828,9 @@ void UCrewSubscriptionContentContainer::OnTabSelected(int32 TabIndex)
 
 void UFortProgressiveScreenBase::BP_OnContainerTabVisibilityUpdated(const bool bTabsVisible, const float SpacingAdjustmentForTabs)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnContainerTabVisibilityUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortProgressiveScreenBase", "BP_OnContainerTabVisibilityUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortProgressiveScreenBase_BP_OnContainerTabVisibilityUpdated Parms{};
 
@@ -924,10 +905,9 @@ void UFortProgressiveItemScreen::HandleSubscribeEngaged()
 
 void UFortProgressiveItemScreen::OnSubscriptionPurchaseComplete(bool bSuccess)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSubscriptionPurchaseComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortProgressiveItemScreen", "OnSubscriptionPurchaseComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortProgressiveItemScreen_OnSubscriptionPurchaseComplete Parms{};
 
@@ -1049,10 +1029,9 @@ void UFortProgressiveTableOfContentsScreen::HandleSubscribeEngaged()
 
 void UFortProgressiveTableOfContentsScreen::OnSubscriptionPurchaseComplete(bool bSuccess)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSubscriptionPurchaseComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortProgressiveTableOfContentsScreen", "OnSubscriptionPurchaseComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortProgressiveTableOfContentsScreen_OnSubscriptionPurchaseComplete Parms{};
 
@@ -1070,10 +1049,9 @@ void UFortProgressiveTableOfContentsScreen::OnSubscriptionPurchaseComplete(bool 
 
 void UFortTemporaryItemsScreen::BP_OnContainerTabVisibilityUpdated(const bool bTabsVisible, const float SpacingAdjustmentForTabs)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnContainerTabVisibilityUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTemporaryItemsScreen", "BP_OnContainerTabVisibilityUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortTemporaryItemsScreen_BP_OnContainerTabVisibilityUpdated Parms{};
 
@@ -1091,10 +1069,9 @@ void UFortTemporaryItemsScreen::BP_OnContainerTabVisibilityUpdated(const bool bT
 
 class UFortSubscriptionVM* UFortTemporaryItemsScreen::GetSubscriptionVM()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSubscriptionVM");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTemporaryItemsScreen", "GetSubscriptionVM");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortTemporaryItemsScreen_GetSubscriptionVM Parms{};
 

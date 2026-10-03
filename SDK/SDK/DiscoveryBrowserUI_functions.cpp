@@ -24,10 +24,9 @@ SDK_NAMESPACE_START
 
 void UFortActivityBrowserRow::OnCategoryItemChanged(const bool bPlayAnimation, const class FName& CategoryPanelName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCategoryItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRow", "OnCategoryItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRow_OnCategoryItemChanged Parms{};
 
@@ -46,10 +45,9 @@ void UFortActivityBrowserRow::OnCategoryItemChanged(const bool bPlayAnimation, c
 
 void UFortActivityBrowserRow::OnCategoryTextChanged(const class FText& CategoryText, const class FText& CategorySubtitle)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCategoryTextChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRow", "OnCategoryTextChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRow_OnCategoryTextChanged Parms{};
 
@@ -67,10 +65,9 @@ void UFortActivityBrowserRow::OnCategoryTextChanged(const class FText& CategoryT
 
 void UFortActivityBrowserRow::OnOverrideItemSelectorSet(const class UFortDiscoverItemSelectorBase* ItemSelector)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOverrideItemSelectorSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRow", "OnOverrideItemSelectorSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRow_OnOverrideItemSelectorSet Parms{};
 
@@ -87,10 +84,9 @@ void UFortActivityBrowserRow::OnOverrideItemSelectorSet(const class UFortDiscove
 
 void UFortActivityBrowserRow::OnRowIsActiveChanged(const bool bIsActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRowIsActiveChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRow", "OnRowIsActiveChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRow_OnRowIsActiveChanged Parms{};
 
@@ -107,10 +103,9 @@ void UFortActivityBrowserRow::OnRowIsActiveChanged(const bool bIsActive)
 
 void UFortActivityBrowserRow::OnRowIsSelectedChanged(const bool bIsSelected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRowIsSelectedChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRow", "OnRowIsSelectedChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRow_OnRowIsSelectedChanged Parms{};
 
@@ -127,10 +122,9 @@ void UFortActivityBrowserRow::OnRowIsSelectedChanged(const bool bIsSelected)
 
 void UFortActivityBrowserRow::OnRowMoveDown(const bool bMovingOffscreen)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRowMoveDown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRow", "OnRowMoveDown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRow_OnRowMoveDown Parms{};
 
@@ -147,10 +141,9 @@ void UFortActivityBrowserRow::OnRowMoveDown(const bool bMovingOffscreen)
 
 void UFortActivityBrowserRow::OnRowMoveUp(const bool bMovingOffscreen)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRowMoveUp");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRow", "OnRowMoveUp");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRow_OnRowMoveUp Parms{};
 
@@ -167,10 +160,9 @@ void UFortActivityBrowserRow::OnRowMoveUp(const bool bMovingOffscreen)
 
 void UFortActivityBrowserRow::OnRowPeekStateChanged(const bool bIsInPeekState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRowPeekStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRow", "OnRowPeekStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRow_OnRowPeekStateChanged Parms{};
 
@@ -262,10 +254,9 @@ bool UFortActivityBrowserRow::GetIsSelected() const
 
 int32 UFortActivityBrowserRow::GetNumDisplayedSubRows() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetNumDisplayedSubRows");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRow", "GetNumDisplayedSubRows");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRow_GetNumDisplayedSubRows Parms{};
 
@@ -287,10 +278,9 @@ int32 UFortActivityBrowserRow::GetNumDisplayedSubRows() const
 
 class UFortDiscoverProviderViewModel* UFortDiscoverBrowserGridRow::GetPanelViewModel()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPanelViewModel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDiscoverBrowserGridRow", "GetPanelViewModel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDiscoverBrowserGridRow_GetPanelViewModel Parms{};
 
@@ -384,10 +374,9 @@ void UFortDiscoverBrowserGridRow::NavigateWithinGrid(int32 Row)
 
 void UFortDiscoverBrowserGridRow::OpenNestedSurface(const class UFortDiscoverSurfaceTileItemVM* SurfaceTileItemVM)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OpenNestedSurface");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDiscoverBrowserGridRow", "OpenNestedSurface");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDiscoverBrowserGridRow_OpenNestedSurface Parms{};
 
@@ -405,10 +394,9 @@ void UFortDiscoverBrowserGridRow::OpenNestedSurface(const class UFortDiscoverSur
 
 void UFortDiscoverBrowserGridRow::SetFocusOffset(int32 FocusOffset, bool bSelectFromBelow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetFocusOffset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDiscoverBrowserGridRow", "SetFocusOffset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDiscoverBrowserGridRow_SetFocusOffset Parms{};
 
@@ -451,10 +439,9 @@ void UFortDiscoverBrowserGridRow::SetMaxVisibleRows(int32 MaxRowsShown)
 
 void UFortDiscoverBrowserGridRow::SetPanelViewModel(class UFortDiscoverProviderViewModel* ViewModel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetPanelViewModel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDiscoverBrowserGridRow", "SetPanelViewModel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDiscoverBrowserGridRow_SetPanelViewModel Parms{};
 
@@ -496,10 +483,9 @@ bool UFortDiscoverBrowserGridRow::ShouldUseSizeShiftedFocusOffset()
 
 void UFortDiscoverBrowserGridRow::UpdateAnalyticsStates(bool bStopImpressions)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateAnalyticsStates");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDiscoverBrowserGridRow", "UpdateAnalyticsStates");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDiscoverBrowserGridRow_UpdateAnalyticsStates Parms{};
 
@@ -566,10 +552,9 @@ int32 UFortDiscoverBrowserGridRow::GetNumberOfVisibleSubRows() const
 
 void UFortDiscoverHomespace::OnPeekPushPercentMobileCVarChanged(float PeekPushPercent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPeekPushPercentMobileCVarChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDiscoverHomespace", "OnPeekPushPercentMobileCVarChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDiscoverHomespace_OnPeekPushPercentMobileCVarChanged Parms{};
 
@@ -586,10 +571,9 @@ void UFortDiscoverHomespace::OnPeekPushPercentMobileCVarChanged(float PeekPushPe
 
 void UFortDiscoverHomespace::ShowDownloadStartedTooltip(const class FString& TooltipDescription)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowDownloadStartedTooltip");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDiscoverHomespace", "ShowDownloadStartedTooltip");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDiscoverHomespace_ShowDownloadStartedTooltip Parms{};
 
@@ -753,10 +737,9 @@ void UFortActivityBrowserListView::SetAllowInternalRowSelection(const bool bInAl
 
 void UFortActivityBrowserPlayWithFriendsTile::BP_PartyInformationUpdated(bool bInIsTileSelected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_PartyInformationUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "BP_PartyInformationUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_BP_PartyInformationUpdated Parms{};
 
@@ -817,10 +800,9 @@ void UFortActivityBrowserPlayWithFriendsTile::HandleCTAButtonClicked()
 
 void UFortActivityBrowserPlayWithFriendsTile::OnGameActivityChanged(class UFortGameActivity* GameActivity)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGameActivityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "OnGameActivityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_OnGameActivityChanged Parms{};
 
@@ -835,10 +817,9 @@ void UFortActivityBrowserPlayWithFriendsTile::OnGameActivityChanged(class UFortG
 
 void UFortActivityBrowserPlayWithFriendsTile::OnTextureBeginLoading()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTextureBeginLoading");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "OnTextureBeginLoading");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -851,10 +832,9 @@ void UFortActivityBrowserPlayWithFriendsTile::OnTextureBeginLoading()
 
 void UFortActivityBrowserPlayWithFriendsTile::OnTextureLoadingComplete(const class UTexture* ThumbnailTexture)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTextureLoadingComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "OnTextureLoadingComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_OnTextureLoadingComplete Parms{};
 
@@ -871,10 +851,9 @@ void UFortActivityBrowserPlayWithFriendsTile::OnTextureLoadingComplete(const cla
 
 void UFortActivityBrowserPlayWithFriendsTile::OnTileActiveChanged(const bool bIsTileActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTileActiveChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "OnTileActiveChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_OnTileActiveChanged Parms{};
 
@@ -891,10 +870,9 @@ void UFortActivityBrowserPlayWithFriendsTile::OnTileActiveChanged(const bool bIs
 
 void UFortActivityBrowserPlayWithFriendsTile::OnUpdateColumnSize(int32 NewColumnSize)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateColumnSize");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "OnUpdateColumnSize");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_OnUpdateColumnSize Parms{};
 
@@ -931,10 +909,9 @@ void UFortActivityBrowserPlayWithFriendsTile::OpenSidebar()
 
 void UFortActivityBrowserPlayWithFriendsTile::UpdateCTAButtonInfo(const class FText& InteractionText, const bool bInteractionFound)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCTAButtonInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "UpdateCTAButtonInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_UpdateCTAButtonInfo Parms{};
 
@@ -952,10 +929,9 @@ void UFortActivityBrowserPlayWithFriendsTile::UpdateCTAButtonInfo(const class FT
 
 void UFortActivityBrowserPlayWithFriendsTile::UpdateCTAButtonInteraction(const bool bIsInteractionEnabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCTAButtonInteraction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "UpdateCTAButtonInteraction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_UpdateCTAButtonInteraction Parms{};
 
@@ -972,10 +948,9 @@ void UFortActivityBrowserPlayWithFriendsTile::UpdateCTAButtonInteraction(const b
 
 void UFortActivityBrowserPlayWithFriendsTile::UpdateIslandThumbnail(const class UTexture* ThumbnailTexture)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateIslandThumbnail");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "UpdateIslandThumbnail");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_UpdateIslandThumbnail Parms{};
 
@@ -992,10 +967,9 @@ void UFortActivityBrowserPlayWithFriendsTile::UpdateIslandThumbnail(const class 
 
 void UFortActivityBrowserPlayWithFriendsTile::UpdateLastInteraction(const class FText& LastInteraction)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateLastInteraction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "UpdateLastInteraction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_UpdateLastInteraction Parms{};
 
@@ -1012,10 +986,9 @@ void UFortActivityBrowserPlayWithFriendsTile::UpdateLastInteraction(const class 
 
 void UFortActivityBrowserPlayWithFriendsTile::UpdateOtherPlayersSubText(const class FText& OtherPlayersSubText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateOtherPlayersSubText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "UpdateOtherPlayersSubText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_UpdateOtherPlayersSubText Parms{};
 
@@ -1032,10 +1005,9 @@ void UFortActivityBrowserPlayWithFriendsTile::UpdateOtherPlayersSubText(const cl
 
 void UFortActivityBrowserPlayWithFriendsTile::UpdatePartyMemberNames(const class FText& Names)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdatePartyMemberNames");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "UpdatePartyMemberNames");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_UpdatePartyMemberNames Parms{};
 
@@ -1052,10 +1024,9 @@ void UFortActivityBrowserPlayWithFriendsTile::UpdatePartyMemberNames(const class
 
 void UFortActivityBrowserPlayWithFriendsTile::UpdateRichPresence(const class FText& RichPresence)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateRichPresence");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "UpdateRichPresence");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_UpdateRichPresence Parms{};
 
@@ -1072,10 +1043,9 @@ void UFortActivityBrowserPlayWithFriendsTile::UpdateRichPresence(const class FTe
 
 void UFortActivityBrowserPlayWithFriendsTile::UpdateSingleFriendName(const class FText& SingleFriendName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateSingleFriendName");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserPlayWithFriendsTile", "UpdateSingleFriendName");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserPlayWithFriendsTile_UpdateSingleFriendName Parms{};
 
@@ -1117,10 +1087,9 @@ const int32 UFortActivityBrowserPlayWithFriendsTile::GetMaxPartySize() const
 
 void UFortActivityBrowserRowList::OnQueryStatusChanged(bool bIsActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQueryStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRowList", "OnQueryStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRowList_OnQueryStatusChanged Parms{};
 
@@ -1135,10 +1104,9 @@ void UFortActivityBrowserRowList::OnQueryStatusChanged(bool bIsActive)
 
 void UFortActivityBrowserView::OnSurfaceDataDirty()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSurfaceDataDirty");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserView", "OnSurfaceDataDirty");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1174,10 +1142,9 @@ EFortInvalidActivityReason UFortActivityBrowserView::GetInvalidActivityReason() 
 
 void UFortActivityBrowserRowView::BP_OnSwipeDownAtEnd()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnSwipeDownAtEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRowView", "BP_OnSwipeDownAtEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1188,10 +1155,9 @@ void UFortActivityBrowserRowView::BP_OnSwipeDownAtEnd()
 
 void UFortActivityBrowserRowView::BP_OnSwipeUpAtStart()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnSwipeUpAtStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRowView", "BP_OnSwipeUpAtStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1227,10 +1193,9 @@ void UFortActivityBrowserRowView::HandleVerticalSwipe(const int32 Direction)
 
 void UFortActivityBrowserRowView::OnActivityUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActivityUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRowView", "OnActivityUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1244,10 +1209,9 @@ void UFortActivityBrowserRowView::OnActivityUpdated()
 
 void UFortActivityBrowserRowView::OnListViewScrolled(float ItemOffset, float DistanceRemaining)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnListViewScrolled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRowView", "OnListViewScrolled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRowView_OnListViewScrolled Parms{};
 
@@ -1263,10 +1227,9 @@ void UFortActivityBrowserRowView::OnListViewScrolled(float ItemOffset, float Dis
 
 void UFortActivityBrowserRowView::OnQueryActivitiesFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQueryActivitiesFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRowView", "OnQueryActivitiesFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1279,10 +1242,9 @@ void UFortActivityBrowserRowView::OnQueryActivitiesFinished()
 
 void UFortActivityBrowserRowView::OnRowChanged(const int32 NewCategoryIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRowChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityBrowserRowView", "OnRowChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityBrowserRowView_OnRowChanged Parms{};
 
@@ -1393,10 +1355,9 @@ void UFortActivityBrowserTile::HandleDisplayTileDetailsHoldTriggered(class UComm
 
 void UFortActivityPlayerBrowserView::BP_OnTileViewUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTileViewUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityPlayerBrowserView", "BP_OnTileViewUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1407,10 +1368,9 @@ void UFortActivityPlayerBrowserView::BP_OnTileViewUpdated()
 
 void UFortActivityPlayerBrowserView::OnPlayViewIntro()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayViewIntro");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityPlayerBrowserView", "OnPlayViewIntro");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1421,10 +1381,9 @@ void UFortActivityPlayerBrowserView::OnPlayViewIntro()
 
 void UFortActivityPlayerBrowserView::OnQueryActivitiesComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQueryActivitiesComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityPlayerBrowserView", "OnQueryActivitiesComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1435,10 +1394,9 @@ void UFortActivityPlayerBrowserView::OnQueryActivitiesComplete()
 
 void UFortActivityPlayerBrowserView::OnQueryActivitiesStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQueryActivitiesStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityPlayerBrowserView", "OnQueryActivitiesStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1470,10 +1428,9 @@ void UFortActivityPlayerBrowserView::PlayViewIntro()
 
 void UFortActivityCategoryTile::OnTileActiveSet(const bool bIsTileActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTileActiveSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityCategoryTile", "OnTileActiveSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityCategoryTile_OnTileActiveSet Parms{};
 
@@ -1520,10 +1477,9 @@ class UFortActivityCategoryTilePanel* UFortActivityCategoryView::NavigateFromPan
 
 void UFortActivityCategoryView::OnCategoryTilePanelSelected(const class UFortActivityCategoryTilePanel* SelectedPanel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCategoryTilePanelSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityCategoryView", "OnCategoryTilePanelSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityCategoryView_OnCategoryTilePanelSelected Parms{};
 
@@ -1538,10 +1494,9 @@ void UFortActivityCategoryView::OnCategoryTilePanelSelected(const class UFortAct
 
 void UFortActivityCategoryView::OnSurfaceDataReady()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSurfaceDataReady");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityCategoryView", "OnSurfaceDataReady");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1579,10 +1534,9 @@ const class UFortActivityCategoryTilePanel* UFortActivityCategoryView::GetCurren
 
 class UFortActivityCategoryTilePanel* UFortActivityCategoryView::GetTopMostVisiblePanel() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetTopMostVisiblePanel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityCategoryView", "GetTopMostVisiblePanel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityCategoryView_GetTopMostVisiblePanel Parms{};
 
@@ -1602,10 +1556,9 @@ class UFortActivityCategoryTilePanel* UFortActivityCategoryView::GetTopMostVisib
 
 void UFortActivityCreatorPageView::OnCreatorActivitiesQueryFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCreatorActivitiesQueryFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityCreatorPageView", "OnCreatorActivitiesQueryFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1616,10 +1569,9 @@ void UFortActivityCreatorPageView::OnCreatorActivitiesQueryFinished()
 
 void UFortActivityCreatorPageView::OnNoContentFoundForCreator()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNoContentFoundForCreator");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityCreatorPageView", "OnNoContentFoundForCreator");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1689,10 +1641,9 @@ void UFortActivityDiscoverView::HandleMovieWidgetMediaStarted()
 
 void UFortActivityDiscoverView::OnMoviePlayingChanged(const bool bIsPlaying)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMoviePlayingChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityDiscoverView", "OnMoviePlayingChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityDiscoverView_OnMoviePlayingChanged Parms{};
 
@@ -1707,10 +1658,9 @@ void UFortActivityDiscoverView::OnMoviePlayingChanged(const bool bIsPlaying)
 
 void UFortActivityDiscoverView::OnMoviePreEndEvent()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMoviePreEndEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityDiscoverView", "OnMoviePreEndEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1721,10 +1671,9 @@ void UFortActivityDiscoverView::OnMoviePreEndEvent()
 
 void UFortActivityDiscoverView::OnPlayKeyArtIntro()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayKeyArtIntro");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityDiscoverView", "OnPlayKeyArtIntro");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1735,10 +1684,9 @@ void UFortActivityDiscoverView::OnPlayKeyArtIntro()
 
 void UFortActivityDiscoverView::OnPlayKeyArtOutro()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayKeyArtOutro");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityDiscoverView", "OnPlayKeyArtOutro");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1752,10 +1700,9 @@ void UFortActivityDiscoverView::OnPlayKeyArtOutro()
 
 void UFortActivityDiscoverView::OnPreviewImageChanged(const bool bIsLoading, const class UTexture* Texture)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreviewImageChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityDiscoverView", "OnPreviewImageChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityDiscoverView_OnPreviewImageChanged Parms{};
 
@@ -1771,10 +1718,9 @@ void UFortActivityDiscoverView::OnPreviewImageChanged(const bool bIsLoading, con
 
 void UFortActivityDiscoverView::OnUpdateDetailsDisplay()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateDetailsDisplay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityDiscoverView", "OnUpdateDetailsDisplay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1787,10 +1733,9 @@ void UFortActivityDiscoverView::OnUpdateDetailsDisplay()
 
 const class UTexture* UFortActivityDiscoverView::GetCurrentTexture() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCurrentTexture");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityDiscoverView", "GetCurrentTexture");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityDiscoverView_GetCurrentTexture Parms{};
 
@@ -1812,10 +1757,9 @@ const class UTexture* UFortActivityDiscoverView::GetCurrentTexture() const
 
 class UWidgetAnimation* UFortActivityDiscoverView::GetKeyArtOutroAnimation() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetKeyArtOutroAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityDiscoverView", "GetKeyArtOutroAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityDiscoverView_GetKeyArtOutroAnimation Parms{};
 
@@ -2269,10 +2213,9 @@ int32 UFortActivityListView::GetInViewCount() const
 
 void UFortActivityLobbyTile::OnDetailsUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDetailsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityLobbyTile", "OnDetailsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2286,10 +2229,9 @@ void UFortActivityLobbyTile::OnDetailsUpdated()
 
 void UFortActivityLobbyTile::OnPreviewImageChanged(const bool bIsLoading, const class UTexture* Texture)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreviewImageChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityLobbyTile", "OnPreviewImageChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityLobbyTile_OnPreviewImageChanged Parms{};
 
@@ -2377,10 +2319,9 @@ bool UFortActivityLobbyTile::IsActivityEpicCreated() const
 
 void UFortActivityModeSetSelectionModal::OnActivityChanged(const class UFortGameActivity* GameActivity, const class FString& StartingSelectedMnemonic)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActivityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityModeSetSelectionModal", "OnActivityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityModeSetSelectionModal_OnActivityChanged Parms{};
 
@@ -2399,10 +2340,9 @@ void UFortActivityModeSetSelectionModal::OnActivityChanged(const class UFortGame
 
 void UFortActivityModeSetSelectionModal::OnPreviewImageChanged(const bool bIsLoading, const class UTexture* Texture)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreviewImageChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityModeSetSelectionModal", "OnPreviewImageChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityModeSetSelectionModal_OnPreviewImageChanged Parms{};
 
@@ -2418,10 +2358,9 @@ void UFortActivityModeSetSelectionModal::OnPreviewImageChanged(const bool bIsLoa
 
 void UFortActivityModeSetSelectionModal::OnSubModeSelected()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSubModeSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityModeSetSelectionModal", "OnSubModeSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2432,10 +2371,9 @@ void UFortActivityModeSetSelectionModal::OnSubModeSelected()
 
 void UFortActivityModeSetSelectionModal::OnSubModeSelectionChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSubModeSelectionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityModeSetSelectionModal", "OnSubModeSelectionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2468,10 +2406,9 @@ void UFortActivityModeSetSelectionModal::SaveSelectionAndClose()
 
 void UFortActivityModeSetSelectionModal::SetHabaneroValues(bool bHabaneroEnabled, bool bHabaneroExists)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetHabaneroValues");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityModeSetSelectionModal", "SetHabaneroValues");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityModeSetSelectionModal_SetHabaneroValues Parms{};
 
@@ -2489,10 +2426,9 @@ void UFortActivityModeSetSelectionModal::SetHabaneroValues(bool bHabaneroEnabled
 
 void UFortActivityModeSetSelectionModal::SetIsRankedSwitchAvailable(const bool bIsRankedSwitchAvailable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetIsRankedSwitchAvailable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityModeSetSelectionModal", "SetIsRankedSwitchAvailable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityModeSetSelectionModal_SetIsRankedSwitchAvailable Parms{};
 
@@ -2591,10 +2527,9 @@ void UFortActivitySelector::HandleShowActivityDetails()
 
 void UFortActivitySelector::OnEnableColorScheme(const bool bIsColorSchemeActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEnableColorScheme");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivitySelector", "OnEnableColorScheme");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivitySelector_OnEnableColorScheme Parms{};
 
@@ -2611,10 +2546,9 @@ void UFortActivitySelector::OnEnableColorScheme(const bool bIsColorSchemeActive)
 
 void UFortActivitySelector::OnSwapColorScheme(const bool bInIsUsingAlternateColorScheme)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSwapColorScheme");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivitySelector", "OnSwapColorScheme");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivitySelector_OnSwapColorScheme Parms{};
 
@@ -2724,10 +2658,9 @@ void UFortActivityTileDetailsDisplay::NotifyAnalyticsTileWasClicked()
 
 void UFortActivityTileDetailsDisplay::OnDetailsUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDetailsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "OnDetailsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2740,10 +2673,9 @@ void UFortActivityTileDetailsDisplay::OnDetailsUpdated()
 
 void UFortActivityTileDetailsDisplay::OnFriendsPlayingChanged(int32 NumPlaying)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFriendsPlayingChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "OnFriendsPlayingChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityTileDetailsDisplay_OnFriendsPlayingChanged Parms{};
 
@@ -2760,10 +2692,9 @@ void UFortActivityTileDetailsDisplay::OnFriendsPlayingChanged(int32 NumPlaying)
 
 void UFortActivityTileDetailsDisplay::OnIsFavoriteChanged(const bool bIsFavorite)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIsFavoriteChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "OnIsFavoriteChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityTileDetailsDisplay_OnIsFavoriteChanged Parms{};
 
@@ -2778,10 +2709,9 @@ void UFortActivityTileDetailsDisplay::OnIsFavoriteChanged(const bool bIsFavorite
 
 void UFortActivityTileDetailsDisplay::OnLocalPlayerDemoted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLocalPlayerDemoted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "OnLocalPlayerDemoted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2792,10 +2722,9 @@ void UFortActivityTileDetailsDisplay::OnLocalPlayerDemoted()
 
 void UFortActivityTileDetailsDisplay::OnLocalPlayerPromotedToLeader()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLocalPlayerPromotedToLeader");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "OnLocalPlayerPromotedToLeader");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2809,10 +2738,9 @@ void UFortActivityTileDetailsDisplay::OnLocalPlayerPromotedToLeader()
 
 void UFortActivityTileDetailsDisplay::OnLogoImageChanged(const bool bIsLoading, const class UTexture* Texture)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLogoImageChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "OnLogoImageChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityTileDetailsDisplay_OnLogoImageChanged Parms{};
 
@@ -2830,10 +2758,9 @@ void UFortActivityTileDetailsDisplay::OnLogoImageChanged(const bool bIsLoading, 
 
 void UFortActivityTileDetailsDisplay::OnPartySizeChanged(const int32 PartySize)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPartySizeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "OnPartySizeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityTileDetailsDisplay_OnPartySizeChanged Parms{};
 
@@ -2851,10 +2778,9 @@ void UFortActivityTileDetailsDisplay::OnPartySizeChanged(const int32 PartySize)
 
 void UFortActivityTileDetailsDisplay::OnPreviewImageChanged(const bool bIsLoading, const class UTexture* Texture)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreviewImageChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "OnPreviewImageChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityTileDetailsDisplay_OnPreviewImageChanged Parms{};
 
@@ -2872,10 +2798,9 @@ void UFortActivityTileDetailsDisplay::OnPreviewImageChanged(const bool bIsLoadin
 
 void UFortActivityTileDetailsDisplay::OnRequiresPurchaseChanged(const bool bRequiresPurchase)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRequiresPurchaseChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "OnRequiresPurchaseChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityTileDetailsDisplay_OnRequiresPurchaseChanged Parms{};
 
@@ -2892,10 +2817,9 @@ void UFortActivityTileDetailsDisplay::OnRequiresPurchaseChanged(const bool bRequ
 
 void UFortActivityTileDetailsDisplay::OnRespondToTileViewVisibilityChange(bool bIsVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRespondToTileViewVisibilityChange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "OnRespondToTileViewVisibilityChange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityTileDetailsDisplay_OnRespondToTileViewVisibilityChange Parms{};
 
@@ -2912,10 +2836,9 @@ void UFortActivityTileDetailsDisplay::OnRespondToTileViewVisibilityChange(bool b
 
 void UFortActivityTileDetailsDisplay::OnTileActiveSet(const bool bIsTileActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTileActiveSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "OnTileActiveSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityTileDetailsDisplay_OnTileActiveSet Parms{};
 
@@ -2951,10 +2874,9 @@ void UFortActivityTileDetailsDisplay::OnTileClicked()
 
 void UFortActivityTileDetailsDisplay::ShouldPlayTileVideo(bool* bOutResult)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldPlayTileVideo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "ShouldPlayTileVideo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityTileDetailsDisplay_ShouldPlayTileVideo Parms{};
 
@@ -3029,10 +2951,9 @@ void UFortActivityTileDetailsDisplay::UpdateActivitySelector()
 
 void UFortActivityTileDetailsDisplay::UpdateCCU(const int32 CCUCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCCU");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "UpdateCCU");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityTileDetailsDisplay_UpdateCCU Parms{};
 
@@ -3068,10 +2989,9 @@ void UFortActivityTileDetailsDisplay::UpdateFromFortActivityViewModel()
 
 void UFortActivityTileDetailsDisplay::UpdateSqueegeeWidgets(class UFortGameActivity* GameActivity)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateSqueegeeWidgets");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortActivityTileDetailsDisplay", "UpdateSqueegeeWidgets");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortActivityTileDetailsDisplay_UpdateSqueegeeWidgets Parms{};
 

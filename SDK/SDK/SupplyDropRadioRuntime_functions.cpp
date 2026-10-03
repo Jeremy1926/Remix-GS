@@ -48,10 +48,9 @@ void ABuildingGameplayActorSupplyDropRadio::HandleMoveIgnoredActorEndPlay(class 
 
 void ABuildingGameplayActorSupplyDropRadio::OnRep_BalloonState()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRep_BalloonState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorSupplyDropRadio", "OnRep_BalloonState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -62,10 +61,9 @@ void ABuildingGameplayActorSupplyDropRadio::OnRep_BalloonState()
 
 void ABuildingGameplayActorSupplyDropRadio::OnRep_DistanceFromOriginalSpawnLocForBalloonOpen()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRep_DistanceFromOriginalSpawnLocForBalloonOpen");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorSupplyDropRadio", "OnRep_DistanceFromOriginalSpawnLocForBalloonOpen");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -76,10 +74,9 @@ void ABuildingGameplayActorSupplyDropRadio::OnRep_DistanceFromOriginalSpawnLocFo
 
 void ABuildingGameplayActorSupplyDropRadio::OpenSupplyDrop()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OpenSupplyDrop");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorSupplyDropRadio", "OpenSupplyDrop");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -143,10 +140,9 @@ void ABuildingGameplayActorSupplyDropRadio::SetGravityMultiplier(const float InG
 
 void ABuildingGameplayActorSupplyDropRadio::UpdateGroundInfo(const bool bValidBlock, const struct FHitResult& MovementHitResult)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateGroundInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorSupplyDropRadio", "UpdateGroundInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorSupplyDropRadio_UpdateGroundInfo Parms{};
 
@@ -242,10 +238,9 @@ class AActor* ABuildingGameplayActorSupplyDropRadio::GetHighestAttachParent(cons
 
 class UBoxComponent* ABuildingGameplayActorSupplyDropRadio::GetRootCollisionComponent() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetRootCollisionComponent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorSupplyDropRadio", "GetRootCollisionComponent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorSupplyDropRadio_GetRootCollisionComponent Parms{};
 
@@ -262,10 +257,9 @@ class UBoxComponent* ABuildingGameplayActorSupplyDropRadio::GetRootCollisionComp
 
 bool ABuildingGameplayActorSupplyDropRadio::IsGrounded() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsGrounded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorSupplyDropRadio", "IsGrounded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorSupplyDropRadio_IsGrounded Parms{};
 

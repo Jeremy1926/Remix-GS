@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void UFortGameplayAbility_ScoutDrone_Dive::BP_OnDroneStartedDiving()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDroneStartedDiving");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_ScoutDrone_Dive", "BP_OnDroneStartedDiving");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -35,10 +34,9 @@ void UFortGameplayAbility_ScoutDrone_Dive::BP_OnDroneStartedDiving()
 
 void UFortGameplayAbility_ScoutDrone_Dive::BP_OnDroneStoppedDiving()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDroneStoppedDiving");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_ScoutDrone_Dive", "BP_OnDroneStoppedDiving");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -51,10 +49,9 @@ void UFortGameplayAbility_ScoutDrone_Dive::BP_OnDroneStoppedDiving()
 
 void UFortGameplayAbility_ScoutDrone_TargetingBase::BP_OnTargetsFound(const struct FTargetingRequestHandle& TargetingHandle)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTargetsFound");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_ScoutDrone_TargetingBase", "BP_OnTargetsFound");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_ScoutDrone_TargetingBase_BP_OnTargetsFound Parms{};
 
@@ -109,10 +106,9 @@ void UFortGameplayAbility_ScoutDrone_TargetingBase::StopTargeting()
 
 void UFortGameplayAbility_ScoutDrone_SpeedBoost::OnBoostedIntoActor(const struct FHitResult& HitResult)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostedIntoActor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_ScoutDrone_SpeedBoost", "OnBoostedIntoActor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_ScoutDrone_SpeedBoost_OnBoostedIntoActor Parms{};
 
@@ -130,10 +126,9 @@ void UFortGameplayAbility_ScoutDrone_SpeedBoost::OnBoostedIntoActor(const struct
 
 void UFortGameplayAbility_ScoutDrone_SpeedBoost::OnDoorBashed(const struct FHitResult& HitResult, class UFortBuildingWallDoorComponent* BashedDoor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDoorBashed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_ScoutDrone_SpeedBoost", "OnDoorBashed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_ScoutDrone_SpeedBoost_OnDoorBashed Parms{};
 
@@ -176,10 +171,9 @@ class AFortScoutDrone* UFortGameplayAbility_ScoutDrone_Dismiss::GetControlledDro
 
 void UFortGameplayAbility_ScoutDrone_MarkPotentialTargets::OnStartHighlightingTarget(class AActor* Target)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartHighlightingTarget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_ScoutDrone_MarkPotentialTargets", "OnStartHighlightingTarget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_ScoutDrone_MarkPotentialTargets_OnStartHighlightingTarget Parms{};
 
@@ -196,10 +190,9 @@ void UFortGameplayAbility_ScoutDrone_MarkPotentialTargets::OnStartHighlightingTa
 
 void UFortGameplayAbility_ScoutDrone_MarkPotentialTargets::OnStoppedHighlightingTarget(class AActor* Target)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStoppedHighlightingTarget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_ScoutDrone_MarkPotentialTargets", "OnStoppedHighlightingTarget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_ScoutDrone_MarkPotentialTargets_OnStoppedHighlightingTarget Parms{};
 
@@ -216,10 +209,9 @@ void UFortGameplayAbility_ScoutDrone_MarkPotentialTargets::OnStoppedHighlighting
 
 void UFortGameplayAbility_ScoutDrone_PassiveMark::BP_OnTargetStatusChanged(class AActor* ActiveTarget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTargetStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_ScoutDrone_PassiveMark", "BP_OnTargetStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_ScoutDrone_PassiveMark_BP_OnTargetStatusChanged Parms{};
 
@@ -504,10 +496,9 @@ void AFortScoutDrone::GetForwardAndRightDotProducts_Native(float* OutForwardDot,
 
 void AFortScoutDrone::OnDamagePlayEffects(float Damage, const struct FGameplayTagContainer& DamageTags, const struct FVector& Momentum, const struct FHitResult& HitInfo, class AFortPawn* InstigatedBy, class AActor* DamageCauser, const struct FGameplayEffectContextHandle& EffectContext)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDamagePlayEffects");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScoutDrone", "OnDamagePlayEffects");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScoutDrone_OnDamagePlayEffects Parms{};
 
@@ -536,10 +527,9 @@ void AFortScoutDrone::OnDamagePlayEffects(float Damage, const struct FGameplayTa
 
 void AFortScoutDrone::OnDeathPlayEffects(float Damage, const struct FGameplayTagContainer& DamageTags, const struct FVector& Momentum, const struct FHitResult& HitInfo, class AFortPawn* InstigatedBy, class AActor* DamageCauser, const struct FGameplayEffectContextHandle& EffectContext)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDeathPlayEffects");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScoutDrone", "OnDeathPlayEffects");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScoutDrone_OnDeathPlayEffects Parms{};
 
@@ -720,10 +710,9 @@ float AFortScoutDrone::GetHealthPercentage() const
 
 void UFortScoutDroneControllingComponent::BP_OnDestructionStarted(bool bInstantDestruction, const struct FGameplayTag& DismissalReason)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDestructionStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScoutDroneControllingComponent", "BP_OnDestructionStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScoutDroneControllingComponent_BP_OnDestructionStarted Parms{};
 
@@ -742,10 +731,9 @@ void UFortScoutDroneControllingComponent::BP_OnDestructionStarted(bool bInstantD
 
 void UFortScoutDroneControllingComponent::BP_OnDismissalStarted(bool bInstantDismissal, const struct FGameplayTag& DismissalReason)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDismissalStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScoutDroneControllingComponent", "BP_OnDismissalStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScoutDroneControllingComponent_BP_OnDismissalStarted Parms{};
 
@@ -763,10 +751,9 @@ void UFortScoutDroneControllingComponent::BP_OnDismissalStarted(bool bInstantDis
 
 void UFortScoutDroneControllingComponent::BP_OnDroneDestroyed(const struct FGameplayTag& DismissalReason)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDroneDestroyed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScoutDroneControllingComponent", "BP_OnDroneDestroyed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScoutDroneControllingComponent_BP_OnDroneDestroyed Parms{};
 
@@ -784,10 +771,9 @@ void UFortScoutDroneControllingComponent::BP_OnDroneDestroyed(const struct FGame
 
 void UFortScoutDroneControllingComponent::BP_OnPlayerInteractLongUseChanged(bool bInteracting, bool bLongUseInteractionCompleted)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnPlayerInteractLongUseChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScoutDroneControllingComponent", "BP_OnPlayerInteractLongUseChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortScoutDroneControllingComponent_BP_OnPlayerInteractLongUseChanged Parms{};
 
@@ -803,10 +789,9 @@ void UFortScoutDroneControllingComponent::BP_OnPlayerInteractLongUseChanged(bool
 
 void UFortScoutDroneControllingComponent::BP_OnPlayerShortInteract()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnPlayerShortInteract");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScoutDroneControllingComponent", "BP_OnPlayerShortInteract");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -997,10 +982,9 @@ class AFortScoutDrone* UFortScoutDroneControllingComponent::GetControlledDrone()
 
 void UFortScoutDronePickupManager::BP_OnActorsAttached()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnActorsAttached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScoutDronePickupManager", "BP_OnActorsAttached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1011,10 +995,9 @@ void UFortScoutDronePickupManager::BP_OnActorsAttached()
 
 void UFortScoutDronePickupManager::BP_OnActorsDetached()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnActorsDetached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortScoutDronePickupManager", "BP_OnActorsDetached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

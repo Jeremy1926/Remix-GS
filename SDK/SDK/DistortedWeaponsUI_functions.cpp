@@ -161,10 +161,9 @@ void UChromeWeaponInfoWidget::HandleXpChanged(const float XPDelta, const float C
 
 void UChromeWeaponInfoWidget::OnGainedXp(float CurrentXPPercentage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGainedXp");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ChromeWeaponInfoWidget", "OnGainedXp");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ChromeWeaponInfoWidget_OnGainedXp Parms{};
 
@@ -181,10 +180,9 @@ void UChromeWeaponInfoWidget::OnGainedXp(float CurrentXPPercentage)
 
 void UChromeWeaponInfoWidget::OnReadyToUpgradeWeapon(EFortRarity NextRarity)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnReadyToUpgradeWeapon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ChromeWeaponInfoWidget", "OnReadyToUpgradeWeapon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ChromeWeaponInfoWidget_OnReadyToUpgradeWeapon Parms{};
 
@@ -199,10 +197,9 @@ void UChromeWeaponInfoWidget::OnReadyToUpgradeWeapon(EFortRarity NextRarity)
 
 void UChromeWeaponInfoWidget::OnWeaponEquipped()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWeaponEquipped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ChromeWeaponInfoWidget", "OnWeaponEquipped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -213,10 +210,9 @@ void UChromeWeaponInfoWidget::OnWeaponEquipped()
 
 void UChromeWeaponInfoWidget::OnWeaponRemoved()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWeaponRemoved");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ChromeWeaponInfoWidget", "OnWeaponRemoved");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -227,10 +223,9 @@ void UChromeWeaponInfoWidget::OnWeaponRemoved()
 
 void UChromeWeaponInfoWidget::OnWeaponStartUpgrading()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWeaponStartUpgrading");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ChromeWeaponInfoWidget", "OnWeaponStartUpgrading");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -241,10 +236,9 @@ void UChromeWeaponInfoWidget::OnWeaponStartUpgrading()
 
 void UChromeWeaponInfoWidget::OnWeaponUpgraded()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWeaponUpgraded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ChromeWeaponInfoWidget", "OnWeaponUpgraded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

@@ -710,10 +710,9 @@ class UPilgrimAsyncAction_RequestPlayerFeed* UPilgrimAsyncAction_RequestPlayerFe
 
 void APilgrimBeatMarker::OnBeatMarkerPassedNowBar()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBeatMarkerPassedNowBar");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBeatMarker", "OnBeatMarkerPassedNowBar");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -729,10 +728,9 @@ void APilgrimBeatMarker::OnBeatMarkerPassedNowBar()
 
 void APilgrimBeatMarker::OnPlacedOnTrack()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlacedOnTrack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBeatMarker", "OnPlacedOnTrack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -750,10 +748,9 @@ void APilgrimBeatMarker::OnPlacedOnTrack()
 
 void APilgrimBeatMarker::SetupNumLanes(int32 NumLanes)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupNumLanes");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBeatMarker", "SetupNumLanes");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimBeatMarker_SetupNumLanes Parms{};
 
@@ -770,10 +767,9 @@ void APilgrimBeatMarker::SetupNumLanes(int32 NumLanes)
 
 void UPilgrimBeatValidatedAbility::OnBeatAbilityActivated(bool bOnBeat)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBeatAbilityActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimBeatValidatedAbility", "OnBeatAbilityActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimBeatValidatedAbility_OnBeatAbilityActivated Parms{};
 
@@ -4655,10 +4651,9 @@ void APilgrimGem::FinishGemSmash()
 
 void APilgrimGem::OnCalibrationDebugSet(bool bDebugEnabled, const struct FTrackItemInfo& Gem, TArray<class UPrimitiveComponent*>* OutDebugPrimitives)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCalibrationDebugSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGem", "OnCalibrationDebugSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimGem_OnCalibrationDebugSet Parms{};
 
@@ -4679,10 +4674,9 @@ void APilgrimGem::OnCalibrationDebugSet(bool bDebugEnabled, const struct FTrackI
 
 void APilgrimGem::OnGemInit(const struct FTrackItemInfo& Gem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGemInit");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGem", "OnGemInit");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimGem_OnGemInit Parms{};
 
@@ -4699,10 +4693,9 @@ void APilgrimGem::OnGemInit(const struct FTrackItemInfo& Gem)
 
 void APilgrimGem::OnGemInputUpdated(const struct FKey& BoundKey)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGemInputUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGem", "OnGemInputUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimGem_OnGemInputUpdated Parms{};
 
@@ -4719,10 +4712,9 @@ void APilgrimGem::OnGemInputUpdated(const struct FKey& BoundKey)
 
 void APilgrimGem::OnGemOverdriveChanged(bool bIsOverdrive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGemOverdriveChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGem", "OnGemOverdriveChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimGem_OnGemOverdriveChanged Parms{};
 
@@ -4737,10 +4729,9 @@ void APilgrimGem::OnGemOverdriveChanged(bool bIsOverdrive)
 
 void APilgrimGem::OnGemPassed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGemPassed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGem", "OnGemPassed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -4756,10 +4747,9 @@ void APilgrimGem::OnGemPassed()
 
 void APilgrimGem::OnGemSmashed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGemSmashed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGem", "OnGemSmashed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -5124,10 +5114,9 @@ const class UPilgrimSongData* UPilgrimGemAnalyzer::GetSongData() const
 
 void APilgrimGemSmasher::BeginSustainHoldEffect(bool bIsOverdrive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BeginSustainHoldEffect");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGemSmasher", "BeginSustainHoldEffect");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimGemSmasher_BeginSustainHoldEffect Parms{};
 
@@ -5142,10 +5131,9 @@ void APilgrimGemSmasher::BeginSustainHoldEffect(bool bIsOverdrive)
 
 void APilgrimGemSmasher::EndSustainHoldEffect()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EndSustainHoldEffect");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGemSmasher", "EndSustainHoldEffect");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -5156,10 +5144,9 @@ void APilgrimGemSmasher::EndSustainHoldEffect()
 
 void APilgrimGemSmasher::OnGemSlotRelativeScaleChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGemSlotRelativeScaleChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGemSmasher", "OnGemSlotRelativeScaleChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -5170,10 +5157,9 @@ void APilgrimGemSmasher::OnGemSlotRelativeScaleChanged()
 
 void APilgrimGemSmasher::OnInputPressed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputPressed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGemSmasher", "OnInputPressed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -5189,10 +5175,9 @@ void APilgrimGemSmasher::OnInputPressed()
 
 void APilgrimGemSmasher::OnInputReleased()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputReleased");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGemSmasher", "OnInputReleased");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -5210,10 +5195,9 @@ void APilgrimGemSmasher::OnInputReleased()
 
 void APilgrimGemSmasher::OnInputUpdated(const struct FKey& BoundKey)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGemSmasher", "OnInputUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimGemSmasher_OnInputUpdated Parms{};
 
@@ -5228,10 +5212,9 @@ void APilgrimGemSmasher::OnInputUpdated(const struct FKey& BoundKey)
 
 void APilgrimGemSmasher::OnPilgrimGameSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPilgrimGameSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGemSmasher", "OnPilgrimGameSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -5242,10 +5225,9 @@ void APilgrimGemSmasher::OnPilgrimGameSet()
 
 void APilgrimGemSmasher::OverdriveFailedDuringSustainHold()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OverdriveFailedDuringSustainHold");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGemSmasher", "OverdriveFailedDuringSustainHold");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -5858,10 +5840,9 @@ bool UPilgrimLeaderboardPlayerComponent::IsBandFriendLeaderboardEnabled() const
 
 void APilgrimNowBar::OnPilgrimGameSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPilgrimGameSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimNowBar", "OnPilgrimGameSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6955,10 +6936,9 @@ int32 UPilgrimScoringModel::GetScoreRequiredForStar(int32 Stars) const
 
 float UPilgrimScoringModifier::Apply(float InputValue)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Apply");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimScoringModifier", "Apply");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimScoringModifier_Apply Parms{};
 
@@ -8473,10 +8453,9 @@ bool UPilgrimTouchButtonBase::IsHolding() const
 
 void APilgrimTrack::AddActorItemToScene(class AActor* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AddActorItemToScene");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimTrack", "AddActorItemToScene");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimTrack_AddActorItemToScene Parms{};
 
@@ -8515,10 +8494,9 @@ void APilgrimTrack::HideAllItems()
 
 void APilgrimTrack::OnGameEnded()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGameEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimTrack", "OnGameEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -8538,10 +8516,9 @@ void APilgrimTrack::OnGameEnded()
 
 void APilgrimTrack::OnGemSmashed(EPilgrimTrackLane Lane, const struct FPilgrimGemHitAccuracy& Accuracy, bool bIsOverdrive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGemSmashed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimTrack", "OnGemSmashed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimTrack_OnGemSmashed Parms{};
 
@@ -8791,10 +8768,9 @@ class UPilgrimTrackCaptureComponent* UPilgrimTrackAndGameManagerComponent::GetTr
 
 void UPilgrimTrackAndGameManagerComponent::LayoutTracksAndCaptureComponent()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"LayoutTracksAndCaptureComponent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimTrackAndGameManagerComponent", "LayoutTracksAndCaptureComponent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8986,10 +8962,9 @@ void APilgrimTrackSustain::OnAttachToSmasher(class APilgrimGemSmasher* Smasher)
 
 void APilgrimTrackSustain::OnIsOverdriveChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIsOverdriveChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimTrackSustain", "OnIsOverdriveChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9002,10 +8977,9 @@ void APilgrimTrackSustain::OnIsOverdriveChanged()
 
 void APilgrimTrackSustain::OnModulationChanged(float CurrentModulation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnModulationChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimTrackSustain", "OnModulationChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimTrackSustain_OnModulationChanged Parms{};
 
@@ -9020,10 +8994,9 @@ void APilgrimTrackSustain::OnModulationChanged(float CurrentModulation)
 
 void APilgrimTrackSustain::OnSustainFail()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSustainFail");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimTrackSustain", "OnSustainFail");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -9039,10 +9012,9 @@ void APilgrimTrackSustain::OnSustainFail()
 
 void APilgrimTrackSustain::OnSustainInit()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSustainInit");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimTrackSustain", "OnSustainInit");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -9060,10 +9032,9 @@ void APilgrimTrackSustain::OnSustainInit()
 
 void APilgrimTrackSustain::OnSustainKeyDownSuccess(float CurrentModulation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSustainKeyDownSuccess");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimTrackSustain", "OnSustainKeyDownSuccess");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimTrackSustain_OnSustainKeyDownSuccess Parms{};
 
@@ -9083,10 +9054,9 @@ void APilgrimTrackSustain::OnSustainKeyDownSuccess(float CurrentModulation)
 
 void APilgrimTrackSustain::OnSustainKeyRelease()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSustainKeyRelease");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimTrackSustain", "OnSustainKeyRelease");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -9102,10 +9072,9 @@ void APilgrimTrackSustain::OnSustainKeyRelease()
 
 void APilgrimTrackSustain::PlaceSustainAlongSpline()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlaceSustainAlongSpline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimTrackSustain", "PlaceSustainAlongSpline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9741,10 +9710,9 @@ void APilgrimMusicBattleInstance::OnClearedUIScene()
 
 void APilgrimMusicBattleInstance::OnClientReceivedSongToPlay(class UPilgrimSongMetadata* Song)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnClientReceivedSongToPlay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "OnClientReceivedSongToPlay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimMusicBattleInstance_OnClientReceivedSongToPlay Parms{};
 
@@ -9893,10 +9861,9 @@ void APilgrimMusicBattleInstance::OnSongLoaded()
 
 void APilgrimMusicBattleInstance::OnStartedPlayingSong(class UPilgrimSongMetadata* Song)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartedPlayingSong");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "OnStartedPlayingSong");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimMusicBattleInstance_OnStartedPlayingSong Parms{};
 
@@ -9913,10 +9880,9 @@ void APilgrimMusicBattleInstance::OnStartedPlayingSong(class UPilgrimSongMetadat
 
 void APilgrimMusicBattleInstance::OnTrackHiddenChanged(bool bHideTrack)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTrackHiddenChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "OnTrackHiddenChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimMusicBattleInstance_OnTrackHiddenChanged Parms{};
 
@@ -9983,10 +9949,9 @@ void APilgrimMusicBattleInstance::ServerAdjustScoreForPlayer(class AFortPlayerSt
 
 void APilgrimMusicBattleInstance::ServerAllPlayersHaveFinishedSong()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ServerAllPlayersHaveFinishedSong");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "ServerAllPlayersHaveFinishedSong");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -10176,10 +10141,9 @@ void APilgrimMusicBattleInstance::ServerRemoveScoringMultiplierForPlayer(class A
 
 void APilgrimMusicBattleInstance::ServerUserFinishedDisconnecting()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ServerUserFinishedDisconnecting");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "ServerUserFinishedDisconnecting");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -10240,10 +10204,9 @@ void APilgrimMusicBattleInstance::SubtractFromBandScore(float Score)
 
 void APilgrimMusicBattleInstance::UpdateScore()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateScore");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "UpdateScore");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -10254,10 +10217,9 @@ void APilgrimMusicBattleInstance::UpdateScore()
 
 void APilgrimMusicBattleInstance::UpdateVisibilityOfUI()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateVisibilityOfUI");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "UpdateVisibilityOfUI");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -10403,10 +10365,9 @@ void APilgrimMusicBattleInstance::GetDifficultyAndTrackTypeForPlayer(class APlay
 
 class UPilgrimGame* APilgrimMusicBattleInstance::GetLocalPilgrimGame() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetLocalPilgrimGame");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "GetLocalPilgrimGame");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimMusicBattleInstance_GetLocalPilgrimGame Parms{};
 
@@ -10551,10 +10512,9 @@ class UMusicClockComponent* APilgrimMusicBattleInstance::GetMusicClock() const
 
 class UPilgrimSongMetadata* APilgrimMusicBattleInstance::GetNextSongToPlay() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetNextSongToPlay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "GetNextSongToPlay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimMusicBattleInstance_GetNextSongToPlay Parms{};
 
@@ -10576,10 +10536,9 @@ class UPilgrimSongMetadata* APilgrimMusicBattleInstance::GetNextSongToPlay() con
 
 struct FPilgrimPlacementAnalyticsData APilgrimMusicBattleInstance::GetPlacementAnalyticsData() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPlacementAnalyticsData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "GetPlacementAnalyticsData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimMusicBattleInstance_GetPlacementAnalyticsData Parms{};
 
@@ -10733,10 +10692,9 @@ int32 APilgrimMusicBattleInstance::GetPlayerIndexFromController(class APlayerCon
 
 EPilgrimSongDifficulty APilgrimMusicBattleInstance::GetSongDifficultyForPlayer(const class AFortPlayerStateAthena* Player) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSongDifficultyForPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "GetSongDifficultyForPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimMusicBattleInstance_GetSongDifficultyForPlayer Parms{};
 
@@ -10760,10 +10718,9 @@ EPilgrimSongDifficulty APilgrimMusicBattleInstance::GetSongDifficultyForPlayer(c
 
 struct FGuid APilgrimMusicBattleInstance::GetSongPlayId() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSongPlayId");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "GetSongPlayId");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimMusicBattleInstance_GetSongPlayId Parms{};
 
@@ -10892,10 +10849,9 @@ class UPilgrimTrackAndGameManagerComponent* APilgrimMusicBattleInstance::GetTrac
 
 EPilgrimTrackType APilgrimMusicBattleInstance::GetTrackTypeForPlayer(const class AFortPlayerStateAthena* Player) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetTrackTypeForPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "GetTrackTypeForPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimMusicBattleInstance_GetTrackTypeForPlayer Parms{};
 
@@ -11171,10 +11127,9 @@ void APilgrimMusicBattleInstance::LogUISceneAlreadyPresent() const
 
 bool APilgrimMusicBattleInstance::ServerShouldAllowInputForPlayer(class AFortPlayerStateAthena* PlayerState, const struct FPilgrimTimedInput& TimedInput) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ServerShouldAllowInputForPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimMusicBattleInstance", "ServerShouldAllowInputForPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimMusicBattleInstance_ServerShouldAllowInputForPlayer Parms{};
 
@@ -11668,10 +11623,9 @@ void UPilgrimPlayerControllerComponent::OnEmotePicker()
 
 void UPilgrimPlayerControllerComponent::OnPilgrimGameEnd(class UPilgrimGame* PilgrimGame)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPilgrimGameEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimPlayerControllerComponent", "OnPilgrimGameEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimPlayerControllerComponent_OnPilgrimGameEnd Parms{};
 
@@ -11693,10 +11647,9 @@ void UPilgrimPlayerControllerComponent::OnPilgrimGameEnd(class UPilgrimGame* Pil
 
 void UPilgrimPlayerControllerComponent::OnPilgrimGameStart(class UPilgrimGame* PilgrimGame)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPilgrimGameStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimPlayerControllerComponent", "OnPilgrimGameStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimPlayerControllerComponent_OnPilgrimGameStart Parms{};
 

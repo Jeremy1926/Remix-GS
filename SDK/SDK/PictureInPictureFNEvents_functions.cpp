@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void ULiveEventHUDAd::ShowAdvertisement(bool* Result)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowAdvertisement");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LiveEventHUDAd", "ShowAdvertisement");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LiveEventHUDAd_ShowAdvertisement Parms{};
 

@@ -65,10 +65,9 @@ TArray<class ADelMarTrackSegmentBase*> ADelMarTrackBase::GetAllTrackSegmentActor
 
 void ADelMarTrackBase::InitializeSpline()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InitializeSpline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackBase", "InitializeSpline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -214,10 +213,9 @@ void ADelMarTrackBase::OnSplinePointRemoved(class UDelMarTrackSplineComponent* I
 
 void ADelMarTrackBase::PostRebuildTrack_BP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PostRebuildTrack_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackBase", "PostRebuildTrack_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -231,10 +229,9 @@ void ADelMarTrackBase::PostRebuildTrack_BP()
 
 void ADelMarTrackBase::PostSplineSegmentGenerated(class UDelMarTrackSplineComponent* SplineComp, int32 PointIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PostSplineSegmentGenerated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackBase", "PostSplineSegmentGenerated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackBase_PostSplineSegmentGenerated Parms{};
 
@@ -250,10 +247,9 @@ void ADelMarTrackBase::PostSplineSegmentGenerated(class UDelMarTrackSplineCompon
 
 void ADelMarTrackBase::PreRebuildTrack_BP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PreRebuildTrack_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackBase", "PreRebuildTrack_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -267,10 +263,9 @@ void ADelMarTrackBase::PreRebuildTrack_BP()
 
 void ADelMarTrackBase::PreSplineSegmentGenerated(class UDelMarTrackSplineComponent* SplineComp, int32 PointIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PreSplineSegmentGenerated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackBase", "PreSplineSegmentGenerated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackBase_PreSplineSegmentGenerated Parms{};
 
@@ -841,10 +836,9 @@ bool ADelMarTrackBase::IsDistanceWithinRange(float InDistance, float StartDistan
 
 bool ADelMarTrackBase::IsPointInOOBTube(const struct FVector& Point) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsPointInOOBTube");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackBase", "IsPointInOOBTube");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackBase_IsPointInOOBTube Parms{};
 
@@ -991,10 +985,9 @@ struct FDelMarTrackPointDistanceRange ADelMarTrackSegmentBase::GetSplineDistance
 
 class USplineMeshComponent* ADelMarTrackSegmentBase::GetSplineMeshComponent() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSplineMeshComponent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackSegmentBase", "GetSplineMeshComponent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackSegmentBase_GetSplineMeshComponent Parms{};
 
@@ -1440,10 +1433,9 @@ void ADelMarTrackOobTube::OnAttachedTrackPointRemoved(class UDelMarTrackSplineCo
 
 void ADelMarTrackOobTube::OnConstructTubeMesh(class USplineMeshComponent* TubeMeshComponent, bool bIsTransitionMesh, bool bIsTransitionIn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnConstructTubeMesh");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTube", "OnConstructTubeMesh");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTube_OnConstructTubeMesh Parms{};
 
@@ -1460,10 +1452,9 @@ void ADelMarTrackOobTube::OnConstructTubeMesh(class USplineMeshComponent* TubeMe
 
 void ADelMarTrackOobTube::OnPostContructedOOBTube()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPostContructedOOBTube");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTube", "OnPostContructedOOBTube");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1478,10 +1469,9 @@ void ADelMarTrackOobTube::OnPostContructedOOBTube()
 
 EDelMarTrackOobTubeTransitionType ADelMarTrackOobTube::DetermineTubeMeshTransitionType(int32 CurrentPointIndex, int32 NextPointIndex) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"DetermineTubeMeshTransitionType");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTube", "DetermineTubeMeshTransitionType");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTube_DetermineTubeMeshTransitionType Parms{};
 
@@ -1640,10 +1630,9 @@ bool ADelMarTrackOobTube::IsSplinePointOffset(int32 PointIndex) const
 
 class ADelMarTrack* UDelMarTrackOobTubeProxy::GetAttachedTrack() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAttachedTrack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeProxy", "GetAttachedTrack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeProxy_GetAttachedTrack Parms{};
 
@@ -1665,10 +1654,9 @@ class ADelMarTrack* UDelMarTrackOobTubeProxy::GetAttachedTrack() const
 
 int32 UDelMarTrackOobTubeProxy::GetDefaultSubsectionCount() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetDefaultSubsectionCount");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeProxy", "GetDefaultSubsectionCount");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeProxy_GetDefaultSubsectionCount Parms{};
 
@@ -1690,10 +1678,9 @@ int32 UDelMarTrackOobTubeProxy::GetDefaultSubsectionCount() const
 
 double UDelMarTrackOobTubeProxy::GetDefaultTransitionMeshLength() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetDefaultTransitionMeshLength");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeProxy", "GetDefaultTransitionMeshLength");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeProxy_GetDefaultTransitionMeshLength Parms{};
 
@@ -1715,10 +1702,9 @@ double UDelMarTrackOobTubeProxy::GetDefaultTransitionMeshLength() const
 
 double UDelMarTrackOobTubeProxy::GetMinimumMeshScale() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetMinimumMeshScale");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeProxy", "GetMinimumMeshScale");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeProxy_GetMinimumMeshScale Parms{};
 
@@ -1740,10 +1726,9 @@ double UDelMarTrackOobTubeProxy::GetMinimumMeshScale() const
 
 class AActor* UDelMarTrackOobTubeProxy::GetOobTubeActor() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetOobTubeActor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeProxy", "GetOobTubeActor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeProxy_GetOobTubeActor Parms{};
 
@@ -1765,10 +1750,9 @@ class AActor* UDelMarTrackOobTubeProxy::GetOobTubeActor() const
 
 double UDelMarTrackOobTubeProxy::GetSmallestSubsectionLength() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSmallestSubsectionLength");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeProxy", "GetSmallestSubsectionLength");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeProxy_GetSmallestSubsectionLength Parms{};
 
@@ -1790,10 +1774,9 @@ double UDelMarTrackOobTubeProxy::GetSmallestSubsectionLength() const
 
 class USplineComponent* UDelMarTrackOobTubeProxy::GetSplineComponent() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSplineComponent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeProxy", "GetSplineComponent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeProxy_GetSplineComponent Parms{};
 
@@ -1816,10 +1799,9 @@ class USplineComponent* UDelMarTrackOobTubeProxy::GetSplineComponent() const
 
 struct FDelMarTrackOobTubePointMetaData UDelMarTrackOobTubeProxy::GetSplineMetadata(int32 PointIndex) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSplineMetadata");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeProxy", "GetSplineMetadata");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeProxy_GetSplineMetadata Parms{};
 
@@ -1843,10 +1825,9 @@ struct FDelMarTrackOobTubePointMetaData UDelMarTrackOobTubeProxy::GetSplineMetad
 
 double UDelMarTrackOobTubeProxy::GetSplineVisualizationOffset() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSplineVisualizationOffset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeProxy", "GetSplineVisualizationOffset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeProxy_GetSplineVisualizationOffset Parms{};
 
@@ -1869,10 +1850,9 @@ double UDelMarTrackOobTubeProxy::GetSplineVisualizationOffset() const
 
 class UDelMarTrackOobTubeProxy* UDelMarTrackOobTubeCollectionProxy::GetOobTubeProxy(int32 OobTubeIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetOobTubeProxy");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeCollectionProxy", "GetOobTubeProxy");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeCollectionProxy_GetOobTubeProxy Parms{};
 
@@ -1896,10 +1876,9 @@ class UDelMarTrackOobTubeProxy* UDelMarTrackOobTubeCollectionProxy::GetOobTubePr
 
 void UDelMarTrackOobTubeCollectionProxy::RegisterOobTube(class AActor* OobTubeActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RegisterOobTube");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeCollectionProxy", "RegisterOobTube");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeCollectionProxy_RegisterOobTube Parms{};
 
@@ -1921,10 +1900,9 @@ void UDelMarTrackOobTubeCollectionProxy::RegisterOobTube(class AActor* OobTubeAc
 
 int32 UDelMarTrackOobTubeCollectionProxy::GetNumOobTubeProxies() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetNumOobTubeProxies");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTrackOobTubeCollectionProxy", "GetNumOobTubeProxies");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTrackOobTubeCollectionProxy_GetNumOobTubeProxies Parms{};
 

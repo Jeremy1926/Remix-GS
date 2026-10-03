@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void UAudioGameplayBehavior::BP_OnFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioGameplayBehavior", "BP_OnFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -37,10 +36,9 @@ void UAudioGameplayBehavior::BP_OnFinished()
 
 void UAudioGameplayBehavior::BP_OnGroupSet(class UAudioComponentGroup* SoundGroup)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnGroupSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioGameplayBehavior", "BP_OnGroupSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AudioGameplayBehavior_BP_OnGroupSet Parms{};
 
@@ -55,10 +53,9 @@ void UAudioGameplayBehavior::BP_OnGroupSet(class UAudioComponentGroup* SoundGrou
 
 void UAudioGameplayBehavior::BP_OnStart()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioGameplayBehavior", "BP_OnStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -69,10 +66,9 @@ void UAudioGameplayBehavior::BP_OnStart()
 
 void UAudioGameplayBehavior::BP_OnStop()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStop");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioGameplayBehavior", "BP_OnStop");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -83,10 +79,9 @@ void UAudioGameplayBehavior::BP_OnStop()
 
 void UAudioGameplayBehavior::BP_OnUnvirtualized()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnUnvirtualized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioGameplayBehavior", "BP_OnUnvirtualized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -97,10 +92,9 @@ void UAudioGameplayBehavior::BP_OnUnvirtualized()
 
 void UAudioGameplayBehavior::BP_OnVirtualized()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVirtualized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioGameplayBehavior", "BP_OnVirtualized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

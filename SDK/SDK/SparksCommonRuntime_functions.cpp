@@ -51,10 +51,9 @@ class USparksCommonUtilities* USparksCommonUtilities::GetSparksCommonUtilities(c
 
 void USparksCommonUtilities::ShowSparksCaptureTool(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowSparksCaptureTool");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCommonUtilities", "ShowSparksCaptureTool");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCommonUtilities_ShowSparksCaptureTool Parms{};
 
@@ -211,10 +210,9 @@ void USparksCrowdSpawner::TransitionCrowdToTargetParamValue(int32 DataIndex, flo
 
 void ASparksMapDataLayerController::OnSparksActivationChange(const class FString& ActivationString)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSparksActivationChange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksMapDataLayerController", "OnSparksActivationChange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksMapDataLayerController_OnSparksActivationChange Parms{};
 

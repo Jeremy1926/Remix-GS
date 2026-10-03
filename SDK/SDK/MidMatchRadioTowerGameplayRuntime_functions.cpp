@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 class ARadioTowerTerminal* ABuildingGameplayActorRadioTower::GetLinkedRadioTowerTerminal() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetLinkedRadioTowerTerminal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorRadioTower", "GetLinkedRadioTowerTerminal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorRadioTower_GetLinkedRadioTowerTerminal Parms{};
 

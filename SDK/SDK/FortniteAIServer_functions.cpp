@@ -148,10 +148,9 @@ void UFortAthenaAIBotEvaluator_Retreat::HandlePlayerHealthOrShieldChanged()
 
 void AFortEQSPrevisActor::PrepForPrevis()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PrepForPrevis");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEQSPrevisActor", "PrepForPrevis");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -482,10 +481,9 @@ void UFortAthenaAIEvaluator_BlueprintBase::AddTimeout(const float TimeoutLength,
 
 bool UFortAthenaAIEvaluator_BlueprintBase::EvaluateOngoingConditions(class UBehaviorTreeComponent* OwnerComp)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EvaluateOngoingConditions");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAIEvaluator_BlueprintBase", "EvaluateOngoingConditions");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAIEvaluator_BlueprintBase_EvaluateOngoingConditions Parms{};
 
@@ -510,10 +508,9 @@ bool UFortAthenaAIEvaluator_BlueprintBase::EvaluateOngoingConditions(class UBeha
 
 bool UFortAthenaAIEvaluator_BlueprintBase::EvaluateStartingConditions(class UBehaviorTreeComponent* OwnerComp)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EvaluateStartingConditions");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAIEvaluator_BlueprintBase", "EvaluateStartingConditions");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAIEvaluator_BlueprintBase_EvaluateStartingConditions Parms{};
 
@@ -538,10 +535,9 @@ bool UFortAthenaAIEvaluator_BlueprintBase::EvaluateStartingConditions(class UBeh
 
 void UFortAthenaAIEvaluator_BlueprintBase::OnBlackboardKeyValueChanged(class UBehaviorTreeComponent* OwnerComp, class FName ChangedKeyName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBlackboardKeyValueChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAIEvaluator_BlueprintBase", "OnBlackboardKeyValueChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAIEvaluator_BlueprintBase_OnBlackboardKeyValueChanged Parms{};
 
@@ -559,10 +555,9 @@ void UFortAthenaAIEvaluator_BlueprintBase::OnBlackboardKeyValueChanged(class UBe
 
 void UFortAthenaAIEvaluator_BlueprintBase::OnEnter(class UBehaviorTreeComponent* OwnerComp)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEnter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAIEvaluator_BlueprintBase", "OnEnter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAIEvaluator_BlueprintBase_OnEnter Parms{};
 
@@ -579,10 +574,9 @@ void UFortAthenaAIEvaluator_BlueprintBase::OnEnter(class UBehaviorTreeComponent*
 
 void UFortAthenaAIEvaluator_BlueprintBase::OnExit(class UBehaviorTreeComponent* OwnerComp)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExit");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAIEvaluator_BlueprintBase", "OnExit");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAIEvaluator_BlueprintBase_OnExit Parms{};
 
@@ -624,10 +618,9 @@ void UFortAthenaAIEvaluator_BlueprintBase::SetWeight(const float NewWeight)
 
 void UFortAthenaAIEvaluator_BlueprintBase::TaskEvaluate(class UBehaviorTreeComponent* OwnerComp)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"TaskEvaluate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAIEvaluator_BlueprintBase", "TaskEvaluate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAIEvaluator_BlueprintBase_TaskEvaluate Parms{};
 
@@ -1087,10 +1080,9 @@ void UFortAthenaAIBotEvaluator_SelectNextDynamicPOI::ReachingPositionFail_Async(
 
 void UFortAthenaBTTask_Escalate::BP_OnEscalate(const class AFortPlayerPawn* OwnerActor, const class AFortPlayerPawn* EscalateTarget) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnEscalate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaBTTask_Escalate", "BP_OnEscalate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaBTTask_Escalate_BP_OnEscalate Parms{};
 
@@ -1109,10 +1101,9 @@ void UFortAthenaBTTask_Escalate::BP_OnEscalate(const class AFortPlayerPawn* Owne
 
 void UFortAthenaBTTask_Escalate::BP_OnHasEscalateTarget(const class AFortPlayerPawn* OwnerActor, const class AFortPlayerPawn* EscalateTarget) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnHasEscalateTarget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaBTTask_Escalate", "BP_OnHasEscalateTarget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaBTTask_Escalate_BP_OnHasEscalateTarget Parms{};
 

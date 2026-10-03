@@ -415,10 +415,9 @@ class UAbilityTask_WaitGameplayTagCountChanged* UAbilityTask_WaitGameplayTagCoun
 
 void UGameplayCueNotify_Static::K2_HandleGameplayCue(class AActor* MyTarget, EGameplayCueEvent EventType, const struct FGameplayCueParameters& Parameters) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_HandleGameplayCue");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Static", "K2_HandleGameplayCue");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Static_K2_HandleGameplayCue Parms{};
 
@@ -439,10 +438,9 @@ void UGameplayCueNotify_Static::K2_HandleGameplayCue(class AActor* MyTarget, EGa
 
 bool UGameplayCueNotify_Static::OnActive(class AActor* MyTarget, const struct FGameplayCueParameters& Parameters) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Static", "OnActive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Static_OnActive Parms{};
 
@@ -469,10 +467,9 @@ bool UGameplayCueNotify_Static::OnActive(class AActor* MyTarget, const struct FG
 
 bool UGameplayCueNotify_Static::OnExecute(class AActor* MyTarget, const struct FGameplayCueParameters& Parameters) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExecute");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Static", "OnExecute");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Static_OnExecute Parms{};
 
@@ -499,10 +496,9 @@ bool UGameplayCueNotify_Static::OnExecute(class AActor* MyTarget, const struct F
 
 bool UGameplayCueNotify_Static::OnRemove(class AActor* MyTarget, const struct FGameplayCueParameters& Parameters) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRemove");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Static", "OnRemove");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Static_OnRemove Parms{};
 
@@ -529,10 +525,9 @@ bool UGameplayCueNotify_Static::OnRemove(class AActor* MyTarget, const struct FG
 
 bool UGameplayCueNotify_Static::WhileActive(class AActor* MyTarget, const struct FGameplayCueParameters& Parameters) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"WhileActive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Static", "WhileActive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Static_WhileActive Parms{};
 
@@ -1006,10 +1001,9 @@ void UGameplayAbility::EndTaskByInstanceName(class FName InstanceName)
 
 void UGameplayAbility::K2_ActivateAbility()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_ActivateAbility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayAbility", "K2_ActivateAbility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1022,10 +1016,9 @@ void UGameplayAbility::K2_ActivateAbility()
 
 void UGameplayAbility::K2_ActivateAbilityFromEvent(const struct FGameplayEventData& EventData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_ActivateAbilityFromEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayAbility", "K2_ActivateAbilityFromEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayAbility_K2_ActivateAbilityFromEvent Parms{};
 
@@ -1308,10 +1301,9 @@ bool UGameplayAbility::K2_CommitAbilityCost(bool BroadcastCommitEvent)
 
 void UGameplayAbility::K2_CommitExecute()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_CommitExecute");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayAbility", "K2_CommitExecute");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1416,10 +1408,9 @@ void UGameplayAbility::K2_ExecuteGameplayCueWithParams(const struct FGameplayTag
 
 void UGameplayAbility::K2_OnEndAbility(bool bWasCancelled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnEndAbility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayAbility", "K2_OnEndAbility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayAbility_K2_OnEndAbility Parms{};
 
@@ -2072,10 +2063,9 @@ bool UGameplayAbility::IsLocallyControlled() const
 
 bool UGameplayAbility::K2_CanActivateAbility(const struct FGameplayAbilityActorInfo& ActorInfo, const struct FGameplayAbilitySpecHandle& Handle, struct FGameplayTagContainer* RelevantTags) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_CanActivateAbility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayAbility", "K2_CanActivateAbility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayAbility_K2_CanActivateAbility Parms{};
 
@@ -2125,10 +2115,9 @@ bool UGameplayAbility::K2_HasAuthority() const
 
 bool UGameplayAbility::K2_ShouldAbilityRespondToEvent(const struct FGameplayAbilityActorInfo& ActorInfo, const struct FGameplayEventData& Payload) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_ShouldAbilityRespondToEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayAbility", "K2_ShouldAbilityRespondToEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayAbility_K2_ShouldAbilityRespondToEvent Parms{};
 
@@ -2239,10 +2228,9 @@ void AGameplayAbilityWorldReticle::FaceTowardSource(bool bFaceIn2D)
 
 void AGameplayAbilityWorldReticle::OnParametersInitialized()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnParametersInitialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayAbilityWorldReticle", "OnParametersInitialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2255,10 +2243,9 @@ void AGameplayAbilityWorldReticle::OnParametersInitialized()
 
 void AGameplayAbilityWorldReticle::OnTargetingAnActor(bool bNewValue)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTargetingAnActor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayAbilityWorldReticle", "OnTargetingAnActor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayAbilityWorldReticle_OnTargetingAnActor Parms{};
 
@@ -2275,10 +2262,9 @@ void AGameplayAbilityWorldReticle::OnTargetingAnActor(bool bNewValue)
 
 void AGameplayAbilityWorldReticle::OnValidTargetChanged(bool bNewValue)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnValidTargetChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayAbilityWorldReticle", "OnValidTargetChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayAbilityWorldReticle_OnValidTargetChanged Parms{};
 
@@ -2296,10 +2282,9 @@ void AGameplayAbilityWorldReticle::OnValidTargetChanged(bool bNewValue)
 
 void AGameplayAbilityWorldReticle::SetReticleMaterialParamFloat(class FName ParamName, float Value)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetReticleMaterialParamFloat");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayAbilityWorldReticle", "SetReticleMaterialParamFloat");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayAbilityWorldReticle_SetReticleMaterialParamFloat Parms{};
 
@@ -2318,10 +2303,9 @@ void AGameplayAbilityWorldReticle::SetReticleMaterialParamFloat(class FName Para
 
 void AGameplayAbilityWorldReticle::SetReticleMaterialParamVector(class FName ParamName, const struct FVector& Value)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetReticleMaterialParamVector");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayAbilityWorldReticle", "SetReticleMaterialParamVector");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayAbilityWorldReticle_SetReticleMaterialParamVector Parms{};
 
@@ -10500,10 +10484,9 @@ void AGameplayCueNotify_Actor::K2_EndGameplayCue()
 
 void AGameplayCueNotify_Actor::K2_HandleGameplayCue(class AActor* MyTarget, EGameplayCueEvent EventType, const struct FGameplayCueParameters& Parameters)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_HandleGameplayCue");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Actor", "K2_HandleGameplayCue");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Actor_K2_HandleGameplayCue Parms{};
 
@@ -10524,10 +10507,9 @@ void AGameplayCueNotify_Actor::K2_HandleGameplayCue(class AActor* MyTarget, EGam
 
 bool AGameplayCueNotify_Actor::OnActive(class AActor* MyTarget, const struct FGameplayCueParameters& Parameters)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Actor", "OnActive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Actor_OnActive Parms{};
 
@@ -10554,10 +10536,9 @@ bool AGameplayCueNotify_Actor::OnActive(class AActor* MyTarget, const struct FGa
 
 bool AGameplayCueNotify_Actor::OnExecute(class AActor* MyTarget, const struct FGameplayCueParameters& Parameters)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExecute");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Actor", "OnExecute");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Actor_OnExecute Parms{};
 
@@ -10609,10 +10590,9 @@ void AGameplayCueNotify_Actor::OnOwnerDestroyed(class AActor* DestroyedActor)
 
 bool AGameplayCueNotify_Actor::OnRemove(class AActor* MyTarget, const struct FGameplayCueParameters& Parameters)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRemove");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Actor", "OnRemove");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Actor_OnRemove Parms{};
 
@@ -10639,10 +10619,9 @@ bool AGameplayCueNotify_Actor::OnRemove(class AActor* MyTarget, const struct FGa
 
 bool AGameplayCueNotify_Actor::WhileActive(class AActor* MyTarget, const struct FGameplayCueParameters& Parameters)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"WhileActive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Actor", "WhileActive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Actor_WhileActive Parms{};
 
@@ -10669,10 +10648,9 @@ bool AGameplayCueNotify_Actor::WhileActive(class AActor* MyTarget, const struct 
 
 void UGameplayCueNotify_Burst::OnBurst(class AActor* Target, const struct FGameplayCueParameters& Parameters, const struct FGameplayCueNotify_SpawnResult& SpawnResults) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBurst");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Burst", "OnBurst");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Burst_OnBurst Parms{};
 
@@ -10693,10 +10671,9 @@ void UGameplayCueNotify_Burst::OnBurst(class AActor* Target, const struct FGamep
 
 void AGameplayCueNotify_BurstLatent::OnBurst(class AActor* Target, const struct FGameplayCueParameters& Parameters, const struct FGameplayCueNotify_SpawnResult& SpawnResults)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBurst");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_BurstLatent", "OnBurst");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_BurstLatent_OnBurst Parms{};
 
@@ -10717,10 +10694,9 @@ void AGameplayCueNotify_BurstLatent::OnBurst(class AActor* Target, const struct 
 
 void AGameplayCueNotify_Looping::OnApplication(class AActor* Target, const struct FGameplayCueParameters& Parameters, const struct FGameplayCueNotify_SpawnResult& SpawnResults)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnApplication");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Looping", "OnApplication");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Looping_OnApplication Parms{};
 
@@ -10741,10 +10717,9 @@ void AGameplayCueNotify_Looping::OnApplication(class AActor* Target, const struc
 
 void AGameplayCueNotify_Looping::OnLoopingStart(class AActor* Target, const struct FGameplayCueParameters& Parameters, const struct FGameplayCueNotify_SpawnResult& SpawnResults)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLoopingStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Looping", "OnLoopingStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Looping_OnLoopingStart Parms{};
 
@@ -10765,10 +10740,9 @@ void AGameplayCueNotify_Looping::OnLoopingStart(class AActor* Target, const stru
 
 void AGameplayCueNotify_Looping::OnRecurring(class AActor* Target, const struct FGameplayCueParameters& Parameters, const struct FGameplayCueNotify_SpawnResult& SpawnResults)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRecurring");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Looping", "OnRecurring");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Looping_OnRecurring Parms{};
 
@@ -10789,10 +10763,9 @@ void AGameplayCueNotify_Looping::OnRecurring(class AActor* Target, const struct 
 
 void AGameplayCueNotify_Looping::OnRemoval(class AActor* Target, const struct FGameplayCueParameters& Parameters, const struct FGameplayCueNotify_SpawnResult& SpawnResults)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRemoval");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayCueNotify_Looping", "OnRemoval");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayCueNotify_Looping_OnRemoval Parms{};
 
@@ -10814,10 +10787,9 @@ void AGameplayCueNotify_Looping::OnRemoval(class AActor* Target, const struct FG
 
 bool UGameplayEffectCustomApplicationRequirement::CanApplyGameplayEffect(const class UGameplayEffect* GameplayEffect, const struct FGameplayEffectSpec& Spec, class UAbilitySystemComponent* ASC) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanApplyGameplayEffect");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayEffectCustomApplicationRequirement", "CanApplyGameplayEffect");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayEffectCustomApplicationRequirement_CanApplyGameplayEffect Parms{};
 
@@ -10844,10 +10816,9 @@ bool UGameplayEffectCustomApplicationRequirement::CanApplyGameplayEffect(const c
 
 void UGameplayEffectExecutionCalculation::Execute(const struct FGameplayEffectCustomExecutionParameters& ExecutionParams, struct FGameplayEffectCustomExecutionOutput* OutExecutionOutput) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Execute");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayEffectExecutionCalculation", "Execute");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayEffectExecutionCalculation_Execute Parms{};
 
@@ -10873,10 +10844,9 @@ void UGameplayEffectExecutionCalculation::Execute(const struct FGameplayEffectCu
 
 float UGameplayModMagnitudeCalculation::CalculateBaseMagnitude(const struct FGameplayEffectSpec& Spec) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CalculateBaseMagnitude");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GameplayModMagnitudeCalculation", "CalculateBaseMagnitude");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GameplayModMagnitudeCalculation_CalculateBaseMagnitude Parms{};
 

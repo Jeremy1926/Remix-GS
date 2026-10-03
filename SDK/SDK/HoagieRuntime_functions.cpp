@@ -142,10 +142,9 @@ void AFortHoagieVehicle::MulticastRotorImpulse(const struct FHitResult& RotorHit
 
 void AFortHoagieVehicle::OnBoostFailed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnBoostFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -156,10 +155,9 @@ void AFortHoagieVehicle::OnBoostFailed()
 
 void AFortHoagieVehicle::OnBoostFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnBoostFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -170,10 +168,9 @@ void AFortHoagieVehicle::OnBoostFinished()
 
 void AFortHoagieVehicle::OnBoostReady()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostReady");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnBoostReady");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -184,10 +181,9 @@ void AFortHoagieVehicle::OnBoostReady()
 
 void AFortHoagieVehicle::OnBoostStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnBoostStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -204,10 +200,9 @@ void AFortHoagieVehicle::OnBoostStarted()
 
 void AFortHoagieVehicle::OnCritRotor(float Damage, const struct FVector& ImpactLocation, class AController* DamageInstigator, class AActor* DamageCauser, bool bMainRotor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCritRotor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnCritRotor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicle_OnCritRotor Parms{};
 
@@ -229,10 +224,9 @@ void AFortHoagieVehicle::OnCritRotor(float Damage, const struct FVector& ImpactL
 
 void AFortHoagieVehicle::OnImpactOtherHoagie(const struct FVector& HitLocation, const struct FVector& NormalImpulse)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnImpactOtherHoagie");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnImpactOtherHoagie");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicle_OnImpactOtherHoagie Parms{};
 
@@ -248,10 +242,9 @@ void AFortHoagieVehicle::OnImpactOtherHoagie(const struct FVector& HitLocation, 
 
 void AFortHoagieVehicle::OnImpactWhileCritical()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnImpactWhileCritical");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnImpactWhileCritical");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -322,10 +315,9 @@ void AFortHoagieVehicle::OnRep_HoagieState()
 
 void AFortHoagieVehicle::OnRotorDamageDealt(const struct FHitResult& Impact, bool bInner)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRotorDamageDealt");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnRotorDamageDealt");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicle_OnRotorDamageDealt Parms{};
 
@@ -343,10 +335,9 @@ void AFortHoagieVehicle::OnRotorDamageDealt(const struct FHitResult& Impact, boo
 
 void AFortHoagieVehicle::OnRotorDamageDealtInner(const struct FHitResult& Impact)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRotorDamageDealtInner");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnRotorDamageDealtInner");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicle_OnRotorDamageDealtInner Parms{};
 
@@ -363,10 +354,9 @@ void AFortHoagieVehicle::OnRotorDamageDealtInner(const struct FHitResult& Impact
 
 void AFortHoagieVehicle::OnRotorDamageDealtOuter(const struct FHitResult& Impact)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRotorDamageDealtOuter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnRotorDamageDealtOuter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicle_OnRotorDamageDealtOuter Parms{};
 
@@ -383,10 +373,9 @@ void AFortHoagieVehicle::OnRotorDamageDealtOuter(const struct FHitResult& Impact
 
 void AFortHoagieVehicle::OnRotorDamagePlayer(const struct FHitResult& Impact)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRotorDamagePlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnRotorDamagePlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicle_OnRotorDamagePlayer Parms{};
 
@@ -401,10 +390,9 @@ void AFortHoagieVehicle::OnRotorDamagePlayer(const struct FHitResult& Impact)
 
 void AFortHoagieVehicle::OnRotorsStop()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRotorsStop");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnRotorsStop");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -415,10 +403,9 @@ void AFortHoagieVehicle::OnRotorsStop()
 
 void AFortHoagieVehicle::OnStartupBegin()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartupBegin");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnStartupBegin");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -429,10 +416,9 @@ void AFortHoagieVehicle::OnStartupBegin()
 
 void AFortHoagieVehicle::OnStartupEnd()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartupEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnStartupEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -445,10 +431,9 @@ void AFortHoagieVehicle::OnStartupEnd()
 
 void AFortHoagieVehicle::OnTickRotors(float RotorAngleDegrees)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTickRotors");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "OnTickRotors");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicle_OnTickRotors Parms{};
 
@@ -490,10 +475,9 @@ void AFortHoagieVehicle::ServerUpdateControlState(const struct FReplicatedHeliCo
 
 void AFortHoagieVehicle::SetMainRotorRotation(float Degrees)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetMainRotorRotation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "SetMainRotorRotation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicle_SetMainRotorRotation Parms{};
 
@@ -510,10 +494,9 @@ void AFortHoagieVehicle::SetMainRotorRotation(float Degrees)
 
 void AFortHoagieVehicle::SetRotorWashActive(bool bActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetRotorWashActive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "SetRotorWashActive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicle_SetRotorWashActive Parms{};
 
@@ -530,10 +513,9 @@ void AFortHoagieVehicle::SetRotorWashActive(bool bActive)
 
 void AFortHoagieVehicle::SetTailRotorRotation(float Degrees)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetTailRotorRotation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "SetTailRotorRotation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicle_SetTailRotorRotation Parms{};
 
@@ -551,10 +533,9 @@ void AFortHoagieVehicle::SetTailRotorRotation(float Degrees)
 
 void AFortHoagieVehicle::ShowCooldownCue(class AFortPlayerPawn* Pawn, float duration)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowCooldownCue");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "ShowCooldownCue");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHoagieVehicle_ShowCooldownCue Parms{};
 
@@ -595,10 +576,9 @@ void AFortHoagieVehicle::UpdateDamageStateNative(float Damage)
 
 void AFortHoagieVehicle::UpdateHoagieAnimBP()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateHoagieAnimBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHoagieVehicle", "UpdateHoagieAnimBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;

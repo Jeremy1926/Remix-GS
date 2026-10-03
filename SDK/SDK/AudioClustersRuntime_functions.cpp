@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UAudioClusterBehavior::OnActorAdded(class AActor* Actor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActorAdded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioClusterBehavior", "OnActorAdded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AudioClusterBehavior_OnActorAdded Parms{};
 
@@ -48,10 +47,9 @@ void UAudioClusterBehavior::OnActorAdded(class AActor* Actor)
 
 void UAudioClusterBehavior::OnActorRemoved(class AActor* Actor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActorRemoved");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioClusterBehavior", "OnActorRemoved");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AudioClusterBehavior_OnActorRemoved Parms{};
 
@@ -73,10 +71,9 @@ void UAudioClusterBehavior::OnActorRemoved(class AActor* Actor)
 
 void UAudioClusterBehavior::OnPositionUpdated(const struct FVector& Position)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPositionUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioClusterBehavior", "OnPositionUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AudioClusterBehavior_OnPositionUpdated Parms{};
 
@@ -98,10 +95,9 @@ void UAudioClusterBehavior::OnPositionUpdated(const struct FVector& Position)
 
 void UAudioClusterBehavior::OnSizeUpdated(int32 Size)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSizeUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioClusterBehavior", "OnSizeUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AudioClusterBehavior_OnSizeUpdated Parms{};
 
@@ -121,10 +117,9 @@ void UAudioClusterBehavior::OnSizeUpdated(int32 Size)
 
 void UAudioClusterBehavior::OnStart()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioClusterBehavior", "OnStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -140,10 +135,9 @@ void UAudioClusterBehavior::OnStart()
 
 void UAudioClusterBehavior::OnStop()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStop");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioClusterBehavior", "OnStop");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;

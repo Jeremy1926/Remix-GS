@@ -79,10 +79,9 @@ void UFortPawnComponent_Mud::HandleSurfaceTypeChanged(class AActor* SurfaceActor
 
 void UFortPawnComponent_Mud::OnAttachedParentCoveredInMud(const struct FGameplayEventData& Payload)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAttachedParentCoveredInMud");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_Mud", "OnAttachedParentCoveredInMud");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_Mud_OnAttachedParentCoveredInMud Parms{};
 
@@ -100,10 +99,9 @@ void UFortPawnComponent_Mud::OnAttachedParentCoveredInMud(const struct FGameplay
 
 void UFortPawnComponent_Mud::OnCreatureSprintingTagCountChanged(const struct FGameplayTag& Tag, int32 NewCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCreatureSprintingTagCountChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_Mud", "OnCreatureSprintingTagCountChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_Mud_OnCreatureSprintingTagCountChanged Parms{};
 
@@ -122,10 +120,9 @@ void UFortPawnComponent_Mud::OnCreatureSprintingTagCountChanged(const struct FGa
 
 void UFortPawnComponent_Mud::OnCurieFireTagCountChanged(const struct FGameplayTag& Tag, int32 NewCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCurieFireTagCountChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_Mud", "OnCurieFireTagCountChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_Mud_OnCurieFireTagCountChanged Parms{};
 
@@ -141,10 +138,9 @@ void UFortPawnComponent_Mud::OnCurieFireTagCountChanged(const struct FGameplayTa
 
 void UFortPawnComponent_Mud::OnEnteredMud()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEnteredMud");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_Mud", "OnEnteredMud");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -155,10 +151,9 @@ void UFortPawnComponent_Mud::OnEnteredMud()
 
 void UFortPawnComponent_Mud::OnExitedMud()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExitedMud");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_Mud", "OnExitedMud");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -172,10 +167,9 @@ void UFortPawnComponent_Mud::OnExitedMud()
 
 void UFortPawnComponent_Mud::OnSlidingTagCountChanged(const struct FGameplayTag& Tag, int32 NewCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSlidingTagCountChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_Mud", "OnSlidingTagCountChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_Mud_OnSlidingTagCountChanged Parms{};
 
@@ -194,10 +188,9 @@ void UFortPawnComponent_Mud::OnSlidingTagCountChanged(const struct FGameplayTag&
 
 void UFortPawnComponent_Mud::OnSprintingTagCountChanged(const struct FGameplayTag& Tag, int32 NewCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSprintingTagCountChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_Mud", "OnSprintingTagCountChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_Mud_OnSprintingTagCountChanged Parms{};
 

@@ -396,10 +396,9 @@ void UFortCheatManager_FakeKillRelevancy::FakeKillRelevancyTestAlgorithm(const i
 
 void UFortControllerComponent_FakeKillRelevancy::CancelKillEffectsOnClient(const TArray<class AFortPlayerStateAthena*>& PlayerStates)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CancelKillEffectsOnClient");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortControllerComponent_FakeKillRelevancy", "CancelKillEffectsOnClient");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortControllerComponent_FakeKillRelevancy_CancelKillEffectsOnClient Parms{};
 
@@ -414,10 +413,9 @@ void UFortControllerComponent_FakeKillRelevancy::CancelKillEffectsOnClient(const
 
 void UFortControllerComponent_FakeKillRelevancy::CancelKillEffectsOnServer()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CancelKillEffectsOnServer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortControllerComponent_FakeKillRelevancy", "CancelKillEffectsOnServer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -475,10 +473,9 @@ void UFortControllerComponent_FakeKillRelevancy::OnRep_ResetCounter()
 
 void UFortControllerComponent_FakeKillRelevancy::PlayKillEffects(const struct FFakeKillRelevancyPlayerDataEntry& FakeKillData, const float RelevancyDelay)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayKillEffects");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortControllerComponent_FakeKillRelevancy", "PlayKillEffects");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortControllerComponent_FakeKillRelevancy_PlayKillEffects Parms{};
 
@@ -1906,10 +1903,9 @@ void AFortAthenaMutator_SpecialEvent::NotifyClientsGameResumed()
 
 void AFortAthenaMutator_SpecialEvent::OnActorPreSpawnInitialization(class AActor* Actor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActorPreSpawnInitialization");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaMutator_SpecialEvent", "OnActorPreSpawnInitialization");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaMutator_SpecialEvent_OnActorPreSpawnInitialization Parms{};
 
@@ -1926,10 +1922,9 @@ void AFortAthenaMutator_SpecialEvent::OnActorPreSpawnInitialization(class AActor
 
 void AFortAthenaMutator_SpecialEvent::OnActorSpawned(class AActor* Actor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActorSpawned");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaMutator_SpecialEvent", "OnActorSpawned");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaMutator_SpecialEvent_OnActorSpawned Parms{};
 
@@ -3101,10 +3096,9 @@ bool AFortAthenaMutator_SpecialEvent::GetHasInfiniteSafeZonePhase() const
 
 void UFortCameraMode_SpecialEventFocalPoint::OnBecomeActiveBP(class AActor* ViewTarget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBecomeActiveBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCameraMode_SpecialEventFocalPoint", "OnBecomeActiveBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCameraMode_SpecialEventFocalPoint_OnBecomeActiveBP Parms{};
 
@@ -3121,10 +3115,9 @@ void UFortCameraMode_SpecialEventFocalPoint::OnBecomeActiveBP(class AActor* View
 
 void UFortCameraMode_SpecialEventFocalPoint::OnBecomeInactiveBP(class AActor* ViewTarget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBecomeInactiveBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCameraMode_SpecialEventFocalPoint", "OnBecomeInactiveBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCameraMode_SpecialEventFocalPoint_OnBecomeInactiveBP Parms{};
 
@@ -3168,10 +3161,9 @@ void UFortCameraMode_SpecialEventFocalPoint::SetOverrideTransitionTime(const flo
 
 void UFortCameraMode_SpecialEventFocalPoint::UpdateCameraBP(class AActor* ViewTarget, float DeltaTime, struct FTViewTarget& OutVT)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCameraBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortCameraMode_SpecialEventFocalPoint", "UpdateCameraBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortCameraMode_SpecialEventFocalPoint_UpdateCameraBP Parms{};
 
@@ -3582,10 +3574,9 @@ void UFortControllerComponent_SpecialEvent::ServerHandleSpecialClientEvent(const
 
 void AFortSpecialRelevancyActorSpawner::BP_OnActorSpawnedPerRelevancyGroup(const TArray<class AActor*>& InSpawnedActors)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnActorSpawnedPerRelevancyGroup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSpecialRelevancyActorSpawner", "BP_OnActorSpawnedPerRelevancyGroup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSpecialRelevancyActorSpawner_BP_OnActorSpawnedPerRelevancyGroup Parms{};
 
@@ -3602,10 +3593,9 @@ void AFortSpecialRelevancyActorSpawner::BP_OnActorSpawnedPerRelevancyGroup(const
 
 void USpecialEventAudioAnalysisBaseComponent::UpdateConstantQ(float time)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateConstantQ");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventAudioAnalysisBaseComponent", "UpdateConstantQ");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SpecialEventAudioAnalysisBaseComponent_UpdateConstantQ Parms{};
 
@@ -3627,10 +3617,9 @@ void USpecialEventAudioAnalysisBaseComponent::UpdateConstantQ(float time)
 
 void USpecialEventAudioAnalysisBaseComponent::UpdateLoudness(float time)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateLoudness");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventAudioAnalysisBaseComponent", "UpdateLoudness");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SpecialEventAudioAnalysisBaseComponent_UpdateLoudness Parms{};
 
@@ -3652,10 +3641,9 @@ void USpecialEventAudioAnalysisBaseComponent::UpdateLoudness(float time)
 
 void USpecialEventAudioAnalysisBaseComponent::UpdateOnset(float time)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateOnset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventAudioAnalysisBaseComponent", "UpdateOnset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SpecialEventAudioAnalysisBaseComponent_UpdateOnset Parms{};
 
@@ -3677,10 +3665,9 @@ void USpecialEventAudioAnalysisBaseComponent::UpdateOnset(float time)
 
 void USpecialEventAudioAnalysisBaseComponent::UpdateTime(const float NewTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateTime");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventAudioAnalysisBaseComponent", "UpdateTime");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SpecialEventAudioAnalysisBaseComponent_UpdateTime Parms{};
 
@@ -6013,10 +6000,9 @@ class USpecialEventGameUserSettingsControllerComponent* USpecialEventGameUserSet
 
 void USpecialEventGameUserSettingsControllerComponent::ParseLoadedData(const class FString& Data)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ParseLoadedData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventGameUserSettingsControllerComponent", "ParseLoadedData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SpecialEventGameUserSettingsControllerComponent_ParseLoadedData Parms{};
 
@@ -6244,10 +6230,9 @@ void ASpecialEventPhase::DebugActivatePhase()
 
 void ASpecialEventPhase::OnPhaseActivation_Client()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPhaseActivation_Client");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventPhase", "OnPhaseActivation_Client");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6258,10 +6243,9 @@ void ASpecialEventPhase::OnPhaseActivation_Client()
 
 void ASpecialEventPhase::OnPhaseActivation_Server()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPhaseActivation_Server");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventPhase", "OnPhaseActivation_Server");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6272,10 +6256,9 @@ void ASpecialEventPhase::OnPhaseActivation_Server()
 
 void ASpecialEventPhase::OnPhaseDeactivation_Client()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPhaseDeactivation_Client");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventPhase", "OnPhaseDeactivation_Client");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6286,10 +6269,9 @@ void ASpecialEventPhase::OnPhaseDeactivation_Client()
 
 void ASpecialEventPhase::OnPhaseDeactivation_Server()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPhaseDeactivation_Server");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventPhase", "OnPhaseDeactivation_Server");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6338,10 +6320,9 @@ void ASpecialEventPhase::OnRep_PhaseState()
 
 void ASpecialEventPhase::PrePhaseActivation_Server()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PrePhaseActivation_Server");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventPhase", "PrePhaseActivation_Server");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6794,10 +6775,9 @@ void ASpecialEventScript::AttemptStartNextPhase(const struct FGameplayTag& Curre
 
 void ASpecialEventScript::BP_OnScriptFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnScriptFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventScript", "BP_OnScriptFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6808,10 +6788,9 @@ void ASpecialEventScript::BP_OnScriptFinished()
 
 void ASpecialEventScript::BP_OnScriptReady()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnScriptReady");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialEventScript", "BP_OnScriptReady");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7233,10 +7212,9 @@ void UDamageRecordEntry::OnRep_DamageTotal()
 
 void USpecialRelevancyHealthComponent::OnDamaged(const class AFortPlayerState* DamagingPlayerState, const int32 RelevancyGroupIndex, const float DealtDamage, const float ActualDealtDamage, const float TotalDamage, const float DealtDamagePercent, const float ActualDealtDamagePercent, const float TotalDamagePercent, const float MaxHealth, const bool bKilled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDamaged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialRelevancyHealthComponent", "OnDamaged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SpecialRelevancyHealthComponent_OnDamaged Parms{};
 
@@ -7263,10 +7241,9 @@ void USpecialRelevancyHealthComponent::OnDamaged(const class AFortPlayerState* D
 
 void USpecialRelevancyHealthComponent::OnKilled(const class AFortPlayerState* KillingPlayerState, const int32 RelevancyGroupIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnKilled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SpecialRelevancyHealthComponent", "OnKilled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SpecialRelevancyHealthComponent_OnKilled Parms{};
 

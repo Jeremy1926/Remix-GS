@@ -76,10 +76,9 @@ class UWidget* UFortVariantRedirectorTile::GetButtonToFocus() const
 
 void UFortVariantSprayCustomizer::BP_SetChannelSlotIcon(const TSoftObjectPtr<class UObject>& ChannelSlotIcon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetChannelSlotIcon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVariantSprayCustomizer", "BP_SetChannelSlotIcon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVariantSprayCustomizer_BP_SetChannelSlotIcon Parms{};
 
@@ -96,10 +95,9 @@ void UFortVariantSprayCustomizer::BP_SetChannelSlotIcon(const TSoftObjectPtr<cla
 
 void UFortVariantSprayCustomizer::BP_SetVariantEditorMode(const bool bIsLockerMode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetVariantEditorMode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVariantSprayCustomizer", "BP_SetVariantEditorMode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVariantSprayCustomizer_BP_SetVariantEditorMode Parms{};
 
@@ -117,10 +115,9 @@ void UFortVariantSprayCustomizer::BP_SetVariantEditorMode(const bool bIsLockerMo
 
 void UFortVariantSprayCustomizerSetting::BP_OnChangeValue(const float Value, const float NormalizedValue)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnChangeValue");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVariantSprayCustomizerSetting", "BP_OnChangeValue");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVariantSprayCustomizerSetting_BP_OnChangeValue Parms{};
 
@@ -138,10 +135,9 @@ void UFortVariantSprayCustomizerSetting::BP_OnChangeValue(const float Value, con
 
 void UFortVariantSprayCustomizerSetting::BP_OnSetConstraints(const struct FFloatRange& Constraints)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnSetConstraints");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVariantSprayCustomizerSetting", "BP_OnSetConstraints");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVariantSprayCustomizerSetting_BP_OnSetConstraints Parms{};
 

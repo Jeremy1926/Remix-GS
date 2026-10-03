@@ -265,10 +265,9 @@ void UFortPlayerAugmentHUDTimerWidget::HandleTimerUpdated(float TimeRemaining, f
 
 void UFortPlayerAugmentHUDTimerWidget::OnAugmentGrantingTimersFinishedForMatch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentGrantingTimersFinishedForMatch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDTimerWidget", "OnAugmentGrantingTimersFinishedForMatch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -279,10 +278,9 @@ void UFortPlayerAugmentHUDTimerWidget::OnAugmentGrantingTimersFinishedForMatch()
 
 void UFortPlayerAugmentHUDTimerWidget::OnAugmentGrantingTimersResetForMatch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentGrantingTimersResetForMatch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDTimerWidget", "OnAugmentGrantingTimersResetForMatch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -295,10 +293,9 @@ void UFortPlayerAugmentHUDTimerWidget::OnAugmentGrantingTimersResetForMatch()
 
 void UFortPlayerAugmentHUDTimerWidget::OnAugmentSelectorOpenedStatusChanged(const bool bIsOpened)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentSelectorOpenedStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDTimerWidget", "OnAugmentSelectorOpenedStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentHUDTimerWidget_OnAugmentSelectorOpenedStatusChanged Parms{};
 
@@ -315,10 +312,9 @@ void UFortPlayerAugmentHUDTimerWidget::OnAugmentSelectorOpenedStatusChanged(cons
 
 void UFortPlayerAugmentHUDTimerWidget::OnCanSelectAugmentChanged(bool bCanSelectAugment)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCanSelectAugmentChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDTimerWidget", "OnCanSelectAugmentChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentHUDTimerWidget_OnCanSelectAugmentChanged Parms{};
 
@@ -335,10 +331,9 @@ void UFortPlayerAugmentHUDTimerWidget::OnCanSelectAugmentChanged(bool bCanSelect
 
 void UFortPlayerAugmentHUDTimerWidget::OnHUDElementVisibilityChanged(const struct FGameplayTagContainer& HiddenElementTagContainer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHUDElementVisibilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDTimerWidget", "OnHUDElementVisibilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentHUDTimerWidget_OnHUDElementVisibilityChanged Parms{};
 
@@ -353,10 +348,9 @@ void UFortPlayerAugmentHUDTimerWidget::OnHUDElementVisibilityChanged(const struc
 
 void UFortPlayerAugmentHUDTimerWidget::OnMovementModeChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMovementModeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDTimerWidget", "OnMovementModeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -369,10 +363,9 @@ void UFortPlayerAugmentHUDTimerWidget::OnMovementModeChanged()
 
 void UFortPlayerAugmentHUDTimerWidget::OnNumPendingAugmentsToGrantUpdated(int32 NumPendingAugmentsToGrant)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNumPendingAugmentsToGrantUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDTimerWidget", "OnNumPendingAugmentsToGrantUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentHUDTimerWidget_OnNumPendingAugmentsToGrantUpdated Parms{};
 
@@ -390,10 +383,9 @@ void UFortPlayerAugmentHUDTimerWidget::OnNumPendingAugmentsToGrantUpdated(int32 
 
 void UFortPlayerAugmentHUDTimerWidget::OnTimerUpdated(float TimeRemaining, float TimePercentage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTimerUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDTimerWidget", "OnTimerUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentHUDTimerWidget_OnTimerUpdated Parms{};
 
@@ -517,10 +509,9 @@ int32 UFortPlayerAugmentHUDTimerWidget::GetPendingAugmentsToGrant() const
 
 void UFortPlayerAugmentHUDSelectionTimerWidget::OnCountdownActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCountdownActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDSelectionTimerWidget", "OnCountdownActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -610,10 +601,9 @@ bool UFortPlayerAugmentHUDSelectionTimerWidget::IsCountdownVisible() const
 
 void UFortMobilePlayerAugmentTimer::BP_OnHUDElementVisibilityChanged(const struct FGameplayTagContainer& HiddenElementTagContainer, bool bIsSelectionItemEquipped, bool bForceCollapse)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnHUDElementVisibilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMobilePlayerAugmentTimer", "BP_OnHUDElementVisibilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMobilePlayerAugmentTimer_BP_OnHUDElementVisibilityChanged Parms{};
 
@@ -905,10 +895,9 @@ void UFortPlayerAugmentGranterWidget::HandleTimerUpdated(float TimeRemaining, fl
 
 void UFortPlayerAugmentGranterWidget::OnAugmentHighlighted(int32 HighlightedAugmentIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentHighlighted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnAugmentHighlighted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentGranterWidget_OnAugmentHighlighted Parms{};
 
@@ -923,10 +912,9 @@ void UFortPlayerAugmentGranterWidget::OnAugmentHighlighted(int32 HighlightedAugm
 
 void UFortPlayerAugmentGranterWidget::OnAugmentScrollDownEvent()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentScrollDownEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnAugmentScrollDownEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -937,10 +925,9 @@ void UFortPlayerAugmentGranterWidget::OnAugmentScrollDownEvent()
 
 void UFortPlayerAugmentGranterWidget::OnAugmentScrollUpEvent()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentScrollUpEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnAugmentScrollUpEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -953,10 +940,9 @@ void UFortPlayerAugmentGranterWidget::OnAugmentScrollUpEvent()
 
 void UFortPlayerAugmentGranterWidget::OnAugmentSelectionStarted(const int32 SelectedAugmentIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentSelectionStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnAugmentSelectionStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentGranterWidget_OnAugmentSelectionStarted Parms{};
 
@@ -974,10 +960,9 @@ void UFortPlayerAugmentGranterWidget::OnAugmentSelectionStarted(const int32 Sele
 
 void UFortPlayerAugmentGranterWidget::OnAugmentSelectorOpenedStatusChanged(const bool bIsOpened, const bool bViewingAugmentInventory)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentSelectorOpenedStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnAugmentSelectorOpenedStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentGranterWidget_OnAugmentSelectorOpenedStatusChanged Parms{};
 
@@ -995,10 +980,9 @@ void UFortPlayerAugmentGranterWidget::OnAugmentSelectorOpenedStatusChanged(const
 
 void UFortPlayerAugmentGranterWidget::OnAugmentSelectorToolViewSwapped(const bool bViewingAugmentInventory)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentSelectorToolViewSwapped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnAugmentSelectorToolViewSwapped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentGranterWidget_OnAugmentSelectorToolViewSwapped Parms{};
 
@@ -1015,10 +999,9 @@ void UFortPlayerAugmentGranterWidget::OnAugmentSelectorToolViewSwapped(const boo
 
 void UFortPlayerAugmentGranterWidget::OnCanSelectAugmentChanged(bool bCanSelectAugment)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCanSelectAugmentChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnCanSelectAugmentChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentGranterWidget_OnCanSelectAugmentChanged Parms{};
 
@@ -1035,10 +1018,9 @@ void UFortPlayerAugmentGranterWidget::OnCanSelectAugmentChanged(bool bCanSelectA
 
 void UFortPlayerAugmentGranterWidget::OnInputTypeChanged(const ECommonInputType NewInputType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputTypeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnInputTypeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentGranterWidget_OnInputTypeChanged Parms{};
 
@@ -1055,10 +1037,9 @@ void UFortPlayerAugmentGranterWidget::OnInputTypeChanged(const ECommonInputType 
 
 void UFortPlayerAugmentGranterWidget::OnNumPendingAugmentsToGrantUpdated(int32 NumPendingAugmentsToGrant)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNumPendingAugmentsToGrantUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnNumPendingAugmentsToGrantUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentGranterWidget_OnNumPendingAugmentsToGrantUpdated Parms{};
 
@@ -1075,10 +1056,9 @@ void UFortPlayerAugmentGranterWidget::OnNumPendingAugmentsToGrantUpdated(int32 N
 
 void UFortPlayerAugmentGranterWidget::OnPopulateAvailableAugmentsHUD(const TArray<class UFortPlayerAugmentItemDefinition*>& AugmentItemDefinition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateAvailableAugmentsHUD");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnPopulateAvailableAugmentsHUD");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentGranterWidget_OnPopulateAvailableAugmentsHUD Parms{};
 
@@ -1093,10 +1073,9 @@ void UFortPlayerAugmentGranterWidget::OnPopulateAvailableAugmentsHUD(const TArra
 
 void UFortPlayerAugmentGranterWidget::OnRerollAugments()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRerollAugments");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnRerollAugments");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1109,10 +1088,9 @@ void UFortPlayerAugmentGranterWidget::OnRerollAugments()
 
 void UFortPlayerAugmentGranterWidget::OnSelectedAugmentForGrant(class UFortPlayerAugmentItemDefinition* HighlightedAugment)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSelectedAugmentForGrant");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnSelectedAugmentForGrant");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentGranterWidget_OnSelectedAugmentForGrant Parms{};
 
@@ -1130,10 +1108,9 @@ void UFortPlayerAugmentGranterWidget::OnSelectedAugmentForGrant(class UFortPlaye
 
 void UFortPlayerAugmentGranterWidget::OnTimerUpdated(float TimeRemaining, float TimePercentage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTimerUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentGranterWidget", "OnTimerUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentGranterWidget_OnTimerUpdated Parms{};
 
@@ -1176,10 +1153,9 @@ int32 UFortPlayerAugmentGranterWidget::GetPendingAugmentsToGrant() const
 
 void UFortPlayerAugmentHUDQuickbarWidget::OnAugmentsUpdated(const TArray<class UFortPlayerAugmentItemDefinition*>& ActiveAugments)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDQuickbarWidget", "OnAugmentsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentHUDQuickbarWidget_OnAugmentsUpdated Parms{};
 
@@ -1286,10 +1262,9 @@ void UFortPlayerAugmentHUDRerollWidget::HandleRerollAugments()
 
 void UFortPlayerAugmentHUDRerollWidget::OnFreeRerollsUpdated(const int32 NewNumFreeRerolls)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFreeRerollsUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDRerollWidget", "OnFreeRerollsUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentHUDRerollWidget_OnFreeRerollsUpdated Parms{};
 
@@ -1304,10 +1279,9 @@ void UFortPlayerAugmentHUDRerollWidget::OnFreeRerollsUpdated(const int32 NewNumF
 
 void UFortPlayerAugmentHUDRerollWidget::OnRerollAugments()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRerollAugments");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDRerollWidget", "OnRerollAugments");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1321,10 +1295,9 @@ void UFortPlayerAugmentHUDRerollWidget::OnRerollAugments()
 
 void UFortPlayerAugmentHUDRerollWidget::OnUpdateCurrency(const int32 OwnedCurrency, const int32 RerollCost)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateCurrency");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentHUDRerollWidget", "OnUpdateCurrency");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentHUDRerollWidget_OnUpdateCurrency Parms{};
 
@@ -1368,10 +1341,9 @@ void UFortPlayerAugmentHUDRerollWidget::StartRerollHoldProgress(const float dura
 
 void UFortPlayerAugmentInfoEntryWidget::OnItemNewOrBorrowedSet(const bool bIsNew, const bool bIsBorrowed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemNewOrBorrowedSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInfoEntryWidget", "OnItemNewOrBorrowedSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInfoEntryWidget_OnItemNewOrBorrowedSet Parms{};
 
@@ -1389,10 +1361,9 @@ void UFortPlayerAugmentInfoEntryWidget::OnItemNewOrBorrowedSet(const bool bIsNew
 
 void UFortPlayerAugmentInfoEntryWidget::OnItemPinColorSet(const struct FLinearColor& PinColor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemPinColorSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInfoEntryWidget", "OnItemPinColorSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInfoEntryWidget_OnItemPinColorSet Parms{};
 
@@ -1410,10 +1381,9 @@ void UFortPlayerAugmentInfoEntryWidget::OnItemPinColorSet(const struct FLinearCo
 
 void UFortPlayerAugmentInfoEntryWidget::OnItemRaritySet(const EFortRarity Rarity, const struct FFortRarityItemData& RarityItemData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemRaritySet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInfoEntryWidget", "OnItemRaritySet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInfoEntryWidget_OnItemRaritySet Parms{};
 
@@ -1481,10 +1451,9 @@ void UFortPlayerAugmentInGameCarriedWidget::HandleExitBus(class AFortPlayerContr
 
 void UFortPlayerAugmentInGameCarriedWidget::OnShowInitialAugment(const class UFortPlayerAugmentItemDefinition* PlayerAugmentItemDefinition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowInitialAugment");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInGameCarriedWidget", "OnShowInitialAugment");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInGameCarriedWidget_OnShowInitialAugment Parms{};
 
@@ -1589,10 +1558,9 @@ void UFortPlayerAugmentInventoryExtensionRow::HandleTimerUpdated(float TimeRemai
 
 void UFortPlayerAugmentInventoryExtensionRow::OnAugmentGrantingTimersFinishedForMatch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentGrantingTimersFinishedForMatch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryExtensionRow", "OnAugmentGrantingTimersFinishedForMatch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1603,10 +1571,9 @@ void UFortPlayerAugmentInventoryExtensionRow::OnAugmentGrantingTimersFinishedFor
 
 void UFortPlayerAugmentInventoryExtensionRow::OnAugmentGrantingTimersResetForMatch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentGrantingTimersResetForMatch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryExtensionRow", "OnAugmentGrantingTimersResetForMatch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1619,10 +1586,9 @@ void UFortPlayerAugmentInventoryExtensionRow::OnAugmentGrantingTimersResetForMat
 
 void UFortPlayerAugmentInventoryExtensionRow::OnNumPendingAugmentsToGrantUpdated(int32 NumPendingAugmentsToGrant)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNumPendingAugmentsToGrantUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryExtensionRow", "OnNumPendingAugmentsToGrantUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInventoryExtensionRow_OnNumPendingAugmentsToGrantUpdated Parms{};
 
@@ -1640,10 +1606,9 @@ void UFortPlayerAugmentInventoryExtensionRow::OnNumPendingAugmentsToGrantUpdated
 
 void UFortPlayerAugmentInventoryExtensionRow::OnTimerUpdated(float TimeRemaining, float TimePercentage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTimerUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryExtensionRow", "OnTimerUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInventoryExtensionRow_OnTimerUpdated Parms{};
 
@@ -1706,10 +1671,9 @@ int32 UFortPlayerAugmentInventoryExtensionRow::GetPendingAugmentsToGrant() const
 
 void UFortPlayerAugmentInventoryInfoWidget::OnItemNewOrBorrowedSet(const bool bIsNew, const bool bIsBorrowed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemNewOrBorrowedSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryInfoWidget", "OnItemNewOrBorrowedSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInventoryInfoWidget_OnItemNewOrBorrowedSet Parms{};
 
@@ -1728,10 +1692,9 @@ void UFortPlayerAugmentInventoryInfoWidget::OnItemNewOrBorrowedSet(const bool bI
 
 void UFortPlayerAugmentInventoryInfoWidget::OnItemRaritySet(const EFortRarity Rarity, const struct FFortRarityItemData& RarityItemData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemRaritySet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryInfoWidget", "OnItemRaritySet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInventoryInfoWidget_OnItemRaritySet Parms{};
 
@@ -1749,10 +1712,9 @@ void UFortPlayerAugmentInventoryInfoWidget::OnItemRaritySet(const EFortRarity Ra
 
 void UFortPlayerAugmentInventoryListEntry::OnAugmentListItemSet(const class UItemDefinitionBase* ItemDefinition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentListItemSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryListEntry", "OnAugmentListItemSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInventoryListEntry_OnAugmentListItemSet Parms{};
 
@@ -1857,10 +1819,9 @@ void UFortPlayerAugmentInventoryTab::HandleTimerUpdated(float TimeRemaining, flo
 
 void UFortPlayerAugmentInventoryTab::OnAugmentGrantingTimersFinishedForMatch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentGrantingTimersFinishedForMatch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryTab", "OnAugmentGrantingTimersFinishedForMatch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1871,10 +1832,9 @@ void UFortPlayerAugmentInventoryTab::OnAugmentGrantingTimersFinishedForMatch()
 
 void UFortPlayerAugmentInventoryTab::OnAugmentGrantingTimersResetForMatch()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentGrantingTimersResetForMatch");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryTab", "OnAugmentGrantingTimersResetForMatch");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1887,10 +1847,9 @@ void UFortPlayerAugmentInventoryTab::OnAugmentGrantingTimersResetForMatch()
 
 void UFortPlayerAugmentInventoryTab::OnAugmentListUpdated(const int32 NumAugments)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAugmentListUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryTab", "OnAugmentListUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInventoryTab_OnAugmentListUpdated Parms{};
 
@@ -1907,10 +1866,9 @@ void UFortPlayerAugmentInventoryTab::OnAugmentListUpdated(const int32 NumAugment
 
 void UFortPlayerAugmentInventoryTab::OnNumPendingAugmentsToGrantUpdated(int32 NumPendingAugmentsToGrant)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNumPendingAugmentsToGrantUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryTab", "OnNumPendingAugmentsToGrantUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInventoryTab_OnNumPendingAugmentsToGrantUpdated Parms{};
 
@@ -1928,10 +1886,9 @@ void UFortPlayerAugmentInventoryTab::OnNumPendingAugmentsToGrantUpdated(int32 Nu
 
 void UFortPlayerAugmentInventoryTab::OnTimerUpdated(float TimeRemaining, float TimePercentage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTimerUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentInventoryTab", "OnTimerUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentInventoryTab_OnTimerUpdated Parms{};
 
@@ -1993,10 +1950,9 @@ int32 UFortPlayerAugmentInventoryTab::GetPendingAugmentsToGrant() const
 
 void UFortPlayerAugmentLobbyWidget::OnShowInitialAugment(const class UFortPlayerAugmentItemDefinition* CarriedAugment)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowInitialAugment");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentLobbyWidget", "OnShowInitialAugment");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentLobbyWidget_OnShowInitialAugment Parms{};
 
@@ -2013,10 +1969,9 @@ void UFortPlayerAugmentLobbyWidget::OnShowInitialAugment(const class UFortPlayer
 
 void UFortPlayerAugmentPostMatchUnlocksWidget::OnShowUnlockedAugments(const TArray<class UFortPlayerAugmentItemDefinition*>& UnlockedAugments)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowUnlockedAugments");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentPostMatchUnlocksWidget", "OnShowUnlockedAugments");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentPostMatchUnlocksWidget_OnShowUnlockedAugments Parms{};
 
@@ -2050,10 +2005,9 @@ void UFortPlayerAugmentSpecialAcquiredNotificationWidget::CloseWidget()
 
 void UFortPlayerAugmentSpecialAcquiredNotificationWidget::OnEventAdded()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEventAdded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentSpecialAcquiredNotificationWidget", "OnEventAdded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2064,10 +2018,9 @@ void UFortPlayerAugmentSpecialAcquiredNotificationWidget::OnEventAdded()
 
 void UFortPlayerAugmentSpecialAcquiredNotificationWidget::OnStompedByOtherWidget()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStompedByOtherWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentSpecialAcquiredNotificationWidget", "OnStompedByOtherWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2080,10 +2033,9 @@ void UFortPlayerAugmentSpecialAcquiredNotificationWidget::OnStompedByOtherWidget
 
 void UFortPlayerAugmentSpecialAcquiredNotificationWidget::OpenWidget(const class UFortPlayerAugmentItemDefinition* ItemDef)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OpenWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAugmentSpecialAcquiredNotificationWidget", "OpenWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAugmentSpecialAcquiredNotificationWidget_OpenWidget Parms{};
 

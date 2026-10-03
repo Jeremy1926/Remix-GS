@@ -115,10 +115,9 @@ void AFortMusterExplosiveARProjectile::SetHitRotation(const struct FRotator& New
 
 void AFortExCaliberProjectile::BP_OnProjectileStopped()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnProjectileStopped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExCaliberProjectile", "BP_OnProjectileStopped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -212,10 +211,9 @@ void AFortExCaliberProjectile::OnRep_bSimulationRunning()
 
 void AFortExCaliberProjectile::PlayPreExplosionEfffects()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayPreExplosionEfffects");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExCaliberProjectile", "PlayPreExplosionEfffects");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -245,10 +243,9 @@ void AFortExCaliberProjectile::RestartSimulating()
 
 void AFortExCaliberProjectile::SetFuseColorBasedOnTeam()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetFuseColorBasedOnTeam");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExCaliberProjectile", "SetFuseColorBasedOnTeam");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -262,10 +259,9 @@ void AFortExCaliberProjectile::SetFuseColorBasedOnTeam()
 
 void AFortExCaliberProjectile::SetupProjectileHitAudio(const struct FVector& ProjectileImpactLocation, const class AActor* HitActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupProjectileHitAudio");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExCaliberProjectile", "SetupProjectileHitAudio");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortExCaliberProjectile_SetupProjectileHitAudio Parms{};
 
@@ -312,10 +308,9 @@ void AFortExCaliberProjectile::SetupSwordRevealEffects(class UStaticMeshComponen
 
 void AFortExCaliberProjectile::TriggerExplosion()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"TriggerExplosion");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExCaliberProjectile", "TriggerExplosion");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -326,10 +321,9 @@ void AFortExCaliberProjectile::TriggerExplosion()
 
 void AFortExCaliberProjectile::UnblockPawnCollision()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UnblockPawnCollision");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortExCaliberProjectile", "UnblockPawnCollision");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

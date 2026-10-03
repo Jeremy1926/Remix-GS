@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UFortMovementMode_ExtLogicTethered::BP_OnExtensionEnded(const struct FMMERuntimeContext& RuntimeContext)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnExtensionEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicTethered", "BP_OnExtensionEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicTethered_BP_OnExtensionEnded Parms{};
 
@@ -66,10 +65,9 @@ void UFortMovementMode_ExtLogicTethered::EventCallback_OnJumpInput(bool bPressed
 
 void UFortMovementMode_ExtLogicTethered::HandleTetheredMovementBegun()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTetheredMovementBegun");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicTethered", "HandleTetheredMovementBegun");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -80,10 +78,9 @@ void UFortMovementMode_ExtLogicTethered::HandleTetheredMovementBegun()
 
 void UFortMovementMode_ExtLogicTethered::HandleTetheredMovementEnded()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTetheredMovementEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicTethered", "HandleTetheredMovementEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -97,10 +94,9 @@ void UFortMovementMode_ExtLogicTethered::HandleTetheredMovementEnded()
 
 bool UFortMovementMode_ExtLogicTethered::ShouldActivateInTetheredMovement(class UFortMovementMode_TetheredRuntimeData* TetheredRuntimeData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldActivateInTetheredMovement");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicTethered", "ShouldActivateInTetheredMovement");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicTethered_ShouldActivateInTetheredMovement Parms{};
 
@@ -125,10 +121,9 @@ bool UFortMovementMode_ExtLogicTethered::ShouldActivateInTetheredMovement(class 
 
 bool UFortMovementMode_ExtLogicTethered::ShouldReEnterTetheredMovement(class UFortMovementMode_TetheredRuntimeData* TetheredRuntimeData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldReEnterTetheredMovement");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicTethered", "ShouldReEnterTetheredMovement");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicTethered_ShouldReEnterTetheredMovement Parms{};
 
@@ -208,10 +203,9 @@ bool UFortMovementMode_ExtLogicTethered::IsAnotherTetheredMMEActive(const class 
 
 bool UFortMovementMode_ExtLogicTethered::IsAtSlowSpeed(class UFortMovementMode_TetheredRuntimeData* TetheredRuntimeData, const struct FVector& PawnVelocity, float DeltaTime) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsAtSlowSpeed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicTethered", "IsAtSlowSpeed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicTethered_IsAtSlowSpeed Parms{};
 

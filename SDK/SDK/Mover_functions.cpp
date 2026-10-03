@@ -2507,10 +2507,9 @@ bool UNavMoverComponent::IsSwimming() const
 
 void UBaseMovementMode::K2_OnActivate()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnActivate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BaseMovementMode", "K2_OnActivate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2521,10 +2520,9 @@ void UBaseMovementMode::K2_OnActivate()
 
 void UBaseMovementMode::K2_OnDeactivate()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnDeactivate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BaseMovementMode", "K2_OnDeactivate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2537,10 +2535,9 @@ void UBaseMovementMode::K2_OnDeactivate()
 
 void UBaseMovementMode::K2_OnRegistered(const class FName ModeName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnRegistered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BaseMovementMode", "K2_OnRegistered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BaseMovementMode_K2_OnRegistered Parms{};
 
@@ -2558,10 +2555,9 @@ void UBaseMovementMode::K2_OnRegistered(const class FName ModeName)
 
 struct FMoverTickEndData UBaseMovementMode::K2_OnSimulationTick(const struct FSimulationTickParams& Params_0)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnSimulationTick");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BaseMovementMode", "K2_OnSimulationTick");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BaseMovementMode_K2_OnSimulationTick Parms{};
 
@@ -2578,10 +2574,9 @@ struct FMoverTickEndData UBaseMovementMode::K2_OnSimulationTick(const struct FSi
 
 void UBaseMovementMode::K2_OnUnregistered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnUnregistered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BaseMovementMode", "K2_OnUnregistered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2621,10 +2616,9 @@ class UMoverComponent* UBaseMovementMode::GetMoverComponent() const
 
 struct FProposedMove UBaseMovementMode::K2_OnGenerateMove(const struct FMoverTickStartData& StartState, const struct FMoverTimeStep& TimeStep) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnGenerateMove");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BaseMovementMode", "K2_OnGenerateMove");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BaseMovementMode_K2_OnGenerateMove Parms{};
 
@@ -2754,10 +2748,9 @@ void UNavWalkingMode::OnGenerateMove(const struct FMoverTickStartData& StartStat
 
 void UBaseMovementModeTransition::K2_OnTrigger(const struct FSimulationTickParams& Params_0)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnTrigger");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BaseMovementModeTransition", "K2_OnTrigger");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BaseMovementModeTransition_K2_OnTrigger Parms{};
 
@@ -2775,10 +2768,9 @@ void UBaseMovementModeTransition::K2_OnTrigger(const struct FSimulationTickParam
 
 struct FTransitionEvalResult UBaseMovementModeTransition::K2_OnEvaluate(const struct FSimulationTickParams& Params_0) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnEvaluate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BaseMovementModeTransition", "K2_OnEvaluate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BaseMovementModeTransition_K2_OnEvaluate Parms{};
 

@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void AScriptDevice::BP_SetVisibility(bool bVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetVisibility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ScriptDevice", "BP_SetVisibility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ScriptDevice_BP_SetVisibility Parms{};
 

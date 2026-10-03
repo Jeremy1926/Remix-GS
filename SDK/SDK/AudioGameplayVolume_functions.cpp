@@ -100,10 +100,9 @@ void UAttenuationVolumeComponent::SetInteriorVolume(float Volume, float Interpol
 
 void AAudioGameplayVolume::OnListenerEnter()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnListenerEnter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioGameplayVolume", "OnListenerEnter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -119,10 +118,9 @@ void AAudioGameplayVolume::OnListenerEnter()
 
 void AAudioGameplayVolume::OnListenerExit()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnListenerExit");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AudioGameplayVolume", "OnListenerExit");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;

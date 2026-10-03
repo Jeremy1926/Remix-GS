@@ -226,10 +226,9 @@ bool ABuoyancyManager::GetBuoyancyComponentManager(const class UObject* WorldCon
 
 void UGerstnerWaterWaveGeneratorBase::GenerateGerstnerWaves(TArray<struct FGerstnerWave>* OutWaves) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GenerateGerstnerWaves");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("GerstnerWaterWaveGeneratorBase", "GenerateGerstnerWaves");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::GerstnerWaterWaveGeneratorBase_GenerateGerstnerWaves Parms{};
 

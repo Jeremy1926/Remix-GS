@@ -328,10 +328,9 @@ float UFMBeatTimingUtils::GetCurrentSongTime_Unsafe(const class UMusicClockCompo
 
 void UMontageBeatSyncComponent::BeganPlayingMusic()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BeganPlayingMusic");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MontageBeatSyncComponent", "BeganPlayingMusic");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -342,10 +341,9 @@ void UMontageBeatSyncComponent::BeganPlayingMusic()
 
 void UMontageBeatSyncComponent::EndedPlayingMusic()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EndedPlayingMusic");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MontageBeatSyncComponent", "EndedPlayingMusic");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -385,10 +383,9 @@ class USkeletalMeshComponent* UMontageBeatSyncComponent::GetOwnerSkeletalMeshCom
 
 const class UPreciseBeatSyncedAnimMetaData* UMontageBeatSyncComponent::LookupMontageTimingInfo_BP(class UAnimMontage* Montage, const class AFortPlayerPawn* PlayerPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"LookupMontageTimingInfo_BP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MontageBeatSyncComponent", "LookupMontageTimingInfo_BP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MontageBeatSyncComponent_LookupMontageTimingInfo_BP Parms{};
 

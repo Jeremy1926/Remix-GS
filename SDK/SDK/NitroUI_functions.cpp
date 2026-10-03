@@ -24,10 +24,9 @@ SDK_NAMESPACE_START
 
 void UNitroPlayerInfoWidget::OnPlayerDeadStateChanged(class AFortPlayerStateAthena* PlayerState, bool bIsDead)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerDeadStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NitroPlayerInfoWidget", "OnPlayerDeadStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NitroPlayerInfoWidget_OnPlayerDeadStateChanged Parms{};
 
@@ -45,10 +44,9 @@ void UNitroPlayerInfoWidget::OnPlayerDeadStateChanged(class AFortPlayerStateAthe
 
 void UNitroPlayerInfoWidget::OnPlayerStateSet(bool bIsDead)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerStateSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NitroPlayerInfoWidget", "OnPlayerStateSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NitroPlayerInfoWidget_OnPlayerStateSet Parms{};
 
@@ -65,10 +63,9 @@ void UNitroPlayerInfoWidget::OnPlayerStateSet(bool bIsDead)
 
 void UNitroPlayerInfoWidget::UpdateNitroStatus(bool bIsNitroActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateNitroStatus");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NitroPlayerInfoWidget", "UpdateNitroStatus");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NitroPlayerInfoWidget_UpdateNitroStatus Parms{};
 
@@ -86,10 +83,9 @@ void UNitroPlayerInfoWidget::UpdateNitroStatus(bool bIsNitroActive)
 
 void UNitroVehicleFuelGaugeWidget::BP_OnFuelValueChanged(float NewFuelValue, bool bIsFuelLow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnFuelValueChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NitroVehicleFuelGaugeWidget", "BP_OnFuelValueChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NitroVehicleFuelGaugeWidget_BP_OnFuelValueChanged Parms{};
 
@@ -107,10 +103,9 @@ void UNitroVehicleFuelGaugeWidget::BP_OnFuelValueChanged(float NewFuelValue, boo
 
 void UNitroVehicleFuelGaugeWidget::BP_OnNitroStateChanged(bool bNitroActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnNitroStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NitroVehicleFuelGaugeWidget", "BP_OnNitroStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NitroVehicleFuelGaugeWidget_BP_OnNitroStateChanged Parms{};
 

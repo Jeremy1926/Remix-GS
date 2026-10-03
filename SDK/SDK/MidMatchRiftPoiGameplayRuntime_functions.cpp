@@ -74,10 +74,9 @@ void UMidmatchRiftPoiCheatManager::MidmatchRiftPoiSpawnNearestToPawnLocation(con
 
 void UMidmatchRiftPoiCheatManager::SpawnMidmatchPoiFurthestLocation(const struct FVector& Location, const int32 DataLayerInfoIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SpawnMidmatchPoiFurthestLocation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MidmatchRiftPoiCheatManager", "SpawnMidmatchPoiFurthestLocation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MidmatchRiftPoiCheatManager_SpawnMidmatchPoiFurthestLocation Parms{};
 
@@ -96,10 +95,9 @@ void UMidmatchRiftPoiCheatManager::SpawnMidmatchPoiFurthestLocation(const struct
 
 void UMidmatchRiftPoiCheatManager::SpawnMidmatchPoiNearestLocation(const struct FVector& Location, const int32 DataLayerInfoIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SpawnMidmatchPoiNearestLocation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MidmatchRiftPoiCheatManager", "SpawnMidmatchPoiNearestLocation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MidmatchRiftPoiCheatManager_SpawnMidmatchPoiNearestLocation Parms{};
 

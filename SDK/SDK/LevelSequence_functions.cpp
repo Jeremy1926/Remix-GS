@@ -565,10 +565,9 @@ class ULevelSequencePlayer* ALevelSequenceActor::GetSequencePlayer() const
 
 void ULevelSequenceBurnIn::SetSettings(class UObject* InSettings)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetSettings");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LevelSequenceBurnIn", "SetSettings");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LevelSequenceBurnIn_SetSettings Parms{};
 
@@ -585,10 +584,9 @@ void ULevelSequenceBurnIn::SetSettings(class UObject* InSettings)
 
 TSubclassOf<class ULevelSequenceBurnInInitSettings> ULevelSequenceBurnIn::GetSettingsClass() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSettingsClass");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LevelSequenceBurnIn", "GetSettingsClass");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LevelSequenceBurnIn_GetSettingsClass Parms{};
 
@@ -745,10 +743,9 @@ class UMovieSceneSequence* ULevelSequenceDirector::GetSequence()
 
 void ULevelSequenceDirector::OnCreated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCreated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LevelSequenceDirector", "OnCreated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

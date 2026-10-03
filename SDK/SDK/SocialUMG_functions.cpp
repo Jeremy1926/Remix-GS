@@ -107,10 +107,9 @@ void USocialChatContainer::HandleRightTabPressed()
 
 void USocialChatContainer::OnChatOpenChanged(bool bShouldBeOpen)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnChatOpenChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SocialChatContainer", "OnChatOpenChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SocialChatContainer_OnChatOpenChanged Parms{};
 
@@ -144,10 +143,9 @@ void USocialChatContainer::SendCurrentMessage()
 
 void USocialChatMessageEntry::OnMessageSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMessageSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SocialChatMessageEntry", "OnMessageSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -208,10 +206,9 @@ class UUserWidget* USocialGroupListEntry::HandleGetMenuContent()
 
 void USocialInteractionButton::OnInteractionSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInteractionSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SocialInteractionButton", "OnInteractionSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -297,10 +294,9 @@ void USocialActionMenu::HandleMenuAnchorOpenChanged(bool bIsOpen)
 
 void USocialActionMenu::OnOpened()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOpened");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SocialActionMenu", "OnOpened");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -313,10 +309,9 @@ void USocialActionMenu::OnOpened()
 
 void USocialInteractionMenu::OnToggleConfirmation(bool bIsVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnToggleConfirmation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SocialInteractionMenu", "OnToggleConfirmation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SocialInteractionMenu_OnToggleConfirmation Parms{};
 

@@ -25,10 +25,9 @@ SDK_NAMESPACE_START
 
 void UFortConversationOptionBrief::ConfigureBP(const struct FConversationContext& ClientContext, const struct FClientConversationOptionEntry& OptionEntry, const int32 SelectedIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ConfigureBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationOptionBrief", "ConfigureBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationOptionBrief_ConfigureBP Parms{};
 
@@ -47,10 +46,9 @@ void UFortConversationOptionBrief::ConfigureBP(const struct FConversationContext
 
 void UFortItemTransactionBrief::OnTransactionInfoReceived(class UFortItem* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransactionInfoReceived");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemTransactionBrief", "OnTransactionInfoReceived");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemTransactionBrief_OnTransactionInfoReceived Parms{};
 
@@ -65,10 +63,9 @@ void UFortItemTransactionBrief::OnTransactionInfoReceived(class UFortItem* Item)
 
 void UFortApplyAbilityBrief::OnAbleToPurchase()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAbleToPurchase");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortApplyAbilityBrief", "OnAbleToPurchase");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -81,10 +78,9 @@ void UFortApplyAbilityBrief::OnAbleToPurchase()
 
 void UFortApplyAbilityBrief::OnUnableToPurchase(EPreventAbilityUseReason Reason)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUnableToPurchase");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortApplyAbilityBrief", "OnUnableToPurchase");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortApplyAbilityBrief_OnUnableToPurchase Parms{};
 
@@ -101,10 +97,9 @@ void UFortApplyAbilityBrief::OnUnableToPurchase(EPreventAbilityUseReason Reason)
 
 void UFortBasicBrief::OnChoiceTextReceived(const class FText& Text)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnChoiceTextReceived");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBasicBrief", "OnChoiceTextReceived");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBasicBrief_OnChoiceTextReceived Parms{};
 
@@ -121,10 +116,9 @@ void UFortBasicBrief::OnChoiceTextReceived(const class FText& Text)
 
 void UFortBasicItemBrief::OnAbleToUse(const bool bShowWarningMessage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAbleToUse");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBasicItemBrief", "OnAbleToUse");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBasicItemBrief_OnAbleToUse Parms{};
 
@@ -142,10 +136,9 @@ void UFortBasicItemBrief::OnAbleToUse(const bool bShowWarningMessage)
 
 void UFortBasicItemBrief::OnItemInfoReceived(class UFortItem* Item, int32 StackSize)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemInfoReceived");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBasicItemBrief", "OnItemInfoReceived");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBasicItemBrief_OnItemInfoReceived Parms{};
 
@@ -163,10 +156,9 @@ void UFortBasicItemBrief::OnItemInfoReceived(class UFortItem* Item, int32 StackS
 
 void UFortBasicItemBrief::OnUnableToUse(const class FText& Reason)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUnableToUse");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBasicItemBrief", "OnUnableToUse");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBasicItemBrief_OnUnableToUse Parms{};
 
@@ -183,10 +175,9 @@ void UFortBasicItemBrief::OnUnableToUse(const class FText& Reason)
 
 void UFortBasicItemBrief::OnUpdateDescriptionText(const class FText& DescriptionText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateDescriptionText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBasicItemBrief", "OnUpdateDescriptionText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBasicItemBrief_OnUpdateDescriptionText Parms{};
 
@@ -203,10 +194,9 @@ void UFortBasicItemBrief::OnUpdateDescriptionText(const class FText& Description
 
 void UFortBuyBrief::OnDisplayUnavailability(ECannotBuyReason CannotBuyReason)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDisplayUnavailability");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBuyBrief", "OnDisplayUnavailability");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBuyBrief_OnDisplayUnavailability Parms{};
 
@@ -224,10 +214,9 @@ void UFortBuyBrief::OnDisplayUnavailability(ECannotBuyReason CannotBuyReason)
 
 void UFortBuyBrief::OnPurchaseDataReceived(int32 StackSize, int32 RemainingForSale)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPurchaseDataReceived");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBuyBrief", "OnPurchaseDataReceived");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBuyBrief_OnPurchaseDataReceived Parms{};
 
@@ -245,10 +234,9 @@ void UFortBuyBrief::OnPurchaseDataReceived(int32 StackSize, int32 RemainingForSa
 
 void UFortConversationMarker::OnCanInteract(bool bCanInteract)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCanInteract");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationMarker", "OnCanInteract");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationMarker_OnCanInteract Parms{};
 
@@ -266,10 +254,9 @@ void UFortConversationMarker::OnCanInteract(bool bCanInteract)
 
 void UFortConversationMarker::OnConversationActorProximityChanged(EInteractionRange TargetInteractionRange, class UFortNonPlayerConversationParticipantComponent* ConversationComponent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnConversationActorProximityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationMarker", "OnConversationActorProximityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationMarker_OnConversationActorProximityChanged Parms{};
 
@@ -316,10 +303,9 @@ void UFortConversationMarker::OnEntityConversationComponentParticipantsChanged(c
 
 void UFortConversationMarker::OnInteractionRangeChanged(EInteractionRange TargetInteractionRange)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInteractionRangeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationMarker", "OnInteractionRangeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationMarker_OnInteractionRangeChanged Parms{};
 
@@ -336,10 +322,9 @@ void UFortConversationMarker::OnInteractionRangeChanged(EInteractionRange Target
 
 void UFortConversationMarker::OnMessageShownOverActor(class AActor* OverActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMessageShownOverActor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationMarker", "OnMessageShownOverActor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationMarker_OnMessageShownOverActor Parms{};
 
@@ -410,10 +395,9 @@ void UFortConversationMarker::OnParticipantNameSanitizationComplete(bool bSucces
 
 void UFortConversationMarker::OnSetIndicatedActor(class AActor* NewIndicatorActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetIndicatedActor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationMarker", "OnSetIndicatedActor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationMarker_OnSetIndicatedActor Parms{};
 
@@ -458,10 +442,9 @@ void UFortConversationMarker::SetIsAtMaxConversations(class UFortNonPlayerConver
 
 void UFortConversationMessageWidget::OnMainMessageSet(const class FText& NPCName, const class FText& MessageBody)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMainMessageSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationMessageWidget", "OnMainMessageSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationMessageWidget_OnMainMessageSet Parms{};
 
@@ -477,10 +460,9 @@ void UFortConversationMessageWidget::OnMainMessageSet(const class FText& NPCName
 
 void UFortConversationMessageWidget::OnMessageHidden()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMessageHidden");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationMessageWidget", "OnMessageHidden");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -491,10 +473,9 @@ void UFortConversationMessageWidget::OnMessageHidden()
 
 void UFortConversationMessageWidget::OnMessageShown()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMessageShown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationMessageWidget", "OnMessageShown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -507,10 +488,9 @@ void UFortConversationMessageWidget::OnMessageShown()
 
 void UFortConversationMessageWidget::OnPreviewMessageSet(const class FText& PreviewText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPreviewMessageSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationMessageWidget", "OnPreviewMessageSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationMessageWidget_OnPreviewMessageSet Parms{};
 
@@ -550,10 +530,9 @@ void UFortConversationMessageWidget::SetPreviewMessage(const class FText& Messag
 
 void UFortConversationOption::OnOptionConfirmed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOptionConfirmed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationOption", "OnOptionConfirmed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -566,10 +545,9 @@ void UFortConversationOption::OnOptionConfirmed()
 
 void UFortConversationOption::OnSetupFromDisplayAsset(class UObject* DisplayAsset)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetupFromDisplayAsset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationOption", "OnSetupFromDisplayAsset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationOption_OnSetupFromDisplayAsset Parms{};
 
@@ -586,10 +564,9 @@ void UFortConversationOption::OnSetupFromDisplayAsset(class UObject* DisplayAsse
 
 void UFortConversationOption::OnSetupFromItemDef(class UFortItem* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetupFromItemDef");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationOption", "OnSetupFromItemDef");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationOption_OnSetupFromItemDef Parms{};
 
@@ -607,10 +584,9 @@ void UFortConversationOption::OnSetupFromItemDef(class UFortItem* Item)
 
 void UFortConversationOption::OnSetupPivotFromRadialInformation(int32 NumElements, int32 ItemIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetupPivotFromRadialInformation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationOption", "OnSetupPivotFromRadialInformation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationOption_OnSetupPivotFromRadialInformation Parms{};
 
@@ -750,10 +726,9 @@ void UFortConversationScreen::EndConversation()
 
 void UFortConversationScreen::OnConversationOptionUnavailable(class UFortRadialSlot* SelectedEntry)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnConversationOptionUnavailable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationScreen", "OnConversationOptionUnavailable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationScreen_OnConversationOptionUnavailable Parms{};
 
@@ -768,10 +743,9 @@ void UFortConversationScreen::OnConversationOptionUnavailable(class UFortRadialS
 
 void UFortConversationScreen::OnConversationStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnConversationStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationScreen", "OnConversationStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -784,10 +758,9 @@ void UFortConversationScreen::OnConversationStarted()
 
 void UFortConversationScreen::OnItemSelected(int32 OriginalIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationScreen", "OnItemSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationScreen_OnItemSelected Parms{};
 
@@ -802,10 +775,9 @@ void UFortConversationScreen::OnItemSelected(int32 OriginalIndex)
 
 void UFortConversationScreen::OnOptionsPopulated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOptionsPopulated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationScreen", "OnOptionsPopulated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -818,10 +790,9 @@ void UFortConversationScreen::OnOptionsPopulated()
 
 void UFortConversationScreen::OnSelectedItemAvailabilityChanged(bool bIsAvailable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSelectedItemAvailabilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortConversationScreen", "OnSelectedItemAvailabilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortConversationScreen_OnSelectedItemAvailabilityChanged Parms{};
 
@@ -861,10 +832,9 @@ bool UFortConversationScreen::ShouldBlockOptionIntroAnim() const
 
 void UFortDataDrivenServiceBrief::OnAbleToPurchase()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAbleToPurchase");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDataDrivenServiceBrief", "OnAbleToPurchase");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -877,10 +847,9 @@ void UFortDataDrivenServiceBrief::OnAbleToPurchase()
 
 void UFortDataDrivenServiceBrief::OnTransactionInfoReceived(class UFortItem* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransactionInfoReceived");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDataDrivenServiceBrief", "OnTransactionInfoReceived");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDataDrivenServiceBrief_OnTransactionInfoReceived Parms{};
 
@@ -897,10 +866,9 @@ void UFortDataDrivenServiceBrief::OnTransactionInfoReceived(class UFortItem* Ite
 
 void UFortDataDrivenServiceBrief::OnUnableToPurchase(const class FText& Reason)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUnableToPurchase");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDataDrivenServiceBrief", "OnUnableToPurchase");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDataDrivenServiceBrief_OnUnableToPurchase Parms{};
 
@@ -917,10 +885,9 @@ void UFortDataDrivenServiceBrief::OnUnableToPurchase(const class FText& Reason)
 
 void UFortDataDrivenServiceBrief::OnWarningMessageUpdated(const class FText& WarningMessage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWarningMessageUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDataDrivenServiceBrief", "OnWarningMessageUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDataDrivenServiceBrief_OnWarningMessageUpdated Parms{};
 
@@ -937,10 +904,9 @@ void UFortDataDrivenServiceBrief::OnWarningMessageUpdated(const class FText& War
 
 void UFortDuelBrief::DisplayLootItems(const TArray<class UFortItem*>& Items)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"DisplayLootItems");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortDuelBrief", "DisplayLootItems");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortDuelBrief_DisplayLootItems Parms{};
 
@@ -957,10 +923,9 @@ void UFortDuelBrief::DisplayLootItems(const TArray<class UFortItem*>& Items)
 
 void UFortHireBrief::BP_SetSpecializationIcon(class UObject* ResourceObject)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_SetSpecializationIcon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHireBrief", "BP_SetSpecializationIcon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHireBrief_BP_SetSpecializationIcon Parms{};
 
@@ -978,10 +943,9 @@ void UFortHireBrief::BP_SetSpecializationIcon(class UObject* ResourceObject)
 
 void UFortHireBrief::HandleNPCDismissal(bool bAtMaxNPCNum, bool bWillDismissNPCAtHire)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleNPCDismissal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortHireBrief", "HandleNPCDismissal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortHireBrief_HandleNPCDismissal Parms{};
 
@@ -1029,10 +993,9 @@ const class FText UFortItemFundBrief::GetDataForKey(const class FString& Key, co
 
 void UFortItemFundBrief::InitializeFromContext(const struct FConversationContext& ConversationContext)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InitializeFromContext");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemFundBrief", "InitializeFromContext");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemFundBrief_InitializeFromContext Parms{};
 
@@ -1047,10 +1010,9 @@ void UFortItemFundBrief::InitializeFromContext(const struct FConversationContext
 
 void UFortItemFundBrief::OnIntializationComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnIntializationComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemFundBrief", "OnIntializationComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1063,10 +1025,9 @@ void UFortItemFundBrief::OnIntializationComplete()
 
 void UFortItemFundBrief::OnProgressUpdated(const float CurrentFundingFraction)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnProgressUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortItemFundBrief", "OnProgressUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortItemFundBrief_OnProgressUpdated Parms{};
 
@@ -1083,10 +1044,9 @@ void UFortItemFundBrief::OnProgressUpdated(const float CurrentFundingFraction)
 
 void UFortMultiItemFundBrief::UpdateSelectedVisuals(int32 SelectedIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateSelectedVisuals");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMultiItemFundBrief", "UpdateSelectedVisuals");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMultiItemFundBrief_UpdateSelectedVisuals Parms{};
 
@@ -1103,10 +1063,9 @@ void UFortMultiItemFundBrief::UpdateSelectedVisuals(int32 SelectedIndex)
 
 void UFortNPCTextDisplay::OnItemNameUpdated(const class FString& ItemName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemNameUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNPCTextDisplay", "OnItemNameUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNPCTextDisplay_OnItemNameUpdated Parms{};
 
@@ -1121,10 +1080,9 @@ void UFortNPCTextDisplay::OnItemNameUpdated(const class FString& ItemName)
 
 void UFortNPCTextDisplay::OnTextUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTextUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNPCTextDisplay", "OnTextUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1181,10 +1139,9 @@ void UFortPlayerConversationUIComponent::OnMinigameStarted()
 
 void UFortQuestBrief::OnQuestExpirationTimeSet(const bool bDisplayExpirationTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQuestExpirationTimeSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestBrief", "OnQuestExpirationTimeSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestBrief_OnQuestExpirationTimeSet Parms{};
 
@@ -1207,10 +1164,9 @@ void UFortQuestBrief::OnQuestExpirationTimeSet(const bool bDisplayExpirationTime
 
 void UFortQuestBrief::OnQuestInformationRecieved(const class FText& Objective, const struct FFortRarityItemData& RarityData, const struct FGameplayTag& CategoryTag, int32 XPReward, int32 MoneyReward, int32 TokenReward, const TSoftObjectPtr<class UTexture2D>& TokenRewardIcon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQuestInformationRecieved");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQuestBrief", "OnQuestInformationRecieved");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQuestBrief_OnQuestInformationRecieved Parms{};
 
@@ -1231,10 +1187,9 @@ void UFortQuestBrief::OnQuestInformationRecieved(const class FText& Objective, c
 
 void UFortShowFutureStormCircleBrief::OnAbleToPurchase()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAbleToPurchase");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortShowFutureStormCircleBrief", "OnAbleToPurchase");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1247,10 +1202,9 @@ void UFortShowFutureStormCircleBrief::OnAbleToPurchase()
 
 void UFortShowFutureStormCircleBrief::OnUnableToPurchase(EPreventUseStormCircleServiceReason Reason)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUnableToPurchase");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortShowFutureStormCircleBrief", "OnUnableToPurchase");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortShowFutureStormCircleBrief_OnUnableToPurchase Parms{};
 
@@ -1267,10 +1221,9 @@ void UFortShowFutureStormCircleBrief::OnUnableToPurchase(EPreventUseStormCircleS
 
 void UFortTransactionStrip::OnSetTransactionCostVisibility(const bool bVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetTransactionCostVisibility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTransactionStrip", "OnSetTransactionCostVisibility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortTransactionStrip_OnSetTransactionCostVisibility Parms{};
 
@@ -1287,10 +1240,9 @@ void UFortTransactionStrip::OnSetTransactionCostVisibility(const bool bVisible)
 
 void UFortTransactionStrip::OnTransactionInfoReceived(const struct FFortServiceTransactionInfo& TransactionInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransactionInfoReceived");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTransactionStrip", "OnTransactionInfoReceived");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortTransactionStrip_OnTransactionInfoReceived Parms{};
 
@@ -1307,10 +1259,9 @@ void UFortTransactionStrip::OnTransactionInfoReceived(const struct FFortServiceT
 
 void UFortUpgradeBrief::OnUnableToUpgrade(EFortWeaponUpgradeInteractionResult CannotUpgradeCause)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUnableToUpgrade");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeBrief", "OnUnableToUpgrade");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortUpgradeBrief_OnUnableToUpgrade Parms{};
 
@@ -1327,10 +1278,9 @@ void UFortUpgradeBrief::OnUnableToUpgrade(EFortWeaponUpgradeInteractionResult Ca
 
 void UFortUpgradeBrief::OnUpgradeInfoReceived(class UFortItem* CurrentWeapon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpgradeInfoReceived");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortUpgradeBrief", "OnUpgradeInfoReceived");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortUpgradeBrief_OnUpgradeInfoReceived Parms{};
 

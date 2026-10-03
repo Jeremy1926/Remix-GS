@@ -94,10 +94,9 @@ void UAthenaWeaponModsWorkbenchWidgetBase::HandleWeaponEquipped(class AFortWeapo
 
 void UAthenaWeaponModsWorkbenchWidgetBase::OnWeaponModCategoryChanged(const struct FGameplayTag& ModTypeTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWeaponModCategoryChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchWidgetBase", "OnWeaponModCategoryChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchWidgetBase_OnWeaponModCategoryChanged Parms{};
 
@@ -112,10 +111,9 @@ void UAthenaWeaponModsWorkbenchWidgetBase::OnWeaponModCategoryChanged(const stru
 
 void UAthenaWeaponModsWorkbenchWidgetBase::OnWorkbenchClosed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWorkbenchClosed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchWidgetBase", "OnWorkbenchClosed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -126,10 +124,9 @@ void UAthenaWeaponModsWorkbenchWidgetBase::OnWorkbenchClosed()
 
 void UAthenaWeaponModsWorkbenchWidgetBase::OnWorkbenchOpened()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWorkbenchOpened");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchWidgetBase", "OnWorkbenchOpened");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -213,10 +210,9 @@ void UAthenaWeaponModsWorkbenchEquippedModDetails::OnRemoveModClicked()
 
 void UAthenaWeaponModsWorkbenchEquippedModDetails::OnSetCurrentlySelectedModInfo(const class UFortWeaponModItemDefinition* ModItemDefinition, bool bIsSameCategory, bool bIsEquippedMod)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetCurrentlySelectedModInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchEquippedModDetails", "OnSetCurrentlySelectedModInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchEquippedModDetails_OnSetCurrentlySelectedModInfo Parms{};
 
@@ -238,10 +234,9 @@ void UAthenaWeaponModsWorkbenchEquippedModDetails::OnSetCurrentlySelectedModInfo
 
 void UAthenaWeaponModsWorkbenchEquippedModDetails::OnSetEquippedModInfo(const class UFortWeaponModItemDefinition* ModItemDefinition, bool bIsDefaultMod, bool bSlotHasDefaultMod, bool bCanRemoveMod)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetEquippedModInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchEquippedModDetails", "OnSetEquippedModInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchEquippedModDetails_OnSetEquippedModInfo Parms{};
 
@@ -332,10 +327,9 @@ void UAthenaWeaponModsWorkbenchModal::HandleWeaponEquipped(class AFortWeapon* Ne
 
 void UAthenaWeaponModsWorkbenchModal::OnInputTypeChanged(const ECommonInputType NewInputType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputTypeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModal", "OnInputTypeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModal_OnInputTypeChanged Parms{};
 
@@ -353,10 +347,9 @@ void UAthenaWeaponModsWorkbenchModal::OnInputTypeChanged(const ECommonInputType 
 
 void UAthenaWeaponModsWorkbenchModal::OnWeaponEquipped(bool bIsModdable, const class AFortWeapon* NewWeapon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWeaponEquipped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModal", "OnWeaponEquipped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModal_OnWeaponEquipped Parms{};
 
@@ -374,10 +367,9 @@ void UAthenaWeaponModsWorkbenchModal::OnWeaponEquipped(bool bIsModdable, const c
 
 void UAthenaWeaponModsWorkbenchModListEntry::OnListItemSet(const class UFortItemDefinition* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnListItemSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModListEntry", "OnListItemSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModListEntry_OnListItemSet Parms{};
 
@@ -392,10 +384,9 @@ void UAthenaWeaponModsWorkbenchModListEntry::OnListItemSet(const class UFortItem
 
 void UAthenaWeaponModsWorkbenchModListEntry::OnRefreshStatus()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRefreshStatus");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModListEntry", "OnRefreshStatus");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -524,10 +515,9 @@ void UAthenaWeaponModsWorkbenchModSelection::OnExitUIClicked()
 
 void UAthenaWeaponModsWorkbenchModSelection::OnModPurchasedSuccessfully()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnModPurchasedSuccessfully");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModSelection", "OnModPurchasedSuccessfully");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -538,10 +528,9 @@ void UAthenaWeaponModsWorkbenchModSelection::OnModPurchasedSuccessfully()
 
 void UAthenaWeaponModsWorkbenchModSelection::OnModPurchaseFailed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnModPurchaseFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModSelection", "OnModPurchaseFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -552,10 +541,9 @@ void UAthenaWeaponModsWorkbenchModSelection::OnModPurchaseFailed()
 
 void UAthenaWeaponModsWorkbenchModSelection::OnModRemovedCallback()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnModRemovedCallback");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModSelection", "OnModRemovedCallback");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -568,10 +556,9 @@ void UAthenaWeaponModsWorkbenchModSelection::OnModRemovedCallback()
 
 void UAthenaWeaponModsWorkbenchModSelection::OnRefreshMods(const TArray<class UFortWeaponModItemDefinition*>& WeaponModItemDefinitions)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRefreshMods");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModSelection", "OnRefreshMods");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModSelection_OnRefreshMods Parms{};
 
@@ -588,10 +575,9 @@ void UAthenaWeaponModsWorkbenchModSelection::OnRefreshMods(const TArray<class UF
 
 void UAthenaWeaponModsWorkbenchModSelection::OnRefreshModType(const struct FGameplayTag& ModCategoryTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRefreshModType");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModSelection", "OnRefreshModType");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModSelection_OnRefreshModType Parms{};
 
@@ -628,10 +614,9 @@ void UAthenaWeaponModsWorkbenchModSelection::OnRemoveModClicked()
 
 void UAthenaWeaponModsWorkbenchModSelection::OnSetSelectedModCostAndOwnedCurrency(int32 ModCost, int32 OwnedCurrency)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetSelectedModCostAndOwnedCurrency");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModSelection", "OnSetSelectedModCostAndOwnedCurrency");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModSelection_OnSetSelectedModCostAndOwnedCurrency Parms{};
 
@@ -649,10 +634,9 @@ void UAthenaWeaponModsWorkbenchModSelection::OnSetSelectedModCostAndOwnedCurrenc
 
 void UAthenaWeaponModsWorkbenchModSelection::OnSetSelectedModInfo(const class UFortWeaponModItemDefinition* ModItemDef)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetSelectedModInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModSelection", "OnSetSelectedModInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModSelection_OnSetSelectedModInfo Parms{};
 
@@ -670,10 +654,9 @@ void UAthenaWeaponModsWorkbenchModSelection::OnSetSelectedModInfo(const class UF
 
 void UAthenaWeaponModsWorkbenchModSelection::OnSetSelectedRemoveModCostAndOwnedCurrency(int32 ModCost, int32 OwnedCurrency)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetSelectedRemoveModCostAndOwnedCurrency");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModSelection", "OnSetSelectedRemoveModCostAndOwnedCurrency");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModSelection_OnSetSelectedRemoveModCostAndOwnedCurrency Parms{};
 
@@ -729,10 +712,9 @@ void UAthenaWeaponModsWorkbenchModSelection::RequestRemoveMod()
 
 void UAthenaWeaponModsWorkbenchModSelection::SetCanRemoveMod(bool bCanRemoveMod)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetCanRemoveMod");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModSelection", "SetCanRemoveMod");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModSelection_SetCanRemoveMod Parms{};
 
@@ -904,10 +886,9 @@ void UAthenaWeaponModsWorkbenchModTypeButton::HandleWeaponEquipped(class AFortWe
 
 void UAthenaWeaponModsWorkbenchModTypeButton::OnWorkbenchClosed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWorkbenchClosed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModTypeButton", "OnWorkbenchClosed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -918,10 +899,9 @@ void UAthenaWeaponModsWorkbenchModTypeButton::OnWorkbenchClosed()
 
 void UAthenaWeaponModsWorkbenchModTypeButton::OnWorkbenchOpened()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWorkbenchOpened");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModTypeButton", "OnWorkbenchOpened");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -935,10 +915,9 @@ void UAthenaWeaponModsWorkbenchModTypeButton::OnWorkbenchOpened()
 
 void UAthenaWeaponModsWorkbenchModTypeButton::SetEquippedOrDefaultMod(class UFortWeaponModItemDefinition* ItemDefinition, bool bIsAvailableCategory)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetEquippedOrDefaultMod");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModTypeButton", "SetEquippedOrDefaultMod");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModTypeButton_SetEquippedOrDefaultMod Parms{};
 
@@ -981,10 +960,9 @@ struct FGameplayTag UAthenaWeaponModsWorkbenchModTypeButton::GetModTypeTag() con
 
 TArray<class UAthenaWeaponModsWorkbenchModTypeButton*> UAthenaWeaponModsWorkbenchModTypeTabs::GetTabButtons()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetTabButtons");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModTypeTabs", "GetTabButtons");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModTypeTabs_GetTabButtons Parms{};
 
@@ -1051,10 +1029,9 @@ void UAthenaWeaponModsWorkbenchModTypeTabs::RequestTabInDirection_BP(const int32
 
 void UAthenaWeaponModsWorkbenchModTypeTabs::SetItemSlotInfo(const TArray<struct FFortWeaponModSlot>& ModSlots)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetItemSlotInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchModTypeTabs", "SetItemSlotInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchModTypeTabs_SetItemSlotInfo Parms{};
 
@@ -1073,10 +1050,9 @@ void UAthenaWeaponModsWorkbenchModTypeTabs::SetItemSlotInfo(const TArray<struct 
 
 void UAthenaWeaponModsWorkbenchWeaponDetails::OnWeaponEquipped(const class UItemDefinitionBase* ItemDefinition, const class FText& DisplayName, const bool bIsModdable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWeaponEquipped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchWeaponDetails", "OnWeaponEquipped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchWeaponDetails_OnWeaponEquipped Parms{};
 
@@ -1097,10 +1073,9 @@ void UAthenaWeaponModsWorkbenchWeaponDetails::OnWeaponEquipped(const class UItem
 
 void UAthenaWeaponModsWorkbenchWeaponDetails::SetWeaponType(const class FText& WeaponTypeText, class UTexture2D* WeaponTypeTexture, const bool bIsValidType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetWeaponType");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchWeaponDetails", "SetWeaponType");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchWeaponDetails_SetWeaponType Parms{};
 
@@ -1145,10 +1120,9 @@ void UAthenaWeaponModsWorkbenchWeaponRenderContainer::HandleWeaponModSlotPreview
 
 void UAthenaWeaponModsWorkbenchWeaponRenderContainer::OnWeaponModSlotPreview(class AFortWeapon* Weapon, class UFortWeaponModItemDefinition* PreviewingModItemDefinition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWeaponModSlotPreview");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchWeaponRenderContainer", "OnWeaponModSlotPreview");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchWeaponRenderContainer_OnWeaponModSlotPreview Parms{};
 
@@ -1166,10 +1140,9 @@ void UAthenaWeaponModsWorkbenchWeaponRenderContainer::OnWeaponModSlotPreview(cla
 
 void UAthenaWeaponModsWorkbenchWeaponRenderContainer::OnWeaponModSlotsChanged(class AFortWeapon* Weapon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWeaponModSlotsChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaWeaponModsWorkbenchWeaponRenderContainer", "OnWeaponModSlotsChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaWeaponModsWorkbenchWeaponRenderContainer_OnWeaponModSlotsChanged Parms{};
 

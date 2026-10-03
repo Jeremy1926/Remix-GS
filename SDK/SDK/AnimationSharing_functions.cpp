@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 class UEnum* UAnimationSharingStateProcessor::GetAnimationStateEnum()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAnimationStateEnum");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimationSharingStateProcessor", "GetAnimationStateEnum");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimationSharingStateProcessor_GetAnimationStateEnum Parms{};
 
@@ -52,10 +51,9 @@ class UEnum* UAnimationSharingStateProcessor::GetAnimationStateEnum()
 
 void UAnimationSharingStateProcessor::ProcessActorState(int32* OutState, class AActor* InActor, uint8 CurrentState, uint8 OnDemandState, bool* bShouldProcess)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ProcessActorState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimationSharingStateProcessor", "ProcessActorState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimationSharingStateProcessor_ProcessActorState Parms{};
 

@@ -1691,10 +1691,9 @@ bool ADelMarPlayspace::ShouldShowLoadingScreen() const
 
 void ADelMarCheckpoint::BP_ActivateRift()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_ActivateRift");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCheckpoint", "BP_ActivateRift");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1705,10 +1704,9 @@ void ADelMarCheckpoint::BP_ActivateRift()
 
 void ADelMarCheckpoint::BP_DeactivateRift()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_DeactivateRift");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCheckpoint", "BP_DeactivateRift");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1721,10 +1719,9 @@ void ADelMarCheckpoint::BP_DeactivateRift()
 
 void ADelMarCheckpoint::BP_FirstPlaceChanged(bool bValidPrevFirstPlace)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_FirstPlaceChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCheckpoint", "BP_FirstPlaceChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCheckpoint_BP_FirstPlaceChanged Parms{};
 
@@ -1743,10 +1740,9 @@ void ADelMarCheckpoint::BP_FirstPlaceChanged(bool bValidPrevFirstPlace)
 
 void ADelMarCheckpoint::BP_LapFinished(int32 CompletedLap, int32 CurrentLap, int32 TotalLaps)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_LapFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCheckpoint", "BP_LapFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCheckpoint_BP_LapFinished Parms{};
 
@@ -1763,10 +1759,9 @@ void ADelMarCheckpoint::BP_LapFinished(int32 CompletedLap, int32 CurrentLap, int
 
 void ADelMarCheckpoint::BP_RaceFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_RaceFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCheckpoint", "BP_RaceFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1777,10 +1772,9 @@ void ADelMarCheckpoint::BP_RaceFinished()
 
 void ADelMarCheckpoint::BP_RaceReset()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_RaceReset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCheckpoint", "BP_RaceReset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1794,10 +1788,9 @@ void ADelMarCheckpoint::BP_RaceReset()
 
 void ADelMarCheckpoint::ClientSetCheckpointActive(int32 CurrentLap, int32 TotalLaps)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ClientSetCheckpointActive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCheckpoint", "ClientSetCheckpointActive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCheckpoint_ClientSetCheckpointActive Parms{};
 
@@ -1813,10 +1806,9 @@ void ADelMarCheckpoint::ClientSetCheckpointActive(int32 CurrentLap, int32 TotalL
 
 void ADelMarCheckpoint::ClientSetCheckpointInactive()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ClientSetCheckpointInactive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCheckpoint", "ClientSetCheckpointInactive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1883,10 +1875,9 @@ void ADelMarCheckpoint::OnTriggered(class ADelMarVehicle* InDelMarVehicle)
 
 void ADelMarCheckpoint::UpdateCheckpointMesh(EDelMarCheckpointMeshType MeshType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCheckpointMesh");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCheckpoint", "UpdateCheckpointMesh");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCheckpoint_UpdateCheckpointMesh Parms{};
 
@@ -1903,10 +1894,9 @@ void ADelMarCheckpoint::UpdateCheckpointMesh(EDelMarCheckpointMeshType MeshType)
 
 void ADelMarCheckpoint::UpdateCheckpointTheme(class UDelMarCheckpointTheme* Theme)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCheckpointTheme");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCheckpoint", "UpdateCheckpointTheme");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCheckpoint_UpdateCheckpointTheme Parms{};
 
@@ -2604,10 +2594,9 @@ void ADelMarVehicle::HandleThrottleToggleChanged()
 
 void ADelMarVehicle::OnApplyOverlapFilter()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnApplyOverlapFilter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarVehicle", "OnApplyOverlapFilter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -4853,10 +4842,9 @@ void UDelMarGhostPlaybackSessionComponent::SetPlaybackLog(class UDelMarGhostRepl
 
 void ADelMarGhostPlaybackTrigger::BP_HandlePlaybackCompleted(const struct FVector& Location)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandlePlaybackCompleted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarGhostPlaybackTrigger", "BP_HandlePlaybackCompleted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarGhostPlaybackTrigger_BP_HandlePlaybackCompleted Parms{};
 
@@ -5038,10 +5026,9 @@ void UDelMarGlobalLeaderboardControllerComponent::ServerNewPersonalBest(const st
 
 void ADelMarGuidedTutorialZoneActor::BP_OnTutorialZoneComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTutorialZoneComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarGuidedTutorialZoneActor", "BP_OnTutorialZoneComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -5052,10 +5039,9 @@ void ADelMarGuidedTutorialZoneActor::BP_OnTutorialZoneComplete()
 
 void ADelMarGuidedTutorialZoneActor::BP_OnTutorialZoneFailed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTutorialZoneFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarGuidedTutorialZoneActor", "BP_OnTutorialZoneFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -5066,10 +5052,9 @@ void ADelMarGuidedTutorialZoneActor::BP_OnTutorialZoneFailed()
 
 void ADelMarGuidedTutorialZoneActor::BP_OnTutorialZoneStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTutorialZoneStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarGuidedTutorialZoneActor", "BP_OnTutorialZoneStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6182,10 +6167,9 @@ void UDelMarRaceMusicPlaylistComponent::SetMusicPlaylist(class UDelMarRaceMusicP
 
 void ADelMarSpeedUpDevice::BP_HandleSpeedEffectGranted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleSpeedEffectGranted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarSpeedUpDevice", "BP_HandleSpeedEffectGranted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6234,10 +6218,9 @@ void ADelMarSpeedUpDevice::OnBeginOverlap(class UPrimitiveComponent* OverlappedC
 
 bool ADelMarSpeedUpDevice::ShouldGrantSpeedEffect(class AActor* OtherActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldGrantSpeedEffect");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarSpeedUpDevice", "ShouldGrantSpeedEffect");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarSpeedUpDevice_ShouldGrantSpeedEffect Parms{};
 
@@ -6261,10 +6244,9 @@ bool ADelMarSpeedUpDevice::ShouldGrantSpeedEffect(class AActor* OtherActor)
 
 void ADelMarTutorialInteractableSpline::BP_HandleAllSplineTriggersCompleted(class AActor* FinalCompletedTrigger)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleAllSplineTriggersCompleted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTutorialInteractableSpline", "BP_HandleAllSplineTriggersCompleted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTutorialInteractableSpline_BP_HandleAllSplineTriggersCompleted Parms{};
 
@@ -6407,10 +6389,9 @@ float ADelMarTutorialInteractableSpline::GetTriggerIndexAsRatio(class ADelMarTut
 
 bool ADelMarTutorialTriggerActor::BP_CanTriggerActor(class AActor* OtherActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CanTriggerActor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTutorialTriggerActor", "BP_CanTriggerActor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarTutorialTriggerActor_BP_CanTriggerActor Parms{};
 
@@ -6427,10 +6408,9 @@ bool ADelMarTutorialTriggerActor::BP_CanTriggerActor(class AActor* OtherActor)
 
 void ADelMarTutorialTriggerActor::BP_HandleColliderReset()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleColliderReset");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTutorialTriggerActor", "BP_HandleColliderReset");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6441,10 +6421,9 @@ void ADelMarTutorialTriggerActor::BP_HandleColliderReset()
 
 void ADelMarTutorialTriggerActor::BP_HandleColliderTriggered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleColliderTriggered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarTutorialTriggerActor", "BP_HandleColliderTriggered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9570,10 +9549,9 @@ class UDelMarSubmixSendExtension* UDelMarAudioComponentGroup::GetSubmixSends() c
 
 void ADelMarAudioController::BP_OnIsLocalChanged(const bool bNewValue)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnIsLocalChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarAudioController", "BP_OnIsLocalChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarAudioController_BP_OnIsLocalChanged Parms{};
 
@@ -13205,10 +13183,9 @@ void ADelMarCosmeticActor::ApplyCosmetic()
 
 void ADelMarCosmeticActor::BP_OnAnyWheelsOnGroundChanged(const TScriptInterface<class IDelMarVehicleInterface>& VehicleRef, bool bValue)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnAnyWheelsOnGroundChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnAnyWheelsOnGroundChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnAnyWheelsOnGroundChanged Parms{};
 
@@ -13224,10 +13201,9 @@ void ADelMarCosmeticActor::BP_OnAnyWheelsOnGroundChanged(const TScriptInterface<
 
 void ADelMarCosmeticActor::BP_OnBonusSpeedActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnBonusSpeedActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnBonusSpeedActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13240,10 +13216,9 @@ void ADelMarCosmeticActor::BP_OnBonusSpeedActivated()
 
 void ADelMarCosmeticActor::BP_OnBonusSpeedChanged(float BonusSpeed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnBonusSpeedChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnBonusSpeedChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnBonusSpeedChanged Parms{};
 
@@ -13258,10 +13233,9 @@ void ADelMarCosmeticActor::BP_OnBonusSpeedChanged(float BonusSpeed)
 
 void ADelMarCosmeticActor::BP_OnBonusSpeedDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnBonusSpeedDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnBonusSpeedDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13272,10 +13246,9 @@ void ADelMarCosmeticActor::BP_OnBonusSpeedDeactivated()
 
 void ADelMarCosmeticActor::BP_OnCosmeticApplied()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCosmeticApplied");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnCosmeticApplied");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13286,10 +13259,9 @@ void ADelMarCosmeticActor::BP_OnCosmeticApplied()
 
 void ADelMarCosmeticActor::BP_OnDelMarAppliedTeleportRotation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDelMarAppliedTeleportRotation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDelMarAppliedTeleportRotation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13300,10 +13272,9 @@ void ADelMarCosmeticActor::BP_OnDelMarAppliedTeleportRotation()
 
 void ADelMarCosmeticActor::BP_OnDelMarTeleportEntered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDelMarTeleportEntered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDelMarTeleportEntered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13314,10 +13285,9 @@ void ADelMarCosmeticActor::BP_OnDelMarTeleportEntered()
 
 void ADelMarCosmeticActor::BP_OnDelMarTeleportExited()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDelMarTeleportExited");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDelMarTeleportExited");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13331,10 +13301,9 @@ void ADelMarCosmeticActor::BP_OnDelMarTeleportExited()
 
 void ADelMarCosmeticActor::BP_OnDelMarVehicleSpawned(bool bFirstVehicleForPlayer, bool bPrevVehicleDemolished)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDelMarVehicleSpawned");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDelMarVehicleSpawned");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnDelMarVehicleSpawned Parms{};
 
@@ -13352,10 +13321,9 @@ void ADelMarCosmeticActor::BP_OnDelMarVehicleSpawned(bool bFirstVehicleForPlayer
 
 void ADelMarCosmeticActor::BP_OnDraftStateChanged(EDelmarDraftingState CurrentState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDraftStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDraftStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnDraftStateChanged Parms{};
 
@@ -13370,10 +13338,9 @@ void ADelMarCosmeticActor::BP_OnDraftStateChanged(EDelmarDraftingState CurrentSt
 
 void ADelMarCosmeticActor::BP_OnDriftActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDriftActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDriftActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13384,10 +13351,9 @@ void ADelMarCosmeticActor::BP_OnDriftActivated()
 
 void ADelMarCosmeticActor::BP_OnDriftBoostActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDriftBoostActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDriftBoostActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13398,10 +13364,9 @@ void ADelMarCosmeticActor::BP_OnDriftBoostActivated()
 
 void ADelMarCosmeticActor::BP_OnDriftBoostDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDriftBoostDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDriftBoostDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13414,10 +13379,9 @@ void ADelMarCosmeticActor::BP_OnDriftBoostDeactivated()
 
 void ADelMarCosmeticActor::BP_OnDriftControlChanged(bool bIsDriftingControlled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDriftControlChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDriftControlChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnDriftControlChanged Parms{};
 
@@ -13432,10 +13396,9 @@ void ADelMarCosmeticActor::BP_OnDriftControlChanged(bool bIsDriftingControlled)
 
 void ADelMarCosmeticActor::BP_OnDriftDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDriftDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDriftDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13448,10 +13411,9 @@ void ADelMarCosmeticActor::BP_OnDriftDeactivated()
 
 void ADelMarCosmeticActor::BP_OnDriftDurationChanged(float duration)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDriftDurationChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDriftDurationChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnDriftDurationChanged Parms{};
 
@@ -13469,10 +13431,9 @@ void ADelMarCosmeticActor::BP_OnDriftDurationChanged(float duration)
 
 void ADelMarCosmeticActor::BP_OnDriftKickActivated(float DriftDirection, EDelMarVehicleDriftState DriftState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDriftKickActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDriftKickActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnDriftKickActivated Parms{};
 
@@ -13488,10 +13449,9 @@ void ADelMarCosmeticActor::BP_OnDriftKickActivated(float DriftDirection, EDelMar
 
 void ADelMarCosmeticActor::BP_OnDriftKickDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDriftKickDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnDriftKickDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13502,10 +13462,9 @@ void ADelMarCosmeticActor::BP_OnDriftKickDeactivated()
 
 void ADelMarCosmeticActor::BP_OnInvulnerabilityActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnInvulnerabilityActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnInvulnerabilityActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13516,10 +13475,9 @@ void ADelMarCosmeticActor::BP_OnInvulnerabilityActivated()
 
 void ADelMarCosmeticActor::BP_OnInvulnerabilityDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnInvulnerabilityDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnInvulnerabilityDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13530,10 +13488,9 @@ void ADelMarCosmeticActor::BP_OnInvulnerabilityDeactivated()
 
 void ADelMarCosmeticActor::BP_OnJumpActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnJumpActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnJumpActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13544,10 +13501,9 @@ void ADelMarCosmeticActor::BP_OnJumpActivated()
 
 void ADelMarCosmeticActor::BP_OnJumpDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnJumpDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnJumpDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13560,10 +13516,9 @@ void ADelMarCosmeticActor::BP_OnJumpDeactivated()
 
 void ADelMarCosmeticActor::BP_OnKickflipActivated(bool bLeftSide)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnKickflipActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnKickflipActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnKickflipActivated Parms{};
 
@@ -13580,10 +13535,9 @@ void ADelMarCosmeticActor::BP_OnKickflipActivated(bool bLeftSide)
 
 void ADelMarCosmeticActor::BP_OnKickflipActivationChargesChanged(int32 ActivationCharges)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnKickflipActivationChargesChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnKickflipActivationChargesChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnKickflipActivationChargesChanged Parms{};
 
@@ -13598,10 +13552,9 @@ void ADelMarCosmeticActor::BP_OnKickflipActivationChargesChanged(int32 Activatio
 
 void ADelMarCosmeticActor::BP_OnKickflipDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnKickflipDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnKickflipDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13614,10 +13567,9 @@ void ADelMarCosmeticActor::BP_OnKickflipDeactivated()
 
 void ADelMarCosmeticActor::BP_OnKickflipDistanceToSuctionSurfaceChanged(float Distance)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnKickflipDistanceToSuctionSurfaceChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnKickflipDistanceToSuctionSurfaceChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnKickflipDistanceToSuctionSurfaceChanged Parms{};
 
@@ -13634,10 +13586,9 @@ void ADelMarCosmeticActor::BP_OnKickflipDistanceToSuctionSurfaceChanged(float Di
 
 void ADelMarCosmeticActor::BP_OnKickflipDurationChanged(float duration)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnKickflipDurationChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnKickflipDurationChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnKickflipDurationChanged Parms{};
 
@@ -13652,10 +13603,9 @@ void ADelMarCosmeticActor::BP_OnKickflipDurationChanged(float duration)
 
 void ADelMarCosmeticActor::BP_OnKickflipSuctionActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnKickflipSuctionActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnKickflipSuctionActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13666,10 +13616,9 @@ void ADelMarCosmeticActor::BP_OnKickflipSuctionActivated()
 
 void ADelMarCosmeticActor::BP_OnKickflipSuctionDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnKickflipSuctionDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnKickflipSuctionDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13680,10 +13629,9 @@ void ADelMarCosmeticActor::BP_OnKickflipSuctionDeactivated()
 
 void ADelMarCosmeticActor::BP_OnReachedMaxDraftBonusSpeed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnReachedMaxDraftBonusSpeed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnReachedMaxDraftBonusSpeed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13694,10 +13642,9 @@ void ADelMarCosmeticActor::BP_OnReachedMaxDraftBonusSpeed()
 
 void ADelMarCosmeticActor::BP_OnReattachmentActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnReattachmentActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnReattachmentActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13708,10 +13655,9 @@ void ADelMarCosmeticActor::BP_OnReattachmentActivated()
 
 void ADelMarCosmeticActor::BP_OnReattachmentDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnReattachmentDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnReattachmentDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13724,10 +13670,9 @@ void ADelMarCosmeticActor::BP_OnReattachmentDeactivated()
 
 void ADelMarCosmeticActor::BP_OnStartlineBoostActivated(float PercentageMaxBonusSpeedEarned)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStartlineBoostActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnStartlineBoostActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnStartlineBoostActivated Parms{};
 
@@ -13742,10 +13687,9 @@ void ADelMarCosmeticActor::BP_OnStartlineBoostActivated(float PercentageMaxBonus
 
 void ADelMarCosmeticActor::BP_OnStartlineBoostDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStartlineBoostDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnStartlineBoostDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13756,10 +13700,9 @@ void ADelMarCosmeticActor::BP_OnStartlineBoostDeactivated()
 
 void ADelMarCosmeticActor::BP_OnStartlineBoostFailed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStartlineBoostFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnStartlineBoostFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13772,10 +13715,9 @@ void ADelMarCosmeticActor::BP_OnStartlineBoostFailed()
 
 void ADelMarCosmeticActor::BP_OnStrafeActivated(bool bLeftSide)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStrafeActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnStrafeActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnStrafeActivated Parms{};
 
@@ -13792,10 +13734,9 @@ void ADelMarCosmeticActor::BP_OnStrafeActivated(bool bLeftSide)
 
 void ADelMarCosmeticActor::BP_OnStrafeCooldownChanged(float CooldownPercentage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStrafeCooldownChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnStrafeCooldownChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnStrafeCooldownChanged Parms{};
 
@@ -13810,10 +13751,9 @@ void ADelMarCosmeticActor::BP_OnStrafeCooldownChanged(float CooldownPercentage)
 
 void ADelMarCosmeticActor::BP_OnStrafeDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStrafeDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnStrafeDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13826,10 +13766,9 @@ void ADelMarCosmeticActor::BP_OnStrafeDeactivated()
 
 void ADelMarCosmeticActor::BP_OnStrafeDisabledChanged(bool bDisabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStrafeDisabledChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnStrafeDisabledChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnStrafeDisabledChanged Parms{};
 
@@ -13846,10 +13785,9 @@ void ADelMarCosmeticActor::BP_OnStrafeDisabledChanged(bool bDisabled)
 
 void ADelMarCosmeticActor::BP_OnStrafeUsabilityChanged(bool bCanActivate)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnStrafeUsabilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnStrafeUsabilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnStrafeUsabilityChanged Parms{};
 
@@ -13864,10 +13802,9 @@ void ADelMarCosmeticActor::BP_OnStrafeUsabilityChanged(bool bCanActivate)
 
 void ADelMarCosmeticActor::BP_OnTurboActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTurboActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnTurboActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13880,10 +13817,9 @@ void ADelMarCosmeticActor::BP_OnTurboActivated()
 
 void ADelMarCosmeticActor::BP_OnTurboBonusStateChanged(EDelMarTurboZoneState NewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTurboBonusStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnTurboBonusStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnTurboBonusStateChanged Parms{};
 
@@ -13898,10 +13834,9 @@ void ADelMarCosmeticActor::BP_OnTurboBonusStateChanged(EDelMarTurboZoneState New
 
 void ADelMarCosmeticActor::BP_OnTurboDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTurboDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnTurboDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13912,10 +13847,9 @@ void ADelMarCosmeticActor::BP_OnTurboDeactivated()
 
 void ADelMarCosmeticActor::BP_OnUnderthrustActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnUnderthrustActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnUnderthrustActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13926,10 +13860,9 @@ void ADelMarCosmeticActor::BP_OnUnderthrustActivated()
 
 void ADelMarCosmeticActor::BP_OnUnderthrustDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnUnderthrustDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnUnderthrustDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13942,10 +13875,9 @@ void ADelMarCosmeticActor::BP_OnUnderthrustDeactivated()
 
 void ADelMarCosmeticActor::BP_OnVehicleDemolished(const struct FGameplayTag& CausedByTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVehicleDemolished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnVehicleDemolished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnVehicleDemolished Parms{};
 
@@ -13962,10 +13894,9 @@ void ADelMarCosmeticActor::BP_OnVehicleDemolished(const struct FGameplayTag& Cau
 
 void ADelMarCosmeticActor::BP_OnVehicleForwardStateChanged(EDelMarVehicleForwardState NewForwardState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVehicleForwardStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnVehicleForwardStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnVehicleForwardStateChanged Parms{};
 
@@ -13983,10 +13914,9 @@ void ADelMarCosmeticActor::BP_OnVehicleForwardStateChanged(EDelMarVehicleForward
 
 void ADelMarCosmeticActor::BP_OnVehicleLanded(float LandingForced, bool bLandedKickflip)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVehicleLanded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnVehicleLanded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnVehicleLanded Parms{};
 
@@ -14002,10 +13932,9 @@ void ADelMarCosmeticActor::BP_OnVehicleLanded(float LandingForced, bool bLandedK
 
 void ADelMarCosmeticActor::BP_OnVehicleStartedSkydiving()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVehicleStartedSkydiving");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnVehicleStartedSkydiving");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14016,10 +13945,9 @@ void ADelMarCosmeticActor::BP_OnVehicleStartedSkydiving()
 
 void ADelMarCosmeticActor::BP_OnVehicleStoppedSkydiving()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVehicleStoppedSkydiving");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnVehicleStoppedSkydiving");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14030,10 +13958,9 @@ void ADelMarCosmeticActor::BP_OnVehicleStoppedSkydiving()
 
 void ADelMarCosmeticActor::BP_OnVehicleWheelsLeftGround()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnVehicleWheelsLeftGround");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnVehicleWheelsLeftGround");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -14047,10 +13974,9 @@ void ADelMarCosmeticActor::BP_OnVehicleWheelsLeftGround()
 
 void ADelMarCosmeticActor::BP_OnWheelsOnGroundChanged(const TScriptInterface<class IDelMarVehicleInterface>& VehicleRef, bool bValue)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnWheelsOnGroundChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnWheelsOnGroundChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnWheelsOnGroundChanged Parms{};
 
@@ -14069,10 +13995,9 @@ void ADelMarCosmeticActor::BP_OnWheelsOnGroundChanged(const TScriptInterface<cla
 
 void ADelMarCosmeticActor::BP_OnWorldBonusSpeedStackGained(const struct FGameplayTag& Source, int32 Stacks)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnWorldBonusSpeedStackGained");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnWorldBonusSpeedStackGained");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnWorldBonusSpeedStackGained Parms{};
 
@@ -14091,10 +14016,9 @@ void ADelMarCosmeticActor::BP_OnWorldBonusSpeedStackGained(const struct FGamepla
 
 void ADelMarCosmeticActor::BP_OnWorldBonusSpeedStackLost(const struct FGameplayTag& Source, int32 Stacks)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnWorldBonusSpeedStackLost");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarCosmeticActor", "BP_OnWorldBonusSpeedStackLost");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarCosmeticActor_BP_OnWorldBonusSpeedStackLost Parms{};
 

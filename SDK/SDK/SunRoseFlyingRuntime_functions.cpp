@@ -139,10 +139,9 @@ bool UFortCameraModifier_SunroseWingsFlying::UseNativeCalculation() const
 
 void UFortMovementMode_ExtLogicFlyingWinged::BlueprintUpdateForMovement(class UFortMovementMode_WingedFlyingRuntimeData* MoveStatus, const float DeltaTime, const struct FVector& InVelocity, const struct FVector& InAcceleration, struct FVector* OutNewVelocity, struct FVector* OutNewAcceleration)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintUpdateForMovement");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicFlyingWinged", "BlueprintUpdateForMovement");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicFlyingWinged_BlueprintUpdateForMovement Parms{};
 
@@ -169,10 +168,9 @@ void UFortMovementMode_ExtLogicFlyingWinged::BlueprintUpdateForMovement(class UF
 
 void UFortMovementMode_ExtLogicFlyingWinged::HandleFlyingStatusActivationFailed(EWingedFlyingStatus FailedStatus, const struct FGameplayTag& FailureTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleFlyingStatusActivationFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicFlyingWinged", "HandleFlyingStatusActivationFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicFlyingWinged_HandleFlyingStatusActivationFailed Parms{};
 
@@ -193,10 +191,9 @@ void UFortMovementMode_ExtLogicFlyingWinged::HandleFlyingStatusActivationFailed(
 
 void UFortMovementMode_ExtLogicFlyingWinged::HandleFlyingStatusChanged(const class UFortMovementMode_WingedFlyingRuntimeData* MoveStatus, EWingedFlyingStatus NewStatus, const bool bIsActive, const struct FGameplayTag& FailureTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleFlyingStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicFlyingWinged", "HandleFlyingStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicFlyingWinged_HandleFlyingStatusChanged Parms{};
 
@@ -220,10 +217,9 @@ void UFortMovementMode_ExtLogicFlyingWinged::HandleFlyingStatusChanged(const cla
 
 void UFortMovementMode_ExtLogicFlyingWinged::CanContinueFlyingStatus(const class UFortMovementMode_WingedFlyingRuntimeData* MoveStatus, EWingedFlyingStatus StatusToContinue, const float ElapsedDuration, bool* bOutCanContinue, struct FGameplayTag* OutFailureTag) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanContinueFlyingStatus");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicFlyingWinged", "CanContinueFlyingStatus");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicFlyingWinged_CanContinueFlyingStatus Parms{};
 
@@ -256,10 +252,9 @@ void UFortMovementMode_ExtLogicFlyingWinged::CanContinueFlyingStatus(const class
 
 bool UFortMovementMode_ExtLogicFlyingWinged::CanEndFlyingStatus(const class UFortMovementMode_WingedFlyingRuntimeData* MoveStatus, EWingedFlyingStatus StatusToEnd, float ElapsedDuration) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanEndFlyingStatus");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicFlyingWinged", "CanEndFlyingStatus");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicFlyingWinged_CanEndFlyingStatus Parms{};
 
@@ -288,10 +283,9 @@ bool UFortMovementMode_ExtLogicFlyingWinged::CanEndFlyingStatus(const class UFor
 
 void UFortMovementMode_ExtLogicFlyingWinged::CanStartFlyingStatus(const class UFortMovementMode_WingedFlyingRuntimeData* MoveStatus, EWingedFlyingStatus StatusToStart, bool* bOutCanStart, struct FGameplayTag* OutFailureTag) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanStartFlyingStatus");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicFlyingWinged", "CanStartFlyingStatus");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicFlyingWinged_CanStartFlyingStatus Parms{};
 
@@ -339,10 +333,9 @@ void UFortPawnComponent_WingedFlying::EndFlying()
 
 void UFortPawnComponent_WingedFlying::HandleAddedDownZVelocityUpdated(const float NewAddedDownZVelocity)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAddedDownZVelocityUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_WingedFlying", "HandleAddedDownZVelocityUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_WingedFlying_HandleAddedDownZVelocityUpdated Parms{};
 
@@ -359,10 +352,9 @@ void UFortPawnComponent_WingedFlying::HandleAddedDownZVelocityUpdated(const floa
 
 void UFortPawnComponent_WingedFlying::HandleFlyingMoveStatusUpdated(const class UFortMovementMode_WingedFlyingRuntimeData* MoveStatus)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleFlyingMoveStatusUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_WingedFlying", "HandleFlyingMoveStatusUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_WingedFlying_HandleFlyingMoveStatusUpdated Parms{};
 
@@ -384,10 +376,9 @@ void UFortPawnComponent_WingedFlying::HandleFlyingMoveStatusUpdated(const class 
 
 void UFortPawnComponent_WingedFlying::HandleForwardSpeedUpdated(const float NewForwardSpeed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleForwardSpeedUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_WingedFlying", "HandleForwardSpeedUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_WingedFlying_HandleForwardSpeedUpdated Parms{};
 
@@ -404,10 +395,9 @@ void UFortPawnComponent_WingedFlying::HandleForwardSpeedUpdated(const float NewF
 
 void UFortPawnComponent_WingedFlying::HandleLeftSkimCheckComplete(const struct FHitResult& HitResult)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleLeftSkimCheckComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_WingedFlying", "HandleLeftSkimCheckComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_WingedFlying_HandleLeftSkimCheckComplete Parms{};
 
@@ -451,10 +441,9 @@ void UFortPawnComponent_WingedFlying::HandleOwnerASCInitialized(class UFortAbili
 
 void UFortPawnComponent_WingedFlying::HandleRightSkimCheckComplete(const struct FHitResult& HitResult)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleRightSkimCheckComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_WingedFlying", "HandleRightSkimCheckComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_WingedFlying_HandleRightSkimCheckComplete Parms{};
 
@@ -580,10 +569,9 @@ struct FVector2D UFortPawnComponent_WingedFlying::GetLocalFlyingMoveActionValue(
 
 void AFortWeaponWings::BP_ModifyIncomingDamage(float Damage, const struct FGameplayTagContainer& DamageTags, const struct FHitResult& DamageHit, const class AController* EventInstigator, const class AActor* DamageCauser, float* OutNewDamage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_ModifyIncomingDamage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortWeaponWings", "BP_ModifyIncomingDamage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortWeaponWings_BP_ModifyIncomingDamage Parms{};
 
@@ -634,10 +622,9 @@ void AFortWeaponWings::HandleDBNOStateChanged(class AFortPawn* FortPawn, bool bI
 
 void AFortWeaponWings::HandleSecondaryFirePressed(class AFortWeapon* Weapon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSecondaryFirePressed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortWeaponWings", "HandleSecondaryFirePressed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortWeaponWings_HandleSecondaryFirePressed Parms{};
 

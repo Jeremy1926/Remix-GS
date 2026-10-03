@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UCampsiteMarkerInfoBase::OnSetPlayerState(class AFortPlayerStateAthena* PSA)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetPlayerState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CampsiteMarkerInfoBase", "OnSetPlayerState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CampsiteMarkerInfoBase_OnSetPlayerState Parms{};
 

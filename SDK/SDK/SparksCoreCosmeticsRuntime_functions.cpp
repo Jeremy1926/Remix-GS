@@ -349,10 +349,9 @@ void USparksCosmeticComponent::AuraStop()
 
 void USparksCosmeticComponent::Debug_BP_ShowCosmeticPicker(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Debug_BP_ShowCosmeticPicker");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCosmeticComponent", "Debug_BP_ShowCosmeticPicker");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCosmeticComponent_Debug_BP_ShowCosmeticPicker Parms{};
 
@@ -1105,10 +1104,9 @@ void USparksInstrumentComponentBase::DestroySpawnedVFX()
 
 ESparksInstrumentType USparksInstrumentComponentBase::GetInstrumentType() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetInstrumentType");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksInstrumentComponentBase", "GetInstrumentType");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksInstrumentComponentBase_GetInstrumentType Parms{};
 

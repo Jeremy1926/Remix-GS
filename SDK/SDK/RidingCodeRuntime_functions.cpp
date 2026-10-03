@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UFortVehicleLayerAnimInstance_Riding::BlueprintCollectRidableAnimBPData(const class UAnimInstance* RidableAnimInstance)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintCollectRidableAnimBPData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVehicleLayerAnimInstance_Riding", "BlueprintCollectRidableAnimBPData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVehicleLayerAnimInstance_Riding_BlueprintCollectRidableAnimBPData Parms{};
 
@@ -41,10 +40,9 @@ void UFortVehicleLayerAnimInstance_Riding::BlueprintCollectRidableAnimBPData(con
 
 void UFortVehicleLayerAnimInstance_Riding::PlaceHandIKTargets()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlaceHandIKTargets");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVehicleLayerAnimInstance_Riding", "PlaceHandIKTargets");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -85,10 +83,9 @@ void UFortVehicleLayerAnimInstance_Riding::SetFootPhase(const ERidingFootPhase I
 
 void UFortVehicleLayerAnimInstance_Riding::UpdateBoostPlayRate()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateBoostPlayRate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVehicleLayerAnimInstance_Riding", "UpdateBoostPlayRate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -104,10 +101,9 @@ void UFortVehicleLayerAnimInstance_Riding::UpdateBoostPlayRate()
 
 void UFortVehicleLayerAnimInstance_Riding::UpdateSlopePitchForRiding()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateSlopePitchForRiding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVehicleLayerAnimInstance_Riding", "UpdateSlopePitchForRiding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -188,10 +184,9 @@ void URidingCheatManager::StopRidingActor()
 
 void URidableComponent::CheatSetStaminaPercent(const float StaminaPercent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CheatSetStaminaPercent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RidableComponent", "CheatSetStaminaPercent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RidableComponent_CheatSetStaminaPercent Parms{};
 
@@ -235,10 +230,9 @@ void URidableComponent::HandleRiderEndPlay(class AActor* Actor, EEndPlayReason E
 
 void URidableComponent::HandleRiderStartedRiding(class URiderComponent* Rider)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleRiderStartedRiding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RidableComponent", "HandleRiderStartedRiding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RidableComponent_HandleRiderStartedRiding Parms{};
 
@@ -260,10 +254,9 @@ void URidableComponent::HandleRiderStartedRiding(class URiderComponent* Rider)
 
 void URidableComponent::HandleRiderStoppedRiding(class URiderComponent* Rider)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleRiderStoppedRiding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RidableComponent", "HandleRiderStoppedRiding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RidableComponent_HandleRiderStoppedRiding Parms{};
 
@@ -305,10 +298,9 @@ void URidableComponent::OnRep_ActiveRider()
 
 bool URidableComponent::CanBePet(class URiderComponent* Rider) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanBePet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RidableComponent", "CanBePet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RidableComponent_CanBePet Parms{};
 
@@ -333,10 +325,9 @@ bool URidableComponent::CanBePet(class URiderComponent* Rider) const
 
 bool URidableComponent::CanBeRiddenBP(class URiderComponent* Rider) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanBeRiddenBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RidableComponent", "CanBeRiddenBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RidableComponent_CanBeRiddenBP Parms{};
 
@@ -361,10 +352,9 @@ bool URidableComponent::CanBeRiddenBP(class URiderComponent* Rider) const
 
 bool URidableComponent::CanRiderPlayEmote(const class URiderComponent* Rider) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanRiderPlayEmote");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RidableComponent", "CanRiderPlayEmote");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RidableComponent_CanRiderPlayEmote Parms{};
 
@@ -389,10 +379,9 @@ bool URidableComponent::CanRiderPlayEmote(const class URiderComponent* Rider) co
 
 struct FVector URidableComponent::GetDismountLaunchVectorOverride(class URiderComponent* Rider) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetDismountLaunchVectorOverride");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RidableComponent", "GetDismountLaunchVectorOverride");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RidableComponent_GetDismountLaunchVectorOverride Parms{};
 
@@ -441,10 +430,9 @@ const struct FRidingPettingData URidableComponent::GetPettingData() const
 
 class USceneComponent* URidableComponent::GetRidingAttachComponent() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetRidingAttachComponent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RidableComponent", "GetRidingAttachComponent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RidableComponent_GetRidingAttachComponent Parms{};
 
@@ -470,10 +458,9 @@ class USceneComponent* URidableComponent::GetRidingAttachComponent() const
 
 void URidableComponent::GetRidingCapsuleSize(const class URiderComponent* Rider, float OriginalRadius, float OriginalHalfHeight, float* OutRadius, float* OutHalfHeight) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetRidingCapsuleSize");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RidableComponent", "GetRidingCapsuleSize");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RidableComponent_GetRidingCapsuleSize Parms{};
 
@@ -507,10 +494,9 @@ void URidableComponent::GetRidingCapsuleSize(const class URiderComponent* Rider,
 
 void URidableComponent::GetRidingEmoteCapsuleSize(const class URiderComponent* Rider, float OriginalRadius, float OriginalHalfHeight, float* OutRadius, float* OutHalfHeight) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetRidingEmoteCapsuleSize");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RidableComponent", "GetRidingEmoteCapsuleSize");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RidableComponent_GetRidingEmoteCapsuleSize Parms{};
 
@@ -616,10 +602,9 @@ bool URidableComponent::IsSprinting() const
 
 bool URidableComponent::ShouldCameraFocusOnRidable(const class URiderComponent* Rider) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldCameraFocusOnRidable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RidableComponent", "ShouldCameraFocusOnRidable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RidableComponent_ShouldCameraFocusOnRidable Parms{};
 
@@ -660,10 +645,9 @@ void UControllableRidableComponent::CancelBuildBar()
 
 void UControllableRidableComponent::HandleAbilityHeld()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAbilityHeld");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleAbilityHeld");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -674,10 +658,9 @@ void UControllableRidableComponent::HandleAbilityHeld()
 
 void UControllableRidableComponent::HandleAbilityStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAbilityStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleAbilityStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -688,10 +671,9 @@ void UControllableRidableComponent::HandleAbilityStarted()
 
 void UControllableRidableComponent::HandleAbilityStopped()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAbilityStopped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleAbilityStopped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -705,10 +687,9 @@ void UControllableRidableComponent::HandleAbilityStopped()
 
 void UControllableRidableComponent::HandleCancelSprint(const bool bAbilityInputHeld, const bool bForceCancel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleCancelSprint");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleCancelSprint");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControllableRidableComponent_HandleCancelSprint Parms{};
 
@@ -724,10 +705,9 @@ void UControllableRidableComponent::HandleCancelSprint(const bool bAbilityInputH
 
 void UControllableRidableComponent::HandleJumpHeld()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleJumpHeld");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleJumpHeld");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -738,10 +718,9 @@ void UControllableRidableComponent::HandleJumpHeld()
 
 void UControllableRidableComponent::HandleJumpStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleJumpStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleJumpStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -752,10 +731,9 @@ void UControllableRidableComponent::HandleJumpStarted()
 
 void UControllableRidableComponent::HandleJumpStopped()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleJumpStopped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleJumpStopped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -766,10 +744,9 @@ void UControllableRidableComponent::HandleJumpStopped()
 
 void UControllableRidableComponent::HandleSecondaryAbilityHeld()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSecondaryAbilityHeld");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleSecondaryAbilityHeld");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -780,10 +757,9 @@ void UControllableRidableComponent::HandleSecondaryAbilityHeld()
 
 void UControllableRidableComponent::HandleSecondaryAbilityStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSecondaryAbilityStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleSecondaryAbilityStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -794,10 +770,9 @@ void UControllableRidableComponent::HandleSecondaryAbilityStarted()
 
 void UControllableRidableComponent::HandleSecondaryAbilityStopped()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleSecondaryAbilityStopped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleSecondaryAbilityStopped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -808,10 +783,9 @@ void UControllableRidableComponent::HandleSecondaryAbilityStopped()
 
 void UControllableRidableComponent::HandleTertiaryAbilityHeld()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTertiaryAbilityHeld");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleTertiaryAbilityHeld");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -822,10 +796,9 @@ void UControllableRidableComponent::HandleTertiaryAbilityHeld()
 
 void UControllableRidableComponent::HandleTertiaryAbilityStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTertiaryAbilityStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleTertiaryAbilityStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -836,10 +809,9 @@ void UControllableRidableComponent::HandleTertiaryAbilityStarted()
 
 void UControllableRidableComponent::HandleTertiaryAbilityStopped()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTertiaryAbilityStopped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "HandleTertiaryAbilityStopped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -926,10 +898,9 @@ void UControllableRidableComponent::ServerDoJumpExit()
 
 bool UControllableRidableComponent::CanBeControlled(class URiderComponent* Rider) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanBeControlled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "CanBeControlled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControllableRidableComponent_CanBeControlled Parms{};
 
@@ -953,10 +924,9 @@ bool UControllableRidableComponent::CanBeControlled(class URiderComponent* Rider
 
 bool UControllableRidableComponent::CanJump() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanJump");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllableRidableComponent", "CanJump");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControllableRidableComponent_CanJump Parms{};
 
@@ -1320,10 +1290,9 @@ void URiderComponent::HandlePawnTeleported(class AFortPawn* TeleportedPawn)
 
 void URiderComponent::HandleRidableFound(const struct FHitResult& HitResult)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleRidableFound");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RiderComponent", "HandleRidableFound");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RiderComponent_HandleRidableFound Parms{};
 
@@ -1485,10 +1454,9 @@ void URiderComponent::HandleRidingExitReleased()
 
 void URiderComponent::HandleStartedRiding(class URidableComponent* Ridable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleStartedRiding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RiderComponent", "HandleStartedRiding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RiderComponent_HandleStartedRiding Parms{};
 
@@ -1510,10 +1478,9 @@ void URiderComponent::HandleStartedRiding(class URidableComponent* Ridable)
 
 void URiderComponent::HandleStoppedRiding(class URidableComponent* Ridable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleStoppedRiding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RiderComponent", "HandleStoppedRiding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RiderComponent_HandleStoppedRiding Parms{};
 
@@ -1861,10 +1828,9 @@ void UControllingRiderComponent::HandlePettingAbilityPressed()
 
 void UControllingRiderComponent::HandleRequestPettingStart()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleRequestPettingStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllingRiderComponent", "HandleRequestPettingStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1875,10 +1841,9 @@ void UControllingRiderComponent::HandleRequestPettingStart()
 
 void UControllingRiderComponent::HandleRequestPettingStop()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleRequestPettingStop");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllingRiderComponent", "HandleRequestPettingStop");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2208,10 +2173,9 @@ void UControllingRiderComponent::ServerUpdateControlInputStateUnreliable(const s
 
 void UControllingRiderComponent::UpdateFromInput(float DeltaTime, const struct FRidingControlInputState& InputState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateFromInput");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ControllingRiderComponent", "UpdateFromInput");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ControllingRiderComponent_UpdateFromInput Parms{};
 

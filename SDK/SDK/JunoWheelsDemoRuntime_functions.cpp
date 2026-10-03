@@ -52,10 +52,9 @@ bool AJunoWheelActor::AttachToUsingCachedData(class UPrimitiveComponent* InAttac
 
 void AJunoWheelActor::BlueprintFillContextInfo(const struct FInteractionType& InteractType, class UFortInteractContextInfo* ContextInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintFillContextInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWheelActor", "BlueprintFillContextInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWheelActor_BlueprintFillContextInfo Parms{};
 
@@ -74,10 +73,9 @@ void AJunoWheelActor::BlueprintFillContextInfo(const struct FInteractionType& In
 
 void AJunoWheelActor::BlueprintOnInteract(const class AFortPawn* InteractingPawn, const EInteractionBeingAttempted InteractionBeingAttempted)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintOnInteract");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWheelActor", "BlueprintOnInteract");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWheelActor_BlueprintOnInteract Parms{};
 
@@ -180,10 +178,9 @@ class AActor* AJunoWheelActor::GetActorRef()
 
 void AJunoWheelActor::HandleDamaged(float Damage, const struct FGameplayTagContainer& InTags, const struct FGameplayEffectContextHandle& EffectContext, class AController* EventInstigator, class AActor* DamageCauser)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDamaged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWheelActor", "HandleDamaged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWheelActor_HandleDamaged Parms{};
 
@@ -208,10 +205,9 @@ void AJunoWheelActor::HandleDamaged(float Damage, const struct FGameplayTagConta
 
 void AJunoWheelActor::HandleOutOfHealth(const float InDamage, const struct FGameplayTagContainer& InTags, const struct FGameplayEffectContextHandle& InEffectContext, class AController* InEventInstigator, class AActor* InDamageCauser)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleOutOfHealth");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWheelActor", "HandleOutOfHealth");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWheelActor_HandleOutOfHealth Parms{};
 
@@ -364,10 +360,9 @@ void AJunoWheelActor::OnHeldObjectPickedUp()
 
 void AJunoWheelActor::OnLocalInteractStart(const class AFortPlayerController* FortPC)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLocalInteractStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWheelActor", "OnLocalInteractStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWheelActor_OnLocalInteractStart Parms{};
 
@@ -384,10 +379,9 @@ void AJunoWheelActor::OnLocalInteractStart(const class AFortPlayerController* Fo
 
 void AJunoWheelActor::OnLocalInteractStop(const class AFortPlayerController* FortPC)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLocalInteractStop");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWheelActor", "OnLocalInteractStop");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWheelActor_OnLocalInteractStop Parms{};
 
@@ -582,10 +576,9 @@ void AJunoWheelActor::SetControlChannelInvert_Velocity(const bool InControlChann
 
 bool AJunoWheelActor::BlueprintCanInteract(const class AFortPawn* InteractingPawn, const EInteractionBeingAttempted InteractionBeingAttempted, const ETInteractionType InteractionType) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintCanInteract");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWheelActor", "BlueprintCanInteract");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWheelActor_BlueprintCanInteract Parms{};
 
@@ -608,10 +601,9 @@ bool AJunoWheelActor::BlueprintCanInteract(const class AFortPawn* InteractingPaw
 
 class FText AJunoWheelActor::BlueprintGetInteractionString(const class AFortPawn* InteractingPawn, const EInteractionBeingAttempted InteractionBeingAttempted) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintGetInteractionString");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWheelActor", "BlueprintGetInteractionString");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWheelActor_BlueprintGetInteractionString Parms{};
 
@@ -634,10 +626,9 @@ class FText AJunoWheelActor::BlueprintGetInteractionString(const class AFortPawn
 
 bool AJunoWheelActor::BlueprintGetInteractionTime(const class AFortPawn* InteractingPawn, float* OutInteractionTime, const EInteractionBeingAttempted InteractionBeingAttempted) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintGetInteractionTime");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWheelActor", "BlueprintGetInteractionTime");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWheelActor_BlueprintGetInteractionTime Parms{};
 

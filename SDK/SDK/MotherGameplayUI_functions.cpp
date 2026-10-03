@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void UAvocadoEaterHealthBarWidget::OnParasiteAttached()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnParasiteAttached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AvocadoEaterHealthBarWidget", "OnParasiteAttached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -35,10 +34,9 @@ void UAvocadoEaterHealthBarWidget::OnParasiteAttached()
 
 void UAvocadoEaterHealthBarWidget::OnParasiteDetached()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnParasiteDetached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AvocadoEaterHealthBarWidget", "OnParasiteDetached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -51,10 +49,9 @@ void UAvocadoEaterHealthBarWidget::OnParasiteDetached()
 
 void UAvocadoEaterHealthBarWidget::OnSetMarkerPosition(float MarkerPosition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetMarkerPosition");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AvocadoEaterHealthBarWidget", "OnSetMarkerPosition");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AvocadoEaterHealthBarWidget_OnSetMarkerPosition Parms{};
 
@@ -69,10 +66,9 @@ void UAvocadoEaterHealthBarWidget::OnSetMarkerPosition(float MarkerPosition)
 
 void UAvocadoEaterHealthBarWidget::OnTargetDamaged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTargetDamaged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AvocadoEaterHealthBarWidget", "OnTargetDamaged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -83,10 +79,9 @@ void UAvocadoEaterHealthBarWidget::OnTargetDamaged()
 
 void UFortGravyGoblinReticleExtensionWidget::OnItemActivatable()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemActivatable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGravyGoblinReticleExtensionWidget", "OnItemActivatable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -97,10 +92,9 @@ void UFortGravyGoblinReticleExtensionWidget::OnItemActivatable()
 
 void UFortGravyGoblinReticleExtensionWidget::OnItemInactivatable()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemInactivatable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGravyGoblinReticleExtensionWidget", "OnItemInactivatable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -113,10 +107,9 @@ void UFortGravyGoblinReticleExtensionWidget::OnItemInactivatable()
 
 void UFortPaddleGingerReticleExtensionWidget::OnPropActivationChanged(const bool Activated)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPropActivationChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPaddleGingerReticleExtensionWidget", "OnPropActivationChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPaddleGingerReticleExtensionWidget_OnPropActivationChanged Parms{};
 
@@ -137,10 +130,9 @@ void UFortPaddleGingerReticleExtensionWidget::OnPropActivationChanged(const bool
 
 void UFortPaddleGingerReticleExtensionWidget::OnPropIndexChanged(const class FText& CategoryText, int32 PropIndex, int32 MaxPropCount, int32 CategoryIndex, int32 MaxCategoryCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPropIndexChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPaddleGingerReticleExtensionWidget", "OnPropIndexChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPaddleGingerReticleExtensionWidget_OnPropIndexChanged Parms{};
 
@@ -159,10 +151,9 @@ void UFortPaddleGingerReticleExtensionWidget::OnPropIndexChanged(const class FTe
 
 void UFortReactorGradeReticleExtensionWidget::OnMinimumChargeReached()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMinimumChargeReached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortReactorGradeReticleExtensionWidget", "OnMinimumChargeReached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -175,10 +166,9 @@ void UFortReactorGradeReticleExtensionWidget::OnMinimumChargeReached()
 
 void UFortReactorGradeReticleExtensionWidget::OnUpdateChargeToAutoDischarge(const float ChargePercent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateChargeToAutoDischarge");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortReactorGradeReticleExtensionWidget", "OnUpdateChargeToAutoDischarge");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortReactorGradeReticleExtensionWidget_OnUpdateChargeToAutoDischarge Parms{};
 
@@ -195,10 +185,9 @@ void UFortReactorGradeReticleExtensionWidget::OnUpdateChargeToAutoDischarge(cons
 
 void UFortReactorGradeReticleExtensionWidget::OnUpdateChargeToMin(const float ChargePercent)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateChargeToMin");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortReactorGradeReticleExtensionWidget", "OnUpdateChargeToMin");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortReactorGradeReticleExtensionWidget_OnUpdateChargeToMin Parms{};
 

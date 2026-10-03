@@ -441,10 +441,9 @@ void ASparksMusicPlayspace::BP_RemovePlayspaceUser(class AController* Controller
 
 void ASparksMusicPlayspace::BPEvent_OnIntialized()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BPEvent_OnIntialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksMusicPlayspace", "BPEvent_OnIntialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -458,10 +457,9 @@ void ASparksMusicPlayspace::BPEvent_OnIntialized()
 
 void ASparksMusicPlayspace::BPEvent_OnUserAdded(const struct FPlayspaceUser& User, const class APlayerState* PlayerState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BPEvent_OnUserAdded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksMusicPlayspace", "BPEvent_OnUserAdded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksMusicPlayspace_BPEvent_OnUserAdded Parms{};
 
@@ -480,10 +478,9 @@ void ASparksMusicPlayspace::BPEvent_OnUserAdded(const struct FPlayspaceUser& Use
 
 void ASparksMusicPlayspace::BPEvent_OnUserRemoved(const struct FPlayspaceUser& User, const class APlayerState* PlayerState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BPEvent_OnUserRemoved");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksMusicPlayspace", "BPEvent_OnUserRemoved");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksMusicPlayspace_BPEvent_OnUserRemoved Parms{};
 

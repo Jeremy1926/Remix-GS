@@ -48,10 +48,9 @@ class UGameplayCameraComponent* AGameplayCameraActor::GetCameraComponent() const
 
 void UBlueprintCameraDirectorEvaluator::ActivateCameraDirector(const struct FBlueprintCameraDirectorActivateParams& Params_0)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ActivateCameraDirector");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BlueprintCameraDirectorEvaluator", "ActivateCameraDirector");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BlueprintCameraDirectorEvaluator_ActivateCameraDirector Parms{};
 
@@ -218,10 +217,9 @@ void UBlueprintCameraDirectorEvaluator::ActivatePersistentVisualCameraRig(class 
 
 void UBlueprintCameraDirectorEvaluator::DeactivateCameraDirector(const struct FBlueprintCameraDirectorDeactivateParams& Params_0)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"DeactivateCameraDirector");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BlueprintCameraDirectorEvaluator", "DeactivateCameraDirector");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BlueprintCameraDirectorEvaluator_DeactivateCameraDirector Parms{};
 
@@ -313,10 +311,9 @@ void UBlueprintCameraDirectorEvaluator::DeactivatePersistentVisualCameraRig(clas
 
 void UBlueprintCameraDirectorEvaluator::RunCameraDirector(const struct FBlueprintCameraDirectorEvaluationParams& Params_0)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RunCameraDirector");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BlueprintCameraDirectorEvaluator", "RunCameraDirector");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BlueprintCameraDirectorEvaluator_RunCameraDirector Parms{};
 
@@ -2349,10 +2346,9 @@ void UGameplayControlRotationComponent::DeactivateControlRotationManagement()
 
 void UBlueprintCameraNodeEvaluator::TickCameraNode(float DeltaTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"TickCameraNode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BlueprintCameraNodeEvaluator", "TickCameraNode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BlueprintCameraNodeEvaluator_TickCameraNode Parms{};
 

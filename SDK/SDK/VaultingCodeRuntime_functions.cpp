@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UFortMovementMode_ExtLogicHurdle::BP_DestroyProp(class ABuildingProp* BuildPropToDestroy)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_DestroyProp");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicHurdle", "BP_DestroyProp");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicHurdle_BP_DestroyProp Parms{};
 
@@ -49,10 +48,9 @@ void UFortMovementMode_ExtLogicHurdle::BP_DestroyProp(class ABuildingProp* Build
 
 void UFortMovementMode_ExtLogicHurdle::BP_GetAnimationMontageInformation(const struct FSynchedActionInfo& SynchedActionInfo, EHurdleType Type, bool bIsNarrowOpening, bool bIsCrouched, class UAnimMontage** AnimMontage, class FName* StartSectionName, class FName* MontageMiddleSectionName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetAnimationMontageInformation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicHurdle", "BP_GetAnimationMontageInformation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicHurdle_BP_GetAnimationMontageInformation Parms{};
 
@@ -79,10 +77,9 @@ void UFortMovementMode_ExtLogicHurdle::BP_GetAnimationMontageInformation(const s
 
 void UHurdleComponent::BP_CleanupHurdleIndicator()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CleanupHurdleIndicator");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HurdleComponent", "BP_CleanupHurdleIndicator");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -95,10 +92,9 @@ void UHurdleComponent::BP_CleanupHurdleIndicator()
 
 void UHurdleComponent::BP_CreateHurdleHighlight(const struct FHurdleTargetingData& TargetingData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CreateHurdleHighlight");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HurdleComponent", "BP_CreateHurdleHighlight");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HurdleComponent_BP_CreateHurdleHighlight Parms{};
 
@@ -115,10 +111,9 @@ void UHurdleComponent::BP_CreateHurdleHighlight(const struct FHurdleTargetingDat
 
 void UHurdleComponent::BP_ShowHurdleInputPrompt(bool bVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_ShowHurdleInputPrompt");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HurdleComponent", "BP_ShowHurdleInputPrompt");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HurdleComponent_BP_ShowHurdleInputPrompt Parms{};
 
@@ -133,10 +128,9 @@ void UHurdleComponent::BP_ShowHurdleInputPrompt(bool bVisible)
 
 void UHurdleComponent::BP_UpdateHurdleHighlight()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateHurdleHighlight");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HurdleComponent", "BP_UpdateHurdleHighlight");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -291,10 +285,9 @@ void UHurdleComponent::UnregisterMutatorUpdatedDelegate()
 
 void UHurdleComponent::BP_CanStartHurdle(bool* OutCanStartHurdle) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CanStartHurdle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("HurdleComponent", "BP_CanStartHurdle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::HurdleComponent_BP_CanStartHurdle Parms{};
 

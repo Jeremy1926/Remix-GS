@@ -48,10 +48,9 @@ void UCreativeClassSelectorButton::SetButtonText(const class FText& InText)
 
 void UClassSelectorTeamTile::OnPlayerCountSet(int32 NewPlayerCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerCountSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClassSelectorTeamTile", "OnPlayerCountSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ClassSelectorTeamTile_OnPlayerCountSet Parms{};
 
@@ -68,10 +67,9 @@ void UClassSelectorTeamTile::OnPlayerCountSet(int32 NewPlayerCount)
 
 void UClassSelectorTeamTile::OnTeamColorIndexSet(int32 TeamColorIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTeamColorIndexSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClassSelectorTeamTile", "OnTeamColorIndexSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ClassSelectorTeamTile_OnTeamColorIndexSet Parms{};
 
@@ -88,10 +86,9 @@ void UClassSelectorTeamTile::OnTeamColorIndexSet(int32 TeamColorIndex)
 
 void UClassSelectorTeamTile::OnTeamIconSet(const struct FCreativeIconOption& NewTeamIcon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTeamIconSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClassSelectorTeamTile", "OnTeamIconSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ClassSelectorTeamTile_OnTeamIconSet Parms{};
 
@@ -108,10 +105,9 @@ void UClassSelectorTeamTile::OnTeamIconSet(const struct FCreativeIconOption& New
 
 void UClassSelectorTeamTile::OnTeamSet(const struct FMinigameTeam& NewTeamData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTeamSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ClassSelectorTeamTile", "OnTeamSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ClassSelectorTeamTile_OnTeamSet Parms{};
 
@@ -128,10 +124,9 @@ void UClassSelectorTeamTile::OnTeamSet(const struct FMinigameTeam& NewTeamData)
 
 void UCreativeClassEntry::OnBrowsingLoadout(const bool bBrowsingLoadout)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBrowsingLoadout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CreativeClassEntry", "OnBrowsingLoadout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CreativeClassEntry_OnBrowsingLoadout Parms{};
 
@@ -149,10 +144,9 @@ void UCreativeClassEntry::OnBrowsingLoadout(const bool bBrowsingLoadout)
 
 void UCreativeClassEntry::OnClassEntryDataSet(const bool bIsCurrentClass, const bool bIsPendingClass)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnClassEntryDataSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CreativeClassEntry", "OnClassEntryDataSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CreativeClassEntry_OnClassEntryDataSet Parms{};
 
@@ -198,10 +192,9 @@ void UCreativeClassSelector::HandleMinigameStateChanged(class AFortMinigame* Min
 
 void UCreativeClassSelector::OnClassSelectionChanged(const class FText& NewClassName, const class FText& NewClassDescription)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnClassSelectionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CreativeClassSelector", "OnClassSelectionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CreativeClassSelector_OnClassSelectionChanged Parms{};
 
@@ -219,10 +212,9 @@ void UCreativeClassSelector::OnClassSelectionChanged(const class FText& NewClass
 
 void UCreativeClassSelector::OnClassSelectorUIPopulated(const bool bHasValidData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnClassSelectorUIPopulated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CreativeClassSelector", "OnClassSelectorUIPopulated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CreativeClassSelector_OnClassSelectorUIPopulated Parms{};
 
@@ -243,10 +235,9 @@ void UCreativeClassSelector::OnClassSelectorUIPopulated(const bool bHasValidData
 
 void UCreativeClassSelector::OnLoadoutCommitted(const class FText& NewClassName, const class FText& NewTeamName, const bool bNewLoadout, const bool bDefer, uint8 SelectedClassIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLoadoutCommitted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CreativeClassSelector", "OnLoadoutCommitted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CreativeClassSelector_OnLoadoutCommitted Parms{};
 
@@ -267,10 +258,9 @@ void UCreativeClassSelector::OnLoadoutCommitted(const class FText& NewClassName,
 
 void UCreativeClassSelector::OnTimerCountdown(const int32 RemainingTime)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTimerCountdown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CreativeClassSelector", "OnTimerCountdown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CreativeClassSelector_OnTimerCountdown Parms{};
 

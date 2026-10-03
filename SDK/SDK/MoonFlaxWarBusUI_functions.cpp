@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UMoonFlaxWarBusActionWidget::BP_ActionTagChanged(bool bIsActionAvailable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_ActionTagChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MoonFlaxWarBusActionWidget", "BP_ActionTagChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MoonFlaxWarBusActionWidget_BP_ActionTagChanged Parms{};
 
@@ -45,10 +44,9 @@ void UMoonFlaxWarBusActionWidget::BP_ActionTagChanged(bool bIsActionAvailable)
 
 void UMoonFlaxWarBusActionWidget::BP_CooldownTagChanged(bool bIsInCooldown, float TotalDuration, float TimeRemaining)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CooldownTagChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MoonFlaxWarBusActionWidget", "BP_CooldownTagChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MoonFlaxWarBusActionWidget_BP_CooldownTagChanged Parms{};
 

@@ -65,10 +65,9 @@ void AFortGrindRail::ConnectToRailAtTailUnchecked(class AFortGrindRail* RailToCo
 
 void AFortGrindRail::ForceClearBoosters()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ForceClearBoosters");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGrindRail", "ForceClearBoosters");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -79,10 +78,9 @@ void AFortGrindRail::ForceClearBoosters()
 
 void AFortGrindRail::GenerateMeshesAlongSpline()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GenerateMeshesAlongSpline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGrindRail", "GenerateMeshesAlongSpline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -96,10 +94,9 @@ void AFortGrindRail::GenerateMeshesAlongSpline()
 
 bool AFortGrindRail::IsTipCapped(const bool bStartTip)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsTipCapped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGrindRail", "IsTipCapped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGrindRail_IsTipCapped Parms{};
 
@@ -183,10 +180,9 @@ void AFortGrindRail::NativeGetNextPositionToGrind(const float DistanceToTravel, 
 
 void AFortGrindRail::OnPlayerBeganGrinding(class AFortPlayerPawn* GrindingPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerBeganGrinding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGrindRail", "OnPlayerBeganGrinding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGrindRail_OnPlayerBeganGrinding Parms{};
 
@@ -203,10 +199,9 @@ void AFortGrindRail::OnPlayerBeganGrinding(class AFortPlayerPawn* GrindingPawn)
 
 void AFortGrindRail::OnPlayerEndedGrinding(class AFortPlayerPawn* Pawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerEndedGrinding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGrindRail", "OnPlayerEndedGrinding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGrindRail_OnPlayerEndedGrinding Parms{};
 
@@ -359,10 +354,9 @@ void AFortGrindRail::UpdateTransientComponentTransforms(const TArray<class UScen
 
 bool AFortGrindRail::AllowSprinting() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AllowSprinting");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGrindRail", "AllowSprinting");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGrindRail_AllowSprinting Parms{};
 
@@ -385,10 +379,9 @@ bool AFortGrindRail::AllowSprinting() const
 
 bool AFortGrindRail::GetCameraModifierOverrideClass(TSubclassOf<class UFortCameraModifier_Grinding>* OutCameraModifierOverrideClass) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCameraModifierOverrideClass");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGrindRail", "GetCameraModifierOverrideClass");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGrindRail_GetCameraModifierOverrideClass Parms{};
 
@@ -414,10 +407,9 @@ bool AFortGrindRail::GetCameraModifierOverrideClass(TSubclassOf<class UFortCamer
 
 bool AFortGrindRail::GetSpeedSettingsOverride(struct FGrindRailSpeedSettings* SpeedSettingsOverride) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSpeedSettingsOverride");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGrindRail", "GetSpeedSettingsOverride");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGrindRail_GetSpeedSettingsOverride Parms{};
 
@@ -492,10 +484,9 @@ bool AFortGrindRail::HasTailConnection() const
 
 bool AFortGrindRail::IsGrindRailEnabled() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsGrindRailEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGrindRail", "IsGrindRailEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGrindRail_IsGrindRailEnabled Parms{};
 
@@ -517,10 +508,9 @@ bool AFortGrindRail::IsGrindRailEnabled() const
 
 bool AFortGrindRail::ShouldApplyFallDamageImmunity() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldApplyFallDamageImmunity");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGrindRail", "ShouldApplyFallDamageImmunity");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGrindRail_ShouldApplyFallDamageImmunity Parms{};
 
@@ -542,10 +532,9 @@ bool AFortGrindRail::ShouldApplyFallDamageImmunity() const
 
 bool AFortGrindRail::ShouldSoftCapMaxSpeeds() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldSoftCapMaxSpeeds");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGrindRail", "ShouldSoftCapMaxSpeeds");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGrindRail_ShouldSoftCapMaxSpeeds Parms{};
 
@@ -702,10 +691,9 @@ void UFortMovementMode_ExtLogicGrinding::AddTemporaryMoveIgnoreActor(class ABuil
 
 void UFortMovementMode_ExtLogicGrinding::ApplyDamageToDevice(class ABuildingActor* BuildingActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ApplyDamageToDevice");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "ApplyDamageToDevice");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_ApplyDamageToDevice Parms{};
 
@@ -1030,10 +1018,9 @@ void UFortMovementMode_ExtLogicGrinding::GameplayTagCallback_BlockSprintingAndHo
 
 TSubclassOf<class UGameplayEffect> UFortMovementMode_ExtLogicGrinding::GetGrindInAirGameplayEffectClass(const class AFortGrindRail* GrindRail)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetGrindInAirGameplayEffectClass");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "GetGrindInAirGameplayEffectClass");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_GetGrindInAirGameplayEffectClass Parms{};
 
@@ -1052,10 +1039,9 @@ TSubclassOf<class UGameplayEffect> UFortMovementMode_ExtLogicGrinding::GetGrindI
 
 void UFortMovementMode_ExtLogicGrinding::HandleFallDamageImmunityOnGrindingEnd(bool bShouldApplyFallDamageImmunityOnEnd)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleFallDamageImmunityOnGrindingEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "HandleFallDamageImmunityOnGrindingEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_HandleFallDamageImmunityOnGrindingEnd Parms{};
 
@@ -1074,10 +1060,9 @@ void UFortMovementMode_ExtLogicGrinding::HandleFallDamageImmunityOnGrindingEnd(b
 
 void UFortMovementMode_ExtLogicGrinding::HandleGameplayCuesOnBoosterModeChange(const class AFortGrindRail* GrindRail, const EGrindRailBoosterMode OldBoosterMode, const EGrindRailBoosterMode NewBoosterMode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleGameplayCuesOnBoosterModeChange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "HandleGameplayCuesOnBoosterModeChange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_HandleGameplayCuesOnBoosterModeChange Parms{};
 
@@ -1096,10 +1081,9 @@ void UFortMovementMode_ExtLogicGrinding::HandleGameplayCuesOnBoosterModeChange(c
 
 void UFortMovementMode_ExtLogicGrinding::HandleGameplayCuesOnFeetLanding(const class AFortGrindRail* GrindRail)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleGameplayCuesOnFeetLanding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "HandleGameplayCuesOnFeetLanding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_HandleGameplayCuesOnFeetLanding Parms{};
 
@@ -1116,10 +1100,9 @@ void UFortMovementMode_ExtLogicGrinding::HandleGameplayCuesOnFeetLanding(const c
 
 void UFortMovementMode_ExtLogicGrinding::HandleGameplayCuesOnHit(const class AFortGrindRail* GrindRail)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleGameplayCuesOnHit");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "HandleGameplayCuesOnHit");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_HandleGameplayCuesOnHit Parms{};
 
@@ -1136,10 +1119,9 @@ void UFortMovementMode_ExtLogicGrinding::HandleGameplayCuesOnHit(const class AFo
 
 void UFortMovementMode_ExtLogicGrinding::HandleGameplayCuesOnRailJump(bool bIsAnchorJumpActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleGameplayCuesOnRailJump");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "HandleGameplayCuesOnRailJump");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_HandleGameplayCuesOnRailJump Parms{};
 
@@ -1157,10 +1139,9 @@ void UFortMovementMode_ExtLogicGrinding::HandleGameplayCuesOnRailJump(bool bIsAn
 
 void UFortMovementMode_ExtLogicGrinding::HandleGameplayCuesOnSprinting(const class AFortGrindRail* GrindRail, const bool bWantsToGrindSprint)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleGameplayCuesOnSprinting");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "HandleGameplayCuesOnSprinting");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_HandleGameplayCuesOnSprinting Parms{};
 
@@ -1178,10 +1159,9 @@ void UFortMovementMode_ExtLogicGrinding::HandleGameplayCuesOnSprinting(const cla
 
 void UFortMovementMode_ExtLogicGrinding::HandleGameplayEffectsOnVehicleHit(class AFortAthenaVehicle* AthenaVehicle)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleGameplayEffectsOnVehicleHit");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "HandleGameplayEffectsOnVehicleHit");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_HandleGameplayEffectsOnVehicleHit Parms{};
 
@@ -1198,10 +1178,9 @@ void UFortMovementMode_ExtLogicGrinding::HandleGameplayEffectsOnVehicleHit(class
 
 void UFortMovementMode_ExtLogicGrinding::HandleGrindingBegun(const class AFortGrindRail* GrindRail)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleGrindingBegun");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "HandleGrindingBegun");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_HandleGrindingBegun Parms{};
 
@@ -1216,10 +1195,9 @@ void UFortMovementMode_ExtLogicGrinding::HandleGrindingBegun(const class AFortGr
 
 void UFortMovementMode_ExtLogicGrinding::HandleGrindingEnded()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleGrindingEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "HandleGrindingEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1233,10 +1211,9 @@ void UFortMovementMode_ExtLogicGrinding::HandleGrindingEnded()
 
 bool UFortMovementMode_ExtLogicGrinding::IsDamageableDevice(class ABuildingActor* BuildingActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsDamageableDevice");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "IsDamageableDevice");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_IsDamageableDevice Parms{};
 
@@ -1256,10 +1233,9 @@ bool UFortMovementMode_ExtLogicGrinding::IsDamageableDevice(class ABuildingActor
 
 bool UFortMovementMode_ExtLogicGrinding::IsThrowableItem(class ABuildingActor* BuildingActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsThrowableItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "IsThrowableItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_IsThrowableItem Parms{};
 
@@ -1305,10 +1281,9 @@ void UFortMovementMode_ExtLogicGrinding::OnIgnoredBuildingEndPlay(class AActor* 
 
 void UFortMovementMode_ExtLogicGrinding::RemoveGrindRailInitiatedEffects(const class AFortGrindRail* GrindRail)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RemoveGrindRailInitiatedEffects");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtLogicGrinding", "RemoveGrindRailInitiatedEffects");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtLogicGrinding_RemoveGrindRailInitiatedEffects Parms{};
 
@@ -1406,10 +1381,9 @@ void UFortMovementMode_ExtLogicGrinding::GameplayTagCallback_StartDashMME(const 
 
 void UFortPawnComponent_GrindingProvider::BP_HandleGameplayEffectsOnPlayerJumpOff(const struct FVector& PlayerPosition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HandleGameplayEffectsOnPlayerJumpOff");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_GrindingProvider", "BP_HandleGameplayEffectsOnPlayerJumpOff");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_GrindingProvider_BP_HandleGameplayEffectsOnPlayerJumpOff Parms{};
 
@@ -1424,10 +1398,9 @@ void UFortPawnComponent_GrindingProvider::BP_HandleGameplayEffectsOnPlayerJumpOf
 
 void UFortPawnComponent_GrindingProvider::BP_OnADSPressed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnADSPressed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_GrindingProvider", "BP_OnADSPressed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1438,10 +1411,9 @@ void UFortPawnComponent_GrindingProvider::BP_OnADSPressed()
 
 void UFortPawnComponent_GrindingProvider::BP_OnADSReleased()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnADSReleased");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_GrindingProvider", "BP_OnADSReleased");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1454,10 +1426,9 @@ void UFortPawnComponent_GrindingProvider::BP_OnADSReleased()
 
 void UFortPawnComponent_GrindingProvider::BP_OnApplyDamageToDevice(class ABuildingActor* BuildingActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnApplyDamageToDevice");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_GrindingProvider", "BP_OnApplyDamageToDevice");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_GrindingProvider_BP_OnApplyDamageToDevice Parms{};
 
@@ -1472,10 +1443,9 @@ void UFortPawnComponent_GrindingProvider::BP_OnApplyDamageToDevice(class ABuildi
 
 void UFortPawnComponent_GrindingProvider::BP_OnDismount()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnDismount");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_GrindingProvider", "BP_OnDismount");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1486,10 +1456,9 @@ void UFortPawnComponent_GrindingProvider::BP_OnDismount()
 
 void UFortPawnComponent_GrindingProvider::BP_OnFeetLanded()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnFeetLanded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_GrindingProvider", "BP_OnFeetLanded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1766,10 +1735,9 @@ bool UFortPawnComponent_GrindingProvider::RequestGrindingOnRail(class AFortGrind
 
 bool UFortPawnComponent_GrindingProvider::BP_CanBeginGrinding() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CanBeginGrinding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_GrindingProvider", "BP_CanBeginGrinding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_GrindingProvider_BP_CanBeginGrinding Parms{};
 
@@ -1955,10 +1923,9 @@ void UStructurallySupportedSplineComponent::Multicast_OnStructuralSupportDied()
 
 void UStructurallySupportedSplineComponent::OnDestroyFromStructuralSupport(class AActor* SupportActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDestroyFromStructuralSupport");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("StructurallySupportedSplineComponent", "OnDestroyFromStructuralSupport");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::StructurallySupportedSplineComponent_OnDestroyFromStructuralSupport Parms{};
 
@@ -2045,10 +2012,9 @@ void AFortGameplayCueNotifyLoop_Grinding::CacheReferences(class UAudioComponent*
 
 void AFortGameplayCueNotifyLoop_Grinding::OnForwardChanged(bool bNewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnForwardChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayCueNotifyLoop_Grinding", "OnForwardChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayCueNotifyLoop_Grinding_OnForwardChanged Parms{};
 

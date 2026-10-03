@@ -2342,10 +2342,9 @@ class AActor* AFortAthenaLivingWorldPrefabActorSpawner::GetSpawnedActor() const
 
 void UFortAthenaLivingWorldSpawnActionBlueprint::K2_ModifySpawnComponentList(class UFortAthenaAISpawnerDataComponentList* ComponentList, class UObject* ComponentOuter) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_ModifySpawnComponentList");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaLivingWorldSpawnActionBlueprint", "K2_ModifySpawnComponentList");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaLivingWorldSpawnActionBlueprint_K2_ModifySpawnComponentList Parms{};
 
@@ -2364,10 +2363,9 @@ void UFortAthenaLivingWorldSpawnActionBlueprint::K2_ModifySpawnComponentList(cla
 
 void UFortAthenaLivingWorldSpawnActionBlueprint::K2_OnAllActorSpawned(const TArray<class AActor*>& SpawnedActor, const TScriptInterface<class IFortAthenaLivingWorldPointProviderInterface>& SourcePointProvider) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnAllActorSpawned");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaLivingWorldSpawnActionBlueprint", "K2_OnAllActorSpawned");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaLivingWorldSpawnActionBlueprint_K2_OnAllActorSpawned Parms{};
 
@@ -2386,10 +2384,9 @@ void UFortAthenaLivingWorldSpawnActionBlueprint::K2_OnAllActorSpawned(const TArr
 
 void UFortAthenaLivingWorldSpawnActionBlueprint::K2_OnSpawnedActor(const class AActor* SpawnedActor, const TScriptInterface<class IFortAthenaLivingWorldPointProviderInterface>& SourcePointProvider) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnSpawnedActor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaLivingWorldSpawnActionBlueprint", "K2_OnSpawnedActor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaLivingWorldSpawnActionBlueprint_K2_OnSpawnedActor Parms{};
 
@@ -2407,10 +2404,9 @@ void UFortAthenaLivingWorldSpawnActionBlueprint::K2_OnSpawnedActor(const class A
 
 void UFortAthenaLivingWorldSpawnActionBlueprint::K2_OnSpawnedActorFailed(const TScriptInterface<class IFortAthenaLivingWorldPointProviderInterface>& SourcePointProvider) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnSpawnedActorFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaLivingWorldSpawnActionBlueprint", "K2_OnSpawnedActorFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaLivingWorldSpawnActionBlueprint_K2_OnSpawnedActorFailed Parms{};
 

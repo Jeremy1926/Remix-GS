@@ -99,10 +99,9 @@ void ULiveLinkInstance::SetSubject(const struct FLiveLinkSubjectName& SubjectNam
 
 class FName ULiveLinkRemapAsset::GetRemappedBoneName(class FName BoneName) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetRemappedBoneName");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LiveLinkRemapAsset", "GetRemappedBoneName");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LiveLinkRemapAsset_GetRemappedBoneName Parms{};
 
@@ -127,10 +126,9 @@ class FName ULiveLinkRemapAsset::GetRemappedBoneName(class FName BoneName) const
 
 class FName ULiveLinkRemapAsset::GetRemappedCurveName(class FName CurveName) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetRemappedCurveName");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LiveLinkRemapAsset", "GetRemappedCurveName");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LiveLinkRemapAsset_GetRemappedCurveName Parms{};
 
@@ -154,10 +152,9 @@ class FName ULiveLinkRemapAsset::GetRemappedCurveName(class FName CurveName) con
 
 void ULiveLinkRemapAsset::RemapCurveElements(TMap<class FName, float>& CurveItems) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RemapCurveElements");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("LiveLinkRemapAsset", "RemapCurveElements");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::LiveLinkRemapAsset_RemapCurveElements Parms{};
 

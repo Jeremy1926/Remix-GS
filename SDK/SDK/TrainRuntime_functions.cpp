@@ -247,10 +247,9 @@ void ATrainCar::HandlePossessedPawnChanged(class APawn* OldPawn, class APawn* Ne
 
 void ATrainCar::OnActorTargetedForImpulse(class AActor* Actor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActorTargetedForImpulse");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TrainCar", "OnActorTargetedForImpulse");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TrainCar_OnActorTargetedForImpulse Parms{};
 
@@ -267,10 +266,9 @@ void ATrainCar::OnActorTargetedForImpulse(class AActor* Actor)
 
 void ATrainCar::OnPawnBasedOnTrainCar(class AFortPawn* Pawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPawnBasedOnTrainCar");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TrainCar", "OnPawnBasedOnTrainCar");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TrainCar_OnPawnBasedOnTrainCar Parms{};
 
@@ -288,10 +286,9 @@ void ATrainCar::OnPawnBasedOnTrainCar(class AFortPawn* Pawn)
 
 void ATrainCar::OnPawnDebasedTrainCar(class AFortPawn* Pawn, class AActor* NewBase)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPawnDebasedTrainCar");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("TrainCar", "OnPawnDebasedTrainCar");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::TrainCar_OnPawnDebasedTrainCar Parms{};
 

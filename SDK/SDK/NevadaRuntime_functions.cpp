@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void AFortNevadaAudioController::BP_Init()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_Init");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaAudioController", "BP_Init");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -35,10 +34,9 @@ void AFortNevadaAudioController::BP_Init()
 
 void AFortNevadaAudioController::BP_Update()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_Update");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaAudioController", "BP_Update");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -337,10 +335,9 @@ void AFortNevadaVehicle::OnAttachedActorDied(class AActor* DamagedActor, float D
 
 void AFortNevadaVehicle::OnBatteryRegen(float Newcharge)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBatteryRegen");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnBatteryRegen");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNevadaVehicle_OnBatteryRegen Parms{};
 
@@ -355,10 +352,9 @@ void AFortNevadaVehicle::OnBatteryRegen(float Newcharge)
 
 void AFortNevadaVehicle::OnBoostChargeRefilled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostChargeRefilled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnBoostChargeRefilled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -369,10 +365,9 @@ void AFortNevadaVehicle::OnBoostChargeRefilled()
 
 void AFortNevadaVehicle::OnBoostFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnBoostFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -383,10 +378,9 @@ void AFortNevadaVehicle::OnBoostFinished()
 
 void AFortNevadaVehicle::OnBoostStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBoostStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnBoostStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -397,10 +391,9 @@ void AFortNevadaVehicle::OnBoostStarted()
 
 void AFortNevadaVehicle::OnCrashedImpact()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCrashedImpact");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnCrashedImpact");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -411,10 +404,9 @@ void AFortNevadaVehicle::OnCrashedImpact()
 
 void AFortNevadaVehicle::OnCrashingStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCrashingStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnCrashingStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -427,10 +419,9 @@ void AFortNevadaVehicle::OnCrashingStarted()
 
 void AFortNevadaVehicle::OnNewVehicleState(ENevadaFlightStates NewVehicleState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNewVehicleState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnNewVehicleState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNevadaVehicle_OnNewVehicleState Parms{};
 
@@ -445,10 +436,9 @@ void AFortNevadaVehicle::OnNewVehicleState(ENevadaFlightStates NewVehicleState)
 
 void AFortNevadaVehicle::OnOutOfBattery()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnOutOfBattery");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnOutOfBattery");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -459,10 +449,9 @@ void AFortNevadaVehicle::OnOutOfBattery()
 
 void AFortNevadaVehicle::OnRebootFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRebootFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnRebootFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -473,10 +462,9 @@ void AFortNevadaVehicle::OnRebootFinished()
 
 void AFortNevadaVehicle::OnRebootStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRebootStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnRebootStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -613,10 +601,9 @@ void AFortNevadaVehicle::OnRep_TractorBeamState(const ETractorBeamState Previous
 
 void AFortNevadaVehicle::OnStartAscend()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartAscend");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnStartAscend");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -627,10 +614,9 @@ void AFortNevadaVehicle::OnStartAscend()
 
 void AFortNevadaVehicle::OnStartDescend()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStartDescend");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnStartDescend");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -643,10 +629,9 @@ void AFortNevadaVehicle::OnStartDescend()
 
 void AFortNevadaVehicle::OnTargetedActorChanged(class AActor* NewTargetedActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTargetedActorChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnTargetedActorChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNevadaVehicle_OnTargetedActorChanged Parms{};
 
@@ -661,10 +646,9 @@ void AFortNevadaVehicle::OnTargetedActorChanged(class AActor* NewTargetedActor)
 
 void AFortNevadaVehicle::OnTractorBeamActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnTractorBeamActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -675,10 +659,9 @@ void AFortNevadaVehicle::OnTractorBeamActivated()
 
 void AFortNevadaVehicle::OnTractorBeamAttached()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamAttached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnTractorBeamAttached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -689,10 +672,9 @@ void AFortNevadaVehicle::OnTractorBeamAttached()
 
 void AFortNevadaVehicle::OnTractorBeamChargeStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamChargeStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnTractorBeamChargeStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -705,10 +687,9 @@ void AFortNevadaVehicle::OnTractorBeamChargeStarted()
 
 void AFortNevadaVehicle::OnTractorBeamDeactivated(const struct FVector& LastBeamPosition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnTractorBeamDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNevadaVehicle_OnTractorBeamDeactivated Parms{};
 
@@ -726,10 +707,9 @@ void AFortNevadaVehicle::OnTractorBeamDeactivated(const struct FVector& LastBeam
 
 void AFortNevadaVehicle::OnTractorBeamDetached(class AActor* DetachedActor, const struct FVector& LastBeamPosition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamDetached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicle", "OnTractorBeamDetached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNevadaVehicle_OnTractorBeamDetached Parms{};
 

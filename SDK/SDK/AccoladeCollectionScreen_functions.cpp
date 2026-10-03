@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UFortAccoladeStageListEntry::BP_PopulateAchievedCount(int32 AchievedCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_PopulateAchievedCount");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAccoladeStageListEntry", "BP_PopulateAchievedCount");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAccoladeStageListEntry_BP_PopulateAchievedCount Parms{};
 
@@ -45,10 +44,9 @@ void UFortAccoladeStageListEntry::BP_PopulateAchievedCount(int32 AchievedCount)
 
 void UPinnedAccoladeWidget::BP_PopulateAccoladeInfo(const class FText& Description, int32 Achieved, int32 Total)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_PopulateAccoladeInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PinnedAccoladeWidget", "BP_PopulateAccoladeInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PinnedAccoladeWidget_BP_PopulateAccoladeInfo Parms{};
 
@@ -67,10 +65,9 @@ void UPinnedAccoladeWidget::BP_PopulateAccoladeInfo(const class FText& Descripti
 
 void UFortPlayerAccoladeCollectionListEntry::BP_OnPinnedChanged(const bool bPinned)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnPinnedChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAccoladeCollectionListEntry", "BP_OnPinnedChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAccoladeCollectionListEntry_BP_OnPinnedChanged Parms{};
 
@@ -87,10 +84,9 @@ void UFortPlayerAccoladeCollectionListEntry::BP_OnPinnedChanged(const bool bPinn
 
 void UFortPlayerAccoladeCollectionListEntry::BP_OnSelectionSuppressionChanged(const bool bShouldBeSuppressed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnSelectionSuppressionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAccoladeCollectionListEntry", "BP_OnSelectionSuppressionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAccoladeCollectionListEntry_BP_OnSelectionSuppressionChanged Parms{};
 
@@ -107,10 +103,9 @@ void UFortPlayerAccoladeCollectionListEntry::BP_OnSelectionSuppressionChanged(co
 
 void UFortPlayerAccoladeCollectionListEntry::BP_UpdateAccoladeTier(EFortAccoladeTierType Tier)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateAccoladeTier");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAccoladeCollectionListEntry", "BP_UpdateAccoladeTier");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAccoladeCollectionListEntry_BP_UpdateAccoladeTier Parms{};
 
@@ -127,10 +122,9 @@ void UFortPlayerAccoladeCollectionListEntry::BP_UpdateAccoladeTier(EFortAccolade
 
 void UFortPlayerAccoladeCollectionListEntry::BP_UpdateCompletedCount(int32 CompletedCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateCompletedCount");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAccoladeCollectionListEntry", "BP_UpdateCompletedCount");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAccoladeCollectionListEntry_BP_UpdateCompletedCount Parms{};
 
@@ -148,10 +142,9 @@ void UFortPlayerAccoladeCollectionListEntry::BP_UpdateCompletedCount(int32 Compl
 
 void UFortPlayerAccoladeCollectionScreenContainer::BP_PopulateProgress(int32 Current, int32 Total)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_PopulateProgress");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAccoladeCollectionScreenContainer", "BP_PopulateProgress");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAccoladeCollectionScreenContainer_BP_PopulateProgress Parms{};
 
@@ -169,10 +162,9 @@ void UFortPlayerAccoladeCollectionScreenContainer::BP_PopulateProgress(int32 Cur
 
 void UFortPlayerAccoladeCollectionScreenInfoOverlay::BP_PopulateAccoladeInfo(int32 CompletionCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_PopulateAccoladeInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAccoladeCollectionScreenInfoOverlay", "BP_PopulateAccoladeInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAccoladeCollectionScreenInfoOverlay_BP_PopulateAccoladeInfo Parms{};
 
@@ -191,10 +183,9 @@ void UFortPlayerAccoladeCollectionScreenInfoOverlay::BP_PopulateAccoladeInfo(int
 
 void UFortPlayerAccoladeCollectionScreenInfoOverlay::BP_PopulateProductCompatibility(const bool bIsCurrentlyCompatible, const struct FGameplayTagQuery& ProductCompatibilityQuery, const struct FGameplayTagContainer& AdditionalQueryTags)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_PopulateProductCompatibility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAccoladeCollectionScreenInfoOverlay", "BP_PopulateProductCompatibility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAccoladeCollectionScreenInfoOverlay_BP_PopulateProductCompatibility Parms{};
 
@@ -213,10 +204,9 @@ void UFortPlayerAccoladeCollectionScreenInfoOverlay::BP_PopulateProductCompatibi
 
 void UFortPlayerAccoladeCollectionScreenInfoOverlay::BP_UpdateAccoladeTier(EFortAccoladeTierType Tier)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateAccoladeTier");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAccoladeCollectionScreenInfoOverlay", "BP_UpdateAccoladeTier");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAccoladeCollectionScreenInfoOverlay_BP_UpdateAccoladeTier Parms{};
 
@@ -233,10 +223,9 @@ void UFortPlayerAccoladeCollectionScreenInfoOverlay::BP_UpdateAccoladeTier(EFort
 
 void UFortPlayerAccoladeCollectionScreenInfoOverlay::BP_UpdateTrackButtonText(const bool bTracked)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateTrackButtonText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPlayerAccoladeCollectionScreenInfoOverlay", "BP_UpdateTrackButtonText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPlayerAccoladeCollectionScreenInfoOverlay_BP_UpdateTrackButtonText Parms{};
 

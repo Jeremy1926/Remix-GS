@@ -48,10 +48,9 @@ void UFortTankVehicleAnimInstance::UpdateMIDEngineProperties(const float DeltaSe
 
 void AFortTankVehicleAudioController::PlayAccelOneShot()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayAccelOneShot");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTankVehicleAudioController", "PlayAccelOneShot");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -62,10 +61,9 @@ void AFortTankVehicleAudioController::PlayAccelOneShot()
 
 void AFortTankVehicleAudioController::PlayDecelOneShot()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayDecelOneShot");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTankVehicleAudioController", "PlayDecelOneShot");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -76,10 +74,9 @@ void AFortTankVehicleAudioController::PlayDecelOneShot()
 
 void AFortTankVehicleAudioController::PlayTurningOneShot()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PlayTurningOneShot");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortTankVehicleAudioController", "PlayTurningOneShot");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

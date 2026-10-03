@@ -80,10 +80,9 @@ void UFortVoiceReportIntroModal::HandleTurnOnClicked()
 
 void UFortVoiceReportIntroModal::UpdateVisuals(const EUFortVoiceReportIntroModalType DescriptionType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateVisuals");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVoiceReportIntroModal", "UpdateVisuals");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVoiceReportIntroModal_UpdateVisuals Parms{};
 

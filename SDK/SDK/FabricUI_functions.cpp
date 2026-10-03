@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 class UFabricInteractableViewModel* UFabricWidget::GetFabricViewModel() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetFabricViewModel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FabricWidget", "GetFabricViewModel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FabricWidget_GetFabricViewModel Parms{};
 

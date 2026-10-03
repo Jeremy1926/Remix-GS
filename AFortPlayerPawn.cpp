@@ -15,7 +15,6 @@ static bool (*FinishedTargetSplineOG)(AFortPickupAthena*);
 static void (*OnCapsuleBeginOverlapOG)(UObject*, FFrame&, void*);
 static void (*ServerOnExitVehicleOG)(UObject*, FFrame&, void*);
 static void (*EmoteStoppedOG)(UObject*, FFrame&, void*);
-static void (*EndSkydivingOG)(AFortPlayerPawnAthena*);
 static void (*TriggerAbilityFromAnimationOG)(AFortPlayerPawnAthena*, UObject*, uint32, uint32, bool, uint32);
 static bool (*ServerOnAttemptInteractOG)(void*, uint8*);
 
@@ -320,22 +319,6 @@ static void EmoteStopped(UObject* Context, FFrame& Stack)
     callOG(Pawn, Stack.CurrentNativeFunction, EmoteStopped, MontageItemDef);
 }
 
-static void EndSkydiving(AFortPlayerPawnAthena* Pawn)
-{
-    EndSkydivingOG(Pawn);
-
-    auto PlayerController = (AFortPlayerControllerAthena*)Pawn->Controller;
-
-    if (!PlayerController || !PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()))
-        return;
-
-    if (Pawn->bIsSkydiving)
-        SendStatEvent(PlayerController->GetQuestManager(ESubGame::Athena), PlayerController, EFortQuestObjectiveStatEvent::Land, 1, true);
-
-    if (Pawn->bIsSkydivingFromBus)
-        SendStatEvent(PlayerController->GetQuestManager(ESubGame::Athena), PlayerController, EFortQuestObjectiveStatEvent::Visit, 1, true);
-}
-
 static void SetDBNOBeingRevivedTag(AActor* AbilitySystemActor, bool bBeingRevived)
 {
     static auto DBNOBeingRevivedTag = FGameplayTag{ FName(L"Gameplay.Status.DBNOBeingRevived") };
@@ -562,7 +545,7 @@ static void ReviveFromDBNO(AFortPlayerPawnAthena* Pawn, AActor* EventInstigator,
     if (ReviverController)
     {
         auto TargetTags = GetOwnedGameplayTags(Pawn);
-        SendStatEvent(ReviverController->GetQuestManager(ESubGame::Athena), ReviverController, EFortQuestObjectiveStatEvent::RevivePlayer, 1, false, Pawn, TargetTags);
+        SendStatEvent(ReviverController->GetQuestManager(ESubGame::Athena), ReviverController, EFortQuestObjectiveStatEvent::RevivePlayer, 1, true, Pawn, TargetTags);
         TargetTags.GameplayTags.Free();
         TargetTags.ParentTags.Free();
     }
@@ -570,7 +553,7 @@ static void ReviveFromDBNO(AFortPlayerPawnAthena* Pawn, AActor* EventInstigator,
     if (PlayerController)
     {
         auto TargetTags = GetOwnedGameplayTags(ReviverPawn);
-        SendStatEvent(PlayerController->GetQuestManager(ESubGame::Athena), PlayerController, EFortQuestObjectiveStatEvent::RevivedFromDBNO, 1, false, ReviverPawn, TargetTags);
+        SendStatEvent(PlayerController->GetQuestManager(ESubGame::Athena), PlayerController, EFortQuestObjectiveStatEvent::RevivedFromDBNO, 1, true, ReviverPawn, TargetTags);
         TargetTags.GameplayTags.Free();
         TargetTags.ParentTags.Free();
     }
@@ -984,7 +967,6 @@ void AFortPlayerPawn__PostLoad()
     ExecHook(PawnClass->FindFunction("MovingEmoteStopped"), MovingEmoteStopped);
     ExecHook(PawnClass->FindFunction("ServerOnExitVehicle"), ServerOnExitVehicle, ServerOnExitVehicleOG);
     ExecHook(PawnClass->FindFunction("EmoteStopped"), EmoteStopped, EmoteStoppedOG);
-    Hook<AFortPlayerPawnAthena>(uint32(0x2C7), EndSkydiving, EndSkydivingOG);
     Hook<AFortPlayerPawnAthena>(uint32(0x23A), (void (*)(AFortPlayerPawnAthena*, AActor*))ServerReviveFromDBNO);
     ExecHook(PawnClass->FindFunction("ForceReviveFromDBNO"), ForceReviveFromDBNO);
     ExecHook(PawnClass->FindFunction("PlayGroupEmote"), PlayGroupEmote);

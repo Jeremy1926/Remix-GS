@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UFortSidebarPanelKoala::OnConnectionChanged(bool bConnected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnConnectionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortSidebarPanelKoala", "OnConnectionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortSidebarPanelKoala_OnConnectionChanged Parms{};
 
@@ -139,10 +138,9 @@ void UKoalaHUDWidget::HandlePlayerPawnEmoteStopped(const class UFortItemDefiniti
 
 void UKoalaHUDWidget::OnAvailabilityChanged(EKoalaAvailability Availability)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAvailabilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("KoalaHUDWidget", "OnAvailabilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::KoalaHUDWidget_OnAvailabilityChanged Parms{};
 
@@ -161,10 +159,9 @@ void UKoalaHUDWidget::OnAvailabilityChanged(EKoalaAvailability Availability)
 
 void UKoalaHUDWidget::OnClipStatusChanged(int32 InClipID, EKoalaClipStatus InClipStatus, float InUploadProgress)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnClipStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("KoalaHUDWidget", "OnClipStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::KoalaHUDWidget_OnClipStatusChanged Parms{};
 
@@ -183,10 +180,9 @@ void UKoalaHUDWidget::OnClipStatusChanged(int32 InClipID, EKoalaClipStatus InCli
 
 void UKoalaHUDWidget::OnConnectionChanged(EKoalaConnectionStatus InStatus)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnConnectionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("KoalaHUDWidget", "OnConnectionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::KoalaHUDWidget_OnConnectionChanged Parms{};
 
@@ -201,10 +197,9 @@ void UKoalaHUDWidget::OnConnectionChanged(EKoalaConnectionStatus InStatus)
 
 void UKoalaHUDWidget::OnInputComplete()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputComplete");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("KoalaHUDWidget", "OnInputComplete");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -217,10 +212,9 @@ void UKoalaHUDWidget::OnInputComplete()
 
 void UKoalaHUDWidget::OnInputProgress(float Progress)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputProgress");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("KoalaHUDWidget", "OnInputProgress");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::KoalaHUDWidget_OnInputProgress Parms{};
 
@@ -237,10 +231,9 @@ void UKoalaHUDWidget::OnInputProgress(float Progress)
 
 void UKoalaHUDWidget::OnRecordingStatusChanged(EKoalaRecording InRecordingStatus)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRecordingStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("KoalaHUDWidget", "OnRecordingStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::KoalaHUDWidget_OnRecordingStatusChanged Parms{};
 
@@ -276,10 +269,9 @@ void UKoalaHUDWidget::OnReminderEnded()
 
 void UKoalaHUDWidget::OnReminderTimerStarted(float time)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnReminderTimerStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("KoalaHUDWidget", "OnReminderTimerStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::KoalaHUDWidget_OnReminderTimerStarted Parms{};
 
@@ -378,10 +370,9 @@ int32 UKoalaHUDWidget::GetUploadingClipCount() const
 
 void UKoalaSettingDetailExtension::OnAvailabilityChanged(bool bAvailable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAvailabilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("KoalaSettingDetailExtension", "OnAvailabilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::KoalaSettingDetailExtension_OnAvailabilityChanged Parms{};
 
@@ -398,10 +389,9 @@ void UKoalaSettingDetailExtension::OnAvailabilityChanged(bool bAvailable)
 
 void UKoalaSettingDetailExtension::OnConnectionChanged(bool bConnected)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnConnectionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("KoalaSettingDetailExtension", "OnConnectionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::KoalaSettingDetailExtension_OnConnectionChanged Parms{};
 

@@ -298,10 +298,9 @@ void USparksCustomSetlist::FindEntriesForSongAndPlayer(const class FName& SongSh
 
 void USparksCustomSetlist::GetRelevantParticipants(TArray<class AFortPlayerController*>* OutPlayers) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetRelevantParticipants");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksCustomSetlist", "GetRelevantParticipants");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksCustomSetlist_GetRelevantParticipants Parms{};
 

@@ -24,10 +24,9 @@ SDK_NAMESPACE_START
 
 void UFortMantisAnimInstance::OnMantisTechniqueEnded(const int32 TechniqueIndex, const class FName TechniqueName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMantisTechniqueEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMantisAnimInstance", "OnMantisTechniqueEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMantisAnimInstance_OnMantisTechniqueEnded Parms{};
 
@@ -46,10 +45,9 @@ void UFortMantisAnimInstance::OnMantisTechniqueEnded(const int32 TechniqueIndex,
 
 void UFortMantisAnimInstance::OnMantisTechniqueStarted(const int32 TechniqueIndex, const class FName TechniqueName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMantisTechniqueStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMantisAnimInstance", "OnMantisTechniqueStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMantisAnimInstance_OnMantisTechniqueStarted Parms{};
 
@@ -68,10 +66,9 @@ void UFortMantisAnimInstance::OnMantisTechniqueStarted(const int32 TechniqueInde
 
 void UFortMantisLayerAnimInstance::OnMantisTechniqueEnded(const int32 TechniqueIndex, const class FName TechniqueName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMantisTechniqueEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMantisLayerAnimInstance", "OnMantisTechniqueEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMantisLayerAnimInstance_OnMantisTechniqueEnded Parms{};
 
@@ -90,10 +87,9 @@ void UFortMantisLayerAnimInstance::OnMantisTechniqueEnded(const int32 TechniqueI
 
 void UFortMantisLayerAnimInstance::OnMantisTechniqueStarted(const int32 TechniqueIndex, const class FName TechniqueName)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMantisTechniqueStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMantisLayerAnimInstance", "OnMantisTechniqueStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMantisLayerAnimInstance_OnMantisTechniqueStarted Parms{};
 
@@ -112,10 +108,9 @@ void UFortMantisLayerAnimInstance::OnMantisTechniqueStarted(const int32 Techniqu
 
 void UFortMovementMode_MantisRootMotion::BP_UpdateConstantForceDirection(const class UFortMovementMode_MantisRootMotionRuntimeData* MantisRootMotionRuntimeData, struct FVector* NewDirection)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateConstantForceDirection");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_MantisRootMotion", "BP_UpdateConstantForceDirection");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_MantisRootMotion_BP_UpdateConstantForceDirection Parms{};
 
@@ -138,10 +133,9 @@ void UFortMovementMode_MantisRootMotion::BP_UpdateConstantForceDirection(const c
 
 void UFortGameplayAbility_Mantis::BP_MantisAbilityTechniqueStarted(const struct FGameplayTagContainer& OwningTags, class FName SequenceName, bool StartsSequence, bool EndsSequence)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_MantisAbilityTechniqueStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "BP_MantisAbilityTechniqueStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_BP_MantisAbilityTechniqueStarted Parms{};
 
@@ -165,10 +159,9 @@ void UFortGameplayAbility_Mantis::BP_MantisAbilityTechniqueStarted(const struct 
 
 void UFortGameplayAbility_Mantis::BP_OnMantisInputEvent(const EFortMantisTechniqueActivationInputType InputType, const EFortMantisTechniqueActivationTimingType InputTiming, const bool bDidInputStartTechnique, const bool bDidInputQueueTechnique, const float InputHeldDuration)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnMantisInputEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "BP_OnMantisInputEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_BP_OnMantisInputEvent Parms{};
 
@@ -187,10 +180,9 @@ void UFortGameplayAbility_Mantis::BP_OnMantisInputEvent(const EFortMantisTechniq
 
 void UFortGameplayAbility_Mantis::BP_OnMantisPreTechniqueSelection()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnMantisPreTechniqueSelection");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "BP_OnMantisPreTechniqueSelection");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -204,10 +196,9 @@ void UFortGameplayAbility_Mantis::BP_OnMantisPreTechniqueSelection()
 
 void UFortGameplayAbility_Mantis::BP_OnMantisTechniqueHit(const struct FGameplayAbilityTargetDataHandle& TargetDataHandle, const struct FGameplayTag& ApplicationTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnMantisTechniqueHit");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "BP_OnMantisTechniqueHit");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_BP_OnMantisTechniqueHit Parms{};
 
@@ -226,10 +217,9 @@ void UFortGameplayAbility_Mantis::BP_OnMantisTechniqueHit(const struct FGameplay
 
 void UFortGameplayAbility_Mantis::BP_OnTechniqueNotifyEvent(const EFortMantisNotifyEvent NotifyEvent, const class UFortAnimNotify_Mantis* Notify)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTechniqueNotifyEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "BP_OnTechniqueNotifyEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_BP_OnTechniqueNotifyEvent Parms{};
 
@@ -248,10 +238,9 @@ void UFortGameplayAbility_Mantis::BP_OnTechniqueNotifyEvent(const EFortMantisNot
 
 void UFortGameplayAbility_Mantis::BP_OnTechniqueNotifyWindowEnded(const EFortMantisNotifyWindow NotifyWindow, const class UFortAnimNotifyState_Mantis* Notify)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTechniqueNotifyWindowEnded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "BP_OnTechniqueNotifyWindowEnded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_BP_OnTechniqueNotifyWindowEnded Parms{};
 
@@ -270,10 +259,9 @@ void UFortGameplayAbility_Mantis::BP_OnTechniqueNotifyWindowEnded(const EFortMan
 
 void UFortGameplayAbility_Mantis::BP_OnTechniqueNotifyWindowStarted(const EFortMantisNotifyWindow NotifyWindow, const class UFortAnimNotifyState_Mantis* Notify)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnTechniqueNotifyWindowStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "BP_OnTechniqueNotifyWindowStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_BP_OnTechniqueNotifyWindowStarted Parms{};
 
@@ -292,10 +280,9 @@ void UFortGameplayAbility_Mantis::BP_OnTechniqueNotifyWindowStarted(const EFortM
 
 void UFortGameplayAbility_Mantis::ConfigureRootMotionMMECreationData(const class FName TechniqueName, struct FFortMovementMode_MantisRootMotionCreationData* OutCreationData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ConfigureRootMotionMMECreationData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "ConfigureRootMotionMMECreationData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_ConfigureRootMotionMMECreationData Parms{};
 
@@ -321,10 +308,9 @@ void UFortGameplayAbility_Mantis::ConfigureRootMotionMMECreationData(const class
 
 void UFortGameplayAbility_Mantis::ConfigureRootMotionWarping(const class FName TechniqueName, bool* bOutAllowTranslationWarp, bool* bOutAllowRotationWarp, class AActor** OutTargetActor, bool* bOutSnapshotTargetActorLocation, bool* bOutWarpTranslationToLocation, struct FVector* outTargetLocation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ConfigureRootMotionWarping");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "ConfigureRootMotionWarping");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_ConfigureRootMotionWarping Parms{};
 
@@ -370,10 +356,9 @@ void UFortGameplayAbility_Mantis::ConfigureRootMotionWarping(const class FName T
 
 void UFortGameplayAbility_Mantis::ConfigureRootMotionWarpingAlternativeBehavior(const class FName TechniqueName, class AActor** OutTargetActor, bool* bOutSnapshotTargetActorLocation, EFortMantisWarpTranslationMethod* OutWarpTranslationMethod, struct FVector* OutWarpTranslationVector, EFortMantisWarpRotationMethod* OutWarpRotationMethod, struct FRotator* OutStaticRotation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ConfigureRootMotionWarpingAlternativeBehavior");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "ConfigureRootMotionWarpingAlternativeBehavior");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_ConfigureRootMotionWarpingAlternativeBehavior Parms{};
 
@@ -409,10 +394,9 @@ void UFortGameplayAbility_Mantis::ConfigureRootMotionWarpingAlternativeBehavior(
 
 void UFortGameplayAbility_Mantis::FillMetadataForTechnique(const class FName TechniqueName, struct FFortMantisTechniqueMetadata* OutTechniqueMetadata)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"FillMetadataForTechnique");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "FillMetadataForTechnique");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_FillMetadataForTechnique Parms{};
 
@@ -490,10 +474,9 @@ void UFortGameplayAbility_Mantis::OnMontageFinished()
 
 class FName UFortGameplayAbility_Mantis::GetDynamicMontageNameForTechnique(const class FName TechniqueName) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetDynamicMontageNameForTechnique");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "GetDynamicMontageNameForTechnique");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_GetDynamicMontageNameForTechnique Parms{};
 
@@ -518,10 +501,9 @@ class FName UFortGameplayAbility_Mantis::GetDynamicMontageNameForTechnique(const
 
 int32 UFortGameplayAbility_Mantis::GetLevelForGameplayEffectContainer(const struct FGameplayTag& ApplicationTag) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetLevelForGameplayEffectContainer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_Mantis", "GetLevelForGameplayEffectContainer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_Mantis_GetLevelForGameplayEffectContainer Parms{};
 

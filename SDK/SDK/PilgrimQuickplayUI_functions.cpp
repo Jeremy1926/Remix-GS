@@ -48,10 +48,9 @@ void UFestivalPassTrackingWidget::HandleMCPInventoryChanged(const TSet<class FSt
 
 void UFestivalPassTrackingWidget::OnProgressUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnProgressUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FestivalPassTrackingWidget", "OnProgressUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -141,10 +140,9 @@ void UPilgrimPostGameQuestList::SetShowQuests(const bool bNewShowCompleted, cons
 
 void UPilgrimQuickplayInfoModal::BP_OnScrollCompleted(bool bScrolledDown)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnScrollCompleted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplayInfoModal", "BP_OnScrollCompleted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimQuickplayInfoModal_BP_OnScrollCompleted Parms{};
 
@@ -159,10 +157,9 @@ void UPilgrimQuickplayInfoModal::BP_OnScrollCompleted(bool bScrolledDown)
 
 void UPilgrimQuickplaySpotlightList::OnSpotlightListUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSpotlightListUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplaySpotlightList", "OnSpotlightListUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -416,10 +413,9 @@ void UPilgrimQuickplay_UISpectatorBase::OnPawnSetForSpectatedPlayer(class APlaye
 
 void UPilgrimQuickplay_UISpectatorBase::OnSpectatorTargetChanged(class AFortPlayerState* NewSpectatorPlayerState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSpectatorTargetChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplay_UISpectatorBase", "OnSpectatorTargetChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimQuickplay_UISpectatorBase_OnSpectatorTargetChanged Parms{};
 
@@ -484,10 +480,9 @@ void UPilgrimQuestNotificationEntry::InitializeQuestNotification(TScriptInterfac
 
 void UPilgrimQuickplaySpotlightEntry::OnSpotlightInitialized()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSpotlightInitialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplaySpotlightEntry", "OnSpotlightInitialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;

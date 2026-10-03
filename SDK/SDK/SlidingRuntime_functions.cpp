@@ -121,10 +121,9 @@ void UFortMovementMode_Sliding::GameplayTagCallback_CancelSlidingRequested(const
 
 void UFortMovementMode_Sliding::SetCameraBlendIn(class UCameraModifier* SlideCameraModifier)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetCameraBlendIn");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_Sliding", "SetCameraBlendIn");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_Sliding_SetCameraBlendIn Parms{};
 
@@ -142,10 +141,9 @@ void UFortMovementMode_Sliding::SetCameraBlendIn(class UCameraModifier* SlideCam
 
 void UFortMovementMode_Sliding::ToggleLandFX(class AFortPlayerPawn* FortPlayerPawn, bool bHiddenInGame)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ToggleLandFX");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_Sliding", "ToggleLandFX");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_Sliding_ToggleLandFX Parms{};
 
@@ -164,10 +162,9 @@ void UFortMovementMode_Sliding::ToggleLandFX(class AFortPlayerPawn* FortPlayerPa
 
 void UFortMovementMode_Sliding::ToggleLandFXAthena(class AFortPlayerPawnAthena* FortPlayerPawnAthena, bool bHiddenInGame)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ToggleLandFXAthena");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_Sliding", "ToggleLandFXAthena");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_Sliding_ToggleLandFXAthena Parms{};
 

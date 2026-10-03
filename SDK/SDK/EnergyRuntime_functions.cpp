@@ -505,10 +505,9 @@ bool UFortComponent_Energy::UseEnergy(float* OutAmountOfEnergyUsed, float Amount
 
 bool UFortComponent_Energy::BP_HasSufficientEnergy(float EnergyAmountToTest) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_HasSufficientEnergy");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortComponent_Energy", "BP_HasSufficientEnergy");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortComponent_Energy_BP_HasSufficientEnergy Parms{};
 

@@ -27,10 +27,9 @@ SDK_NAMESPACE_START
 
 class URootMotionModifier* UAnimNotifyState_MotionWarping::AddRootMotionModifier(class UMotionWarpingComponent* MotionWarpingComp, const class UAnimSequenceBase* Animation, float StartTime, float EndTime) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AddRootMotionModifier");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotifyState_MotionWarping", "AddRootMotionModifier");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotifyState_MotionWarping_AddRootMotionModifier Parms{};
 
@@ -139,10 +138,9 @@ void UAnimNotifyState_MotionWarping::OnRootMotionModifierUpdate(class UMotionWar
 
 void UAnimNotifyState_MotionWarping::OnWarpBegin(class UMotionWarpingComponent* MotionWarpingComp, class URootMotionModifier* Modifier) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWarpBegin");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotifyState_MotionWarping", "OnWarpBegin");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotifyState_MotionWarping_OnWarpBegin Parms{};
 
@@ -161,10 +159,9 @@ void UAnimNotifyState_MotionWarping::OnWarpBegin(class UMotionWarpingComponent* 
 
 void UAnimNotifyState_MotionWarping::OnWarpEnd(class UMotionWarpingComponent* MotionWarpingComp, class URootMotionModifier* Modifier) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWarpEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotifyState_MotionWarping", "OnWarpEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotifyState_MotionWarping_OnWarpEnd Parms{};
 
@@ -183,10 +180,9 @@ void UAnimNotifyState_MotionWarping::OnWarpEnd(class UMotionWarpingComponent* Mo
 
 void UAnimNotifyState_MotionWarping::OnWarpUpdate(class UMotionWarpingComponent* MotionWarpingComp, class URootMotionModifier* Modifier) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWarpUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AnimNotifyState_MotionWarping", "OnWarpUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AnimNotifyState_MotionWarping_OnWarpUpdate Parms{};
 

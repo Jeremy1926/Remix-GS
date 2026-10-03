@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UFortNevadaVehicleReticle::OnBatteryChanged(float BatteryLevel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBatteryChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicleReticle", "OnBatteryChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNevadaVehicleReticle_OnBatteryChanged Parms{};
 
@@ -43,10 +42,9 @@ void UFortNevadaVehicleReticle::OnBatteryChanged(float BatteryLevel)
 
 void UFortNevadaVehicleReticle::OnEnergyCannonEnabledChanged(const bool bEnabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEnergyCannonEnabledChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicleReticle", "OnEnergyCannonEnabledChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNevadaVehicleReticle_OnEnergyCannonEnabledChanged Parms{};
 
@@ -63,10 +61,9 @@ void UFortNevadaVehicleReticle::OnEnergyCannonEnabledChanged(const bool bEnabled
 
 void UFortNevadaVehicleReticle::OnEnergyCanonFired(const float Cooldown)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEnergyCanonFired");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicleReticle", "OnEnergyCanonFired");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNevadaVehicleReticle_OnEnergyCanonFired Parms{};
 
@@ -81,10 +78,9 @@ void UFortNevadaVehicleReticle::OnEnergyCanonFired(const float Cooldown)
 
 void UFortNevadaVehicleReticle::OnTractorBeamActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicleReticle", "OnTractorBeamActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -95,10 +91,9 @@ void UFortNevadaVehicleReticle::OnTractorBeamActivated()
 
 void UFortNevadaVehicleReticle::OnTractorBeamAttached()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamAttached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicleReticle", "OnTractorBeamAttached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -109,10 +104,9 @@ void UFortNevadaVehicleReticle::OnTractorBeamAttached()
 
 void UFortNevadaVehicleReticle::OnTractorBeamChargeStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamChargeStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicleReticle", "OnTractorBeamChargeStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -125,10 +119,9 @@ void UFortNevadaVehicleReticle::OnTractorBeamChargeStarted()
 
 void UFortNevadaVehicleReticle::OnTractorBeamDeactivated(const float Cooldown)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicleReticle", "OnTractorBeamDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNevadaVehicleReticle_OnTractorBeamDeactivated Parms{};
 
@@ -143,10 +136,9 @@ void UFortNevadaVehicleReticle::OnTractorBeamDeactivated(const float Cooldown)
 
 void UFortNevadaVehicleReticle::OnTractorBeamDetached()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamDetached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicleReticle", "OnTractorBeamDetached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -159,10 +151,9 @@ void UFortNevadaVehicleReticle::OnTractorBeamDetached()
 
 void UFortNevadaVehicleReticle::OnTractorBeamEnabledChanged(const bool bEnabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamEnabledChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicleReticle", "OnTractorBeamEnabledChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNevadaVehicleReticle_OnTractorBeamEnabledChanged Parms{};
 
@@ -179,10 +170,9 @@ void UFortNevadaVehicleReticle::OnTractorBeamEnabledChanged(const bool bEnabled)
 
 void UFortNevadaVehicleReticle::OnVehicleStateChanged(const ENevadaFlightStates VehicleState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnVehicleStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortNevadaVehicleReticle", "OnVehicleStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortNevadaVehicleReticle_OnVehicleStateChanged Parms{};
 
@@ -199,10 +189,9 @@ void UFortNevadaVehicleReticle::OnVehicleStateChanged(const ENevadaFlightStates 
 
 void UNevadaTargetIndicator::OnTractorBeamActivated(const bool bActivated)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NevadaTargetIndicator", "OnTractorBeamActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NevadaTargetIndicator_OnTractorBeamActivated Parms{};
 
@@ -219,10 +208,9 @@ void UNevadaTargetIndicator::OnTractorBeamActivated(const bool bActivated)
 
 void UNevadaTargetIndicator::OnTractorBeamAttached(const bool bAttached)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTractorBeamAttached");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("NevadaTargetIndicator", "OnTractorBeamAttached");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::NevadaTargetIndicator_OnTractorBeamAttached Parms{};
 

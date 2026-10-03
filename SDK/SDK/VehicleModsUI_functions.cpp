@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void UAthenaMarkerDetailsExtensionVehicleMods::ResetModInfo()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ResetModInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaMarkerDetailsExtensionVehicleMods", "ResetModInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -37,10 +36,9 @@ void UAthenaMarkerDetailsExtensionVehicleMods::ResetModInfo()
 
 void UAthenaMarkerDetailsExtensionVehicleMods::SetModInfo(const class UFortVehicleModConfig* VehicleModConfig)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetModInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaMarkerDetailsExtensionVehicleMods", "SetModInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaMarkerDetailsExtensionVehicleMods_SetModInfo Parms{};
 
@@ -80,10 +78,9 @@ void UFortInteractionContextInfoWidgetVehicleMods::HandleContextInfoUpdated(clas
 
 void UFortInteractionContextInfoWidgetVehicleMods::ResetModInfo()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ResetModInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortInteractionContextInfoWidgetVehicleMods", "ResetModInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -96,10 +93,9 @@ void UFortInteractionContextInfoWidgetVehicleMods::ResetModInfo()
 
 void UFortInteractionContextInfoWidgetVehicleMods::SetModInfo(const class UFortVehicleModConfig* VehicleModConfig)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetModInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortInteractionContextInfoWidgetVehicleMods", "SetModInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortInteractionContextInfoWidgetVehicleMods_SetModInfo Parms{};
 

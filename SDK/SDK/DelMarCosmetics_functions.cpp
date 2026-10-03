@@ -118,10 +118,9 @@ bool ADelMarPreviewVehicle::IsWheelOnGround(EDelMarVehicleWheelIndex WheelIndex)
 
 void ADelMarGaragePreviewVehicle::K2_OnActiveCameraUpdated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnActiveCameraUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarGaragePreviewVehicle", "K2_OnActiveCameraUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1531,10 +1530,9 @@ class UAudioComponentGroup* ADelMarEngineAudioCosmeticActor::GetComponentGroup()
 
 void ADelMarWheelContactFxCosmeticActor::BP_UpdateWheelContactFx(const struct FDelMarVehicleCosmeticWheelInfo& WheelInfo, bool bActive, float AbsForwardSpeed, float AbsSideSpeed)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateWheelContactFx");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DelMarWheelContactFxCosmeticActor", "BP_UpdateWheelContactFx");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::DelMarWheelContactFxCosmeticActor_BP_UpdateWheelContactFx Parms{};
 

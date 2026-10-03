@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void UBadNetworkIndicator::UpdateDisplay()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateDisplay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BadNetworkIndicator", "UpdateDisplay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

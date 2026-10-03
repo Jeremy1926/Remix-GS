@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UAthenaMapCollectionIcon::SetIsKnown(const bool bIsKnown)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetIsKnown");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaMapCollectionIcon", "SetIsKnown");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaMapCollectionIcon_SetIsKnown Parms{};
 
@@ -43,10 +42,9 @@ void UAthenaMapCollectionIcon::SetIsKnown(const bool bIsKnown)
 
 void UAthenaMapCollectionIcon::SetSecondaryIcon(const TSoftObjectPtr<class UObject>& SecondaryIcon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetSecondaryIcon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaMapCollectionIcon", "SetSecondaryIcon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AthenaMapCollectionIcon_SetSecondaryIcon Parms{};
 

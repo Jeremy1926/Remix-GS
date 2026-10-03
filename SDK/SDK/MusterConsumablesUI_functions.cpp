@@ -24,10 +24,9 @@ SDK_NAMESPACE_START
 
 void UEnergyDrinkStaminaBarOverlayWidget::OnPlayerDeadStateChanged(class AFortPlayerStateAthena* PlayerState, bool bIsDead)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerDeadStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EnergyDrinkStaminaBarOverlayWidget", "OnPlayerDeadStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EnergyDrinkStaminaBarOverlayWidget_OnPlayerDeadStateChanged Parms{};
 
@@ -45,10 +44,9 @@ void UEnergyDrinkStaminaBarOverlayWidget::OnPlayerDeadStateChanged(class AFortPl
 
 void UEnergyDrinkStaminaBarOverlayWidget::OnPlayerStateSet(class AFortPlayerStateAthena* InPlayerState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerStateSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EnergyDrinkStaminaBarOverlayWidget", "OnPlayerStateSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EnergyDrinkStaminaBarOverlayWidget_OnPlayerStateSet Parms{};
 

@@ -139,10 +139,9 @@ class APlayerState* UJamPlayParamsUtilities::GetOwningPlayerStateFromPlayParams(
 
 void AJamPlayspace::BeginShutdownJam()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BeginShutdownJam");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamPlayspace", "BeginShutdownJam");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -180,10 +179,9 @@ void AJamPlayspace::ConvertPlayerToAutoJammer(const struct FUniqueNetIdRepl& Pla
 
 class UAudioComponent* AJamPlayspace::GetJamAudioSource()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetJamAudioSource");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamPlayspace", "GetJamAudioSource");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JamPlayspace_GetJamAudioSource Parms{};
 
@@ -206,10 +204,9 @@ class UAudioComponent* AJamPlayspace::GetJamAudioSource()
 
 void AJamPlayspace::OnJamAudioSourceActiveStateChange(class UAudioComponent* JamAudioSource, bool bNewActiveState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnJamAudioSourceActiveStateChange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamPlayspace", "OnJamAudioSourceActiveStateChange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JamPlayspace_OnJamAudioSourceActiveStateChange Parms{};
 
@@ -833,10 +830,9 @@ struct FGameplayTag UJamPlayspaceComponent_JamCompanion::GetJamCompanionSlotTag(
 
 void UJamPlayspaceComponent_JamCompanion::BP_OnJamLoopStarted(const struct FJamEvent_JamLoopStarted& Payload)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnJamLoopStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamPlayspaceComponent_JamCompanion", "BP_OnJamLoopStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JamPlayspaceComponent_JamCompanion_BP_OnJamLoopStarted Parms{};
 
@@ -853,10 +849,9 @@ void UJamPlayspaceComponent_JamCompanion::BP_OnJamLoopStarted(const struct FJamE
 
 void UJamPlayspaceComponent_JamCompanion::BP_OnJamLoopStopped(const struct FJamEvent_JamLoopStopped& Payload)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnJamLoopStopped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamPlayspaceComponent_JamCompanion", "BP_OnJamLoopStopped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JamPlayspaceComponent_JamCompanion_BP_OnJamLoopStopped Parms{};
 
@@ -2816,10 +2811,9 @@ bool UJamPlayspaceComponent_ReactiveFX::RemoveReactiveNiagaraEffect(int32 LoopIn
 
 bool UJamPlayspaceComponent_ReactiveFX::GetPlayerVFXSpawnProps(const struct FJamEvent_JamLoopStarted& Event, class USceneComponent** OutComponentToFollow, struct FVector* OutSpawnLocation, struct FRotator* OutSpawnRotation, struct FVector* OutSpawnScale, class UNiagaraSystem** OutNiagaraSystemToSpawn) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPlayerVFXSpawnProps");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamPlayspaceComponent_ReactiveFX", "GetPlayerVFXSpawnProps");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JamPlayspaceComponent_ReactiveFX_GetPlayerVFXSpawnProps Parms{};
 
@@ -2884,10 +2878,9 @@ TArray<class UNiagaraComponent*> UJamPlayspaceComponent_ReactiveFX::GetReactiveN
 
 void AJamPlayspaceVolume::BP_OnPlayspaceSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnPlayspaceSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamPlayspaceVolume", "BP_OnPlayspaceSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2900,10 +2893,9 @@ void AJamPlayspaceVolume::BP_OnPlayspaceSet()
 
 void AJamPlayspaceVolume::BP_UpdateReactiveFX(float JamAmplitude)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateReactiveFX");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JamPlayspaceVolume", "BP_UpdateReactiveFX");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JamPlayspaceVolume_BP_UpdateReactiveFX Parms{};
 

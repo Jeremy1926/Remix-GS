@@ -107,10 +107,9 @@ void UPictureInPictureBladeMenuButton::OnPartnerListUpdated()
 
 void UPictureInPictureBladeMenuButton::UpdatePiPStatusBP(const bool LoggedIn, const bool Enabled, const bool ParentalControlsEnabled)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdatePiPStatusBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PictureInPictureBladeMenuButton", "UpdatePiPStatusBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PictureInPictureBladeMenuButton_UpdatePiPStatusBP Parms{};
 
@@ -165,10 +164,9 @@ void UPictureInPictureMetadataOverlay::HandleOnPIPVideoStarted()
 
 void UPictureInPictureMetadataOverlay::OnMediaStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMediaStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PictureInPictureMetadataOverlay", "OnMediaStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -430,10 +428,9 @@ void UPictureInPicturePanelWidget::SetupPIPSoundComponent(const struct FFortMedi
 
 void UPictureInPicturePanelWidget::ShowDebugInfo(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowDebugInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PictureInPicturePanelWidget", "ShowDebugInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PictureInPicturePanelWidget_ShowDebugInfo Parms{};
 

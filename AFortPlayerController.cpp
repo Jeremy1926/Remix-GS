@@ -5,6 +5,7 @@
 #include "AFortPickup.h"
 #include "AFortGameMode.h"
 #include "UFortQuestManager.h"
+#include "UFortControllerComponent_TournamentStatsTracker.h"
 #include "SDK/SDK/FortniteGame_parameters.hpp"
 
 INIT_POSTLOAD(AFortPlayerController);
@@ -798,6 +799,10 @@ static void ClientOnPawnDied(AFortPlayerControllerAthena* PlayerController, FFor
         RemoveFromAlivePlayers(GameMode, PlayerController, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState, KillerPawn, DamageCauser && DamageCauser->IsA(AFortWeapon::StaticClass()) ? DamageCauser->WeaponData : nullptr,
                                DeathInfo.DeathCause, 0);
 
+        TournamentPlayerEliminated(GameMode, PlayerState, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState);
+        SendPlacementUpdate(KillerPlayerController);
+        EndBattleRoyaleGame(PlayerController);
+
         Pawn->CharacterMovement->DisableMovement();
 
         if (Pawn && KillerPlayerState && KillerPlayerState != PlayerState && KillerPlayerState->Place == 1)
@@ -816,6 +821,9 @@ static void ClientOnPawnDied(AFortPlayerControllerAthena* PlayerController, FFor
             GameState->OnRep_WinningTeam();
             GameState->WinningPlayerState = KillerPlayerState;
             GameState->OnRep_WinningPlayerState();
+
+            for (auto AlivePlayer : GameMode->AlivePlayers)
+                EndBattleRoyaleGame(AlivePlayer);
         }
     }
 
@@ -1248,6 +1256,7 @@ static void ServerSetMultiProductCosmeticLoadout(UObject* Context, FFrame& Stack
     static auto BroadcastActiveArchetypesChanged = (void (*)(void*))(ImageBase + 0x4A3DF04);
     static auto GetCosmeticLoadout = (FFortAthenaLoadout* (*)(AFortPlayerControllerAthena*, FFortAthenaLoadout*, bool, bool*))(ImageBase + 0xA00838C);
     static auto DestructAthenaLoadout = (void (*)(FFortAthenaLoadout*))(ImageBase + 0x2289914);
+    static auto CachedLoadoutCharacterInfoName = FName(L"CachedLoadoutCharacterInfo");
 
     SetCosmeticLoadout(CosmeticLoadoutComponent, &Loadout);
 
@@ -1279,6 +1288,11 @@ static void ServerSetMultiProductCosmeticLoadout(UObject* Context, FFrame& Stack
 
     if (!bFromComponent)
         return;
+
+    auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
+
+    PlayerState->CachedLoadoutCharacterInfo.CachedLoadoutCharacterUngated = PlayerController->CosmeticLoadoutPC.Character;
+    UNetPushModelHelpers::MarkPropertyDirty(PlayerState, CachedLoadoutCharacterInfoName);
 
     auto MyFortPawn = PlayerController->MyFortPawn;
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;

@@ -111,10 +111,9 @@ class UContextualAnimSceneAsset* UFortAISmartObjectUserComponent::FindSmartObjec
 
 class UBehaviorTree* UFortAthenaAISpawnerDataComponent_BehaviorBase::GetBehaviorTree()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetBehaviorTree");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_BehaviorBase", "GetBehaviorTree");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_BehaviorBase_GetBehaviorTree Parms{};
 
@@ -188,10 +187,9 @@ void UFortPhysicsObjectNavigationComponent::OnSleepStateChanged(class UPrimitive
 
 void UFortAthenaAISpawnerDataComponent_CosmeticBase::GetFallbackTag(struct FGameplayTag* OutFallbackTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetFallbackTag");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_CosmeticBase", "GetFallbackTag");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_CosmeticBase_GetFallbackTag Parms{};
 
@@ -239,10 +237,9 @@ void UFortAthenaAISpawnerDataComponent_AIBotCosmeticBase::AddCosmeticOverrideIte
 
 void UFortAthenaAISpawnerDataComponent_AIBotCosmeticBase::GetAllLoadouts(TArray<struct FFortAthenaLoadout>* OutLoadouts)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAllLoadouts");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_AIBotCosmeticBase", "GetAllLoadouts");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_AIBotCosmeticBase_GetAllLoadouts Parms{};
 
@@ -266,10 +263,9 @@ void UFortAthenaAISpawnerDataComponent_AIBotCosmeticBase::GetAllLoadouts(TArray<
 
 void UFortAthenaAISpawnerDataComponent_AIBotCosmeticBase::GetAnimBPOverride(TSubclassOf<class UAnimInstance>* OutAnimBPOverride, int32* OutPriority)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAnimBPOverride");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_AIBotCosmeticBase", "GetAnimBPOverride");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_AIBotCosmeticBase_GetAnimBPOverride Parms{};
 
@@ -295,10 +291,9 @@ void UFortAthenaAISpawnerDataComponent_AIBotCosmeticBase::GetAnimBPOverride(TSub
 
 void UFortAthenaAISpawnerDataComponent_AIBotCosmeticBase::GetCustomCharacterParts(TArray<class UCustomCharacterPart*>* OutCustomCharacterParts)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCustomCharacterParts");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_AIBotCosmeticBase", "GetCustomCharacterParts");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_AIBotCosmeticBase_GetCustomCharacterParts Parms{};
 
@@ -322,10 +317,9 @@ void UFortAthenaAISpawnerDataComponent_AIBotCosmeticBase::GetCustomCharacterPart
 
 void UFortAthenaAISpawnerDataComponent_AIBotCosmeticBase::GetDances(TArray<class UAthenaDanceItemDefinition*>* Dances, const class AFortAthenaAIBotController* BotController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetDances");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_AIBotCosmeticBase", "GetDances");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_AIBotCosmeticBase_GetDances Parms{};
 
@@ -350,10 +344,9 @@ void UFortAthenaAISpawnerDataComponent_AIBotCosmeticBase::GetDances(TArray<class
 
 void UFortAthenaAISpawnerDataComponent_AIBotCosmeticBase::GetLoadout(struct FFortAthenaLoadout* OutLoadout)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetLoadout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_AIBotCosmeticBase", "GetLoadout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_AIBotCosmeticBase_GetLoadout Parms{};
 
@@ -499,10 +492,9 @@ struct FBox IFortAIEnvironmentalDangerSourceInterface::GetDangerSourceBounds() c
 
 float UFortAthenaAISpawnerDataComponent_SkillsetBase::GetSkill()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSkill");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SkillsetBase", "GetSkill");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SkillsetBase_GetSkill Parms{};
 
@@ -524,10 +516,9 @@ float UFortAthenaAISpawnerDataComponent_SkillsetBase::GetSkill()
 
 TArray<TSubclassOf<class UFortAthenaAIBotSkillSet>> UFortAthenaAISpawnerDataComponent_SkillsetBase::GetSkillSets()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSkillSets");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SkillsetBase", "GetSkillSets");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SkillsetBase_GetSkillSets Parms{};
 
@@ -549,10 +540,9 @@ TArray<TSubclassOf<class UFortAthenaAIBotSkillSet>> UFortAthenaAISpawnerDataComp
 
 bool UFortAthenaAISpawnerDataComponent_SkillsetBase::ShouldUseMatchMMRToOverrideSkillLevel()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldUseMatchMMRToOverrideSkillLevel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SkillsetBase", "ShouldUseMatchMMRToOverrideSkillLevel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SkillsetBase_ShouldUseMatchMMRToOverrideSkillLevel Parms{};
 
@@ -751,10 +741,9 @@ bool UFortAthenaAISpawnerDataComponent_GameplayAbilityBase::GetApplySpawnerDescr
 
 void UFortAthenaAISpawnerDataComponent_GameplayAbilityBase::GetInitialGameplayAbilities(TArray<class UFortAbilitySet*>* OutGASets) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetInitialGameplayAbilities");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_GameplayAbilityBase", "GetInitialGameplayAbilities");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_GameplayAbilityBase_GetInitialGameplayAbilities Parms{};
 
@@ -777,10 +766,9 @@ void UFortAthenaAISpawnerDataComponent_GameplayAbilityBase::GetInitialGameplayAb
 
 void UFortAthenaAISpawnerDataComponent_GameplayAbilityBase::GetInitialGameplayEffects(TArray<struct FInitialGameplayEffectInfo>* OutGEs) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetInitialGameplayEffects");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_GameplayAbilityBase", "GetInitialGameplayEffects");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_GameplayAbilityBase_GetInitialGameplayEffects Parms{};
 
@@ -1037,10 +1025,9 @@ bool AAIHotSpot::OccupySlotByIndex(int32 Index_0)
 
 bool AAIHotSpot::OnAssignedClaimedBehavior(class AAIController* AI, int32 Index_0, int32 UserId, bool bWasOnWaitingList)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAssignedClaimedBehavior");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnAssignedClaimedBehavior");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnAssignedClaimedBehavior Parms{};
 
@@ -1070,10 +1057,9 @@ bool AAIHotSpot::OnAssignedClaimedBehavior(class AAIController* AI, int32 Index_
 
 bool AAIHotSpot::OnAssignedOccupiedBehavior(class AAIController* AI, int32 Index_0, int32 UserId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAssignedOccupiedBehavior");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnAssignedOccupiedBehavior");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnAssignedOccupiedBehavior Parms{};
 
@@ -1100,10 +1086,9 @@ bool AAIHotSpot::OnAssignedOccupiedBehavior(class AAIController* AI, int32 Index
 
 bool AAIHotSpot::OnAssignedSlotlessBehavior(class AAIController* AI)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAssignedSlotlessBehavior");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnAssignedSlotlessBehavior");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnAssignedSlotlessBehavior Parms{};
 
@@ -1125,10 +1110,9 @@ bool AAIHotSpot::OnAssignedSlotlessBehavior(class AAIController* AI)
 
 void AAIHotSpot::OnHotSpotDisabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHotSpotDisabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnHotSpotDisabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1144,10 +1128,9 @@ void AAIHotSpot::OnHotSpotDisabled()
 
 void AAIHotSpot::OnHotSpotEnabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnHotSpotEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnHotSpotEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1168,10 +1151,9 @@ void AAIHotSpot::OnHotSpotEnabled()
 
 void AAIHotSpot::OnMoveToSlotFinished(class AAIController* AI, int32 Index_0, int32 UserId, bool bResult)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMoveToSlotFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnMoveToSlotFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnMoveToSlotFinished Parms{};
 
@@ -1200,10 +1182,9 @@ void AAIHotSpot::OnMoveToSlotFinished(class AAIController* AI, int32 Index_0, in
 
 void AAIHotSpot::OnRemovedBehavior(class AAIController* AI, int32 Index_0, int32 UserId, EAIHotSpotSlot PrevState, bool bWasOnWaitingList)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRemovedBehavior");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnRemovedBehavior");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnRemovedBehavior Parms{};
 
@@ -1230,10 +1211,9 @@ void AAIHotSpot::OnRemovedBehavior(class AAIController* AI, int32 Index_0, int32
 
 void AAIHotSpot::OnRemovedSlotlessBehavior(class AAIController* AI, bool bIsClamingSlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRemovedSlotlessBehavior");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnRemovedSlotlessBehavior");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnRemovedSlotlessBehavior Parms{};
 
@@ -1258,10 +1238,9 @@ void AAIHotSpot::OnRemovedSlotlessBehavior(class AAIController* AI, bool bIsClam
 
 void AAIHotSpot::OnSlotBlocked(class AAIController* AI, int32 Index_0, int32 UserId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSlotBlocked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnSlotBlocked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnSlotBlocked Parms{};
 
@@ -1287,10 +1266,9 @@ void AAIHotSpot::OnSlotBlocked(class AAIController* AI, int32 Index_0, int32 Use
 
 void AAIHotSpot::OnSlotClaimed(class AAIController* AI, int32 Index_0, int32 UserId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSlotClaimed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnSlotClaimed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnSlotClaimed Parms{};
 
@@ -1315,10 +1293,9 @@ void AAIHotSpot::OnSlotClaimed(class AAIController* AI, int32 Index_0, int32 Use
 
 void AAIHotSpot::OnSlotDisabled(int32 Index_0, int32 UserId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSlotDisabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnSlotDisabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnSlotDisabled Parms{};
 
@@ -1342,10 +1319,9 @@ void AAIHotSpot::OnSlotDisabled(int32 Index_0, int32 UserId)
 
 void AAIHotSpot::OnSlotEnabled(int32 Index_0, int32 UserId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSlotEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnSlotEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnSlotEnabled Parms{};
 
@@ -1370,10 +1346,9 @@ void AAIHotSpot::OnSlotEnabled(int32 Index_0, int32 UserId)
 
 void AAIHotSpot::OnSlotFreed(class AAIController* AI, int32 Index_0, int32 UserId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSlotFreed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnSlotFreed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnSlotFreed Parms{};
 
@@ -1399,10 +1374,9 @@ void AAIHotSpot::OnSlotFreed(class AAIController* AI, int32 Index_0, int32 UserI
 
 void AAIHotSpot::OnSlotOccupied(class AAIController* AI, int32 Index_0, int32 UserId)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSlotOccupied");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "OnSlotOccupied");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_OnSlotOccupied Parms{};
 
@@ -1987,10 +1961,9 @@ bool AAIHotSpot::HasEnabledSlots() const
 
 bool AAIHotSpot::IsAIAllowed(const class AAIController* AI) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsAIAllowed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpot", "IsAIAllowed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpot_IsAIAllowed Parms{};
 
@@ -2065,10 +2038,9 @@ bool AAIHotSpot::IsSlotlessAssignmentAllowed() const
 
 bool UFortAthenaAISpawnerDataComponent_ConstructionBase::GetConstructionBuildingInfo(struct FConstructionBuildingList* OutConstructionInfoList) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetConstructionBuildingInfo");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_ConstructionBase", "GetConstructionBuildingInfo");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_ConstructionBase_GetConstructionBuildingInfo Parms{};
 
@@ -2093,10 +2065,9 @@ bool UFortAthenaAISpawnerDataComponent_ConstructionBase::GetConstructionBuilding
 
 class UFortAthenaAILODSettingsContainer* UFortAthenaAISpawnerDataComponent_LODBase::GetAILODSettingsContainer() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAILODSettingsContainer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_LODBase", "GetAILODSettingsContainer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_LODBase_GetAILODSettingsContainer Parms{};
 
@@ -2118,10 +2089,9 @@ class UFortAthenaAILODSettingsContainer* UFortAthenaAISpawnerDataComponent_LODBa
 
 struct FClientAILODSettings UFortAthenaAISpawnerDataComponent_LODBase::GetClientAILODSettings() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetClientAILODSettings");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_LODBase", "GetClientAILODSettings");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_LODBase_GetClientAILODSettings Parms{};
 
@@ -2851,10 +2821,9 @@ void UFortAthenaAISpawnerDataComponent_SpawnParamsBase::SetSpawnTransform(const 
 
 TSubclassOf<class AAIController> UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetAIControllerClass() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAIControllerClass");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SpawnParamsBase", "GetAIControllerClass");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SpawnParamsBase_GetAIControllerClass Parms{};
 
@@ -2876,10 +2845,9 @@ TSubclassOf<class AAIController> UFortAthenaAISpawnerDataComponent_SpawnParamsBa
 
 float UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetInAirSpawnTraceEndHeight() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetInAirSpawnTraceEndHeight");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SpawnParamsBase", "GetInAirSpawnTraceEndHeight");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SpawnParamsBase_GetInAirSpawnTraceEndHeight Parms{};
 
@@ -2901,10 +2869,9 @@ float UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetInAirSpawnTraceEndHe
 
 float UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetInAirSpawnTraceSphereRadius() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetInAirSpawnTraceSphereRadius");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SpawnParamsBase", "GetInAirSpawnTraceSphereRadius");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SpawnParamsBase_GetInAirSpawnTraceSphereRadius Parms{};
 
@@ -2926,10 +2893,9 @@ float UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetInAirSpawnTraceSpher
 
 float UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetInAirSpawnTraceStartHeight() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetInAirSpawnTraceStartHeight");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SpawnParamsBase", "GetInAirSpawnTraceStartHeight");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SpawnParamsBase_GetInAirSpawnTraceStartHeight Parms{};
 
@@ -2951,10 +2917,9 @@ float UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetInAirSpawnTraceStart
 
 TSubclassOf<class APawn> UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetPawnClass() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPawnClass");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SpawnParamsBase", "GetPawnClass");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SpawnParamsBase_GetPawnClass Parms{};
 
@@ -2976,10 +2941,9 @@ TSubclassOf<class APawn> UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetP
 
 struct FDataTableRowHandle UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetPawnStatHandle() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetPawnStatHandle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SpawnParamsBase", "GetPawnStatHandle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SpawnParamsBase_GetPawnStatHandle Parms{};
 
@@ -3001,10 +2965,9 @@ struct FDataTableRowHandle UFortAthenaAISpawnerDataComponent_SpawnParamsBase::Ge
 
 TArray<TSubclassOf<class UFortAthenaAISpawnerData>> UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetSpawnerDataSpawnedAsChildren() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSpawnerDataSpawnedAsChildren");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SpawnParamsBase", "GetSpawnerDataSpawnedAsChildren");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SpawnParamsBase_GetSpawnerDataSpawnedAsChildren Parms{};
 
@@ -3026,10 +2989,9 @@ TArray<TSubclassOf<class UFortAthenaAISpawnerData>> UFortAthenaAISpawnerDataComp
 
 float UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetSpawnTracePadding() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSpawnTracePadding");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SpawnParamsBase", "GetSpawnTracePadding");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SpawnParamsBase_GetSpawnTracePadding Parms{};
 
@@ -3051,10 +3013,9 @@ float UFortAthenaAISpawnerDataComponent_SpawnParamsBase::GetSpawnTracePadding() 
 
 bool UFortAthenaAISpawnerDataComponent_SpawnParamsBase::ShouldCheckForOverlaps() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldCheckForOverlaps");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SpawnParamsBase", "ShouldCheckForOverlaps");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SpawnParamsBase_ShouldCheckForOverlaps Parms{};
 
@@ -3076,10 +3037,9 @@ bool UFortAthenaAISpawnerDataComponent_SpawnParamsBase::ShouldCheckForOverlaps()
 
 bool UFortAthenaAISpawnerDataComponent_SpawnParamsBase::ShouldSpawnInAir() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldSpawnInAir");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_SpawnParamsBase", "ShouldSpawnInAir");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_SpawnParamsBase_ShouldSpawnInAir Parms{};
 
@@ -3221,10 +3181,9 @@ void AFortAthenaLocalGameplayBehavior::FinishExecute()
 
 void AFortAthenaLocalGameplayBehavior::OnAbort()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAbort");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaLocalGameplayBehavior", "OnAbort");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3237,10 +3196,9 @@ void AFortAthenaLocalGameplayBehavior::OnAbort()
 
 void AFortAthenaLocalGameplayBehavior::OnExecute(class AActor* Activator)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExecute");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaLocalGameplayBehavior", "OnExecute");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaLocalGameplayBehavior_OnExecute Parms{};
 
@@ -3820,10 +3778,9 @@ void UFortPawnComponent_AIBotPingCommand::HandleOnNPCUnconvertEvent(class AFortP
 
 void UFortPawnComponent_AIBotPingCommand::OnAIPingCommand(class AFortPlayerPawn* PlayerPawn, EPingCommandType CommandType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAIPingCommand");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPawnComponent_AIBotPingCommand", "OnAIPingCommand");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPawnComponent_AIBotPingCommand_OnAIPingCommand Parms{};
 
@@ -4118,10 +4075,9 @@ void UAIHotSpotSlot::ClearSlot()
 
 void UAIHotSpotSlot::OnStateChanged(class AAIController* SlotOwner, EAIHotSpotSlot NewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpotSlot", "OnStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpotSlot_OnStateChanged Parms{};
 
@@ -4492,10 +4448,9 @@ bool UAIHotSpotSlot::HasUserId() const
 
 bool UAIHotSpotSlot::IsAIAllowed(const class AAIController* AI) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsAIAllowed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpotSlot", "IsAIAllowed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::AIHotSpotSlot_IsAIAllowed Parms{};
 
@@ -4945,10 +4900,9 @@ class UFortAIEncounterInfo* AFortAIController::GetEncounterInfo() const
 
 void UAIHotSpotSlotGenerator::GenerateSlots()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GenerateSlots");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AIHotSpotSlotGenerator", "GenerateSlots");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -5199,10 +5153,9 @@ void AFortAIDirector::OnDayPhaseChanged(EFortDayPhase CurrentDayPhase, EFortDayP
 
 void AFortAIDirector::OnDirectorDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDirectorDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIDirector", "OnDirectorDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -5213,10 +5166,9 @@ void AFortAIDirector::OnDirectorDeactivated()
 
 void AFortAIDirector::OnFadeStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFadeStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIDirector", "OnFadeStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -5229,10 +5181,9 @@ void AFortAIDirector::OnFadeStarted()
 
 void AFortAIDirector::OnPawnDied(class AFortAIPawn* KilledPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPawnDied");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIDirector", "OnPawnDied");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAIDirector_OnPawnDied Parms{};
 
@@ -5247,10 +5198,9 @@ void AFortAIDirector::OnPawnDied(class AFortAIPawn* KilledPawn)
 
 void AFortAIDirector::OnPeakStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPeakStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIDirector", "OnPeakStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -5263,10 +5213,9 @@ void AFortAIDirector::OnPeakStarted()
 
 void AFortAIDirector::OnPlayerDied(class AFortPlayerPawn* PlayerPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerDied");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIDirector", "OnPlayerDied");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAIDirector_OnPlayerDied Parms{};
 
@@ -5283,10 +5232,9 @@ void AFortAIDirector::OnPlayerDied(class AFortPlayerPawn* PlayerPawn)
 
 void AFortAIDirector::OnPlayerSpawn(class AFortPlayerPawn* PlayerPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerSpawn");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIDirector", "OnPlayerSpawn");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAIDirector_OnPlayerSpawn Parms{};
 
@@ -5301,10 +5249,9 @@ void AFortAIDirector::OnPlayerSpawn(class AFortPlayerPawn* PlayerPawn)
 
 void AFortAIDirector::OnRampStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRampStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIDirector", "OnRampStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -5315,10 +5262,9 @@ void AFortAIDirector::OnRampStarted()
 
 void AFortAIDirector::OnRestStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRestStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIDirector", "OnRestStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -5333,10 +5279,9 @@ void AFortAIDirector::OnRestStarted()
 
 void AFortAIDirector::PostDayPhaseChanged(EFortDayPhase CurrentDayPhase, EFortDayPhase PreviousDayPhase, bool bAtCreation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PostDayPhaseChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIDirector", "PostDayPhaseChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAIDirector_PostDayPhaseChanged Parms{};
 
@@ -5355,10 +5300,9 @@ void AFortAIDirector::PostDayPhaseChanged(EFortDayPhase CurrentDayPhase, EFortDa
 
 void AFortAIDirector::ReceivePawnSpawned(class AFortPawn* SpawnedPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePawnSpawned");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIDirector", "ReceivePawnSpawned");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAIDirector_ReceivePawnSpawned Parms{};
 
@@ -6024,10 +5968,9 @@ void UAthenaAISystem::OnAIPawnSpawned(class AController* SpawnedController, bool
 
 void AAthenaCreativeRift::BlueprintShowRift()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintShowRift");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("AthenaCreativeRift", "BlueprintShowRift");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -6098,10 +6041,9 @@ void UFortPathFollowingComponent::OnPossessedPawnChanged(class APawn* OldPawn, c
 
 void UFortAthenaNPCLoopStateComponent::InitLoopState(class AFortPawn* PawnOwner)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"InitLoopState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaNPCLoopStateComponent", "InitLoopState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaNPCLoopStateComponent_InitLoopState Parms{};
 
@@ -6557,10 +6499,9 @@ void UFortAINavInvokerComponent::SetInvokerRadii(const float GenerationRadius, c
 
 void UFortAINavInvokerComponent::GetCharacterCollisionComponent(TArray<class UShapeComponent*>* OutCollisionComponents) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCharacterCollisionComponent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAINavInvokerComponent", "GetCharacterCollisionComponent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAINavInvokerComponent_GetCharacterCollisionComponent Parms{};
 
@@ -6846,10 +6787,9 @@ void UFortAthenaAISpawnerDataComponent_GameplayBase::SetCopyConverterSpecificRel
 
 float UFortAthenaAISpawnerDataComponent_GameplayBase::GetGlobalSpeedMultiplier() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetGlobalSpeedMultiplier");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_GameplayBase", "GetGlobalSpeedMultiplier");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_GameplayBase_GetGlobalSpeedMultiplier Parms{};
 
@@ -6871,10 +6811,9 @@ float UFortAthenaAISpawnerDataComponent_GameplayBase::GetGlobalSpeedMultiplier()
 
 void UFortAthenaAISpawnerDataComponent_GameplayBase::PostOnSpawnedBP(class APawn* PawnAI) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PostOnSpawnedBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_GameplayBase", "PostOnSpawnedBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_GameplayBase_PostOnSpawnedBP Parms{};
 
@@ -6891,10 +6830,9 @@ void UFortAthenaAISpawnerDataComponent_GameplayBase::PostOnSpawnedBP(class APawn
 
 bool UFortAthenaAISpawnerDataComponent_GameplayBase::ShouldOverrideGlobalSpeedMultiplier() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldOverrideGlobalSpeedMultiplier");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_GameplayBase", "ShouldOverrideGlobalSpeedMultiplier");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_GameplayBase_ShouldOverrideGlobalSpeedMultiplier Parms{};
 
@@ -7001,10 +6939,9 @@ void UFortControllerComponent_AIEscalate::HandleTargetPerceptionUpdated(class AA
 
 bool UFortControllerComponent_AIRandomTargeter::AllowedToSwitchTarget() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AllowedToSwitchTarget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortControllerComponent_AIRandomTargeter", "AllowedToSwitchTarget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortControllerComponent_AIRandomTargeter_AllowedToSwitchTarget Parms{};
 
@@ -8433,10 +8370,9 @@ void UFortAIEncounterInfo::OnEncounterPawnDamaged(class AActor* DamagedActor, fl
 
 void UFortAIEncounterInfo::OnFadeStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFadeStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIEncounterInfo", "OnFadeStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8505,10 +8441,9 @@ void UFortAIEncounterInfo::OnGoalTakeDamage(class AActor* DamagedActor, float Da
 
 void UFortAIEncounterInfo::OnPeakStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPeakStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIEncounterInfo", "OnPeakStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8519,10 +8454,9 @@ void UFortAIEncounterInfo::OnPeakStarted()
 
 void UFortAIEncounterInfo::OnRampStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRampStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIEncounterInfo", "OnRampStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -8533,10 +8467,9 @@ void UFortAIEncounterInfo::OnRampStarted()
 
 void UFortAIEncounterInfo::OnRestStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRestStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAIEncounterInfo", "OnRestStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -10501,10 +10434,9 @@ bool UFortAthenaAISpawnerDataComponent_AffiliationBase::GetFullTeamAwarenessProp
 
 bool UFortAthenaAISpawnerDataComponent_AffiliationBase::GetTeamID(int32* OutTeamId) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetTeamID");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_AffiliationBase", "GetTeamID");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_AffiliationBase_GetTeamID Parms{};
 
@@ -10828,10 +10760,9 @@ class UFortAsyncAction_MakeTieredWaveEncounterSettings* UFortAsyncAction_MakeTie
 
 bool UFortAthenaAISpawnerDataComponent_AIBotAffiliation::GetSquadID(int32* OutSquadId) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSquadID");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_AIBotAffiliation", "GetSquadID");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_AIBotAffiliation_GetSquadID Parms{};
 
@@ -10918,10 +10849,9 @@ void AFortAthenaAIBotController::AddTargetInfos(const TArray<class AActor*>& Tar
 
 void AFortAthenaAIBotController::BlueprintOnBehaviorTreeStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintOnBehaviorTreeStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAIBotController", "BlueprintOnBehaviorTreeStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11283,10 +11213,9 @@ void AFortAthenaAIBotController::OnAgentDBNO(class AFortPawn* InPlayer, bool bIn
 
 void AFortAthenaAIBotController::OnAlertLevelChanged(const EAlertLevel OldAlertLevel, const EAlertLevel NewAlertLevel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAlertLevelChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAIBotController", "OnAlertLevelChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAIBotController_OnAlertLevelChanged Parms{};
 
@@ -14473,10 +14402,9 @@ void UFortQueryTwoPointSolver::AddNamedFloatParamB(class FName ParamName, float 
 
 void UFortQueryTwoPointSolver::OnCustomRotationMode(const struct FVector& InPointA, const struct FVector& Querier)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCustomRotationMode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortQueryTwoPointSolver", "OnCustomRotationMode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortQueryTwoPointSolver_OnCustomRotationMode Parms{};
 
@@ -14654,10 +14582,9 @@ void AAthenaNavMesh::MoveTiles(const struct FBox& SourceBox, const struct FIntPo
 
 void UFortGameplayAbility_TeleportToActor::PostTeleportedPawn(class AFortPawn* TeleportedPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PostTeleportedPawn");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_TeleportToActor", "PostTeleportedPawn");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_TeleportToActor_PostTeleportedPawn Parms{};
 
@@ -14674,10 +14601,9 @@ void UFortGameplayAbility_TeleportToActor::PostTeleportedPawn(class AFortPawn* T
 
 void UFortGameplayAbility_TeleportToActor::PreTeleportPawn(class AFortPawn* TeleportedPawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PreTeleportPawn");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_TeleportToActor", "PreTeleportPawn");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_TeleportToActor_PreTeleportPawn Parms{};
 
@@ -14696,10 +14622,9 @@ void UFortGameplayAbility_TeleportToActor::PreTeleportPawn(class AFortPawn* Tele
 
 bool UFortGameplayInteractionSmartObjectBehaviorDefinition::CanBeUsedBy(const class AActor* User, const class AActor* SmartObjectActor) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanBeUsedBy");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayInteractionSmartObjectBehaviorDefinition", "CanBeUsedBy");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayInteractionSmartObjectBehaviorDefinition_CanBeUsedBy Parms{};
 
@@ -14849,10 +14774,9 @@ void AFortThreatVisualsManager::BeginThreatVisualsPrecursor(class AActor* Source
 
 void AFortThreatVisualsManager::OnBeginThreatVisualsPrecursor(class AActor* SourceActor, const struct FVector& EndLocation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBeginThreatVisualsPrecursor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortThreatVisualsManager", "OnBeginThreatVisualsPrecursor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortThreatVisualsManager_OnBeginThreatVisualsPrecursor Parms{};
 
@@ -14946,10 +14870,9 @@ void AFortThreatVisualsManager::OnRep_ThreatLocations()
 
 void AFortThreatVisualsManager::OnThreatCloudsChanged(const TArray<struct FThreatLocationInfo>& ThreatLocationInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnThreatCloudsChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortThreatVisualsManager", "OnThreatCloudsChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortThreatVisualsManager_OnThreatCloudsChanged Parms{};
 
@@ -14964,10 +14887,9 @@ void AFortThreatVisualsManager::OnThreatCloudsChanged(const TArray<struct FThrea
 
 void AFortThreatVisualsManager::OnWorldReady()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnWorldReady");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortThreatVisualsManager", "OnWorldReady");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -15839,10 +15761,9 @@ void UFortBotMissionLogic::MarkSingleLocator(const class AActor* LocatorActor)
 
 void UFortBotMissionLogic::OnAssignedBehavior(class AFortAIController* BotAI)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAssignedBehavior");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBotMissionLogic", "OnAssignedBehavior");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBotMissionLogic_OnAssignedBehavior Parms{};
 
@@ -15861,10 +15782,9 @@ void UFortBotMissionLogic::OnAssignedBehavior(class AFortAIController* BotAI)
 
 bool UFortBotMissionLogic::OnCanStartOtherMission(class AFortAIController* BotAI, class AFortMission* OtherMission)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCanStartOtherMission");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBotMissionLogic", "OnCanStartOtherMission");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBotMissionLogic_OnCanStartOtherMission Parms{};
 
@@ -15886,10 +15806,9 @@ bool UFortBotMissionLogic::OnCanStartOtherMission(class AFortAIController* BotAI
 
 bool UFortBotMissionLogic::OnInteractWithMissionGoal(class AFortAIController* BotAI, class AActor* MissionGoal)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInteractWithMissionGoal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBotMissionLogic", "OnInteractWithMissionGoal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortBotMissionLogic_OnInteractWithMissionGoal Parms{};
 
@@ -15907,10 +15826,9 @@ bool UFortBotMissionLogic::OnInteractWithMissionGoal(class AFortAIController* Bo
 
 void UFortBotMissionLogic::OnMissionActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMissionActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBotMissionLogic", "OnMissionActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -15921,10 +15839,9 @@ void UFortBotMissionLogic::OnMissionActivated()
 
 void UFortBotMissionLogic::OnMissionFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMissionFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBotMissionLogic", "OnMissionFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -15935,10 +15852,9 @@ void UFortBotMissionLogic::OnMissionFinished()
 
 void UFortBotMissionLogic::OnMissionStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMissionStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortBotMissionLogic", "OnMissionStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -16426,10 +16342,9 @@ void UFortAITask_ExecuteAbility::OnInjectedHitResultDied(class AActor* DamagedAc
 
 void AThreatCloud::ManualLightningFlash()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ManualLightningFlash");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ThreatCloud", "ManualLightningFlash");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -16440,10 +16355,9 @@ void AThreatCloud::ManualLightningFlash()
 
 void AThreatCloud::OnBeginDeath()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBeginDeath");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ThreatCloud", "OnBeginDeath");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -16454,10 +16368,9 @@ void AThreatCloud::OnBeginDeath()
 
 void AThreatCloud::OnCloudActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCloudActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ThreatCloud", "OnCloudActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -16470,10 +16383,9 @@ void AThreatCloud::OnCloudActivated()
 
 void AThreatCloud::OnCloudDeactivated(EFortThreatDeactivationType DeactivationType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCloudDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ThreatCloud", "OnCloudDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ThreatCloud_OnCloudDeactivated Parms{};
 
@@ -16490,10 +16402,9 @@ void AThreatCloud::OnCloudDeactivated(EFortThreatDeactivationType DeactivationTy
 
 void AThreatCloud::OnCloudHiddenChange(bool bCloudsAreHidden)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCloudHiddenChange");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ThreatCloud", "OnCloudHiddenChange");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ThreatCloud_OnCloudHiddenChange Parms{};
 
@@ -16508,10 +16419,9 @@ void AThreatCloud::OnCloudHiddenChange(bool bCloudsAreHidden)
 
 void AThreatCloud::OnCloudStart()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCloudStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ThreatCloud", "OnCloudStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -16527,10 +16437,9 @@ void AThreatCloud::OnCloudStart()
 
 void AThreatCloud::OnLightningStrike(const struct FVector& StartLocation, const struct FVector& EndLocation, class ABuildingRift* Rift, bool bLightningStruckRift)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLightningStrike");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ThreatCloud", "OnLightningStrike");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ThreatCloud_OnLightningStrike Parms{};
 
@@ -16548,10 +16457,9 @@ void AThreatCloud::OnLightningStrike(const struct FVector& StartLocation, const 
 
 void AThreatCloud::OnThreatVolumeChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnThreatVolumeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ThreatCloud", "OnThreatVolumeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18706,10 +18614,9 @@ int32 UAthenaAISpawner::RequestSpawn(class UFortAthenaAISpawnerDataComponentList
 
 class UFortAthenaAIBotCosmeticLibraryData* UFortAthenaAISpawnerDataComponent_CosmeticLibrary::GetAICosmeticLibraryData() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAICosmeticLibraryData");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_CosmeticLibrary", "GetAICosmeticLibraryData");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_CosmeticLibrary_GetAICosmeticLibraryData Parms{};
 
@@ -18731,10 +18638,9 @@ class UFortAthenaAIBotCosmeticLibraryData* UFortAthenaAISpawnerDataComponent_Cos
 
 int32 UFortAthenaAISpawnerDataComponent_CosmeticLibrary::GetAICosmeticLibraryDataIndex() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAICosmeticLibraryDataIndex");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaAISpawnerDataComponent_CosmeticLibrary", "GetAICosmeticLibraryDataIndex");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaAISpawnerDataComponent_CosmeticLibrary_GetAICosmeticLibraryDataIndex Parms{};
 
@@ -18916,10 +18822,9 @@ bool UFortAthenaNpcPatrollingComponent::FindAndSetDynamicPatrolPath(const struct
 
 void UFortAthenaNpcPatrollingComponent::K2_NewFuturePatrolPath(class AFortAthenaPatrolPath* NewPatrolPath)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_NewFuturePatrolPath");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaNpcPatrollingComponent", "K2_NewFuturePatrolPath");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaNpcPatrollingComponent_K2_NewFuturePatrolPath Parms{};
 
@@ -18936,10 +18841,9 @@ void UFortAthenaNpcPatrollingComponent::K2_NewFuturePatrolPath(class AFortAthena
 
 void UFortAthenaNpcPatrollingComponent::OnPatrolPathStatusChanged(const bool bEnableState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPatrolPathStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAthenaNpcPatrollingComponent", "OnPatrolPathStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAthenaNpcPatrollingComponent_OnPatrolPathStatusChanged Parms{};
 
@@ -20313,10 +20217,9 @@ void UDespawnExpiredPawnComponent::AddDespawnRift(class ABuildingRift* NewRift)
 
 void UDespawnExpiredPawnComponent::DespawnExpired()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"DespawnExpired");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("DespawnExpiredPawnComponent", "DespawnExpired");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;

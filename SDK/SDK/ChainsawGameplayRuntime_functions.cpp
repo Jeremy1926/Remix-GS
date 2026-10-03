@@ -52,10 +52,9 @@ void UChainsawAttributeSet::OnRep_Overheat(const struct FFortGameplayAttributeDa
 
 void UFortMovementMode_ExtChainsaw::BP_PhysUpdate(const struct FMMERuntimeContext& RuntimeContext, const struct FVector& InVelocity, const struct FVector& InAcceleration, struct FVector* ResultVelocity, struct FVector* ResultAcceleration)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_PhysUpdate");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtChainsaw", "BP_PhysUpdate");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtChainsaw_BP_PhysUpdate Parms{};
 
@@ -81,10 +80,9 @@ void UFortMovementMode_ExtChainsaw::BP_PhysUpdate(const struct FMMERuntimeContex
 
 EFortMovementModeExt_UpdateResult UFortMovementMode_ExtChainsaw::BP_UpdateBeforeCharacterMovement(const struct FMMERuntimeContext& RuntimeContext)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateBeforeCharacterMovement");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortMovementMode_ExtChainsaw", "BP_UpdateBeforeCharacterMovement");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortMovementMode_ExtChainsaw_BP_UpdateBeforeCharacterMovement Parms{};
 

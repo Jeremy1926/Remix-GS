@@ -490,10 +490,9 @@ void UFortVehicleSoundComponent_DamageState::HandleVehicleExploded(const class A
 
 void UFortVehicleSoundComponent_DamageState::OnExplode(const class AController* LastDamageInstigator, class AFortAthenaVehicle* Vehicle)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExplode");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVehicleSoundComponent_DamageState", "OnExplode");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVehicleSoundComponent_DamageState_OnExplode Parms{};
 
@@ -511,10 +510,9 @@ void UFortVehicleSoundComponent_DamageState::OnExplode(const class AController* 
 
 void UFortVehicleSoundComponent_DamageState::OnScrapingSidesOrTop(const bool bIsScraping)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnScrapingSidesOrTop");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVehicleSoundComponent_DamageState", "OnScrapingSidesOrTop");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVehicleSoundComponent_DamageState_OnScrapingSidesOrTop Parms{};
 
@@ -556,10 +554,9 @@ void UFortVehicleSoundComponent_DamageState::OnScrapingSidesOrTopChanged(const b
 
 void UFortVehicleSoundComponent_DamageState::OnSleepStateChanged(const bool bIsAwake)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSleepStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVehicleSoundComponent_DamageState", "OnSleepStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVehicleSoundComponent_DamageState_OnSleepStateChanged Parms{};
 
@@ -666,10 +663,9 @@ void IVehicleAudioLifecycleInterface::OnUpdate(float DeltaSeconds)
 
 class USoundBase* UVehicleSoundSurfaceData::BP_GetSoundForSurface(const EPhysicalSurface InSurface, const bool InAir)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetSoundForSurface");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleSoundSurfaceData", "BP_GetSoundForSurface");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VehicleSoundSurfaceData_BP_GetSoundForSurface Parms{};
 
@@ -1328,10 +1324,9 @@ bool AFortVehicleAudioController::UseMetasounds() const
 
 void UFortVehicleSoundComponent_Speed::OnReversedChanged(bool bReversing)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnReversedChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVehicleSoundComponent_Speed", "OnReversedChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVehicleSoundComponent_Speed_OnReversedChanged Parms{};
 
@@ -1412,10 +1407,9 @@ float UFortVehicleSoundComponent_Surface::GetSpringCompressionMagnitude(const fl
 
 void UFortVehicleSoundComponent_Surface::OnBrakingChanged(bool bNewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBrakingChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVehicleSoundComponent_Surface", "OnBrakingChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVehicleSoundComponent_Surface_OnBrakingChanged Parms{};
 
@@ -1486,10 +1480,9 @@ void UFortVehicleSoundComponent_Surface::OnExitWaterBody(class AFortAthenaVehicl
 
 void UFortVehicleSoundComponent_Surface::OnInAirChanged(bool bNewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInAirChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVehicleSoundComponent_Surface", "OnInAirChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVehicleSoundComponent_Surface_OnInAirChanged Parms{};
 
@@ -1506,10 +1499,9 @@ void UFortVehicleSoundComponent_Surface::OnInAirChanged(bool bNewState)
 
 void UFortVehicleSoundComponent_Surface::OnSkiddingChanged(bool bNewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSkiddingChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortVehicleSoundComponent_Surface", "OnSkiddingChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortVehicleSoundComponent_Surface_OnSkiddingChanged Parms{};
 

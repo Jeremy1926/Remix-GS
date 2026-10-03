@@ -167,10 +167,9 @@ ESparksInstrumentType USparksPlayerStateComponent::GetSparksInstrumentChoice() c
 
 void ASparksSongPreviewActor::OnSongTextureLoaded(class UTexture2D* CoverArt)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSongTextureLoaded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksSongPreviewActor", "OnSongTextureLoaded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::SparksSongPreviewActor_OnSongTextureLoaded Parms{};
 
@@ -185,10 +184,9 @@ void ASparksSongPreviewActor::OnSongTextureLoaded(class UTexture2D* CoverArt)
 
 void ASparksSongPreviewActor::StartSongPreview()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StartSongPreview");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("SparksSongPreviewActor", "StartSongPreview");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

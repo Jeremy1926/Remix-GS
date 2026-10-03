@@ -101,10 +101,9 @@ void IMovieSceneBindingEventReceiverInterface::OnObjectUnboundBySequencer(class 
 
 bool UMovieSceneCondition::BP_EvaluateCondition(const struct FMovieSceneConditionContext& ConditionContext) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_EvaluateCondition");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MovieSceneCondition", "BP_EvaluateCondition");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MovieSceneCondition_BP_EvaluateCondition Parms{};
 
@@ -123,10 +122,9 @@ bool UMovieSceneCondition::BP_EvaluateCondition(const struct FMovieSceneConditio
 
 EMovieSceneConditionCheckFrequency UMovieSceneCondition::BP_GetCheckFrequency() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetCheckFrequency");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MovieSceneCondition", "BP_GetCheckFrequency");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MovieSceneCondition_BP_GetCheckFrequency Parms{};
 
@@ -148,10 +146,9 @@ EMovieSceneConditionCheckFrequency UMovieSceneCondition::BP_GetCheckFrequency() 
 
 EMovieSceneConditionScope UMovieSceneCondition::BP_GetScope() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetScope");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("MovieSceneCondition", "BP_GetScope");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::MovieSceneCondition_BP_GetScope Parms{};
 

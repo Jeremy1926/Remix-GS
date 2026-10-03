@@ -1396,10 +1396,9 @@ TArray<class UClass*> UInventorySetupDataNativeBasic::GetDisallowedInventoryClas
 
 void UItemAbilityConfigurationAsset::Construct(class UGameplayAbility* ability) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"Construct");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ItemAbilityConfigurationAsset", "Construct");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ItemAbilityConfigurationAsset_Construct Parms{};
 

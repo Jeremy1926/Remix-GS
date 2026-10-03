@@ -129,10 +129,9 @@ struct FInterchangePipelinePropertyStates UInterchangePipelineBase::FindOrAddPro
 
 void UInterchangePipelineBase::ScriptedExecuteExportPipeline(class UInterchangeBaseNodeContainer* BaseNodeContainer)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedExecuteExportPipeline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangePipelineBase", "ScriptedExecuteExportPipeline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangePipelineBase_ScriptedExecuteExportPipeline Parms{};
 
@@ -156,10 +155,9 @@ void UInterchangePipelineBase::ScriptedExecuteExportPipeline(class UInterchangeB
 
 void UInterchangePipelineBase::ScriptedExecutePipeline(class UInterchangeBaseNodeContainer* BaseNodeContainer, const TArray<class UInterchangeSourceData*>& SourceDatas, const class FString& ContentBasePath)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedExecutePipeline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangePipelineBase", "ScriptedExecutePipeline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangePipelineBase_ScriptedExecutePipeline Parms{};
 
@@ -186,10 +184,9 @@ void UInterchangePipelineBase::ScriptedExecutePipeline(class UInterchangeBaseNod
 
 void UInterchangePipelineBase::ScriptedExecutePostBroadcastPipeline(const class UInterchangeBaseNodeContainer* BaseNodeContainer, const class FString& FactoryNodeKey, class UObject* CreatedAsset, bool bIsAReimport)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedExecutePostBroadcastPipeline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangePipelineBase", "ScriptedExecutePostBroadcastPipeline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangePipelineBase_ScriptedExecutePostBroadcastPipeline Parms{};
 
@@ -217,10 +214,9 @@ void UInterchangePipelineBase::ScriptedExecutePostBroadcastPipeline(const class 
 
 void UInterchangePipelineBase::ScriptedExecutePostFactoryPipeline(const class UInterchangeBaseNodeContainer* BaseNodeContainer, const class FString& FactoryNodeKey, class UObject* CreatedAsset, bool bIsAReimport)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedExecutePostFactoryPipeline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangePipelineBase", "ScriptedExecutePostFactoryPipeline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangePipelineBase_ScriptedExecutePostFactoryPipeline Parms{};
 
@@ -248,10 +244,9 @@ void UInterchangePipelineBase::ScriptedExecutePostFactoryPipeline(const class UI
 
 void UInterchangePipelineBase::ScriptedExecutePostImportPipeline(const class UInterchangeBaseNodeContainer* BaseNodeContainer, const class FString& FactoryNodeKey, class UObject* CreatedAsset, bool bIsAReimport)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedExecutePostImportPipeline");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangePipelineBase", "ScriptedExecutePostImportPipeline");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangePipelineBase_ScriptedExecutePostImportPipeline Parms{};
 
@@ -277,10 +272,9 @@ void UInterchangePipelineBase::ScriptedExecutePostImportPipeline(const class UIn
 
 void UInterchangePipelineBase::ScriptedSetReimportSourceIndex(class UClass* ReimportObjectClass, const int32 SourceFileIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedSetReimportSourceIndex");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangePipelineBase", "ScriptedSetReimportSourceIndex");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangePipelineBase_ScriptedSetReimportSourceIndex Parms{};
 
@@ -331,10 +325,9 @@ bool UInterchangePipelineBase::DoesPropertyStatesExist(const class FName Propert
 
 class FString UInterchangePipelineBase::ScriptedGetPipelineDisplayName() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ScriptedGetPipelineDisplayName");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("InterchangePipelineBase", "ScriptedGetPipelineDisplayName");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::InterchangePipelineBase_ScriptedGetPipelineDisplayName Parms{};
 

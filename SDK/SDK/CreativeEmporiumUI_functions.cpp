@@ -67,10 +67,9 @@ void UEmporiumBrowserFilterEntry::UpdateButtonText()
 
 void UEmporiumBrowserFilterEntry::UpdateCheckMarkState(bool bIsChecked)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCheckMarkState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EmporiumBrowserFilterEntry", "UpdateCheckMarkState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EmporiumBrowserFilterEntry_UpdateCheckMarkState Parms{};
 
@@ -87,10 +86,9 @@ void UEmporiumBrowserFilterEntry::UpdateCheckMarkState(bool bIsChecked)
 
 void UEmporiumBrowserFilterEntry::UpdateItemCount(int32 ItemCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateItemCount");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EmporiumBrowserFilterEntry", "UpdateItemCount");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EmporiumBrowserFilterEntry_UpdateItemCount Parms{};
 
@@ -544,10 +542,9 @@ class UWidget* UEmporiumBrowserFiltersPanel::NavigateToNextSection(bool bReverse
 
 void UEmporiumBrowserFiltersPanel::OnClearSearchProgress(float Progress)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnClearSearchProgress");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EmporiumBrowserFiltersPanel", "OnClearSearchProgress");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EmporiumBrowserFiltersPanel_OnClearSearchProgress Parms{};
 
@@ -564,10 +561,9 @@ void UEmporiumBrowserFiltersPanel::OnClearSearchProgress(float Progress)
 
 void UEmporiumBrowserFiltersPanel::OnPopulateCategories(const TArray<class FName>& CategoryIDs)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateCategories");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EmporiumBrowserFiltersPanel", "OnPopulateCategories");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EmporiumBrowserFiltersPanel_OnPopulateCategories Parms{};
 
@@ -584,10 +580,9 @@ void UEmporiumBrowserFiltersPanel::OnPopulateCategories(const TArray<class FName
 
 void UEmporiumBrowserFiltersPanel::OnSetPanelLayout(EFortEmporiumLayoutVersion LayoutVersion)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetPanelLayout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EmporiumBrowserFiltersPanel", "OnSetPanelLayout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EmporiumBrowserFiltersPanel_OnSetPanelLayout Parms{};
 
@@ -602,10 +597,9 @@ void UEmporiumBrowserFiltersPanel::OnSetPanelLayout(EFortEmporiumLayoutVersion L
 
 void UEmporiumBrowserFiltersPanel::OnSetSearchFocused()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetSearchFocused");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EmporiumBrowserFiltersPanel", "OnSetSearchFocused");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -618,10 +612,9 @@ void UEmporiumBrowserFiltersPanel::OnSetSearchFocused()
 
 void UEmporiumBrowserFiltersPanel::OnSetSearchText(const class FText& NewSearchText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetSearchText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EmporiumBrowserFiltersPanel", "OnSetSearchText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EmporiumBrowserFiltersPanel_OnSetSearchText Parms{};
 
@@ -638,10 +631,9 @@ void UEmporiumBrowserFiltersPanel::OnSetSearchText(const class FText& NewSearchT
 
 void UEmporiumBrowserFiltersPanel::OnSetSearchVisible(bool bVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetSearchVisible");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EmporiumBrowserFiltersPanel", "OnSetSearchVisible");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EmporiumBrowserFiltersPanel_OnSetSearchVisible Parms{};
 
@@ -658,10 +650,9 @@ void UEmporiumBrowserFiltersPanel::OnSetSearchVisible(bool bVisible)
 
 void UEmporiumBrowserFiltersPanel::OnUpdateActiveCategory(const class FName& CategoryID)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateActiveCategory");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EmporiumBrowserFiltersPanel", "OnUpdateActiveCategory");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EmporiumBrowserFiltersPanel_OnUpdateActiveCategory Parms{};
 
@@ -680,10 +671,9 @@ void UEmporiumBrowserFiltersPanel::OnUpdateActiveCategory(const class FName& Cat
 
 void UEmporiumBrowserFiltersPanel::OnUpdateCategoryCountDisplay(const class FName& CategoryID, int32 NumItems, bool bHideIfEmpty)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateCategoryCountDisplay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EmporiumBrowserFiltersPanel", "OnUpdateCategoryCountDisplay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EmporiumBrowserFiltersPanel_OnUpdateCategoryCountDisplay Parms{};
 
@@ -703,10 +693,9 @@ void UEmporiumBrowserFiltersPanel::OnUpdateCategoryCountDisplay(const class FNam
 
 class UWidget* UEmporiumBrowserFiltersPanel::RefreshSideNavigationFocus(class FName* OutFocusCategory)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"RefreshSideNavigationFocus");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("EmporiumBrowserFiltersPanel", "RefreshSideNavigationFocus");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::EmporiumBrowserFiltersPanel_RefreshSideNavigationFocus Parms{};
 
@@ -997,10 +986,9 @@ void UFortEmporiumFilterCategoryHeader::ActivateCategory(bool bExpanded)
 
 void UFortEmporiumFilterCategoryHeader::AddSubcategoryWidget(class UWidget* SubcategoryWidget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AddSubcategoryWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "AddSubcategoryWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_AddSubcategoryWidget Parms{};
 
@@ -1015,10 +1003,9 @@ void UFortEmporiumFilterCategoryHeader::AddSubcategoryWidget(class UWidget* Subc
 
 void UFortEmporiumFilterCategoryHeader::ClearSubcategoryWidgets()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ClearSubcategoryWidgets");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "ClearSubcategoryWidgets");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1031,10 +1018,9 @@ void UFortEmporiumFilterCategoryHeader::ClearSubcategoryWidgets()
 
 void UFortEmporiumFilterCategoryHeader::EnableCategoryExpansion(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"EnableCategoryExpansion");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "EnableCategoryExpansion");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_EnableCategoryExpansion Parms{};
 
@@ -1051,10 +1037,9 @@ void UFortEmporiumFilterCategoryHeader::EnableCategoryExpansion(bool bShow)
 
 void UFortEmporiumFilterCategoryHeader::ExpandCategory(bool bExpanded)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ExpandCategory");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "ExpandCategory");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_ExpandCategory Parms{};
 
@@ -1090,10 +1075,9 @@ void UFortEmporiumFilterCategoryHeader::ExpandSection()
 
 void UFortEmporiumFilterCategoryHeader::SetCategoryText(const class FText& NewButtonText)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetCategoryText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "SetCategoryText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_SetCategoryText Parms{};
 
@@ -1110,10 +1094,9 @@ void UFortEmporiumFilterCategoryHeader::SetCategoryText(const class FText& NewBu
 
 void UFortEmporiumFilterCategoryHeader::SetCycleSectionIcon(const struct FSlateBrush& CycleSectionIcon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetCycleSectionIcon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "SetCycleSectionIcon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_SetCycleSectionIcon Parms{};
 
@@ -1130,10 +1113,9 @@ void UFortEmporiumFilterCategoryHeader::SetCycleSectionIcon(const struct FSlateB
 
 void UFortEmporiumFilterCategoryHeader::SetSubcategoryCount(int32 NewCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetSubcategoryCount");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "SetSubcategoryCount");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_SetSubcategoryCount Parms{};
 
@@ -1150,10 +1132,9 @@ void UFortEmporiumFilterCategoryHeader::SetSubcategoryCount(int32 NewCount)
 
 void UFortEmporiumFilterCategoryHeader::ShowCategoryActive(bool bIsActive)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowCategoryActive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "ShowCategoryActive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_ShowCategoryActive Parms{};
 
@@ -1170,10 +1151,9 @@ void UFortEmporiumFilterCategoryHeader::ShowCategoryActive(bool bIsActive)
 
 void UFortEmporiumFilterCategoryHeader::ShowCycleSectionPrompt(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowCycleSectionPrompt");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "ShowCycleSectionPrompt");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_ShowCycleSectionPrompt Parms{};
 
@@ -1190,10 +1170,9 @@ void UFortEmporiumFilterCategoryHeader::ShowCycleSectionPrompt(bool bShow)
 
 void UFortEmporiumFilterCategoryHeader::ShowUpperSpacer(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowUpperSpacer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "ShowUpperSpacer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_ShowUpperSpacer Parms{};
 
@@ -1211,10 +1190,9 @@ void UFortEmporiumFilterCategoryHeader::ShowUpperSpacer(bool bShow)
 
 void UFortEmporiumFilterCategoryHeader::UpdateCategoryCount(int32 NewCount, bool bHideIfEmpty)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCategoryCount");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "UpdateCategoryCount");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_UpdateCategoryCount Parms{};
 
@@ -1232,10 +1210,9 @@ void UFortEmporiumFilterCategoryHeader::UpdateCategoryCount(int32 NewCount, bool
 
 class UCommonButtonBase* UFortEmporiumFilterCategoryHeader::GetCategoryButton() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCategoryButton");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "GetCategoryButton");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_GetCategoryButton Parms{};
 
@@ -1252,10 +1229,9 @@ class UCommonButtonBase* UFortEmporiumFilterCategoryHeader::GetCategoryButton() 
 
 TArray<class UWidget*> UFortEmporiumFilterCategoryHeader::GetSubcategoryWidgets() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetSubcategoryWidgets");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFilterCategoryHeader", "GetSubcategoryWidgets");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFilterCategoryHeader_GetSubcategoryWidgets Parms{};
 
@@ -1275,10 +1251,9 @@ TArray<class UWidget*> UFortEmporiumFilterCategoryHeader::GetSubcategoryWidgets(
 
 void UFortEmporiumFiltersSubPanel::ClearFilterWidgets()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ClearFilterWidgets");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFiltersSubPanel", "ClearFilterWidgets");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1397,10 +1372,9 @@ void UFortEmporiumFiltersSubPanel::HandleShowAllEnabled(bool bShowAllItems, clas
 
 void UFortEmporiumFiltersSubPanel::OnAddSubcategoryWidget(class UEmporiumBrowserFilterEntry* SubcategoryWidget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAddSubcategoryWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFiltersSubPanel", "OnAddSubcategoryWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFiltersSubPanel_OnAddSubcategoryWidget Parms{};
 
@@ -1417,10 +1391,9 @@ void UFortEmporiumFiltersSubPanel::OnAddSubcategoryWidget(class UEmporiumBrowser
 
 void UFortEmporiumFiltersSubPanel::OnFilterSelected(class UEmporiumBrowserFilterEntry* SubcategoryWidget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFilterSelected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFiltersSubPanel", "OnFilterSelected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFiltersSubPanel_OnFilterSelected Parms{};
 
@@ -1437,10 +1410,9 @@ void UFortEmporiumFiltersSubPanel::OnFilterSelected(class UEmporiumBrowserFilter
 
 void UFortEmporiumFiltersSubPanel::OnUpdateFilterEntries(const TArray<class FName>& IncludedTags)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateFilterEntries");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFiltersSubPanel", "OnUpdateFilterEntries");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFiltersSubPanel_OnUpdateFilterEntries Parms{};
 
@@ -1459,10 +1431,9 @@ void UFortEmporiumFiltersSubPanel::OnUpdateFilterEntries(const TArray<class FNam
 
 void UFortEmporiumFiltersSubPanel::OnUpdateSubcategoryCount(const class FName& CategoryID, int32 Count, bool bShowOnEmpty)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateSubcategoryCount");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumFiltersSubPanel", "OnUpdateSubcategoryCount");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumFiltersSubPanel_OnUpdateSubcategoryCount Parms{};
 
@@ -1482,10 +1453,9 @@ void UFortEmporiumFiltersSubPanel::OnUpdateSubcategoryCount(const class FName& C
 
 void UFortEmporiumHomeListEntry::UpdateOverflowDisplay(class UAthenaCreativeItemTileButton* OverflowTile, int32 OverflowCount)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateOverflowDisplay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumHomeListEntry", "UpdateOverflowDisplay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumHomeListEntry_UpdateOverflowDisplay Parms{};
 
@@ -1503,10 +1473,9 @@ void UFortEmporiumHomeListEntry::UpdateOverflowDisplay(class UAthenaCreativeItem
 
 void UFortEmporiumHomeListEntry::UpdateWarningMessage(bool bShowMessage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateWarningMessage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumHomeListEntry", "UpdateWarningMessage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumHomeListEntry_UpdateWarningMessage Parms{};
 
@@ -1598,10 +1567,9 @@ class UWidget* UFortEmporiumHomeListView::GetFocusWidget()
 
 void UFortEmporiumHomeTabPanel::OnSetPanelLayout(EFortEmporiumLayoutVersion LayoutVersion)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetPanelLayout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumHomeTabPanel", "OnSetPanelLayout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumHomeTabPanel_OnSetPanelLayout Parms{};
 
@@ -1668,10 +1636,9 @@ void UFortEmporiumItemDetailsPanel::HandleItemTagSelected(class FName TagID, boo
 
 void UFortEmporiumItemDetailsPanel::HideAdditionalButtons()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HideAdditionalButtons");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "HideAdditionalButtons");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1682,10 +1649,9 @@ void UFortEmporiumItemDetailsPanel::HideAdditionalButtons()
 
 void UFortEmporiumItemDetailsPanel::HideExtendedDataPanel()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HideExtendedDataPanel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "HideExtendedDataPanel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1698,10 +1664,9 @@ void UFortEmporiumItemDetailsPanel::HideExtendedDataPanel()
 
 bool UFortEmporiumItemDetailsPanel::IsShowingAdditionalButtons()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsShowingAdditionalButtons");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "IsShowingAdditionalButtons");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemDetailsPanel_IsShowingAdditionalButtons Parms{};
 
@@ -1723,10 +1688,9 @@ bool UFortEmporiumItemDetailsPanel::IsShowingAdditionalButtons()
 
 void UFortEmporiumItemDetailsPanel::SetActiveItemDetailTags(const TArray<class FName>& ActiveTags)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetActiveItemDetailTags");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "SetActiveItemDetailTags");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemDetailsPanel_SetActiveItemDetailTags Parms{};
 
@@ -1745,10 +1709,9 @@ void UFortEmporiumItemDetailsPanel::SetActiveItemDetailTags(const TArray<class F
 
 void UFortEmporiumItemDetailsPanel::SetItemDetails(const class UFortItem* FortItem, const bool bUseLargeThumbnail, const bool bAllowInteractiveTags)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetItemDetails");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "SetItemDetails");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemDetailsPanel_SetItemDetails Parms{};
 
@@ -1796,10 +1759,9 @@ void UFortEmporiumItemDetailsPanel::SetItemToDetail(const class UFortItem* InIte
 
 void UFortEmporiumItemDetailsPanel::SetSpecialItemTagVisibility(const class FName& SpecialItemTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetSpecialItemTagVisibility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "SetSpecialItemTagVisibility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemDetailsPanel_SetSpecialItemTagVisibility Parms{};
 
@@ -1814,10 +1776,9 @@ void UFortEmporiumItemDetailsPanel::SetSpecialItemTagVisibility(const class FNam
 
 void UFortEmporiumItemDetailsPanel::ShowExtendedDataPanel()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowExtendedDataPanel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "ShowExtendedDataPanel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1830,10 +1791,9 @@ void UFortEmporiumItemDetailsPanel::ShowExtendedDataPanel()
 
 void UFortEmporiumItemDetailsPanel::SwitchItemDetailsPanel(bool bUseLegacy)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SwitchItemDetailsPanel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "SwitchItemDetailsPanel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemDetailsPanel_SwitchItemDetailsPanel Parms{};
 
@@ -1853,10 +1813,9 @@ void UFortEmporiumItemDetailsPanel::SwitchItemDetailsPanel(bool bUseLegacy)
 
 void UFortEmporiumItemDetailsPanel::ToggleItemDetailsPanel()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ToggleItemDetailsPanel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "ToggleItemDetailsPanel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1869,10 +1828,9 @@ void UFortEmporiumItemDetailsPanel::ToggleItemDetailsPanel()
 
 void UFortEmporiumItemDetailsPanel::UpdateItemDetailsDisplay(bool bShowItemDetails)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateItemDetailsDisplay");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "UpdateItemDetailsDisplay");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemDetailsPanel_UpdateItemDetailsDisplay Parms{};
 
@@ -1889,10 +1847,9 @@ void UFortEmporiumItemDetailsPanel::UpdateItemDetailsDisplay(bool bShowItemDetai
 
 TArray<class FName> UFortEmporiumItemDetailsPanel::BP_GetSpecialItemTags() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_GetSpecialItemTags");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "BP_GetSpecialItemTags");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemDetailsPanel_BP_GetSpecialItemTags Parms{};
 
@@ -1909,10 +1866,9 @@ TArray<class FName> UFortEmporiumItemDetailsPanel::BP_GetSpecialItemTags() const
 
 bool UFortEmporiumItemDetailsPanel::HasLegacyItemDetailsPanel() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HasLegacyItemDetailsPanel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "HasLegacyItemDetailsPanel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemDetailsPanel_HasLegacyItemDetailsPanel Parms{};
 
@@ -1934,10 +1890,9 @@ bool UFortEmporiumItemDetailsPanel::HasLegacyItemDetailsPanel() const
 
 bool UFortEmporiumItemDetailsPanel::IsShowingExtendedDataPanel() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsShowingExtendedDataPanel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemDetailsPanel", "IsShowingExtendedDataPanel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemDetailsPanel_IsShowingExtendedDataPanel Parms{};
 
@@ -1959,10 +1914,9 @@ bool UFortEmporiumItemDetailsPanel::IsShowingExtendedDataPanel() const
 
 void UFortEmporiumItemInfo::SetSelectItemTagsIcon(const struct FSlateBrush& SelectItemTagsIcon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetSelectItemTagsIcon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemInfo", "SetSelectItemTagsIcon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemInfo_SetSelectItemTagsIcon Parms{};
 
@@ -1979,10 +1933,9 @@ void UFortEmporiumItemInfo::SetSelectItemTagsIcon(const struct FSlateBrush& Sele
 
 void UFortEmporiumItemInfo::SetSelectItemTagsPrompt(const class FText& Prompt)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetSelectItemTagsPrompt");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemInfo", "SetSelectItemTagsPrompt");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemInfo_SetSelectItemTagsPrompt Parms{};
 
@@ -1997,10 +1950,9 @@ void UFortEmporiumItemInfo::SetSelectItemTagsPrompt(const class FText& Prompt)
 
 void UFortEmporiumItemInfo::SetTagFocus()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetTagFocus");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemInfo", "SetTagFocus");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -2013,10 +1965,9 @@ void UFortEmporiumItemInfo::SetTagFocus()
 
 void UFortEmporiumItemInfo::ShowSelectItemTagsPrompt(bool bShowPrompt)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowSelectItemTagsPrompt");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemInfo", "ShowSelectItemTagsPrompt");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemInfo_ShowSelectItemTagsPrompt Parms{};
 
@@ -2034,10 +1985,9 @@ void UFortEmporiumItemInfo::ShowSelectItemTagsPrompt(bool bShowPrompt)
 
 void UFortEmporiumItemInfo::UpdateWithFortItem(const class UFortItem* Item, const bool bAllowInteractiveTags)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateWithFortItem");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemInfo", "UpdateWithFortItem");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemInfo_UpdateWithFortItem Parms{};
 
@@ -2055,10 +2005,9 @@ void UFortEmporiumItemInfo::UpdateWithFortItem(const class UFortItem* Item, cons
 
 bool UFortEmporiumItemInfo::HasFocusableTags() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HasFocusableTags");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemInfo", "HasFocusableTags");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemInfo_HasFocusableTags Parms{};
 
@@ -2987,10 +2936,9 @@ void UFortEmporiumItemListMenu::NativeOnItemsRefreshed()
 
 void UFortEmporiumItemListMenu::OnAnimateSidePanel(bool bIsRightPanel, bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAnimateSidePanel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnAnimateSidePanel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnAnimateSidePanel Parms{};
 
@@ -3006,10 +2954,9 @@ void UFortEmporiumItemListMenu::OnAnimateSidePanel(bool bIsRightPanel, bool bSho
 
 void UFortEmporiumItemListMenu::OnBuiltInItemsLoaded()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBuiltInItemsLoaded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnBuiltInItemsLoaded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3058,10 +3005,9 @@ void UFortEmporiumItemListMenu::OnCreativeQuickbarComponentLoaded()
 
 void UFortEmporiumItemListMenu::OnExitSubTab()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExitSubTab");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnExitSubTab");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3128,10 +3074,9 @@ void UFortEmporiumItemListMenu::OnFabItemQueryComplete(bool bSuccess, const clas
 
 void UFortEmporiumItemListMenu::OnItemEquipped(const struct FFortItemEntry& EquippedItemEntry)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemEquipped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnItemEquipped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnItemEquipped Parms{};
 
@@ -3146,10 +3091,9 @@ void UFortEmporiumItemListMenu::OnItemEquipped(const struct FFortItemEntry& Equi
 
 void UFortEmporiumItemListMenu::OnItemsLoaded()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnItemsLoaded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnItemsLoaded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3162,10 +3106,9 @@ void UFortEmporiumItemListMenu::OnItemsLoaded()
 
 void UFortEmporiumItemListMenu::OnQuickbarStateChanged(const EFortContentBrowserQuickbarState State)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnQuickbarStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnQuickbarStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnQuickbarStateChanged Parms{};
 
@@ -3182,10 +3125,9 @@ void UFortEmporiumItemListMenu::OnQuickbarStateChanged(const EFortContentBrowser
 
 void UFortEmporiumItemListMenu::OnSearchFiltersVisibilityChanged(bool bIsVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSearchFiltersVisibilityChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnSearchFiltersVisibilityChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnSearchFiltersVisibilityChanged Parms{};
 
@@ -3202,10 +3144,9 @@ void UFortEmporiumItemListMenu::OnSearchFiltersVisibilityChanged(bool bIsVisible
 
 void UFortEmporiumItemListMenu::OnSelectionOpened(const class UItemDefinitionBase* SelectedItemDefinition)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSelectionOpened");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnSelectionOpened");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnSelectionOpened Parms{};
 
@@ -3222,10 +3163,9 @@ void UFortEmporiumItemListMenu::OnSelectionOpened(const class UItemDefinitionBas
 
 void UFortEmporiumItemListMenu::OnSetPanelLayout(EFortEmporiumLayoutVersion LayoutVersion)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetPanelLayout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnSetPanelLayout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnSetPanelLayout Parms{};
 
@@ -3244,10 +3184,9 @@ void UFortEmporiumItemListMenu::OnSetPanelLayout(EFortEmporiumLayoutVersion Layo
 
 bool UFortEmporiumItemListMenu::OnShouldAllowCommandBar(class UUserWidget* FocusPathWidget, bool* bAllowCommandBar)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShouldAllowCommandBar");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnShouldAllowCommandBar");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnShouldAllowCommandBar Parms{};
 
@@ -3269,10 +3208,9 @@ bool UFortEmporiumItemListMenu::OnShouldAllowCommandBar(class UUserWidget* Focus
 
 void UFortEmporiumItemListMenu::OnShowCategoryModal(bool bShowModal)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowCategoryModal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnShowCategoryModal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnShowCategoryModal Parms{};
 
@@ -3289,10 +3227,9 @@ void UFortEmporiumItemListMenu::OnShowCategoryModal(bool bShowModal)
 
 void UFortEmporiumItemListMenu::OnShowGridBlocker(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnShowGridBlocker");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnShowGridBlocker");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnShowGridBlocker Parms{};
 
@@ -3307,10 +3244,9 @@ void UFortEmporiumItemListMenu::OnShowGridBlocker(bool bShow)
 
 void UFortEmporiumItemListMenu::OnSidePanelDockToggled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSidePanelDockToggled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnSidePanelDockToggled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3321,10 +3257,9 @@ void UFortEmporiumItemListMenu::OnSidePanelDockToggled()
 
 void UFortEmporiumItemListMenu::OnSubPanelModeChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSubPanelModeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnSubPanelModeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3337,10 +3272,9 @@ void UFortEmporiumItemListMenu::OnSubPanelModeChanged()
 
 void UFortEmporiumItemListMenu::OnTabAdded(class UFortCreativeContentBrowserTabPanelBase* Tab)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTabAdded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnTabAdded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnTabAdded Parms{};
 
@@ -3355,10 +3289,9 @@ void UFortEmporiumItemListMenu::OnTabAdded(class UFortCreativeContentBrowserTabP
 
 void UFortEmporiumItemListMenu::OnTabChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTabChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnTabChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -3372,10 +3305,9 @@ void UFortEmporiumItemListMenu::OnTabChanged()
 
 void UFortEmporiumItemListMenu::OnUpdateCategoryLabel(const class FText& SectionLabel, const class FText& CategoryLabel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateCategoryLabel");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnUpdateCategoryLabel");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnUpdateCategoryLabel Parms{};
 
@@ -3393,10 +3325,9 @@ void UFortEmporiumItemListMenu::OnUpdateCategoryLabel(const class FText& Section
 
 void UFortEmporiumItemListMenu::OnUpdateCommandBarVisibility(bool bShowBar)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateCommandBarVisibility");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnUpdateCommandBarVisibility");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnUpdateCommandBarVisibility Parms{};
 
@@ -3413,10 +3344,9 @@ void UFortEmporiumItemListMenu::OnUpdateCommandBarVisibility(bool bShowBar)
 
 void UFortEmporiumItemListMenu::OnUpdateTagFilterButton(const EFortEmporiumItemTagFilterMode Mode)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateTagFilterButton");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "OnUpdateTagFilterButton");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_OnUpdateTagFilterButton Parms{};
 
@@ -3827,10 +3757,9 @@ class UFortCreativeContentBrowserTabPanelBase* UFortEmporiumItemListMenu::GetCur
 
 class UWidget* UFortEmporiumItemListMenu::GetEmptyTabFocusWidget(const class UFortEmporiumItemListTabPanel* Tab) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetEmptyTabFocusWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "GetEmptyTabFocusWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_GetEmptyTabFocusWidget Parms{};
 
@@ -3899,10 +3828,9 @@ class UItemDefinitionBase* UFortEmporiumItemListMenu::GetSubTabSelectedItemDefin
 
 bool UFortEmporiumItemListMenu::IsShowingModal() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsShowingModal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "IsShowingModal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_IsShowingModal Parms{};
 
@@ -3920,10 +3848,9 @@ bool UFortEmporiumItemListMenu::IsShowingModal() const
 
 bool UFortEmporiumItemListMenu::IsSidePanelOpen(bool bRightPanel) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsSidePanelOpen");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListMenu", "IsSidePanelOpen");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListMenu_IsSidePanelOpen Parms{};
 
@@ -4057,10 +3984,9 @@ void UFortEmporiumItemListTabPanel::ClearFilteredItems()
 
 void UFortEmporiumItemListTabPanel::FocusCurrentSelection()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"FocusCurrentSelection");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListTabPanel", "FocusCurrentSelection");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -4123,10 +4049,9 @@ bool UFortEmporiumItemListTabPanel::IsEmpty()
 
 void UFortEmporiumItemListTabPanel::ItemEquipped(const struct FFortItemEntry& Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ItemEquipped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListTabPanel", "ItemEquipped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListTabPanel_ItemEquipped Parms{};
 
@@ -4143,10 +4068,9 @@ void UFortEmporiumItemListTabPanel::ItemEquipped(const struct FFortItemEntry& It
 
 void UFortEmporiumItemListTabPanel::OnSetPanelLayout(EFortEmporiumLayoutVersion LayoutVersion)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetPanelLayout");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListTabPanel", "OnSetPanelLayout");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListTabPanel_OnSetPanelLayout Parms{};
 
@@ -4201,10 +4125,9 @@ void UFortEmporiumItemListTabPanel::RestoreLastSelection()
 
 void UFortEmporiumItemListTabPanel::SetActiveItemDetailTags(const TArray<class FName>& TagIDs)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetActiveItemDetailTags");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListTabPanel", "SetActiveItemDetailTags");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListTabPanel_SetActiveItemDetailTags Parms{};
 
@@ -4221,10 +4144,9 @@ void UFortEmporiumItemListTabPanel::SetActiveItemDetailTags(const TArray<class F
 
 void UFortEmporiumItemListTabPanel::ShowLegacyFilterCounter(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowLegacyFilterCounter");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListTabPanel", "ShowLegacyFilterCounter");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListTabPanel_ShowLegacyFilterCounter Parms{};
 
@@ -4241,10 +4163,9 @@ void UFortEmporiumItemListTabPanel::ShowLegacyFilterCounter(bool bShow)
 
 void UFortEmporiumItemListTabPanel::ShowTopButtonBar(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowTopButtonBar");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListTabPanel", "ShowTopButtonBar");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListTabPanel_ShowTopButtonBar Parms{};
 
@@ -4261,10 +4182,9 @@ void UFortEmporiumItemListTabPanel::ShowTopButtonBar(bool bShow)
 
 void UFortEmporiumItemListTabPanel::UpdateSortButton(const class FText& SortType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateSortButton");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListTabPanel", "UpdateSortButton");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortEmporiumItemListTabPanel_UpdateSortButton Parms{};
 
@@ -4279,10 +4199,9 @@ void UFortEmporiumItemListTabPanel::UpdateSortButton(const class FText& SortType
 
 void UFortEmporiumItemListTabPanel::UpdateTabHeader()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateTabHeader");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortEmporiumItemListTabPanel", "UpdateTabHeader");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

@@ -71,10 +71,9 @@ void UPOIBannerToastSocialAvatar::SetSocialAvatarTexture(TSoftObjectPtr<class UT
 
 void UPOIBannerToastWidgetBase::K2_OnBecomeActive()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnBecomeActive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("POIBannerToastWidgetBase", "K2_OnBecomeActive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -85,10 +84,9 @@ void UPOIBannerToastWidgetBase::K2_OnBecomeActive()
 
 void UPOIBannerToastWidgetBase::K2_OnBecomeInactive()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnBecomeInactive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("POIBannerToastWidgetBase", "K2_OnBecomeInactive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -99,10 +97,9 @@ void UPOIBannerToastWidgetBase::K2_OnBecomeInactive()
 
 void UPOIBannerToastWidgetBase::OnStompedByOtherWidget()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStompedByOtherWidget");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("POIBannerToastWidgetBase", "OnStompedByOtherWidget");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -113,10 +110,9 @@ void UPOIBannerToastWidgetBase::OnStompedByOtherWidget()
 
 void UPOIBannerToastWidgetBase::OnStompFailed()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStompFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("POIBannerToastWidgetBase", "OnStompFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

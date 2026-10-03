@@ -248,10 +248,9 @@ void UCommonActivatablePanelLegacy::EndOutro()
 
 void UCommonActivatablePanelLegacy::OnAddedToActivationStack()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAddedToActivationStack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonActivatablePanelLegacy", "OnAddedToActivationStack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -262,10 +261,9 @@ void UCommonActivatablePanelLegacy::OnAddedToActivationStack()
 
 void UCommonActivatablePanelLegacy::OnBeginIntro()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBeginIntro");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonActivatablePanelLegacy", "OnBeginIntro");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -281,10 +279,9 @@ void UCommonActivatablePanelLegacy::OnBeginIntro()
 
 void UCommonActivatablePanelLegacy::OnBeginOutro()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBeginOutro");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonActivatablePanelLegacy", "OnBeginOutro");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -302,10 +299,9 @@ void UCommonActivatablePanelLegacy::OnBeginOutro()
 
 void UCommonActivatablePanelLegacy::OnInputModeChanged(bool bUsingGamepad)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputModeChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonActivatablePanelLegacy", "OnInputModeChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonActivatablePanelLegacy_OnInputModeChanged Parms{};
 
@@ -320,10 +316,9 @@ void UCommonActivatablePanelLegacy::OnInputModeChanged(bool bUsingGamepad)
 
 void UCommonActivatablePanelLegacy::OnRemovedFromActivationStack()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRemovedFromActivationStack");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonActivatablePanelLegacy", "OnRemovedFromActivationStack");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -334,10 +329,9 @@ void UCommonActivatablePanelLegacy::OnRemovedFromActivationStack()
 
 void UCommonActivatablePanelLegacy::OnTransitionedBySwitcher()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnTransitionedBySwitcher");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonActivatablePanelLegacy", "OnTransitionedBySwitcher");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1220,10 +1214,9 @@ bool UCommonInputManagerLegacy::IsPanelOnStack(const class UCommonActivatablePan
 
 void UCommonInputReflectorLegacy::OnButtonAdded(class UCommonButtonLegacy* AddedButton, const struct FCommonInputActionHandlerData& Data)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnButtonAdded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonInputReflectorLegacy", "OnButtonAdded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonInputReflectorLegacy_OnButtonAdded Parms{};
 
@@ -1264,10 +1257,9 @@ class UUserWidget* UCommonPopupButtonLegacy::GetMenuAnchorWidget()
 
 void UCommonPopupMenuLegacy::HandlePostDifferentContextProviderSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandlePostDifferentContextProviderSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonPopupMenuLegacy", "HandlePostDifferentContextProviderSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1283,10 +1275,9 @@ void UCommonPopupMenuLegacy::HandlePostDifferentContextProviderSet()
 
 void UCommonPopupMenuLegacy::HandlePreDifferentContextProviderSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandlePreDifferentContextProviderSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonPopupMenuLegacy", "HandlePreDifferentContextProviderSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -1481,10 +1472,9 @@ void UCommonTabListWidgetLegacy::HandleOnTabButtonRemoved(class FName TabID, cla
 
 void UCommonTabListWidgetLegacy::HandleTabCreated(class FName TabNameID, class UCommonButtonLegacy* TabButton)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTabCreated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonTabListWidgetLegacy", "HandleTabCreated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonTabListWidgetLegacy_HandleTabCreated Parms{};
 
@@ -1508,10 +1498,9 @@ void UCommonTabListWidgetLegacy::HandleTabCreated(class FName TabNameID, class U
 
 void UCommonTabListWidgetLegacy::HandleTabRemoved(class FName TabNameID, class UCommonButtonLegacy* TabButton)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTabRemoved");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CommonTabListWidgetLegacy", "HandleTabRemoved");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CommonTabListWidgetLegacy_HandleTabRemoved Parms{};
 

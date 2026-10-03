@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UFortGameplayAbility_RangedPropSpawner::HandleAbilityRejectedOnClient(class AFortWeapon* SourceWeapon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleAbilityRejectedOnClient");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortGameplayAbility_RangedPropSpawner", "HandleAbilityRejectedOnClient");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortGameplayAbility_RangedPropSpawner_HandleAbilityRejectedOnClient Parms{};
 
@@ -322,10 +321,9 @@ void AItemizedPropSpawnerWallChunk::FindSupportingActors(TArray<class AActor*>& 
 
 void AItemizedPropSpawnerWallChunk::GetComponentsForOverlapCheck(TArray<class UPrimitiveComponent*>* OutComponents)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetComponentsForOverlapCheck");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("ItemizedPropSpawnerWallChunk", "GetComponentsForOverlapCheck");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::ItemizedPropSpawnerWallChunk_GetComponentsForOverlapCheck Parms{};
 

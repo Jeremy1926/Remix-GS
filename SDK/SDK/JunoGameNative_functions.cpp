@@ -239,10 +239,9 @@ bool IJunoLocalEnvironmentActorInterface::GetBiomeInfo(struct FJunoBiomeInfoQuer
 
 void UJunoAbility_Gear_Resurrect::OnResurrectTriggered()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnResurrectTriggered");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoAbility_Gear_Resurrect", "OnResurrectTriggered");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -1452,10 +1451,9 @@ const class UItemDefinitionBase* AJunoBuildingProp::GetAssociatedItem() const
 
 bool AJunoBuildingPropTree::BlueprintCanDieInLifecyclePhase(const uint8 CurrentPhaseIndex)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintCanDieInLifecyclePhase");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPropTree", "BlueprintCanDieInLifecyclePhase");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingPropTree_BlueprintCanDieInLifecyclePhase Parms{};
 
@@ -2861,10 +2859,9 @@ void UJunoCampCenterComponent::OnNonResourceRequirementsChanged(const struct FJu
 
 bool AJunoBuildingGameplayActor::BlueprintCanDropResourceWithTagOnDeath(const struct FGameplayTag& ResourceTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintCanDropResourceWithTagOnDeath");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingGameplayActor", "BlueprintCanDropResourceWithTagOnDeath");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingGameplayActor_BlueprintCanDropResourceWithTagOnDeath Parms{};
 
@@ -2886,10 +2883,9 @@ bool AJunoBuildingGameplayActor::BlueprintCanDropResourceWithTagOnDeath(const st
 
 void AJunoBuildingGameplayActor::OnActorPersistentDataReady()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActorPersistentDataReady");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingGameplayActor", "OnActorPersistentDataReady");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -2951,10 +2947,9 @@ void AJunoBuildingGameplayActor::SetAssociatedItem(const class UItemDefinitionBa
 
 bool AJunoBuildingGameplayActor::BlueprintCanDropItemOnDestroy() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintCanDropItemOnDestroy");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingGameplayActor", "BlueprintCanDropItemOnDestroy");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingGameplayActor_BlueprintCanDropItemOnDestroy Parms{};
 
@@ -3769,10 +3764,9 @@ void UJunoCampRecruitmentObjectComponent::OnRep_bIsEnabled()
 
 void UJunoCampRecruitmentObjectComponent::AssignedActorSpawnLocationOverride(struct FVector& OutSpawnLocation) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"AssignedActorSpawnLocationOverride");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCampRecruitmentObjectComponent", "AssignedActorSpawnLocationOverride");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCampRecruitmentObjectComponent_AssignedActorSpawnLocationOverride Parms{};
 
@@ -6865,10 +6859,9 @@ class UJunoWeatherStateComponent* UJunoGameStateWeatherComponent::FindWeatherSta
 
 void UJunoGameStateWeatherComponent::ForceWeatherState(class FName NewWeatherType, class FName OptionalLocation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ForceWeatherState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoGameStateWeatherComponent", "ForceWeatherState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoGameStateWeatherComponent_ForceWeatherState Parms{};
 
@@ -6891,10 +6884,9 @@ void UJunoGameStateWeatherComponent::ForceWeatherState(class FName NewWeatherTyp
 
 void UJunoGameStateWeatherComponent::HandleWeatherStatesSetup(const TArray<class UJunoWeatherStateComponent*>& WeatherStates)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleWeatherStatesSetup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoGameStateWeatherComponent", "HandleWeatherStatesSetup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoGameStateWeatherComponent_HandleWeatherStatesSetup Parms{};
 
@@ -7444,10 +7436,9 @@ void IJunoGuidedBuildingBCOInterface::SetParentGuidedBuilding(class AJunoGuidedB
 
 void UJunoBuildingPreviewComponent::ReceiveCleared()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveCleared");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewComponent", "ReceiveCleared");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7458,10 +7449,9 @@ void UJunoBuildingPreviewComponent::ReceiveCleared()
 
 void UJunoBuildingPreviewComponent::ReceiveCreated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveCreated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewComponent", "ReceiveCreated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7472,10 +7462,9 @@ void UJunoBuildingPreviewComponent::ReceiveCreated()
 
 void UJunoBuildingPreviewComponent::ReceiveDisabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveDisabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewComponent", "ReceiveDisabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7486,10 +7475,9 @@ void UJunoBuildingPreviewComponent::ReceiveDisabled()
 
 void UJunoBuildingPreviewComponent::ReceiveEnabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewComponent", "ReceiveEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7500,10 +7488,9 @@ void UJunoBuildingPreviewComponent::ReceiveEnabled()
 
 void UJunoBuildingPreviewComponent::ReceivePlacementStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePlacementStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewComponent", "ReceivePlacementStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -7514,10 +7501,9 @@ void UJunoBuildingPreviewComponent::ReceivePlacementStarted()
 
 void UJunoBuildingPreviewComponent::ReceiveSet()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewComponent", "ReceiveSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -9401,10 +9387,9 @@ class FName UJunoPlayerBuildingComponent::GetLastSelectedRecipe() const
 
 class FText UJunoPlayerBuildingComponent::GetMCPItemPlacedMessageDescription() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetMCPItemPlacedMessageDescription");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoPlayerBuildingComponent", "GetMCPItemPlacedMessageDescription");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoPlayerBuildingComponent_GetMCPItemPlacedMessageDescription Parms{};
 
@@ -9426,10 +9411,9 @@ class FText UJunoPlayerBuildingComponent::GetMCPItemPlacedMessageDescription() c
 
 class FText UJunoPlayerBuildingComponent::GetMCPItemPlacedMessageTitle() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetMCPItemPlacedMessageTitle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoPlayerBuildingComponent", "GetMCPItemPlacedMessageTitle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoPlayerBuildingComponent_GetMCPItemPlacedMessageTitle Parms{};
 
@@ -10192,10 +10176,9 @@ bool IJunoUIHealthBarLocationInterface::GetHealthBarRelativeLocation(struct FVec
 
 void AJunoBuildingActor::OnActorPersistentDataReady()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnActorPersistentDataReady");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingActor", "OnActorPersistentDataReady");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -10330,10 +10313,9 @@ void AJunoBuildingActor::SetCanEverAffectNavigation(bool bCanEverAffectNavigatio
 
 class UClass* AJunoPhysicsToySpawnerActor::GetToyClass() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetToyClass");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoPhysicsToySpawnerActor", "GetToyClass");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoPhysicsToySpawnerActor_GetToyClass Parms{};
 
@@ -10767,10 +10749,9 @@ void UJunoWeatherLocationComponent::OnRep_Location(const struct FJunoWeatherLoca
 
 struct FJunoWeatherLocation UJunoWeatherLocationComponent::BP_CalculateLocation() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_CalculateLocation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWeatherLocationComponent", "BP_CalculateLocation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWeatherLocationComponent_BP_CalculateLocation Parms{};
 
@@ -10842,10 +10823,9 @@ void UJunoWeatherReactionComponent::HandleWeatherLocationChanged(const struct FJ
 
 void UJunoWeatherReactionComponent::ReceiveOnTemperatureChanged(const struct FJunoEvent_TemperatureChanged& Payload)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveOnTemperatureChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWeatherReactionComponent", "ReceiveOnTemperatureChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWeatherReactionComponent_ReceiveOnTemperatureChanged Parms{};
 
@@ -10862,10 +10842,9 @@ void UJunoWeatherReactionComponent::ReceiveOnTemperatureChanged(const struct FJu
 
 void UJunoWeatherReactionComponent::ReceiveOnWeatherPhaseChanged(const struct FJunoEvent_WeatherPhaseChanged& Payload)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveOnWeatherPhaseChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWeatherReactionComponent", "ReceiveOnWeatherPhaseChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWeatherReactionComponent_ReceiveOnWeatherPhaseChanged Parms{};
 
@@ -11038,10 +11017,9 @@ void UJunoBuildingBehaviorBase::MulticastUpdatePreviewOnRemoteClients(const stru
 
 void UJunoBuildingBehaviorBase::ReceiveBuildingStateChanged(const EJunoBuildingBehaviorState PreviousState, const EJunoBuildingBehaviorState NewState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveBuildingStateChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingBehaviorBase", "ReceiveBuildingStateChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingBehaviorBase_ReceiveBuildingStateChanged Parms{};
 
@@ -11057,10 +11035,9 @@ void UJunoBuildingBehaviorBase::ReceiveBuildingStateChanged(const EJunoBuildingB
 
 void UJunoBuildingBehaviorBase::ReceivePositionInterpEnd()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePositionInterpEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingBehaviorBase", "ReceivePositionInterpEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11071,10 +11048,9 @@ void UJunoBuildingBehaviorBase::ReceivePositionInterpEnd()
 
 void UJunoBuildingBehaviorBase::ReceivePositionInterpStart()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePositionInterpStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingBehaviorBase", "ReceivePositionInterpStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -11171,10 +11147,9 @@ bool UJunoBuildingBehaviorBase::CanPlaceSelectedActors(struct FGameplayTagContai
 
 bool UJunoBuildingBehaviorBase::CanSelectedActorsBePlaced(const TArray<struct FBuilderToolSelectedActor>& InSelectedActors, const struct FTransform& InSelectionToWorld, struct FGameplayTagContainer* OutBuildingStateTags) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanSelectedActorsBePlaced");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingBehaviorBase", "CanSelectedActorsBePlaced");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingBehaviorBase_CanSelectedActorsBePlaced Parms{};
 
@@ -11427,10 +11402,9 @@ bool UJunoBuildingBehaviorBase::IsDisabled() const
 
 void UJunoRoomBuildingBehavior::ReceiveRoomContextChanged(const struct FJunoRoomContext& Context)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveRoomContextChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoRoomBuildingBehavior", "ReceiveRoomContextChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoRoomBuildingBehavior_ReceiveRoomContextChanged Parms{};
 
@@ -11817,10 +11791,9 @@ void UJunoWeatherStateComponent::QueueNextWeather(const struct FJunoWeatherPhase
 
 void UJunoWeatherStateComponent::ReceiveTemperatureChanged(const struct FJunoEvent_TemperatureChanged& Payload)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveTemperatureChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWeatherStateComponent", "ReceiveTemperatureChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWeatherStateComponent_ReceiveTemperatureChanged Parms{};
 
@@ -11837,10 +11810,9 @@ void UJunoWeatherStateComponent::ReceiveTemperatureChanged(const struct FJunoEve
 
 void UJunoWeatherStateComponent::ReceiveWeatherPhaseChanged(const struct FJunoEvent_WeatherPhaseChanged& Payload)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveWeatherPhaseChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWeatherStateComponent", "ReceiveWeatherPhaseChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWeatherStateComponent_ReceiveWeatherPhaseChanged Parms{};
 
@@ -11953,10 +11925,9 @@ void UJunoWeatherStateComponent::TransitionWeatherNowTo(const struct FJunoWeathe
 
 struct FGameplayTag UJunoWeatherStateComponent::GetCurrentSeason() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetCurrentSeason");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoWeatherStateComponent", "GetCurrentSeason");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoWeatherStateComponent_GetCurrentSeason Parms{};
 
@@ -13185,10 +13156,9 @@ void AJunoBuildingPreviewer::NotifyPlacementStarted()
 
 void AJunoBuildingPreviewer::ReceiveClearSnapEntryPreviews(const TArray<struct FJunoBuildingSnapEntryPreview>& Previews)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveClearSnapEntryPreviews");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceiveClearSnapEntryPreviews");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingPreviewer_ReceiveClearSnapEntryPreviews Parms{};
 
@@ -13205,10 +13175,9 @@ void AJunoBuildingPreviewer::ReceiveClearSnapEntryPreviews(const TArray<struct F
 
 void AJunoBuildingPreviewer::ReceiveDestroyPlacementPreview(const struct FJunoBuildingPlacementPreview& Preview)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveDestroyPlacementPreview");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceiveDestroyPlacementPreview");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingPreviewer_ReceiveDestroyPlacementPreview Parms{};
 
@@ -13225,10 +13194,9 @@ void AJunoBuildingPreviewer::ReceiveDestroyPlacementPreview(const struct FJunoBu
 
 void AJunoBuildingPreviewer::ReceiveDestroyPreview(const struct FJunoBuildingSelectionPreview& Preview)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveDestroyPreview");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceiveDestroyPreview");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingPreviewer_ReceiveDestroyPreview Parms{};
 
@@ -13243,10 +13211,9 @@ void AJunoBuildingPreviewer::ReceiveDestroyPreview(const struct FJunoBuildingSel
 
 void AJunoBuildingPreviewer::ReceiveDisabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveDisabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceiveDisabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13257,10 +13224,9 @@ void AJunoBuildingPreviewer::ReceiveDisabled()
 
 void AJunoBuildingPreviewer::ReceiveEnabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceiveEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13273,10 +13239,9 @@ void AJunoBuildingPreviewer::ReceiveEnabled()
 
 void AJunoBuildingPreviewer::ReceivePlacementPreviewHidden(const struct FJunoBuildingPlacementPreview& Preview)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePlacementPreviewHidden");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceivePlacementPreviewHidden");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingPreviewer_ReceivePlacementPreviewHidden Parms{};
 
@@ -13293,10 +13258,9 @@ void AJunoBuildingPreviewer::ReceivePlacementPreviewHidden(const struct FJunoBui
 
 void AJunoBuildingPreviewer::ReceivePlacementPreviewInitialized(const struct FJunoBuildingPlacementPreview& Preview)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePlacementPreviewInitialized");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceivePlacementPreviewInitialized");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingPreviewer_ReceivePlacementPreviewInitialized Parms{};
 
@@ -13311,10 +13275,9 @@ void AJunoBuildingPreviewer::ReceivePlacementPreviewInitialized(const struct FJu
 
 void AJunoBuildingPreviewer::ReceivePlacementStarted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePlacementStarted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceivePlacementStarted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -13327,10 +13290,9 @@ void AJunoBuildingPreviewer::ReceivePlacementStarted()
 
 void AJunoBuildingPreviewer::ReceivePreviewCleared(const struct FJunoBuildingSelectionPreview& Preview)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePreviewCleared");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceivePreviewCleared");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingPreviewer_ReceivePreviewCleared Parms{};
 
@@ -13347,10 +13309,9 @@ void AJunoBuildingPreviewer::ReceivePreviewCleared(const struct FJunoBuildingSel
 
 void AJunoBuildingPreviewer::ReceivePreviewCreated(const struct FJunoBuildingSelectionPreview& Preview)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePreviewCreated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceivePreviewCreated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingPreviewer_ReceivePreviewCreated Parms{};
 
@@ -13367,10 +13328,9 @@ void AJunoBuildingPreviewer::ReceivePreviewCreated(const struct FJunoBuildingSel
 
 void AJunoBuildingPreviewer::ReceivePreviewSet(const struct FJunoBuildingSelectionPreview& Preview)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePreviewSet");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceivePreviewSet");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingPreviewer_ReceivePreviewSet Parms{};
 
@@ -13387,10 +13347,9 @@ void AJunoBuildingPreviewer::ReceivePreviewSet(const struct FJunoBuildingSelecti
 
 void AJunoBuildingPreviewer::ReceiveUpdateSnapEntryPreviews(const TArray<struct FJunoBuildingSnapEntryPreview>& Previews)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveUpdateSnapEntryPreviews");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingPreviewer", "ReceiveUpdateSnapEntryPreviews");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingPreviewer_ReceiveUpdateSnapEntryPreviews Parms{};
 
@@ -14773,10 +14732,9 @@ void UJunoAwesomeThresholdsComponent::HandleJunoAwesomeLevelChanged(const struct
 
 void UJunoAwesomeLevelComponent::BP_OnAwesomeLevelChanged(const struct FJunoAwesomeLevelChangeData& ChangeData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnAwesomeLevelChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoAwesomeLevelComponent", "BP_OnAwesomeLevelChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoAwesomeLevelComponent_BP_OnAwesomeLevelChanged Parms{};
 
@@ -14793,10 +14751,9 @@ void UJunoAwesomeLevelComponent::BP_OnAwesomeLevelChanged(const struct FJunoAwes
 
 void UJunoAwesomeLevelComponent::BP_OnAwesomePointsModified(const struct FJunoAwesomePointModificationData& ModificationData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnAwesomePointsModified");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoAwesomeLevelComponent", "BP_OnAwesomePointsModified");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoAwesomeLevelComponent_BP_OnAwesomePointsModified Parms{};
 
@@ -15373,10 +15330,9 @@ void AJunoKnowledgeDebugMenu::ServerSetRecipeKnowledgeState(const class APlayerC
 
 void UJunoNamedPOIComponent::K2_OnAwesomeLevelChangedCosmetic(const struct FJunoAwesomeLevelChangeData& ChangeData, const class APlayerController* PlayerController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnAwesomeLevelChangedCosmetic");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoNamedPOIComponent", "K2_OnAwesomeLevelChangedCosmetic");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoNamedPOIComponent_K2_OnAwesomeLevelChangedCosmetic Parms{};
 
@@ -15395,10 +15351,9 @@ void UJunoNamedPOIComponent::K2_OnAwesomeLevelChangedCosmetic(const struct FJuno
 
 void UJunoNamedPOIComponent::K2_OnAwesomePointsModifiedCosmetic(const struct FJunoAwesomePointModificationData& ModificationData, const class APlayerController* PlayerController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnAwesomePointsModifiedCosmetic");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoNamedPOIComponent", "K2_OnAwesomePointsModifiedCosmetic");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoNamedPOIComponent_K2_OnAwesomePointsModifiedCosmetic Parms{};
 
@@ -15418,10 +15373,9 @@ void UJunoNamedPOIComponent::K2_OnAwesomePointsModifiedCosmetic(const struct FJu
 
 void UJunoNamedPOIComponent::K2_OnCampMarkerChanged(const struct FJunoMarker& NewMarker, const class AJunoCampActor* OwningCamp, const class APlayerController* PlayerController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnCampMarkerChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoNamedPOIComponent", "K2_OnCampMarkerChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoNamedPOIComponent_K2_OnCampMarkerChanged Parms{};
 
@@ -15442,10 +15396,9 @@ void UJunoNamedPOIComponent::K2_OnCampMarkerChanged(const struct FJunoMarker& Ne
 
 void UJunoNamedPOIComponent::K2_OnCampNameChanged(const class FText& NewName, const class AJunoCampActor* OwningCamp, const class APlayerController* PlayerController)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnCampNameChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoNamedPOIComponent", "K2_OnCampNameChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoNamedPOIComponent_K2_OnCampNameChanged Parms{};
 
@@ -15467,10 +15420,9 @@ void UJunoNamedPOIComponent::K2_OnCampNameChanged(const class FText& NewName, co
 
 void UJunoNamedPOIComponent::K2_OnPlayerEnteredCampCosmetic(const class APlayerController* PlayerController, int32 CurrentAwesomeLevel, int32 AwesomePoints, const class AJunoCampActor* OwningCamp)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnPlayerEnteredCampCosmetic");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoNamedPOIComponent", "K2_OnPlayerEnteredCampCosmetic");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoNamedPOIComponent_K2_OnPlayerEnteredCampCosmetic Parms{};
 
@@ -15493,10 +15445,9 @@ void UJunoNamedPOIComponent::K2_OnPlayerEnteredCampCosmetic(const class APlayerC
 
 void UJunoNamedPOIComponent::K2_OnPlayerExitedCampCosmetic(const class APlayerController* PlayerController, int32 CurrentAwesomeLevel, int32 AwesomePoints, const class AJunoCampActor* OwningCamp)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnPlayerExitedCampCosmetic");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoNamedPOIComponent", "K2_OnPlayerExitedCampCosmetic");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoNamedPOIComponent_K2_OnPlayerExitedCampCosmetic Parms{};
 
@@ -16329,10 +16280,9 @@ bool UJunoPawnComponentMood::IsMoodReactionSupported(const struct FGameplayTag& 
 
 bool UJunoPawnComponentMood::IsMoodReactionSupported_Internal(const struct FGameplayTag& MoodReactionTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"IsMoodReactionSupported_Internal");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoPawnComponentMood", "IsMoodReactionSupported_Internal");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoPawnComponentMood_IsMoodReactionSupported_Internal Parms{};
 
@@ -17156,10 +17106,9 @@ void UJunoPawnAnimInstance::ClearPawnMovingIdleBreakTimer()
 
 class UAnimMontage* UJunoPawnAnimInstance::DetermineMoodReactionMontage(const struct FGameplayTag& MoodReactionTag, class UProxyTable* MoodReactionProxyTable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"DetermineMoodReactionMontage");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoPawnAnimInstance", "DetermineMoodReactionMontage");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoPawnAnimInstance_DetermineMoodReactionMontage Parms{};
 
@@ -17177,10 +17126,9 @@ class UAnimMontage* UJunoPawnAnimInstance::DetermineMoodReactionMontage(const st
 
 void UJunoPawnAnimInstance::OnBecomeAggressive()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBecomeAggressive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoPawnAnimInstance", "OnBecomeAggressive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17191,10 +17139,9 @@ void UJunoPawnAnimInstance::OnBecomeAggressive()
 
 void UJunoPawnAnimInstance::OnStoppedBeingAggressive()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnStoppedBeingAggressive");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoPawnAnimInstance", "OnStoppedBeingAggressive");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17278,10 +17225,9 @@ void UJunoPlayerAnimInstance::ClearRotationInterpolationSpeedOverride()
 
 void UJunoPlayerAnimInstance::OnPlayerEmotionChanged()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerEmotionChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoPlayerAnimInstance", "OnPlayerEmotionChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -17294,10 +17240,9 @@ void UJunoPlayerAnimInstance::OnPlayerEmotionChanged()
 
 void UJunoPlayerAnimInstance::OnPlayerMainHandItemChanged(class AFortWeapon* CurrentItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerMainHandItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoPlayerAnimInstance", "OnPlayerMainHandItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoPlayerAnimInstance_OnPlayerMainHandItemChanged Parms{};
 
@@ -17314,10 +17259,9 @@ void UJunoPlayerAnimInstance::OnPlayerMainHandItemChanged(class AFortWeapon* Cur
 
 void UJunoPlayerAnimInstance::OnPlayerOffHandItemChanged(class AFortWeapon* CurrentItem)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerOffHandItemChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoPlayerAnimInstance", "OnPlayerOffHandItemChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoPlayerAnimInstance_OnPlayerOffHandItemChanged Parms{};
 
@@ -17332,10 +17276,9 @@ void UJunoPlayerAnimInstance::OnPlayerOffHandItemChanged(class AFortWeapon* Curr
 
 void UJunoPlayerAnimInstance::OnPlayerStoppedPushing()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerStoppedPushing");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoPlayerAnimInstance", "OnPlayerStoppedPushing");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -18484,10 +18427,9 @@ class ABuilderTool* UJunoCameraMode_OrbitCam::GetBuildPreviewerFromViewTarget(co
 
 void UJunoCameraMode_OrbitCam::OnBecomeActiveBP(class AActor* ViewTarget)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBecomeActiveBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCameraMode_OrbitCam", "OnBecomeActiveBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCameraMode_OrbitCam_OnBecomeActiveBP Parms{};
 
@@ -18698,10 +18640,9 @@ void UJunoCameraMode_OrbitCam::UpdateCamera_UpdateViewTargetSpaceViewOffset(stru
 
 void UJunoCameraMode_OrbitCam::UpdateCameraBP(class AActor* ViewTarget, float DeltaTime, struct FTViewTarget& OutVT)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateCameraBP");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCameraMode_OrbitCam", "UpdateCameraBP");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCameraMode_OrbitCam_UpdateCameraBP Parms{};
 
@@ -18794,10 +18735,9 @@ void UJunoCameraMode_OrbitCam::UpdateCameraNativeRawTranslation(class AActor* Vi
 
 bool UJunoCameraMode_OrbitCam::CalculateCameraOriginForBuildPreview(const class AActor* ViewTarget, struct FVector& OutOrigin) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CalculateCameraOriginForBuildPreview");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCameraMode_OrbitCam", "CalculateCameraOriginForBuildPreview");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoCameraMode_OrbitCam_CalculateCameraOriginForBuildPreview Parms{};
 
@@ -20004,10 +19944,9 @@ void UJunoControllerComponent::HandleFortPawnChanged(class AFortPawn* NewPawn)
 
 void UJunoControllerComponent::OnAnimToggle()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnAnimToggle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoControllerComponent", "OnAnimToggle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20018,10 +19957,9 @@ void UJunoControllerComponent::OnAnimToggle()
 
 void UJunoControllerComponent::OnCameraToggle()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnCameraToggle");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoControllerComponent", "OnCameraToggle");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -20950,10 +20888,9 @@ void AJunoRootPlayspace::OnRep_WorldMetadata()
 
 void UJunoConnectivityComponent::GetAutomaticallyConnectedComponents(TArray<class UJunoConnectivityComponent*>* Results)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetAutomaticallyConnectedComponents");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoConnectivityComponent", "GetAutomaticallyConnectedComponents");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoConnectivityComponent_GetAutomaticallyConnectedComponents Parms{};
 
@@ -21221,10 +21158,9 @@ void UJunoConnectivityComponent::OnRemovedFromClusterUnion(class UClusterUnionCo
 
 void UJunoConnectivityComponent::OnRemovedFromGraph()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRemovedFromGraph");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoConnectivityComponent", "OnRemovedFromGraph");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -21503,10 +21439,9 @@ void UJunoCreatureAnimInstance::StartInPlace_Setup(const class UAnimSequence* St
 
 void UJunoCreatureAnimInstance::StartInPlace_Started()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StartInPlace_Started");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCreatureAnimInstance", "StartInPlace_Started");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21517,10 +21452,9 @@ void UJunoCreatureAnimInstance::StartInPlace_Started()
 
 void UJunoCreatureAnimInstance::TurnInPlace_Ended()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"TurnInPlace_Ended");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCreatureAnimInstance", "TurnInPlace_Ended");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21531,10 +21465,9 @@ void UJunoCreatureAnimInstance::TurnInPlace_Ended()
 
 void UJunoCreatureAnimInstance::TurnInPlace_Interrupted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"TurnInPlace_Interrupted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCreatureAnimInstance", "TurnInPlace_Interrupted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -21589,10 +21522,9 @@ void UJunoCreatureAnimInstance::TurnInPlace_SignalAnimationEnded()
 
 void UJunoCreatureAnimInstance::TurnInPlace_Started()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"TurnInPlace_Started");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoCreatureAnimInstance", "TurnInPlace_Started");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22149,10 +22081,9 @@ bool UJunoBuildingBehavior::HasAnySnapEntries()
 
 void UJunoBuildingBehavior::ReceivedFailedInteraction()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivedFailedInteraction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingBehavior", "ReceivedFailedInteraction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22165,10 +22096,9 @@ void UJunoBuildingBehavior::ReceivedFailedInteraction()
 
 void UJunoBuildingBehavior::ReceiveNudgeInputAction(bool bOffsetChanged)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveNudgeInputAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingBehavior", "ReceiveNudgeInputAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingBehavior_ReceiveNudgeInputAction Parms{};
 
@@ -22185,10 +22115,9 @@ void UJunoBuildingBehavior::ReceiveNudgeInputAction(bool bOffsetChanged)
 
 void UJunoBuildingBehavior::ReceivePositionChangedGridCell(const struct FVector& GridCellLocation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceivePositionChangedGridCell");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingBehavior", "ReceivePositionChangedGridCell");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoBuildingBehavior_ReceivePositionChangedGridCell Parms{};
 
@@ -22203,10 +22132,9 @@ void UJunoBuildingBehavior::ReceivePositionChangedGridCell(const struct FVector&
 
 void UJunoBuildingBehavior::ReceiveRotateSelection()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveRotateSelection");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingBehavior", "ReceiveRotateSelection");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22217,10 +22145,9 @@ void UJunoBuildingBehavior::ReceiveRotateSelection()
 
 void UJunoBuildingBehavior::ReceiveSnappingDisabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveSnappingDisabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingBehavior", "ReceiveSnappingDisabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -22231,10 +22158,9 @@ void UJunoBuildingBehavior::ReceiveSnappingDisabled()
 
 void UJunoBuildingBehavior::ReceiveSnappingEnabled()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ReceiveSnappingEnabled");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoBuildingBehavior", "ReceiveSnappingEnabled");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23652,10 +23578,9 @@ struct FBuilderToolSelectedActor UJunoBuildingBlueprintLibrary::MakeJunoBuilderT
 
 void UJunoAction::K2_OnExecuteAction(const struct FJunoActionTargetPayload& ActionTargetPayload, const class UJunoActionConfig* Config) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnExecuteAction");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoAction", "K2_OnExecuteAction");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoAction_K2_OnExecuteAction Parms{};
 
@@ -23825,10 +23750,9 @@ void IJunoDamageableBuildingInterface::OnBuildingHandleOutOfHealth(const struct 
 
 void AJunoGuidedBuildingActor::HideSparkleEffect()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HideSparkleEffect");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoGuidedBuildingActor", "HideSparkleEffect");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -23841,10 +23765,9 @@ void AJunoGuidedBuildingActor::HideSparkleEffect()
 
 void AJunoGuidedBuildingActor::OnBlockedAutoCompleteIndexes(const TArray<struct FAutoCompleteBlockedIndex>& BlockedIndexes)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBlockedAutoCompleteIndexes");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoGuidedBuildingActor", "OnBlockedAutoCompleteIndexes");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoGuidedBuildingActor_OnBlockedAutoCompleteIndexes Parms{};
 
@@ -23925,10 +23848,9 @@ void AJunoGuidedBuildingActor::OnFilledPieceDied(class AActor* DamagedActor, flo
 
 void AJunoGuidedBuildingActor::OnGhostBrushesHidden(bool bCanBlendVisibility)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGhostBrushesHidden");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoGuidedBuildingActor", "OnGhostBrushesHidden");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoGuidedBuildingActor_OnGhostBrushesHidden Parms{};
 
@@ -23946,10 +23868,9 @@ void AJunoGuidedBuildingActor::OnGhostBrushesHidden(bool bCanBlendVisibility)
 
 void AJunoGuidedBuildingActor::OnGhostBrushesVisible(bool bIsFocused, bool bCanBlendVisibility)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnGhostBrushesVisible");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoGuidedBuildingActor", "OnGhostBrushesVisible");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoGuidedBuildingActor_OnGhostBrushesVisible Parms{};
 
@@ -24153,10 +24074,9 @@ void AJunoGuidedBuildingActor::SetToAutoCompleteToStage(class APawn* InInstigato
 
 void AJunoGuidedBuildingActor::SetupComponent(class UPrimitiveComponent* PrimComp)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupComponent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoGuidedBuildingActor", "SetupComponent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoGuidedBuildingActor_SetupComponent Parms{};
 
@@ -24176,10 +24096,9 @@ void AJunoGuidedBuildingActor::SetupComponent(class UPrimitiveComponent* PrimCom
 
 void AJunoGuidedBuildingActor::ShowSparkleEffect()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShowSparkleEffect");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoGuidedBuildingActor", "ShowSparkleEffect");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -24192,10 +24111,9 @@ void AJunoGuidedBuildingActor::ShowSparkleEffect()
 
 void AJunoGuidedBuildingActor::UpdateBlueprintColor(const struct FJunoGuidedBuildingBrushState& BrushState)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateBlueprintColor");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoGuidedBuildingActor", "UpdateBlueprintColor");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoGuidedBuildingActor_UpdateBlueprintColor Parms{};
 
@@ -25056,10 +24974,9 @@ void AStressISMManager::Towers(int32 Rows, int32 Cols, int32 Height)
 
 class FText UJunoGuidedBuildingInteractionComponent::GetInteractionText() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetInteractionText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoGuidedBuildingInteractionComponent", "GetInteractionText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoGuidedBuildingInteractionComponent_GetInteractionText Parms{};
 
@@ -26944,10 +26861,9 @@ void UJunoPickupComponent::PickupBuildingctor(class AFortPlayerController* FPC)
 
 bool AJunoStorageChest::BlueprintAllowSpawnLoot(const struct FInteractionType& InteractType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintAllowSpawnLoot");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoStorageChest", "BlueprintAllowSpawnLoot");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoStorageChest_BlueprintAllowSpawnLoot Parms{};
 
@@ -26972,10 +26888,9 @@ bool AJunoStorageChest::BlueprintAllowSpawnLoot(const struct FInteractionType& I
 
 bool AJunoStorageChest::BlueprintCanShowInventoryUI(const struct FInteractionType& InteractType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintCanShowInventoryUI");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoStorageChest", "BlueprintCanShowInventoryUI");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoStorageChest_BlueprintCanShowInventoryUI Parms{};
 
@@ -27001,10 +26916,9 @@ bool AJunoStorageChest::BlueprintCanShowInventoryUI(const struct FInteractionTyp
 
 class FName AJunoStorageChest::BlueprintGetLootTierGroup(const struct FJunoBiomeInfoQueryResult& BiomeInfo, const class FString& TilePrefix)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintGetLootTierGroup");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoStorageChest", "BlueprintGetLootTierGroup");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoStorageChest_BlueprintGetLootTierGroup Parms{};
 
@@ -27022,10 +26936,9 @@ class FName AJunoStorageChest::BlueprintGetLootTierGroup(const struct FJunoBiome
 
 void AJunoStorageChest::BlueprintOnChestLooted()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BlueprintOnChestLooted");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoStorageChest", "BlueprintOnChestLooted");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -27122,10 +27035,9 @@ void AJunoStorageChest::OnRep_ChestSearched()
 
 void AJunoStorageChest::UpdateVisibilityOfLightBeamDeathChest(bool IsVisible)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateVisibilityOfLightBeamDeathChest");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoStorageChest", "UpdateVisibilityOfLightBeamDeathChest");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoStorageChest_UpdateVisibilityOfLightBeamDeathChest Parms{};
 
@@ -27143,10 +27055,9 @@ void AJunoStorageChest::UpdateVisibilityOfLightBeamDeathChest(bool IsVisible)
 
 bool AJunoStorageChest::CanInteractWithChest(const class AFortPawn* FortPawn) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanInteractWithChest");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoStorageChest", "CanInteractWithChest");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoStorageChest_CanInteractWithChest Parms{};
 

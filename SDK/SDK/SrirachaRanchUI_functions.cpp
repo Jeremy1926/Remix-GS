@@ -342,10 +342,9 @@ void URadioPlayerWidgetBase::OnControllerGainedNewFortPawn(class AFortPawn* Fort
 
 void URadioPlayerWidgetBase::OnFailedToOpenSource(class UStreamingRadioPlayerComponent* Radio, const struct FAthenaRadioStation& Source)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnFailedToOpenSource");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RadioPlayerWidgetBase", "OnFailedToOpenSource");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RadioPlayerWidgetBase_OnFailedToOpenSource Parms{};
 
@@ -364,10 +363,9 @@ void URadioPlayerWidgetBase::OnFailedToOpenSource(class UStreamingRadioPlayerCom
 
 void URadioPlayerWidgetBase::OnLoadingNewSource(class UStreamingRadioPlayerComponent* Radio, const struct FAthenaRadioStation& Source)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLoadingNewSource");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RadioPlayerWidgetBase", "OnLoadingNewSource");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RadioPlayerWidgetBase_OnLoadingNewSource Parms{};
 
@@ -385,10 +383,9 @@ void URadioPlayerWidgetBase::OnLoadingNewSource(class UStreamingRadioPlayerCompo
 
 void URadioPlayerWidgetBase::OnMetadataChanged(const struct FFortMediaInBandMetadata& MediaMetadata)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnMetadataChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RadioPlayerWidgetBase", "OnMetadataChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RadioPlayerWidgetBase_OnMetadataChanged Parms{};
 
@@ -403,10 +400,9 @@ void URadioPlayerWidgetBase::OnMetadataChanged(const struct FFortMediaInBandMeta
 
 void URadioPlayerWidgetBase::OnPickerActivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPickerActivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RadioPlayerWidgetBase", "OnPickerActivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -417,10 +413,9 @@ void URadioPlayerWidgetBase::OnPickerActivated()
 
 void URadioPlayerWidgetBase::OnPickerDeactivated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPickerDeactivated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RadioPlayerWidgetBase", "OnPickerDeactivated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -434,10 +429,9 @@ void URadioPlayerWidgetBase::OnPickerDeactivated()
 
 void URadioPlayerWidgetBase::OnRadioStopped(class UStreamingRadioPlayerComponent* Radio, const struct FAthenaRadioStation& LastSource)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRadioStopped");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RadioPlayerWidgetBase", "OnRadioStopped");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RadioPlayerWidgetBase_OnRadioStopped Parms{};
 
@@ -456,10 +450,9 @@ void URadioPlayerWidgetBase::OnRadioStopped(class UStreamingRadioPlayerComponent
 
 void URadioPlayerWidgetBase::OnSourceFinished(class UStreamingRadioPlayerComponent* Radio, const struct FAthenaRadioStation& Source)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSourceFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RadioPlayerWidgetBase", "OnSourceFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RadioPlayerWidgetBase_OnSourceFinished Parms{};
 
@@ -478,10 +471,9 @@ void URadioPlayerWidgetBase::OnSourceFinished(class UStreamingRadioPlayerCompone
 
 void URadioPlayerWidgetBase::OnSourcePlaying(class UStreamingRadioPlayerComponent* Radio, const struct FAthenaRadioStation& Source)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSourcePlaying");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RadioPlayerWidgetBase", "OnSourcePlaying");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RadioPlayerWidgetBase_OnSourcePlaying Parms{};
 
@@ -499,10 +491,9 @@ void URadioPlayerWidgetBase::OnSourcePlaying(class UStreamingRadioPlayerComponen
 
 void URadioPlayerWidgetBase::SetControllable(bool bCanControl)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetControllable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("RadioPlayerWidgetBase", "SetControllable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::RadioPlayerWidgetBase_SetControllable Parms{};
 

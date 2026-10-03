@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void AVehicleCosmeticsAudioController::BP_OnCosmeticsDataUpdated(const class UVehicleAudioCosmeticData* CosmeticData)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCosmeticsDataUpdated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsAudioController", "BP_OnCosmeticsDataUpdated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VehicleCosmeticsAudioController_BP_OnCosmeticsDataUpdated Parms{};
 
@@ -43,10 +42,9 @@ void AVehicleCosmeticsAudioController::BP_OnCosmeticsDataUpdated(const class UVe
 
 void AVehicleCosmeticsAudioController::BP_OnCosmeticsFailed(const struct FVehicleCosmeticsFailureInfo& ReasonInfo)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnCosmeticsFailed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsAudioController", "BP_OnCosmeticsFailed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VehicleCosmeticsAudioController_BP_OnCosmeticsFailed Parms{};
 
@@ -61,10 +59,9 @@ void AVehicleCosmeticsAudioController::BP_OnCosmeticsFailed(const struct FVehicl
 
 void AVehicleCosmeticsAudioController::BP_OnEngineAudioDataEjected()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnEngineAudioDataEjected");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsAudioController", "BP_OnEngineAudioDataEjected");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -77,10 +74,9 @@ void AVehicleCosmeticsAudioController::BP_OnEngineAudioDataEjected()
 
 void AVehicleCosmeticsAudioController::BP_OnEngineAudioDataLoaded(const class USoundBase* Sound)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnEngineAudioDataLoaded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VehicleCosmeticsAudioController", "BP_OnEngineAudioDataLoaded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VehicleCosmeticsAudioController_BP_OnEngineAudioDataLoaded Parms{};
 

@@ -24,10 +24,9 @@ SDK_NAMESPACE_START
 
 TSoftClassPtr<class UClass> UCustomHUDLayoutComponent::GetTargetWidgetClassFromTag(const struct FGameplayTag& GameplayTag)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetTargetWidgetClassFromTag");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("CustomHUDLayoutComponent", "GetTargetWidgetClassFromTag");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::CustomHUDLayoutComponent_GetTargetWidgetClassFromTag Parms{};
 

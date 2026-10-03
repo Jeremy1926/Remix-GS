@@ -23,10 +23,9 @@ SDK_NAMESPACE_START
 
 void UFortPurchaseHistoryEntryBase::UpdateItemList(const TArray<class UFortCosmeticItemCard*>& ItemCards)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"UpdateItemList");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPurchaseHistoryEntryBase", "UpdateItemList");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPurchaseHistoryEntryBase_UpdateItemList Parms{};
 
@@ -51,10 +50,9 @@ void UFortPurchaseHistoryEntryBase::UpdateItemList(const TArray<class UFortCosme
 
 void UFortPurchaseHistoryEntry::OnSetHistory(bool bHasBeenRefunded, bool bIsCancelPurchaseEligible, bool bIsTokenlessRefund, bool bPlayerHasTokens, bool bNonRefundable, bool IsPartOfABundle, bool IsNextRefundable, int32 IndexInBundle, int32 NumPurchasesInBundle)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetHistory");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPurchaseHistoryEntry", "OnSetHistory");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPurchaseHistoryEntry_OnSetHistory Parms{};
 
@@ -82,10 +80,9 @@ void UFortPurchaseHistoryEntry::OnSetHistory(bool bHasBeenRefunded, bool bIsCanc
 
 void UFortPurchaseHistoryEntry::SetPurchaseText(const class FText& PurchaseDateText, const class FText& RefundDateText, bool bHasBeenRefunded, const EFortPurchaseHistoryRefundType RefundType)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetPurchaseText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPurchaseHistoryEntry", "SetPurchaseText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPurchaseHistoryEntry_SetPurchaseText Parms{};
 
@@ -106,10 +103,9 @@ void UFortPurchaseHistoryEntry::SetPurchaseText(const class FText& PurchaseDateT
 
 void UFortPurchaseHistoryEntry::SetupItemCard(const class UFortCosmeticItemCard* ItemCard, const class UFortItem* Item)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetupItemCard");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPurchaseHistoryEntry", "SetupItemCard");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPurchaseHistoryEntry_SetupItemCard Parms{};
 
@@ -127,10 +123,9 @@ void UFortPurchaseHistoryEntry::SetupItemCard(const class UFortCosmeticItemCard*
 
 void UFortPurchaseHistoryBundleEntry::SetExpandButtonText(int32 NumPurchases)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"SetExpandButtonText");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPurchaseHistoryBundleEntry", "SetExpandButtonText");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPurchaseHistoryBundleEntry_SetExpandButtonText Parms{};
 
@@ -145,10 +140,9 @@ void UFortPurchaseHistoryBundleEntry::SetExpandButtonText(int32 NumPurchases)
 
 void UFortAnnualRefundTicket::OnPlayLockingAnimation()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayLockingAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAnnualRefundTicket", "OnPlayLockingAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -161,10 +155,9 @@ void UFortAnnualRefundTicket::OnPlayLockingAnimation()
 
 void UFortAnnualRefundTicket::OnUpdateAvailableState(const bool bIsAvailable)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdateAvailableState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAnnualRefundTicket", "OnUpdateAvailableState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAnnualRefundTicket_OnUpdateAvailableState Parms{};
 
@@ -181,10 +174,9 @@ void UFortAnnualRefundTicket::OnUpdateAvailableState(const bool bIsAvailable)
 
 void UFortAnnualRefundTicket::OnUpdatePendingState(const bool bIsPending)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnUpdatePendingState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortAnnualRefundTicket", "OnUpdatePendingState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortAnnualRefundTicket_OnUpdatePendingState Parms{};
 
@@ -201,10 +193,9 @@ void UFortAnnualRefundTicket::OnUpdatePendingState(const bool bIsPending)
 
 bool UFortPurchaseHistoryScreen::BP_IsShowingPurchases()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_IsShowingPurchases");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPurchaseHistoryScreen", "BP_IsShowingPurchases");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortPurchaseHistoryScreen_BP_IsShowingPurchases Parms{};
 
@@ -219,10 +210,9 @@ bool UFortPurchaseHistoryScreen::BP_IsShowingPurchases()
 
 void UFortPurchaseHistoryScreen::OnBeginRefundSubmission()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnBeginRefundSubmission");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPurchaseHistoryScreen", "OnBeginRefundSubmission");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -233,10 +223,9 @@ void UFortPurchaseHistoryScreen::OnBeginRefundSubmission()
 
 void UFortPurchaseHistoryScreen::OnEndRefundSubmission()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnEndRefundSubmission");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPurchaseHistoryScreen", "OnEndRefundSubmission");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -247,10 +236,9 @@ void UFortPurchaseHistoryScreen::OnEndRefundSubmission()
 
 void UFortPurchaseHistoryScreen::OnNoPurchasesAvailable()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnNoPurchasesAvailable");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPurchaseHistoryScreen", "OnNoPurchasesAvailable");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -261,10 +249,9 @@ void UFortPurchaseHistoryScreen::OnNoPurchasesAvailable()
 
 void UFortPurchaseHistoryScreen::OnPopulateView()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPopulateView");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortPurchaseHistoryScreen", "OnPopulateView");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -278,10 +265,9 @@ void UFortPurchaseHistoryScreen::OnPopulateView()
 
 void UFortRefundConfirmation::BP_UpdateItemsList(const TArray<class UFortItemDefinition*>& SelectedItemDefs, const int32 TotalMtxPaid)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateItemsList");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRefundConfirmation", "BP_UpdateItemsList");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortRefundConfirmation_BP_UpdateItemsList Parms{};
 
@@ -300,10 +286,9 @@ void UFortRefundConfirmation::BP_UpdateItemsList(const TArray<class UFortItemDef
 
 void UFortRefundConfirmation::BP_UpdateRefundType(const EFortPurchaseHistoryRefundType RefundType, const bool bBundledRefund)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_UpdateRefundType");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortRefundConfirmation", "BP_UpdateRefundType");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortRefundConfirmation_BP_UpdateRefundType Parms{};
 

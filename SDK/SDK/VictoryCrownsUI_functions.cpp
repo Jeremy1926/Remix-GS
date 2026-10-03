@@ -48,10 +48,9 @@ void UFortUIManagerComponent_VictoryCrowns::RebuildBearerIndicators(const TArray
 
 void UVictoryCrownsBearerInfoBase::OnSetPlayerState(class AFortPlayerStateAthena* PSA)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSetPlayerState");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VictoryCrownsBearerInfoBase", "OnSetPlayerState");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VictoryCrownsBearerInfoBase_OnSetPlayerState Parms{};
 
@@ -93,10 +92,9 @@ void UVictoryCrownsBearerInfoBase::SetPlayerState(class AFortPlayerStateAthena* 
 
 void UVictoryCrownsIndicator::OnDistanceChanged(int32 Distance)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnDistanceChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VictoryCrownsIndicator", "OnDistanceChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VictoryCrownsIndicator_OnDistanceChanged Parms{};
 
@@ -113,10 +111,9 @@ void UVictoryCrownsIndicator::OnDistanceChanged(int32 Distance)
 
 void UVictoryCrownsIndicator::OnScreenClampChanged(bool bIsClamped)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnScreenClampChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VictoryCrownsIndicator", "OnScreenClampChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VictoryCrownsIndicator_OnScreenClampChanged Parms{};
 
@@ -183,10 +180,9 @@ void UVictoryCrownsPlayerInfoWidget::HandleCrownBearerListChanged(const TArray<c
 
 void UVictoryCrownsPlayerInfoWidget::OnPlayerVictoryCrownStatusChanged(const bool bHasCrown)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnPlayerVictoryCrownStatusChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VictoryCrownsPlayerInfoWidget", "OnPlayerVictoryCrownStatusChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VictoryCrownsPlayerInfoWidget_OnPlayerVictoryCrownStatusChanged Parms{};
 
@@ -220,10 +216,9 @@ void UVictoryCrownsPreGameWidget::FadeOutTimerFinished()
 
 void UVictoryCrownsPreGameWidget::OnButtonClose()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnButtonClose");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VictoryCrownsPreGameWidget", "OnButtonClose");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -236,10 +231,9 @@ void UVictoryCrownsPreGameWidget::OnButtonClose()
 
 void UVictoryCrownsPreGameWidget::OnButtonCloseProgress(float Progress)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnButtonCloseProgress");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VictoryCrownsPreGameWidget", "OnButtonCloseProgress");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VictoryCrownsPreGameWidget_OnButtonCloseProgress Parms{};
 
@@ -275,10 +269,9 @@ void UVictoryCrownsPreGameWidget::OnCloseActionsComplete()
 
 void UVictoryCrownsPreGameWidget::OnInputMethodChanged(ECommonInputType CurrentInput)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInputMethodChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VictoryCrownsPreGameWidget", "OnInputMethodChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::VictoryCrownsPreGameWidget_OnInputMethodChanged Parms{};
 
@@ -337,10 +330,9 @@ void UVictoryCrownsPreGameWidget::RegisterCloseButtonInput()
 
 void UVictoryCrownsPreGameWidget::StartFadeOut()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StartFadeOut");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("VictoryCrownsPreGameWidget", "StartFadeOut");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

@@ -910,10 +910,9 @@ void UFNE_VolumeOverlapComponent::SetVolumeMaterial(TSoftObjectPtr<class UMateri
 
 bool UFNE_VolumeOverlapComponent::ShouldAllowOverlapEventToFire(class AActor* OverlapActor)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ShouldAllowOverlapEventToFire");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FNE_VolumeOverlapComponent", "ShouldAllowOverlapEventToFire");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FNE_VolumeOverlapComponent_ShouldAllowOverlapEventToFire Parms{};
 

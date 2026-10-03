@@ -168,6 +168,7 @@
     <ClInclude Include="MinHook.h" />
     <ClInclude Include="Shared.h" />
     <ClInclude Include="UConversationInstance.h" />
+    <ClInclude Include="UFortControllerComponent_TournamentStatsTracker.h" />
     <ClInclude Include="UFortQuestManager.h" />
     <ClInclude Include="hde64.h" />
     <ClInclude Include="SDK\SDK.hpp" />
@@ -422,6 +423,7 @@
     <ClCompile Include="UFortControllerComponent_IndicatedActorManagement.cpp" />
     <ClCompile Include="UFortEngine.cpp" />
     <ClCompile Include="UFortMovementComp_Character.cpp" />
+    <ClCompile Include="UFortControllerComponent_TournamentStatsTracker.cpp" />
     <ClCompile Include="UFortQuestManager.cpp" />
     <ClCompile Include="UNetDriver.cpp" />
     <ClCompile Include="UWorld.cpp" />

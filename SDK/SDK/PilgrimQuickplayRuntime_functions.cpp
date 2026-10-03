@@ -42,10 +42,9 @@ void UPilgrimGreenRoomLayoutSwitcher::CycleLayout()
 
 void UPilgrimGreenRoomLayoutSwitcher::OnLayoutChanged(int32 NewLayout)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnLayoutChanged");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimGreenRoomLayoutSwitcher", "OnLayoutChanged");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimGreenRoomLayoutSwitcher_OnLayoutChanged Parms{};
 
@@ -175,10 +174,9 @@ void UPilgrimPlayspaceComponent_IntroDirector::ClearSpotlightMontageHandles()
 
 void UPilgrimPlayspaceComponent_IntroDirector::DebugShowSpotlightTool_Impl(bool bShow)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"DebugShowSpotlightTool_Impl");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimPlayspaceComponent_IntroDirector", "DebugShowSpotlightTool_Impl");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimPlayspaceComponent_IntroDirector_DebugShowSpotlightTool_Impl Parms{};
 
@@ -252,10 +250,9 @@ bool UPilgrimPlayspaceComponent_IntroDirector::HasSpotlightMontageLoadFinished(i
 
 void UPilgrimPlayspaceComponent_IntroDirector::OnSpotlightMontageLoaded(int32 PlayerIndex, class UAnimMontage* LoadedMontage)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnSpotlightMontageLoaded");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimPlayspaceComponent_IntroDirector", "OnSpotlightMontageLoaded");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimPlayspaceComponent_IntroDirector_OnSpotlightMontageLoaded Parms{};
 
@@ -1678,10 +1675,9 @@ void APilgrimQuickplayPlayspace::ForceActiveCameraDirector()
 
 void APilgrimQuickplayPlayspace::HandleDirectorResetEvent(const struct FSparksCommonResetCameraDirectorEvent& Payload)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDirectorResetEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplayPlayspace", "HandleDirectorResetEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimQuickplayPlayspace_HandleDirectorResetEvent Parms{};
 
@@ -1698,10 +1694,9 @@ void APilgrimQuickplayPlayspace::HandleDirectorResetEvent(const struct FSparksCo
 
 void APilgrimQuickplayPlayspace::HandleDirectorStartEvent(const struct FSparksCommonStartCameraDirectorEvent& Payload)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDirectorStartEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplayPlayspace", "HandleDirectorStartEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimQuickplayPlayspace_HandleDirectorStartEvent Parms{};
 
@@ -1718,10 +1713,9 @@ void APilgrimQuickplayPlayspace::HandleDirectorStartEvent(const struct FSparksCo
 
 void APilgrimQuickplayPlayspace::HandleDirectorStopEvent(const struct FSparksCommonStopCameraDirectorEvent& Payload)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleDirectorStopEvent");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplayPlayspace", "HandleDirectorStopEvent");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimQuickplayPlayspace_HandleDirectorStopEvent Parms{};
 
@@ -1915,10 +1909,9 @@ void UPilgrimQuickplayPlayspaceComponent_AuraManager::HandleOnMBIFinished(const 
 
 void UPilgrimQuickplayPlayspaceComponent_PlayerManager::BP_OnAppResumed(float ElapsedTimeSeconds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"BP_OnAppResumed");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplayPlayspaceComponent_PlayerManager", "BP_OnAppResumed");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimQuickplayPlayspaceComponent_PlayerManager_BP_OnAppResumed Parms{};
 
@@ -2250,10 +2243,9 @@ struct FGameplayTag UPilgrimQuickplayStateBPFL::GetStateTag(const EPilgrimQuickp
 
 void UPilgrimQuickplayStateMachine::CleanUpStageForPlayer(class AFortPlayerPawn* Pawn)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CleanUpStageForPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplayStateMachine", "CleanUpStageForPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimQuickplayStateMachine_CleanUpStageForPlayer Parms{};
 
@@ -2298,10 +2290,9 @@ void UPilgrimQuickplayStateMachine::GetPlayerPawnsInPlayspace(TArray<class AFort
 
 void UPilgrimQuickplayStateMachine::PrepareStageForPlayer(class AFortPlayerPawn* Pawn, const struct FVector& TeleportLocation, const struct FRotator& TeleportRotation)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"PrepareStageForPlayer");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplayStateMachine", "PrepareStageForPlayer");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimQuickplayStateMachine_PrepareStageForPlayer Parms{};
 
@@ -2570,10 +2561,9 @@ const TArray<class APilgrimMusicBattleInstance*> UPilgrimQuickplayState_SongGame
 
 void UPilgrimQuickplayState_SongResults::ClientUpdateStateEndTime(float ServerWorldEndTimeSeconds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ClientUpdateStateEndTime");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplayState_SongResults", "ClientUpdateStateEndTime");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimQuickplayState_SongResults_ClientUpdateStateEndTime Parms{};
 
@@ -2607,10 +2597,9 @@ void UPilgrimQuickplayState_SongResults::GoToNextState()
 
 void UPilgrimQuickplayState_SongResults::HandleTimerFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleTimerFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplayState_SongResults", "HandleTimerFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	auto Flgs = Func->FunctionFlags;
 	Func->FunctionFlags |= 0x400;
@@ -2701,10 +2690,9 @@ void UPilgrimQuickplayState_SongResults::ServerRecievedPlayPreviousSongFromClien
 
 void UPilgrimQuickplayState_SongResults::ServerSetEndTime(float ServerWorldEndTimeSeconds)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"ServerSetEndTime");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimQuickplayState_SongResults", "ServerSetEndTime");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimQuickplayState_SongResults_ServerSetEndTime Parms{};
 
@@ -2874,10 +2862,9 @@ void UPilgrimStandinPawnComponent::SetupListeners(class UGameplayEventRouterComp
 
 void UPilgrimStandinPawnComponent::StartInstrumentAnimation(class APawn* Pawn, class ASparksMusicPlayspace* Playspace)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"StartInstrumentAnimation");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("PilgrimStandinPawnComponent", "StartInstrumentAnimation");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::PilgrimStandinPawnComponent_StartInstrumentAnimation Parms{};
 

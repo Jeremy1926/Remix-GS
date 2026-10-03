@@ -51,10 +51,9 @@ struct FVector ABuildingGameplayActorZeusThunderstorm::GetStrikeTargetingLocatio
 
 void ABuildingGameplayActorZeusThunderstorm::K2_OnLightningStrike(const struct FVector& Location)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnLightningStrike");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorZeusThunderstorm", "K2_OnLightningStrike");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorZeusThunderstorm_K2_OnLightningStrike Parms{};
 
@@ -72,10 +71,9 @@ void ABuildingGameplayActorZeusThunderstorm::K2_OnLightningStrike(const struct F
 
 void ABuildingGameplayActorZeusThunderstorm::K2_OnLightningStrikeFX(const struct FVector& Location, const float BoltHeight)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnLightningStrikeFX");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorZeusThunderstorm", "K2_OnLightningStrikeFX");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorZeusThunderstorm_K2_OnLightningStrikeFX Parms{};
 
@@ -91,10 +89,9 @@ void ABuildingGameplayActorZeusThunderstorm::K2_OnLightningStrikeFX(const struct
 
 void ABuildingGameplayActorZeusThunderstorm::K2_OnTelegraphEnd()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnTelegraphEnd");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorZeusThunderstorm", "K2_OnTelegraphEnd");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -107,10 +104,9 @@ void ABuildingGameplayActorZeusThunderstorm::K2_OnTelegraphEnd()
 
 void ABuildingGameplayActorZeusThunderstorm::K2_OnTelegraphStart(const struct FVector& Location)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"K2_OnTelegraphStart");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("BuildingGameplayActorZeusThunderstorm", "K2_OnTelegraphStart");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::BuildingGameplayActorZeusThunderstorm_K2_OnTelegraphStart Parms{};
 
@@ -286,10 +282,9 @@ void AFortProjectileSunRoseLightning::DoExplosionAsyncLOS()
 
 void AFortProjectileSunRoseLightning::OnExplosionFinished()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnExplosionFinished");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortProjectileSunRoseLightning", "OnExplosionFinished");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }

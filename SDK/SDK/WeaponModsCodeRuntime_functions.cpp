@@ -21,10 +21,9 @@ SDK_NAMESPACE_START
 
 void AFortModStation_WeaponUICapture::OnRefreshCapture()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnRefreshCapture");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortModStation_WeaponUICapture", "OnRefreshCapture");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -161,10 +160,9 @@ void AFortWeaponModStationBase::ForceEndInteractionsWithModStation()
 
 bool AFortWeaponModStationBase::GetModCostOverride(float* OutModCostOverride) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetModCostOverride");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortWeaponModStationBase", "GetModCostOverride");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortWeaponModStationBase_GetModCostOverride Parms{};
 
@@ -189,10 +187,9 @@ bool AFortWeaponModStationBase::GetModCostOverride(float* OutModCostOverride) co
 
 class UFortResourceItemDefinition* AFortWeaponModStationBase::GetTransactionCurrency() const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"GetTransactionCurrency");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortWeaponModStationBase", "GetTransactionCurrency");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortWeaponModStationBase_GetTransactionCurrency Parms{};
 
@@ -305,10 +302,9 @@ void UFortWeaponModStationComponent::HandleStopLocalInteractingWithStation()
 
 void UFortWeaponModStationComponent::LocalPurchaseRemoveMod(class UFortWeaponModItemDefinition* WeaponMod, class AFortWeapon* Weapon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"LocalPurchaseRemoveMod");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortWeaponModStationComponent", "LocalPurchaseRemoveMod");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortWeaponModStationComponent_LocalPurchaseRemoveMod Parms{};
 
@@ -332,10 +328,9 @@ void UFortWeaponModStationComponent::LocalPurchaseRemoveMod(class UFortWeaponMod
 
 void UFortWeaponModStationComponent::LocalPurchaseWeaponModForWeapon(class UFortWeaponModItemDefinition* WeaponMod, class AFortWeapon* Weapon)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"LocalPurchaseWeaponModForWeapon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortWeaponModStationComponent", "LocalPurchaseWeaponModForWeapon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortWeaponModStationComponent_LocalPurchaseWeaponModForWeapon Parms{};
 
@@ -465,10 +460,9 @@ void UFortWeaponModStationComponent::StartInteractWithWorkbenchActor(class AFort
 
 bool UFortWeaponModStationComponent::CanPlayerAffordModForWeapon(const class UFortWeaponModItemDefinition* WeaponMod, const class AFortWeapon* Weapon, const class AController* Controller) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanPlayerAffordModForWeapon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortWeaponModStationComponent", "CanPlayerAffordModForWeapon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortWeaponModStationComponent_CanPlayerAffordModForWeapon Parms{};
 
@@ -497,10 +491,9 @@ bool UFortWeaponModStationComponent::CanPlayerAffordModForWeapon(const class UFo
 
 bool UFortWeaponModStationComponent::CanPlayerAffordRemoveModFromWeapon(const class UFortWeaponModItemDefinition* WeaponMod, const class AFortWeapon* Weapon, const class AController* Controller) const
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"CanPlayerAffordRemoveModFromWeapon");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("FortWeaponModStationComponent", "CanPlayerAffordRemoveModFromWeapon");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::FortWeaponModStationComponent_CanPlayerAffordRemoveModFromWeapon Parms{};
 

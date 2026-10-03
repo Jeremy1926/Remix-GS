@@ -98,10 +98,9 @@ int32 UJunoPlayerEssenceViewModel::GetCurrentEssenceBalance() const
 
 void UJunoRuneEntry::HandlePlayerEssenceViewModelCreated(class UJunoPlayerEssenceViewModel* InPlayerEssenceViewModel)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandlePlayerEssenceViewModelCreated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoRuneEntry", "HandlePlayerEssenceViewModelCreated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoRuneEntry_HandlePlayerEssenceViewModelCreated Parms{};
 
@@ -144,10 +143,9 @@ bool UJunoRuneForgeScreen::ChooseInventorySlotToForge(const class UJunoInventory
 
 void UJunoRuneForgeScreen::HandleRuneForgeViewModelCreated()
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"HandleRuneForgeViewModelCreated");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoRuneForgeScreen", "HandleRuneForgeViewModelCreated");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	UObject::ProcessEvent(Func, nullptr);
 }
@@ -160,10 +158,9 @@ void UJunoRuneForgeScreen::HandleRuneForgeViewModelCreated()
 
 void UJunoRuneForgeScreen::OnInventorySlotClicked(class UJunoInventorySlot* InInventorySlot)
 {
-	static class UFunction* Func = nullptr;
+	static const class FName FuncName = FName(L"OnInventorySlotClicked");
 
-	if (Func == nullptr)
-		Func = Class->GetFunction("JunoRuneForgeScreen", "OnInventorySlotClicked");
+	class UFunction* Func = Class->GetFunction(FuncName);
 
 	Params::JunoRuneForgeScreen_OnInventorySlotClicked Parms{};
 

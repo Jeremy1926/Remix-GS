@@ -136,15 +136,41 @@ void Patch(uint64_t _Ptr, _Pt _Val)
     VirtualProtect((LPVOID)_Ptr, sizeof(_Pt), Protect, &Protect);
 }
 
+inline void* AllocateNear(uint64_t _Ptr)
+{
+    SYSTEM_INFO _Info;
+    GetSystemInfo(&_Info);
+
+    const uint64_t _Granularity = _Info.dwAllocationGranularity;
+    const uint64_t _Lowest = uint64_t(_Info.lpMinimumApplicationAddress);
+    const uint64_t _Highest = uint64_t(_Info.lpMaximumApplicationAddress);
+    const uint64_t _Min = _Ptr > _Lowest + 0x7FFF0000 ? _Ptr - 0x7FFF0000 : _Lowest;
+    const uint64_t _Max = _Ptr + 0x7FFF0000 < _Highest ? _Ptr + 0x7FFF0000 : _Highest;
+
+    for (auto _Address = (_Ptr & ~(_Granularity - 1)) - _Granularity; _Address >= _Min && _Address < _Ptr; _Address -= _Granularity)
+    {
+        if (auto _Page = VirtualAlloc((LPVOID)_Address, 0x1000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE))
+            return _Page;
+    }
+
+    for (auto _Address = (_Ptr & ~(_Granularity - 1)) + _Granularity; _Address + 0x1000 <= _Max; _Address += _Granularity)
+    {
+        if (auto _Page = VirtualAlloc((LPVOID)_Address, 0x1000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE))
+            return _Page;
+    }
+
+    return nullptr;
+}
+
 inline void Rel32Hook(uint64_t _Ptr, void* _Detour)
 {
     uint8_t _Jmp[] = { 0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     *(void**)(_Jmp + 6) = _Detour;
 
-    void* _Page = nullptr;
+    auto _Page = AllocateNear(_Ptr);
 
-    for (auto _Address = (_Ptr & ~0xFFFFull) - 0x10000; !_Page && _Ptr - _Address < 0x7FFF0000; _Address -= 0x10000)
-        _Page = VirtualAlloc((LPVOID)_Address, 0x1000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    if (!_Page)
+        return;
 
     memcpy(_Page, _Jmp, sizeof(_Jmp));
     Patch<int32_t>(_Ptr, int32_t(uint64_t(_Page) - (_Ptr + 4)));
