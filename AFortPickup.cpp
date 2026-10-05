@@ -2,6 +2,9 @@
 #include "Shared.h"
 #include "AFortPickup.h"
 #include "AFortInventory.h"
+#include "AFortPlayerController.h"
+#include "AFortAthenaAIBotController.h"
+#include "UAthenaAIServiceLoot.h"
 
 INIT_MODULE(AFortPickup);
 INIT_POSTLOAD(AFortPickup);
@@ -43,6 +46,8 @@ AFortPickupAthena* SpawnPickup(FVector Loc, FFortItemEntry& Entry, EFortPickupSo
     NewPickup->bTossedFromContainer = SpawnSource == EFortPickupSpawnSource::Chest || SpawnSource == EFortPickupSpawnSource::AmmoBox;
     if (NewPickup->bTossedFromContainer)
         NewPickup->OnRep_TossedFromContainer();
+
+    RegisterPickupLoot(NewPickup);
 
     return NewPickup;
 }
@@ -86,6 +91,8 @@ AFortPickupAthena* SpawnPickup(ABuildingContainer* Container, FFortItemEntry& En
 
     NewPickup->bTossedFromContainer = true;
     NewPickup->OnRep_TossedFromContainer();
+
+    RegisterPickupLoot(NewPickup);
 
     return NewPickup;
 }
@@ -561,8 +568,25 @@ static void PickLootDrops(UObject* Context, FFrame& Stack, bool* Ret)
     *Ret = LootDrops.Num() > 0;
 }
 
+static void (*GivePickupToOG)(AFortPickupAthena*, void*, bool);
+
+static void GivePickupTo(AFortPickupAthena* Pickup, void* InventoryOwner, bool bDestroyAfterPickup)
+{
+    auto Pawn = (AFortPlayerPawnAthena*)Pickup->PickupLocationData.PickupTarget.Get();
+    auto Controller = Pawn ? (AFortAthenaAIBotController*)Pawn->Controller : nullptr;
+
+    if (Pickup->Role == ENetRole::ROLE_Authority && Controller && Controller->IsA(AFortAthenaAIBotController::StaticClass()) && InventoryOwner == (void*)(uint64(Controller) + 0x3F0) && Controller->Inventory.ObjectPointer)
+    {
+        InternalPickup(Controller, &Pickup->PrimaryPickupItemEntry);
+        RefreshSlotItems(Controller);
+    }
+
+    GivePickupToOG(Pickup, InventoryOwner, bDestroyAfterPickup);
+}
+
 void AFortPickup__Init()
 {
+    Hook(ImageBase + 0x9ABE14C, GivePickupTo, GivePickupToOG);
     ExecHook(UFortKismetLibrary::StaticClass()->FindFunction("K2_SpawnPickupInWorld"), K2_SpawnPickupInWorld);
     ExecHook(UFortKismetLibrary::StaticClass()->FindFunction("K2_SpawnPickupInWorldWithClassAndItemEntry"), K2_SpawnPickupInWorldWithClassAndItemEntry);
     ExecHook(UFortKismetLibrary::StaticClass()->FindFunction("SpawnItemVariantPickupInWorld"), SpawnItemVariantPickupInWorld);

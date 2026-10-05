@@ -887,6 +887,31 @@ static void GiveVictoryCrown(AFortPlayerControllerAthena* PlayerController)
     StateValues.Free();
 }
 
+void DropItemsAsPickups(TArray<UFortWorldItem*>& ItemsToDropViaPickup, AFortPawn* DestructionPawn, AFortInventory* Inventory, AActor* PickupPostSpawnObject, void (*PickupPostSpawn)(AActor*, AFortPickup*, int32))
+{
+    auto Location = DestructionPawn->K2_GetActorLocation();
+
+    for (auto Item : ItemsToDropViaPickup)
+    {
+        auto ItemGuid = Item->ItemEntry.ItemGuid;
+
+        for (auto& Entry : Inventory->Inventory.ReplicatedEntries)
+        {
+            if (Entry.ItemGuid != ItemGuid)
+                continue;
+
+            auto Pickup = SpawnPickup(Location, Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::PlayerElimination, DestructionPawn);
+
+            if (Pickup && PickupPostSpawn)
+                PickupPostSpawn(PickupPostSpawnObject, Pickup, -1);
+
+            break;
+        }
+
+        Remove(Inventory, ItemGuid);
+    }
+}
+
 static void OnPawnDied(AFortPlayerControllerAthena* PlayerController, AFortPawn* DeadPawn, float Damage, const FGameplayTagContainer& DamageTags, const FGameplayEffectContextHandle& EffectContext,
                        AController* InstigatedBy, AActor* DamageCauser, AActor* KillerActor)
 {
@@ -912,19 +937,16 @@ static void ClientOnPawnDied(AFortPlayerControllerAthena* PlayerController, FFor
 
     if (WorldInventory && Pawn && Pawn->bShouldDropItemsOnDeath)
     {
-        std::vector<FGuid> GuidsToRemove;
+        TArray<UFortWorldItem*> ItemsToDrop;
 
-        for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
+        for (auto Item : WorldInventory->Inventory.ItemInstances)
         {
-            if (!CanBeDropped((UFortItemDefinition*)Entry.ItemDefinition))
-                continue;
-
-            SpawnPickup(Pawn->K2_GetActorLocation(), Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::PlayerElimination, PlayerController->MyFortPawn);
-            GuidsToRemove.push_back(Entry.ItemGuid);
+            if (CanBeDropped((UFortItemDefinition*)Item->ItemEntry.ItemDefinition))
+                ItemsToDrop.Add(Item);
         }
 
-        for (auto& Guid : GuidsToRemove)
-            Remove(WorldInventory, Guid);
+        DropItemsAsPickups(ItemsToDrop, Pawn, WorldInventory, nullptr, nullptr);
+        ItemsToDrop.Free();
     }
 
     auto KillerPlayerState = (AFortPlayerStateAthena*)DeathReport.KillerPlayerState;
@@ -1089,14 +1111,15 @@ static void ServerSpectateActor(AFortPlayerControllerAthena* PlayerController, A
     PlayerController->ClientSetViewTarget(NewViewTarget, TransitionParams);
 }
 
-void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntry* PickupEntry)
+void InternalPickup(AController* Controller, FFortItemEntry* PickupEntry)
 {
     if (!PickupEntry || !PickupEntry->ItemDefinition)
         return;
 
-    auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
-    auto Pawn = PlayerController->Pawn;
-    auto MyFortPawn = PlayerController->MyFortPawn;
+    auto PlayerController = Controller->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)Controller : nullptr;
+    auto WorldInventory = (AFortInventory*)(PlayerController ? PlayerController->WorldInventory.ObjectPointer : ((AFortAthenaAIBotController*)Controller)->Inventory.ObjectPointer);
+    auto Pawn = Controller->Pawn;
+    auto MyFortPawn = PlayerController ? PlayerController->MyFortPawn : (AFortPawn*)Pawn;
     auto PickupDefinition = (UFortItemDefinition*)PickupEntry->ItemDefinition;
     auto MaxStack = PickupDefinition->GetMaxStackSize(nullptr);
     int ItemCount = 0;
@@ -1128,6 +1151,9 @@ void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntr
 
     auto SendCollectStat = [&](int Count)
     {
+        if (!PlayerController)
+            return;
+
         auto TargetTags = GetOwnedGameplayTags(PickupDefinition);
 
         SendStatEvent(PlayerController->GetQuestManager(ESubGame::Athena), PlayerController, EFortQuestObjectiveStatEvent::Collect, Count, true, PickupDefinition, TargetTags);
@@ -1163,8 +1189,12 @@ void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntr
             Remove(WorldInventory, MyFortPawn->CurrentWeapon->ItemEntryGuid);
 
             auto Item = GiveItem(WorldInventory, *PickupEntry, PickupEntry->Count, true);
-            PlayerController->ServerExecuteInventoryItem(Item->ItemEntry.ItemGuid);
-            PlayerController->ClientEquipItem(Item->ItemEntry.ItemGuid, true);
+
+            if (PlayerController)
+            {
+                PlayerController->ServerExecuteInventoryItem(Item->ItemEntry.ItemGuid);
+                PlayerController->ClientEquipItem(Item->ItemEntry.ItemGuid, true);
+            }
         }
         else
             GiveItem(WorldInventory, *PickupEntry, PickupEntry->Count, true);
@@ -1598,43 +1628,8 @@ static void ServerVehicleModSeatRpc(UObject* Context, FFrame& Stack)
 static bool RemoveInventoryItem(void* Interface, FGuid& ItemGuid, int32 Count, bool bForceRemoval, bool bForcePersistWhenEmpty)
 {
     auto PlayerController = (AFortPlayerControllerAthena*)(__int64(Interface) - 0x878);
-    auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
-    UFortWorldItem* Item = nullptr;
-    FFortItemEntry* ItemEntry = nullptr;
 
-    for (auto Instance : WorldInventory->Inventory.ItemInstances)
-    {
-        if (Instance->ItemEntry.ItemGuid == ItemGuid)
-        {
-            Item = Instance;
-            break;
-        }
-    }
-
-    for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
-    {
-        if (Entry.ItemGuid == ItemGuid)
-        {
-            ItemEntry = &Entry;
-            break;
-        }
-    }
-
-    if (!Item)
-        return false;
-
-    ItemEntry->Count -= (std::max)(Count, 0);
-
-    if ((Count < 0 || ItemEntry->Count <= 0 || bForceRemoval) && !(bForcePersistWhenEmpty && Count >= 0 && !bForceRemoval))
-        Remove(WorldInventory, ItemGuid);
-    else
-    {
-        Item->ItemEntry.Count = ItemEntry->Count;
-        UpdateEntry(WorldInventory, *ItemEntry);
-        Item->ItemEntry.bIsDirty = true;
-    }
-
-    return true;
+    return RemoveInventoryItem((AFortInventory*)PlayerController->WorldInventory.ObjectPointer, ItemGuid, Count, bForceRemoval, bForcePersistWhenEmpty);
 }
 
 static void (*EnterAircraftOG)(UFortControllerComponent_Aircraft*, AActor*);
@@ -1891,7 +1886,7 @@ void AFortPlayerController__PostLoad()
     ExecHook(PlayerControllerClass->FindFunction("ServerOnMaterialSelection"), ServerOnMaterialSelection);
     ExecHook(PlayerControllerClass->FindFunction("ServerPlaySquadQuickChatMessage"), ServerPlaySquadQuickChatMessage);
     ExecHook(AFortPlayerControllerGameplay::StaticClass()->FindFunction("ServerVehicleModSeatRpc"), ServerVehicleModSeatRpc);
-    Hook(ImageBase + 0xA02DACC, RemoveInventoryItem);
+    Hook(ImageBase + 0xA02DACC, (bool (*)(void*, FGuid&, int32, bool, bool))RemoveInventoryItem);
 
     Hook(ImageBase + 0x945F42C, EnterAircraft, EnterAircraftOG);
     Hook<UFortControllerComponent_Aircraft>(uint32(0xAA), ServerAttemptAircraftJump);

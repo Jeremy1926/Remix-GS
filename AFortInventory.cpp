@@ -357,6 +357,46 @@ void Remove(AFortInventory* Inventory, FGuid Guid)
         ((bool (*)(const UFortWorldItem*, const void*, uint32_t))Instance->VTable[0xB3])(Instance, Inventory->Owner->GetInterface(IFortInventoryOwnerInterface::StaticClass()), Instance->ItemEntry.Count);
 }
 
+bool RemoveInventoryItem(AFortInventory* Inventory, FGuid& ItemGuid, int32 Count, bool bForceRemoval, bool bForcePersistWhenEmpty)
+{
+    UFortWorldItem* Item = nullptr;
+    FFortItemEntry* ItemEntry = nullptr;
+
+    for (auto Instance : Inventory->Inventory.ItemInstances)
+    {
+        if (Instance->ItemEntry.ItemGuid == ItemGuid)
+        {
+            Item = Instance;
+            break;
+        }
+    }
+
+    for (auto& Entry : Inventory->Inventory.ReplicatedEntries)
+    {
+        if (Entry.ItemGuid == ItemGuid)
+        {
+            ItemEntry = &Entry;
+            break;
+        }
+    }
+
+    if (!Item)
+        return false;
+
+    ItemEntry->Count -= (std::max)(Count, 0);
+
+    if ((Count < 0 || ItemEntry->Count <= 0 || bForceRemoval) && !(bForcePersistWhenEmpty && Count >= 0 && !bForceRemoval))
+        Remove(Inventory, ItemGuid);
+    else
+    {
+        Item->ItemEntry.Count = ItemEntry->Count;
+        UpdateEntry(Inventory, *ItemEntry);
+        Item->ItemEntry.bIsDirty = true;
+    }
+
+    return true;
+}
+
 FFortRangedWeaponStats* GetStats(const UFortWeaponItemDefinition* WeaponDefinition)
 {
     if (!WeaponDefinition || !WeaponDefinition->WeaponStatHandle.DataTable)

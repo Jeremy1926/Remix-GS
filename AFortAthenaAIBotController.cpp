@@ -3,6 +3,7 @@
 #include "AFortInventory.h"
 #include "AFortPickup.h"
 #include "AFortGameMode.h"
+#include "AFortPlayerController.h"
 #include "UConversationInstance.h"
 
 INIT_MODULE(AFortAthenaAIBotController);
@@ -70,9 +71,118 @@ static void InitializeInventory(void* InventoryOwnerInterface, TArray<FItemAndCo
         }
     }
 
+    if (Inventory && InventoryRuntimeParameters->bGrantPickAxe)
+    {
+        auto CosmeticLoadoutProvider = (void*)(uint64(Controller) + 0x3D0);
+        auto GetCosmeticLoadout = (FFortAthenaLoadout* (*)(void*, uint8))(*(void***)CosmeticLoadoutProvider)[0x3];
+        auto Pickaxe = GetCosmeticLoadout(CosmeticLoadoutProvider, 2)->Pickaxe;
+
+        if (!Pickaxe)
+            Pickaxe = GetCosmeticLoadout(CosmeticLoadoutProvider, 0)->Pickaxe;
+
+        if (auto PickaxeWeaponDefinition = Pickaxe ? Pickaxe->WeaponDefinition : nullptr)
+        {
+            auto& ReplicatedEntries = Inventory->Inventory.ReplicatedEntries;
+
+            for (int32 i = ReplicatedEntries.Num() - 1; i >= 0; i--)
+            {
+                auto ItemDefinition = (UFortItemDefinition*)ReplicatedEntries[i].ItemDefinition;
+
+                if (ItemDefinition && ItemDefinition->ItemType == EFortItemType::WeaponHarvest)
+                    Remove(Inventory, ReplicatedEntries[i].ItemGuid);
+            }
+
+            GiveItem(Inventory, PickaxeWeaponDefinition, 1);
+        }
+    }
+
     InventoryRuntimeParameters->bRemoveAllItemsOnInitialization = false;
     InitializeInventoryOG(InventoryOwnerInterface, Items);
     InventoryRuntimeParameters->bRemoveAllItemsOnInitialization = bRemoveAllItemsOnInitialization;
+}
+
+void RefreshSlotItems(AFortAthenaAIBotController* Controller)
+{
+    static auto SetItem = (void (*)(FFortBotInventoryInfo*, UFortWorldItem*))(ImageBase + 0xA5700A8);
+
+    auto Inventory = (AFortInventory*)Controller->Inventory.ObjectPointer;
+
+    if (!Inventory)
+        return;
+
+    auto& ItemInstances = Inventory->Inventory.ItemInstances;
+    auto& SlotItems = Controller->SlotItems;
+
+    for (int32 i = 0; i < SlotItems.Num() && i < Controller->MaxInventorySlots; i++)
+        SetItem(&SlotItems[i], i < ItemInstances.Num() ? ItemInstances[i] : nullptr);
+}
+
+static bool RemoveInventoryItem(void* InventoryOwnerInterface, FGuid& ItemGuid, int32 Count, bool bForceRemoval, bool bForcePersistWhenEmpty)
+{
+    auto Controller = (AFortAthenaAIBotController*)(uint64(InventoryOwnerInterface) - 0x3F0);
+    auto Inventory = (AFortInventory*)Controller->Inventory.ObjectPointer;
+
+    if (!Inventory || !RemoveInventoryItem(Inventory, ItemGuid, Count, bForceRemoval, bForcePersistWhenEmpty))
+        return false;
+
+    RefreshSlotItems(Controller);
+    return true;
+}
+
+static void DropInventoryItems(AFortAthenaAIBotController* Controller, AFortPawn* FortPawn)
+{
+    static auto ExternalShouldAlwaysDropItemOnDeathOrLogout = (bool (*)(UFortWorldItem*, bool))(ImageBase + 0x900D9F0);
+    static auto ExternalShouldDropOrDestroyByItemType = (void (*)(AController*, UFortWorldItemDefinition*, bool*, bool*))(ImageBase + 0x900DA7C);
+    static auto GetPickupComponentData = (FFortItemComponentData_Pickup* (*)(UFortWorldItemDefinition*))(ImageBase + 0x1C73DE8);
+    static auto HandlePickupPostSpawnOnDeath = (void (*)(AActor*, AFortPickup*, int32))(ImageBase + 0xA55DB94);
+
+    auto Inventory = (AFortInventory*)Controller->Inventory.ObjectPointer;
+
+    if (!Inventory || !Controller->Inventory.InterfacePointer || !FortPawn)
+        return;
+
+    TArray<UFortWorldItem*> ItemsToDropViaPickup;
+    TArray<UFortWorldItem*> ItemsToDropViaDestruction;
+
+    for (auto Item : Inventory->Inventory.ItemInstances)
+    {
+        auto ItemDefinition = ((UFortWorldItemDefinition* (*)(UFortWorldItem*))Item->VTable[0xB8])(Item);
+
+        if (!ItemDefinition || !ItemDefinition->IsA(UFortWorldItemDefinition::StaticClass()))
+            continue;
+
+        bool bShouldDestroy = false;
+        bool bShouldDrop = ExternalShouldAlwaysDropItemOnDeathOrLogout(Item, false);
+
+        ExternalShouldDropOrDestroyByItemType(Controller, ItemDefinition, &bShouldDrop, &bShouldDestroy);
+
+        if (!bShouldDrop && !bShouldDestroy)
+            continue;
+
+        auto PickupComponentData = GetPickupComponentData(ItemDefinition);
+        auto DropBehavior = PickupComponentData ? PickupComponentData->DropBehavior : EWorldItemDropBehavior::DropAsPickup;
+
+        if (bShouldDestroy || (DropBehavior != EWorldItemDropBehavior::DropAsPickup && DropBehavior != EWorldItemDropBehavior::DropAsPickupEvenWhenEmpty &&
+                               (DropBehavior != EWorldItemDropBehavior::DropAsPickupDestroyOnEmpty || ((int32 (*)(UFortWorldItem*))Item->VTable[0x80])(Item) <= 0)))
+            ItemsToDropViaDestruction.Add(Item);
+        else
+            ItemsToDropViaPickup.Add(Item);
+    }
+
+    DropItemsAsPickups(ItemsToDropViaPickup, FortPawn, Inventory, Controller, HandlePickupPostSpawnOnDeath);
+
+    auto InventoryOwnerInterface = (void*)(uint64(Controller) + 0x3F0);
+    auto OwnerRemoveInventoryItem = (bool (*)(void*, FGuid&, int32, bool, bool))(*(void***)InventoryOwnerInterface)[0x3D];
+
+    for (auto Item : ItemsToDropViaDestruction)
+    {
+        auto ItemGuid = Item->ItemEntry.ItemGuid;
+
+        OwnerRemoveInventoryItem(InventoryOwnerInterface, ItemGuid, ((int32 (*)(UFortWorldItem*))Item->VTable[0x80])(Item), true, false);
+    }
+
+    ItemsToDropViaPickup.Free();
+    ItemsToDropViaDestruction.Free();
 }
 
 static void DropLootOnDeath(AFortAthenaAIBotController* Controller, AFortPawn* Pawn, void* Context)
@@ -434,12 +544,14 @@ void AFortAthenaAIBotController__Init()
 {
     Hook(ImageBase + 0xA549788, ApplyCosmeticLoadout, ApplyCosmeticLoadoutOG);
     Hook(ImageBase + 0xA5512C8, DropLootOnDeath, DropLootOnDeathOG);
+    Hook(ImageBase + 0xA5510C8, DropInventoryItems);
 
     auto InventoryOwnerInterfaceVft = *(void***)(uint64(AFortAthenaAIBotController::GetDefaultObj()) + 0x3F0);
 
     InitializeInventoryOG = decltype(InitializeInventoryOG)(InventoryOwnerInterfaceVft[0x4]);
     Patch<void*>(uint64(&InventoryOwnerInterfaceVft[0x4]), (void*)InitializeInventory);
     Patch<void*>(uint64(&InventoryOwnerInterfaceVft[0x3]), (void*)CreateInventory);
+    Patch<void*>(uint64(&InventoryOwnerInterfaceVft[0x3D]), (void*)(bool (*)(void*, FGuid&, int32, bool, bool))RemoveInventoryItem);
 
     auto BaseInterfaceVft = *(void***)(uint64(UFortAthenaAISpawnerDataComponent::GetDefaultObj()) + 0x28);
 

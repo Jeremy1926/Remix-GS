@@ -6,6 +6,7 @@ UFortWorldItem* GiveItem(AFortInventory* Inventory, const UFortItemDefinition* I
 UFortWorldItem* GiveItem(AFortInventory* Inventory, FFortItemEntry& Entry, int Count = -1, bool bNotifyPlayer = true, bool bUpdateInventory = true);
 void Update(AFortInventory* Inventory, FFortItemEntry* Entry);
 void Remove(AFortInventory* Inventory, FGuid Guid);
+bool RemoveInventoryItem(AFortInventory* Inventory, FGuid& ItemGuid, int32 Count, bool bForceRemoval, bool bForcePersistWhenEmpty);
 FFortItemEntry* MakeItemEntry(const UFortItemDefinition* ItemDefinition, int32 Count, int32 Level);
 FFortRangedWeaponStats* GetStats(const UFortWeaponItemDefinition* WeaponDefinition);
 bool IsPrimaryQuickbar(const UFortItemDefinition* ItemDefinition);
