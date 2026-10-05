@@ -45,7 +45,6 @@ static void ServerNotifyConversationStarted(UConversationParticipantComponent* C
 static void ServerNotifyConversationEnded(UConversationParticipantComponent* Component, UConversationInstance* Conversation, const FConversationParticipants& PreservedParticipants);
 static void SendClientConversationMessage(UConversationParticipantComponent* Component, const FConversationContext* Context, const FClientConversationMessagePayload& Payload);
 static void SendClientUpdatedChoices(UConversationParticipantComponent* Component, const FConversationContext* Context, bool bForcedRefresh);
-static void SendClientRefreshedTaskChoiceData(UConversationParticipantComponent* Component, const FConversationNodeHandle& Handle, const FConversationContext* Context);
 
 static UConversationRegistry* GetFromWorld(UObject* World)
 {
@@ -59,18 +58,7 @@ static UConversationRegistry* GetFromWorld(UObject* World)
         return CachedRegistry;
 
     CachedWorld = World;
-    CachedRegistry = nullptr;
-
-    for (int32 i = 0; i < UObject::GObjects->Num(); i++)
-    {
-        auto Object = UObject::GObjects->GetByIndex(i);
-
-        if (Object && !Object->IsDefaultObject() && Object->Outer == World && Object->IsA(UConversationRegistry::StaticClass()))
-        {
-            CachedRegistry = (UConversationRegistry*)Object;
-            break;
-        }
-    }
+    CachedRegistry = (UConversationRegistry*)USubsystemBlueprintLibrary::GetWorldSubsystem(World, UConversationRegistry::StaticClass());
 
     return CachedRegistry;
 }
@@ -646,32 +634,6 @@ static void UpdateNextChoices(UConversationInstance* Conversation, const FConver
         AddDefaultUserChoice(Conversation);
 }
 
-static void ServerRefreshConversationChoices(UConversationInstance* Conversation)
-{
-    auto Context = CreateServerContext(Conversation);
-
-    UpdateNextChoices(Conversation, Context);
-
-    for (auto Actor : GetParticipantActors(Conversation))
-        if (auto ParticipantComponent = FindFor(Actor))
-            SendClientUpdatedChoices(ParticipantComponent, Context, false);
-
-    Context->Free();
-}
-
-static void ServerRefreshTaskChoiceData(UConversationInstance* Conversation, const FConversationNodeHandle& Handle)
-{
-    auto Context = CreateServerContext(Conversation);
-
-    UpdateNextChoices(Conversation, Context);
-
-    for (auto Actor : GetParticipantActors(Conversation))
-        if (auto ParticipantComponent = FindFor(Actor))
-            SendClientRefreshedTaskChoiceData(ParticipantComponent, Handle, Context);
-
-    Context->Free();
-}
-
 static void ProcessCurrentConversationNode(UConversationInstance* Conversation)
 {
     auto AnonContext = CreateServerContext(Conversation);
@@ -936,30 +898,6 @@ static void ServerNotifyExecuteTaskAndSideEffects(UConversationParticipantCompon
         Component->ClientExecuteTaskAndSideEffects(Handle, Graph);
 }
 
-static void ServerForAllConversationsRefreshChoices(UConversationParticipantComponent* Component, UConversationInstance* IgnoreConversation)
-{
-    if (!HasAuthority(Component))
-        return;
-
-    auto Conversations = Component->Auth_Conversations;
-
-    for (int32 i = 0; i < Conversations.Num(); i++)
-        if (Conversations.Data[i] != IgnoreConversation)
-            ServerRefreshConversationChoices(Conversations.Data[i]);
-}
-
-static void ServerForAllConversationsRefreshTaskChoiceData(UConversationParticipantComponent* Component, const FConversationNodeHandle& Handle, UConversationInstance* IgnoreConversation)
-{
-    if (!HasAuthority(Component))
-        return;
-
-    auto Conversations = Component->Auth_Conversations;
-
-    for (int32 i = 0; i < Conversations.Num(); i++)
-        if (Conversations.Data[i] != IgnoreConversation)
-            ServerRefreshTaskChoiceData(Conversations.Data[i], Handle);
-}
-
 static void ServerAbortAllConversations(UConversationParticipantComponent* Component)
 {
     std::vector<UConversationInstance*> Conversations;
@@ -997,44 +935,6 @@ static void SendClientUpdatedChoices(UConversationParticipantComponent* Componen
     FClientConversationOptionEntry::DestroyArray(LastMessage.Options);
     FClientConversationOptionEntry::CopyArray(LastMessage.Options, NewOptions);
     Component->ClientUpdateConversation(LastMessage);
-}
-
-static void SendClientRefreshedTaskChoiceData(UConversationParticipantComponent* Component, const FConversationNodeHandle& Handle, const FConversationContext* Context)
-{
-    auto Conversation = Context->ActiveConversation;
-
-    if (!Conversation)
-        return;
-
-    auto& CurrentOptions = GetCurrentUserChoices(Conversation);
-    auto& LastOptions = Component->LastMessage.Options;
-
-    for (int32 i = 0; i < CurrentOptions.Num(); i++)
-    {
-        auto& CurrentOption = CurrentOptions.Data[i];
-
-        if (!CurrentOption.ChoiceReference.NodeReference.IsIdenticalTo(Handle))
-            continue;
-
-        for (int32 j = 0; j < LastOptions.Num(); j++)
-        {
-            auto& LastOption = LastOptions.Data[j];
-
-            if (!LastOption.ChoiceReference.NodeReference.IsIdenticalTo(Handle))
-                continue;
-
-            if (FConversationNodeParameterPair::AreArraysIdentical(LastOption.ExtraData, CurrentOption.ExtraData) &&
-                FConversationNodeParameterPair::AreArraysIdentical(LastOption.ChoiceReference.NodeParameters, CurrentOption.ChoiceReference.NodeParameters))
-                continue;
-
-            FConversationNodeParameterPair::DestroyArray(LastOption.ExtraData);
-            FConversationNodeParameterPair::CopyArray(LastOption.ExtraData, CurrentOption.ExtraData);
-            FConversationNodeParameterPair::DestroyArray(LastOption.ChoiceReference.NodeParameters);
-            FConversationNodeParameterPair::CopyArray(LastOption.ChoiceReference.NodeParameters, CurrentOption.ChoiceReference.NodeParameters);
-            Component->ClientUpdateConversationTaskChoiceData(Handle, LastOption);
-            break;
-        }
-    }
 }
 
 static void ServerAdvanceConversation(UObject* Context, FFrame& Stack)

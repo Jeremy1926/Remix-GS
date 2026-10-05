@@ -25,6 +25,8 @@ static void ServerNotifyPawnHit(UObject* Context, FFrame& Stack, void* Ret)
     Stack.StepCompiledIn(&HitEntity);
     Stack.IncrementCode();
 
+    ProjectileContext.Free();
+
     auto Weapon = (AFortWeaponRanged*)Context;
 
     if (!Hit.HitObjectHandle.ReferenceObject.Get())
@@ -250,6 +252,9 @@ static void ServerCreateBuildingAndSpawnDeco(UObject* Context, FFrame& Stack, vo
         }
     }
 
+    if (!ItemDefinition)
+        return;
+
     auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
     UClass* BuildingClass = nullptr;
     EFortResourceType ResourceType = PlayerController->CurrentResourceType;
@@ -308,11 +313,11 @@ static void ServerCreateBuildingAndSpawnDeco(UObject* Context, FFrame& Stack, vo
 
     auto Building = SpawnActorUnfinished<ABuildingSMActor>(BuildingClass, BuildingLocation, BuildingRotation, PlayerController);
 
-    Building->InitializeKismetSpawnedBuildingActor(Building, PlayerController, true, nullptr, false);
-    FinishSpawnActor(Building, BuildingLocation, BuildingRotation);
-
     if (!Building)
         return;
+
+    Building->InitializeKismetSpawnedBuildingActor(Building, PlayerController, true, nullptr, false);
+    FinishSpawnActor(Building, BuildingLocation, BuildingRotation);
 
     Building->bPlayerPlaced = true;
     Building->Team = (EFortTeam)((AFortPlayerStateAthena*)PlayerController->PlayerState)->TeamIndex;

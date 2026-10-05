@@ -41,8 +41,11 @@ static void SendClientMoveAdjustments(UNetDriver* Driver)
 static void (*TickFlushOG)(UNetDriver*, float);
 static void TickFlush(UNetDriver* Driver, float DeltaSeconds)
 {
-    for (auto& Ticker : Tickers)
-        Ticker();
+    if (Driver->World && Driver->World->NetDriver == Driver)
+    {
+        for (auto& Ticker : Tickers)
+            Ticker();
+    }
 
     if (Driver->ClientConnections.Num() > 0)
     {

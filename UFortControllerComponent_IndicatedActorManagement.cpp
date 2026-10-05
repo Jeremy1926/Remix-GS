@@ -93,7 +93,7 @@ static uint8 GetStencilIndex(FName StencilName)
 
     if (!StencilDefinitionCollection)
     {
-        auto AssetManager = GetFirstInstance<UFortAssetManager>();
+        auto AssetManager = (UFortAssetManager*)UEngine::GetEngine()->AssetManager;
         auto GameData = AssetManager ? AssetManager->GameDataCommon : nullptr;
 
         StencilDefinitionCollection = GameData ? GameData->StencilDefinitionCollection.Get() : nullptr;

@@ -18,8 +18,6 @@ static void SetPickupItems(AFortPickupAthena* Pickup)
 AFortPickupAthena* SpawnPickup(FVector Loc, FFortItemEntry& Entry, EFortPickupSourceTypeFlag SourceTypeFlag, EFortPickupSpawnSource SpawnSource, AFortPawn* Pawn, int OverrideCount, bool Toss, bool RandomRotation,
                                bool bCombine, const UClass* OverrideClass, FVector FinalLoc)
 {
-    if (!&Entry)
-        return nullptr;
     auto NewPickup = SpawnActor<AFortPickupAthena>(OverrideClass ? OverrideClass : AFortPickupAthena::StaticClass(), Loc, {});
     if (!NewPickup)
         return nullptr;
@@ -63,9 +61,6 @@ AFortPickupAthena* SpawnPickup(FVector Loc, const UFortItemDefinition* ItemDefin
 
 AFortPickupAthena* SpawnPickup(ABuildingContainer* Container, FFortItemEntry& Entry, AFortPawn* Pawn, int OverrideCount)
 {
-    if (!&Entry)
-        return nullptr;
-
     auto ContainerLoc = Container->K2_GetActorLocation();
     auto& SpawnLocation = Container->LootSpawnLocation_Athena;
     auto Loc = ContainerLoc + (Container->GetActorForwardVector() * SpawnLocation.X) + (Container->GetActorRightVector() * SpawnLocation.Y) + (Container->GetActorUpVector() * SpawnLocation.Z);
@@ -375,8 +370,9 @@ static void SpawnPickup(UObject* Context, FFrame& Stack, AFortPickup** Ret)
     Stack.StepCompiledIn(&Direction);
     Stack.IncrementCode();
 
-    *Ret = SpawnPickup(Position, ItemDefinition, NumberToSpawn, ItemDefinition->IsA(UFortWeaponItemDefinition::StaticClass()) ? GetStats((UFortWeaponItemDefinition*)ItemDefinition)->ClipSize : 0,
-                       EFortPickupSourceTypeFlag::Other, EFortPickupSpawnSource::SupplyDrop);
+    auto Stats = ItemDefinition->IsA(UFortWeaponItemDefinition::StaticClass()) ? GetStats((UFortWeaponItemDefinition*)ItemDefinition) : nullptr;
+
+    *Ret = SpawnPickup(Position, ItemDefinition, NumberToSpawn, Stats ? Stats->ClipSize : 0, EFortPickupSourceTypeFlag::Other, EFortPickupSpawnSource::SupplyDrop);
 }
 
 struct FPendingConsumableQuery
@@ -440,7 +436,7 @@ void WorldReady(ABGAConsumableSpawner* Spawner)
     if (Total <= 0)
         return;
 
-    auto Query = UEnvQueryManager::RunEQSQuery(Spawner, QueryTemplate, Spawner, (EEnvQueryRunMode)3, UEnvQueryInstanceBlueprintWrapper::StaticClass());
+    auto Query = UEnvQueryManager::RunEQSQuery(Spawner, QueryTemplate, Spawner, EEnvQueryRunMode::AllMatching, UEnvQueryInstanceBlueprintWrapper::StaticClass());
 
     if (!Query)
         return;
@@ -519,6 +515,9 @@ static void K2_SpawnPickupInWorldWithClassAndItemEntry(UObject* Context, FFrame&
     Stack.IncrementCode();
 
     *Ret = SpawnPickup(Position, (UFortItemDefinition*)Entry.ItemDefinition, Entry.Count, Entry.LoadedAmmo, SourceType, Source, OptionalOwnerPC ? OptionalOwnerPC->MyFortPawn : nullptr, bToss, bRandomRotation);
+
+    static auto DestroyItemEntry = (void (*)(FFortItemEntry*))(ImageBase + 0x16E77DC);
+    DestroyItemEntry(&Entry);
 }
 
 static void SpawnItemVariantPickupInWorld(UObject* Context, FFrame& Stack, AFortPickupAthena** Ret)

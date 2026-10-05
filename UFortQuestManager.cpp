@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Shared.h"
 #include "UFortQuestManager.h"
+#include "UFortControllerComponent_Accolades.h"
+#include "SDK/SDK/AccoladesRuntime_classes.hpp"
 #include "SDK/SDK/FortniteGame_parameters.hpp"
 
 INIT_POSTLOAD(UFortQuestManager);
@@ -65,7 +67,8 @@ enum class EQuestVerb : uint8
     Custom,
     CurrencySpent,
     MatchFinished,
-    PlayerReceivedGameplayEvent
+    PlayerReceivedGameplayEvent,
+    PlayerDowned
 };
 
 struct FVerbProcessor
@@ -107,66 +110,6 @@ struct FQuestManagerFlushState
 
 static std::unordered_map<UFortQuestManager*, FQuestManagerFlushState> FlushStates;
 static FPendingDamageTaken PendingDamageTaken;
-
-static const char* QuestDiagReason = "";
-static bool bQuestDiagHookEntered = false;
-static bool bQuestDiagStructMatched = false;
-
-static void QuestLog(const char* Format, ...)
-{
-    static std::mutex Mutex;
-    static HANDLE File = INVALID_HANDLE_VALUE;
-
-    std::lock_guard<std::mutex> Lock(Mutex);
-
-    if (File == INVALID_HANDLE_VALUE)
-    {
-        char Path[MAX_PATH]{};
-        auto Length = GetEnvironmentVariableA("LOCALAPPDATA", Path, MAX_PATH);
-        auto FilePath = std::string(Path, Length) + "\\FortniteGame\\Saved\\Logs\\RemixGS-Quests.log";
-        File = CreateFileA(FilePath.c_str(), FILE_APPEND_DATA, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
-
-        if (File == INVALID_HANDLE_VALUE)
-            return;
-    }
-
-    char Line[2048];
-    SYSTEMTIME Time;
-    GetLocalTime(&Time);
-    auto Length = snprintf(Line, sizeof(Line), "[%02d:%02d:%02d.%03d] ", Time.wHour, Time.wMinute, Time.wSecond, Time.wMilliseconds);
-
-    va_list Args;
-    va_start(Args, Format);
-    auto Written = vsnprintf(Line + Length, sizeof(Line) - Length - 2, Format, Args);
-    va_end(Args);
-
-    Length = Written < 0 ? Length : (std::min)((int)sizeof(Line) - 2, Length + Written);
-    Line[Length++] = '\n';
-
-    DWORD Bytes = 0;
-    WriteFile(File, Line, (DWORD)Length, &Bytes, nullptr);
-}
-
-static std::string QuestDiagName(UObject* Object)
-{
-    return Object ? Object->GetName() : std::string("None");
-}
-
-static std::string QuestDiagPlayer(AActor* PlayerController)
-{
-    auto Controller = PlayerController && PlayerController->IsA(APlayerController::StaticClass()) ? (APlayerController*)PlayerController : nullptr;
-    return Controller && Controller->PlayerState ? Controller->PlayerState->GetPlayerName().ToString() : QuestDiagName(PlayerController);
-}
-
-static std::string QuestDiagTags(const FGameplayTagContainer& Tags)
-{
-    std::string Result;
-
-    for (int32 i = 0; i < Tags.GameplayTags.Num() && i < 16; i++)
-        Result += (i ? "," : "") + Tags.GameplayTags[i].TagName.ToString();
-
-    return Result;
-}
 
 static FQuestManagerFlushState& GetFlushState(UFortQuestManager* QuestManager)
 {
@@ -248,7 +191,6 @@ static void ScheduleFlush(UFortQuestManager* QuestManager)
         return;
 
     State.NextFlushTime = UGameplayStatics::GetTimeSeconds(UWorld::GetWorld()) + QuestManager->DamageEventFlushDelaySeconds;
-    QuestLog("schedule flush qm=%p at=%.1f delay=%.1f", QuestManager, State.NextFlushTime, QuestManager->DamageEventFlushDelaySeconds);
 }
 
 static bool DoesTagQueryMatch(const FGameplayTagQuery& TagQuery, const FGameplayTagContainer& Tags)
@@ -330,6 +272,7 @@ static const std::vector<FVerbProcessor>& GetVerbProcessors()
         { EQuestVerb::MatchFinished, FindFortniteGameStruct(L"FortVerbMessage_MatchFinished"), FindFortniteGameStruct(L"FortObjectiveFilter_MatchFinished"), EFortQuestObjectiveStatEvent::Finish, false },
         { EQuestVerb::PlayerReceivedGameplayEvent, FindFortniteGameStruct(L"FortVerbMessage_PlayerReceivedGameplayEvent"), FindFortniteGameStruct(L"FortObjectiveFilter_PlayerReceivedGameplayEvent"),
           EFortQuestObjectiveStatEvent::Custom, false },
+        { EQuestVerb::PlayerDowned, FindFortniteGameStruct(L"FortVerbMessage_PlayerDowned"), FindFortniteGameStruct(L"FortObjectiveFilter_PlayerDowned"), EFortQuestObjectiveStatEvent::DownOrElim, true },
     };
 
     return Processors;
@@ -476,8 +419,6 @@ static EFortTeamAffiliation GetTeamAffiliation(AFortPlayerControllerAthena* Play
 
 static int32 EvaluateVerbFilter(void* Memory, UFortQuestManager* QuestManager, FName BackendName, AFortPlayerControllerAthena* PlayerController, const FVerbProcessor& Verb, FVerbMessage* Message)
 {
-    QuestDiagReason = "verb";
-
     switch (Verb.Verb)
     {
     case EQuestVerb::DamageDone:
@@ -490,8 +431,6 @@ static int32 EvaluateVerbFilter(void* Memory, UFortQuestManager* QuestManager, F
             (Data->bUseDistance && !IsInRange(Data->Distance, Damage->Distance)) || (Data->bUseDamageAmount && !IsInRange(Data->DamageAmount, Damage->Damage)) ||
             (Data->bUseUncappedDamage && !IsInRange(Data->UncappedDamageAmount, Damage->UncappedDamage)))
             return 0;
-
-        QuestDiagReason = "subjects";
 
         if (!DoesTagQueryMatch(Data->DamageSource.TagQuery, Damage->DamageSource.Tags) || !DoesTagQueryMatch(Data->DamagedActor.TagQuery, Damage->DamagedActor.Tags) ||
             !DoesTagQueryMatch(Data->DamageType.TagQuery, Damage->DamageType.Tags))
@@ -507,8 +446,6 @@ static int32 EvaluateVerbFilter(void* Memory, UFortQuestManager* QuestManager, F
         if ((Hit->bHitSelf && !Data->bAllowSelfInflictedDamage) || !IsRequirementMet(Data->SelfInflictedDamage, Hit->bHitSelf) || !IsRequirementMet(Data->TeamDamage, Hit->bHitTeamMember) ||
             (Data->bRequireCriticalHit && Hit->DamageZone != EFortDamageZone::Critical) || (Data->bUseDistance && !IsInRange(Data->Distance, Hit->Distance)))
             return 0;
-
-        QuestDiagReason = "subjects";
 
         if (!DoesTagQueryMatch(Data->DamageSource.TagQuery, Hit->DamageSource.Tags) || !DoesTagQueryMatch(Data->DamagedActor.TagQuery, Hit->DamagedActor.Tags) ||
             !DoesTagQueryMatch(Data->DamageType.TagQuery, Hit->DamageType.Tags))
@@ -527,8 +464,6 @@ static int32 EvaluateVerbFilter(void* Memory, UFortQuestManager* QuestManager, F
             (Data->bRequireHealedToFull && !Healing->bHealedToFull) || (Data->bUseHealingAmount && !IsInRange(Data->HealingAmount, Healing->AmountHealedToHealth)) ||
             (Data->bUseOverHealing && !IsInRange(Data->HealthOverHealed, Healing->HealthOverHealingAmount)) || (Data->bUsePercentHealed && !IsInRange(Data->PercentHealed, Healing->PercentHealed)))
             return 0;
-
-        QuestDiagReason = "subjects";
 
         if (!DoesTagQueryMatch(Data->HealingType.TagQuery, Healing->HealingType.Tags))
             return 0;
@@ -572,8 +507,6 @@ static int32 EvaluateVerbFilter(void* Memory, UFortQuestManager* QuestManager, F
             (Data->bUseShieldGainedPercent && !IsInRange(Data->ShieldsPercentGained, Shields->ShieldPercentGained)))
             return 0;
 
-        QuestDiagReason = "subjects";
-
         if (!DoesTagQueryMatch(Data->ShieldGainSource.TagQuery, Shields->ShieldGainSource.Tags) || !DoesTagQueryMatch(Data->ShieldGainType.TagQuery, Shields->ShieldGainType.Tags))
             return 0;
 
@@ -598,8 +531,6 @@ static int32 EvaluateVerbFilter(void* Memory, UFortQuestManager* QuestManager, F
         if (Data->bUseAdvancedVehicleFilter || (Data->bRequireInVehicle && (!Pawn || !Pawn->IsInVehicle())))
             return 0;
 
-        QuestDiagReason = "subjects";
-
         return DoesTagQueryMatch(Data->DestroyedBuilding.TagQuery, Destroy->DestroyedBuilding.Tags) && DoesTagQueryMatch(Data->DamageSource.TagQuery, Destroy->DamageSource.Tags) ? 1 : 0;
     }
     case EQuestVerb::PawnEliminated:
@@ -613,8 +544,6 @@ static int32 EvaluateVerbFilter(void* Memory, UFortQuestManager* QuestManager, F
             !IsAllowed(Data->AllowedKilledPawnTypes, Data->ProhibitedKilledPawnTypes, KillType) || (Data->bUseDistance && !IsInRange(Data->Distance, Elimination->Distance)) ||
             (Data->bUseKillStreak && !IsInRange(Data->KillStreak, Elimination->KillStreak)))
             return 0;
-
-        QuestDiagReason = "subjects";
 
         if (!DoesTagQueryMatch(Data->EliminatedPawn.TagQuery, Elimination->EliminatedPawn.Tags) || !DoesTagQueryMatch(Data->Killer.TagQuery, Elimination->Killer.Tags) ||
             !DoesTagQueryMatch(Data->EliminationSource.TagQuery, Elimination->EliminationSource.Tags))
@@ -666,14 +595,23 @@ static int32 EvaluateVerbFilter(void* Memory, UFortQuestManager* QuestManager, F
             Filter.bUseAdvancedObject2ClassFilter || (Filter.bUseEventMagnitude && !IsInRange(Filter.EventMagnitude, EventData.EventMagnitude)))
             return 0;
 
-        QuestDiagReason = "subjects";
-
         if ((Filter.bUseInstigatorTags && !DoesTagQueryMatch(Filter.InstigatorTags, EventData.InstigatorTags)) || (Filter.bUseTargetTags && !DoesTagQueryMatch(Filter.TargetTags, EventData.TargetTags)) ||
             (Filter.bUseObject1Tags && !DoesTagQueryMatch(Filter.Object1TagFilter, EventData.OptionalObject1Tags)) ||
             (Filter.bUseObject2Tags && !DoesTagQueryMatch(Filter.Object2TagFilter, EventData.OptionalObject2Tags)))
             return 0;
 
         return Data->bIncrementByEventMagnitude ? AccumulateProgress(QuestManager, BackendName, EventData.EventMagnitude) : 1;
+    }
+    case EQuestVerb::PlayerDowned:
+    {
+        auto Data = (FFortObjectiveFilter_PlayerDowned*)Memory;
+        auto Downed = (FFortVerbMessage_PlayerDowned*)Message;
+
+        if ((Data->bIsHeadShot && !Downed->bIsHeadShot) || (Data->bIsSaviorDBNO && !Downed->bIsSaviorDBNO) || (Data->bIsAvengerDBNO && !Downed->bIsAvengerDBNO) ||
+            (Data->bUseDownedDistance && !IsInRange(Data->DownedDistance, Downed->DownedDistance)))
+            return 0;
+
+        return DoesTagQueryMatch(Data->DownedPlayer.TagQuery, Downed->DownedPlayer.Tags) && DoesTagQueryMatch(Data->Downer.TagQuery, Downed->Downer.Tags) ? 1 : 0;
     }
     default:
         return 0;
@@ -703,8 +641,6 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
 
     auto Struct = Filter.ScriptStruct;
     auto Memory = Filter.StructMemory;
-
-    QuestDiagReason = "struct";
 
     if (!Struct || !Memory)
         return 0;
@@ -770,29 +706,19 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
     if (!ExpectedStructs[0] || (Struct != ExpectedStructs[0] && Struct != ExpectedStructs[1]))
         return 0;
 
-    bQuestDiagStructMatched = true;
-
     auto ObjectiveFilter = (FObjectiveFilter*)Memory;
-
-    QuestDiagReason = "author_progress";
 
     if (!ObjectiveFilter->Author.bCanGainProgressForThisObjective)
         return 0;
 
-    QuestDiagReason = "author_query";
-
     if (!DoesTagQueryMatch(ObjectiveFilter->Author.TagQuery, Event->SourceTags))
         return 0;
-
-    QuestDiagReason = "context_query";
 
     if (!DoesTagQueryMatch(ObjectiveFilter->Context.TagQuery, Event->ContextTags))
         return 0;
 
     if (Verb)
         return EvaluateVerbFilter(Memory, QuestManager, BackendName, PlayerController, *Verb, Message);
-
-    QuestDiagReason = "type_check";
 
     auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
 
@@ -810,6 +736,15 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
 
         if (!IsAllowed(Data->AllowedTeamAffiliations, Data->ProhibitedTeamAffiliations, GetTeamAffiliation(PlayerController, TargetObject)))
             return 0;
+
+        if (Data->FinalBlowGivesCredit == EFinalBlowAllowance::Never)
+        {
+            auto TargetPawn = TargetObject && TargetObject->IsA(APawn::StaticClass()) ? (APawn*)TargetObject : nullptr;
+            auto TargetPlayerState = TargetPawn && TargetPawn->PlayerState && TargetPawn->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)TargetPawn->PlayerState : nullptr;
+
+            if (TargetPlayerState && TargetPlayerState->DeathInfo.FinisherOrDowner.Get() == PlayerController->PlayerState)
+                return 0;
+        }
 
         return DoesTagQueryMatch(Data->KilledActor.TagQuery, Event->TargetTags) && DoesTagQueryMatch(Data->KillerTags.TagQuery, Event->SourceTags) ? 1 : 0;
     }
@@ -912,8 +847,6 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
         if (!Pawn || (Event->Type == EFortQuestObjectiveStatEvent::AthenaDistanceTraveled) != bHorizontal || (!bHorizontal && Data->TravelDirection != EDistanceTravelDirection::Any) ||
             Data->bUsePerAxisSettings || Data->BoostRequirement != EObjectiveProcessorPropertyRequirement::Ignored || Data->AllowedVehicleSurfaces.Num() > 0)
             return 0;
-
-        QuestDiagReason = "travel_mode";
 
         if (!IsTravelModeAllowed(Data->AllowedTravelModes, Data->ProhibitedTravelModes, GetTravelMode(Pawn)))
             return 0;
@@ -1043,93 +976,6 @@ static bool IsCompatibleWithProduct(UFortQuestItemDefinition* Definition, AFortP
     return IsCompatibleWithProductInternal(Definition, PlayerController, &ProductTag);
 }
 
-static void QuestDiagVerb(const FVerbProcessor& Verb, FVerbMessage* Message)
-{
-    static std::unordered_map<int32, int32> Logged;
-
-    if (Logged[(int32)Verb.Verb]++ >= 5)
-        return;
-
-    QuestLog("    author=[%s] context=[%s]", QuestDiagTags(Message->Author.Tags).c_str(), QuestDiagTags(Message->ContextTags).c_str());
-
-    switch (Verb.Verb)
-    {
-    case EQuestVerb::DamageDone:
-    {
-        auto Damage = (FFortVerbMessage_DamageDone*)Message;
-        QuestLog("    damage=%d uncapped=%d distance=%.1f zone=%d team=%d self=%d source=%s [%s] damaged=[%s] type=[%s]", Damage->Damage, Damage->UncappedDamage, Damage->Distance, (int)Damage->DamageZone,
-                 Damage->bDamageDoneToTeamMember, Damage->bDamageDoneToSelf, QuestDiagName(Damage->DamageSource.Subject.Get()).c_str(), QuestDiagTags(Damage->DamageSource.Tags).c_str(),
-                 QuestDiagTags(Damage->DamagedActor.Tags).c_str(), QuestDiagTags(Damage->DamageType.Tags).c_str());
-        break;
-    }
-    case EQuestVerb::Hit:
-    {
-        auto Hit = (FFortVerbMessage_Hit*)Message;
-        QuestLog("    distance=%.1f zone=%d team=%d self=%d damaged=[%s] type=[%s]", Hit->Distance, (int)Hit->DamageZone, Hit->bHitTeamMember, Hit->bHitSelf, QuestDiagTags(Hit->DamagedActor.Tags).c_str(),
-                 QuestDiagTags(Hit->DamageType.Tags).c_str());
-        break;
-    }
-    case EQuestVerb::HealingDone:
-    case EQuestVerb::HealingReceived:
-    {
-        auto Healing = (FFortVerbMessage_Healing*)Message;
-        QuestLog("    amount=%.1f over=%.1f percent=%.1f full=%d teammate=%d type=[%s]", Healing->AmountHealedToHealth, Healing->HealthOverHealingAmount, Healing->PercentHealed, Healing->bHealedToFull,
-                 Verb.Verb == EQuestVerb::HealingDone ? ((FFortVerbMessage_HealingDone*)Message)->bHealedTeammate : ((FFortVerbMessage_HealingReceived*)Message)->bHealedByTeammate,
-                 QuestDiagTags(Healing->HealingType.Tags).c_str());
-        break;
-    }
-    case EQuestVerb::GainShields:
-    {
-        auto Shields = (FFortVerbMessage_GainShields*)Message;
-        QuestLog("    amount=%.1f full=%d teammate=%d source=%s [%s] type=[%s]", Shields->AmountOfShieldsGained, Shields->bGainedFullShields, Shields->bGainedShieldsFromTeammate,
-                 QuestDiagName(Shields->ShieldGainSource.Subject.Get()).c_str(), QuestDiagTags(Shields->ShieldGainSource.Tags).c_str(), QuestDiagTags(Shields->ShieldGainType.Tags).c_str());
-        break;
-    }
-    case EQuestVerb::DestroyBuilding:
-    {
-        auto Destroy = (FFortVerbMessage_DestroyBuilding*)Message;
-        QuestLog("    building=%s [%s] source=[%s]", QuestDiagName(Destroy->DestroyedBuilding.Subject.Get()).c_str(), QuestDiagTags(Destroy->DestroyedBuilding.Tags).c_str(),
-                 QuestDiagTags(Destroy->DamageSource.Tags).c_str());
-        break;
-    }
-    case EQuestVerb::PawnEliminated:
-    {
-        auto Elimination = (FFortVerbMessage_PawnEliminated*)Message;
-        QuestLog("    pawn=%s player=%d wildlife=%d self=%d affiliation=%d distance=%.1f streak=%d eliminated=[%s] killer=[%s] source=[%s]", QuestDiagName(Elimination->EliminatedPawn.Subject.Get()).c_str(),
-                 Elimination->bKilledPawnWasPlayer, Elimination->bKilledPawnWasWildlife, Elimination->bWasSelfElimination, (int)Elimination->EliminatedAndKillerTeamAffiliation, Elimination->Distance,
-                 Elimination->KillStreak, QuestDiagTags(Elimination->EliminatedPawn.Tags).c_str(), QuestDiagTags(Elimination->Killer.Tags).c_str(), QuestDiagTags(Elimination->EliminationSource.Tags).c_str());
-        break;
-    }
-    case EQuestVerb::Custom:
-    {
-        auto Custom = (FVerbMessage_Custom*)Message;
-        QuestLog("    verb=%s amount=%d", Custom->Verb.TagName.ToString().c_str(), Custom->Amount);
-        break;
-    }
-    case EQuestVerb::CurrencySpent:
-    {
-        auto Spent = (FFortVerbMessage_CurrencySpent*)Message;
-        QuestLog("    amount=%d specific=%d tags=[%s]", Spent->AmountSpent, (int)Spent->bIsFromSpecificEvent, QuestDiagTags(Spent->PurchaseTags.Tags).c_str());
-        break;
-    }
-    case EQuestVerb::MatchFinished:
-    {
-        auto Finished = (FFortVerbMessage_MatchFinished*)Message;
-        QuestLog("    rank=%d outlived=%d metadata=[%s]", Finished->PlayerRank, Finished->PlayersOutLived, QuestDiagTags(Finished->MatchMetaData.Tags).c_str());
-        break;
-    }
-    case EQuestVerb::PlayerReceivedGameplayEvent:
-    {
-        auto Received = (FFortVerbMessage_PlayerReceivedGameplayEvent*)Message;
-        QuestLog("    tag=%s instigator=%d target=%d magnitude=%.1f instigatortags=[%s] targettags=[%s]", Received->GameplayEventTag.TagName.ToString().c_str(), Received->bAuthorIsInstigator,
-                 Received->bAuthorIsTarget, Received->EventData.EventMagnitude, QuestDiagTags(Received->EventData.InstigatorTags).c_str(), QuestDiagTags(Received->EventData.TargetTags).c_str());
-        break;
-    }
-    default:
-        break;
-    }
-}
-
 static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlayerControllerAthena* PlayerController, FFortQuestStatEvent* Event, UObject* TargetObject, const FVerbProcessor* Verb,
                                       FVerbMessage* Message)
 {
@@ -1142,35 +988,16 @@ static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlay
     FString ContextString;
     bool bChanged = false;
     bool bHasObjectiveStat = Event->ObjectiveStat.DataTable || !Event->ObjectiveStat.RowName.IsNone();
-    int32 DiagQuests = 0;
-    int32 DiagActive = 0;
-    int32 DiagConsidered = 0;
-    int32 DiagMatched = 0;
-    int32 DiagLogged = 0;
-    int32 DiagStructMatched = 0;
-    int32 DiagIncompatible = 0;
 
     static auto GetObjectiveCompletionCount = (int32 (*)(UFortQuestItem*, FName*))(ImageBase + 0xA10B850);
 
     auto ProfileQuests = GetProfileQuests(QuestManager);
     auto ProductTag = GetProductTag(PlayerController);
 
-    static int32 DiagProductTag = -1;
-
-    if (DiagProductTag != ProductTag.TagName.ComparisonIndex)
-    {
-        DiagProductTag = ProductTag.TagName.ComparisonIndex;
-        QuestLog("product tag=%s player=%s", ProductTag.TagName.ToString().c_str(), QuestDiagPlayer(PlayerController).c_str());
-    }
-
     for (auto Quest : ProfileQuests)
     {
-        DiagQuests++;
-
         if (!Quest || HasCompletedQuest(Quest))
             continue;
-
-        DiagActive++;
 
         auto Definition = (UFortQuestItemDefinition*)Quest->ItemDefinition;
 
@@ -1178,10 +1005,7 @@ static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlay
             continue;
 
         if (!IsCompatibleWithProduct(Definition, PlayerController, ProductTag))
-        {
-            DiagIncompatible++;
             continue;
-        }
 
         for (auto& Objective : Definition->Objectives)
         {
@@ -1204,19 +1028,7 @@ static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlay
             auto RequiredCount = ObjectiveInfo ? ObjectiveInfo->RequiredCount : Objective.Count;
 
             if (AchievedCount >= RequiredCount)
-            {
-                if (DiagLogged < 3 && Event->Type == EFortQuestObjectiveStatEvent::TimeElapsed)
-                {
-                    DiagLogged++;
-                    QuestLog("  skip %s %s info=%p achieved=%d required=%d", QuestDiagName(Definition).c_str(), Objective.BackendName.ToString().c_str(), ObjectiveInfo, AchievedCount, RequiredCount);
-                }
-
                 continue;
-            }
-
-            DiagConsidered++;
-            QuestDiagReason = "";
-            bQuestDiagStructMatched = false;
 
             int32 Increment = 0;
 
@@ -1235,38 +1047,12 @@ static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlay
                 Increment = bMatched ? Event->Count : 0;
             }
 
-            if (bQuestDiagStructMatched)
-                DiagStructMatched++;
-
             if (Increment <= 0)
-            {
-                if (DiagLogged < 3 && (!Verb || bQuestDiagStructMatched))
-                {
-                    DiagLogged++;
-                    QuestLog("  nomatch %s %s filters=%d first=%s legacy=%d reason=%s achieved=%d/%d", QuestDiagName(Definition).c_str(), Objective.BackendName.ToString().c_str(),
-                             Objective.ObjectiveFilters.Num(), Objective.ObjectiveFilters.Num() > 0 ? QuestDiagName(Objective.ObjectiveFilters[0].ScriptStruct).c_str() : "None",
-                             Objective.InlineObjectiveStats.Num(), QuestDiagReason, AchievedCount, RequiredCount);
-                }
-
                 continue;
-            }
-
-            DiagMatched++;
-            QuestLog("  match %s %s +%d", QuestDiagName(Definition).c_str(), Objective.BackendName.ToString().c_str(), Increment);
 
             AddPendingChange(QuestManager, Quest, Objective.BackendName, Increment, CountedNames);
             bChanged = true;
         }
-    }
-
-    if (!Verb)
-        QuestLog("  result type=%d quests=%d active=%d incompatible=%d considered=%d matched=%d pending=%d", (int)Event->Type, DiagQuests, DiagActive, DiagIncompatible, DiagConsidered, DiagMatched,
-                 QuestManager->PendingChanges.Num());
-    else if (DiagStructMatched > 0)
-    {
-        QuestLog("  verb %s player=%s target=%s objectives=%d matched=%d pending=%d", QuestDiagName(Verb->MessageStruct).c_str(), QuestDiagPlayer(PlayerController).c_str(), QuestDiagName(TargetObject).c_str(),
-                 DiagStructMatched, DiagMatched, QuestManager->PendingChanges.Num());
-        QuestDiagVerb(*Verb, Message);
     }
 
     ProfileQuests.Free();
@@ -1320,6 +1106,9 @@ static void ProcessVerbMessage(AFortPlayerControllerAthena* PlayerController, co
         ReapplyPendingChanges(QuestManager);
         ScheduleFlush(QuestManager);
     }
+
+    ProcessAccoladeEvent(PlayerController, &Event->ContextTags, [&](const FInstancedStruct& Filter, FName BackendName)
+                         { return EvaluateObjectiveFilter(Filter, QuestManager, BackendName, PlayerController, Event, TargetObject, &Verb, Message); });
 
     DestroyStatEvent(Event);
     FreeGameplayTags(ContextTags);
@@ -1401,10 +1190,6 @@ static void OnDamageServer(AFortPawn* Pawn, float Damage, const FGameplayTagCont
 static void OnVerbMessage(UScriptStruct* Struct, FVerbMessage* Message)
 {
     static auto DamageTaken = FindFortniteGameStruct(L"FortVerbMessage_DamageTaken");
-    static std::unordered_set<UScriptStruct*> DiagSeen;
-
-    if (DiagSeen.insert(Struct).second)
-        QuestLog("verb seen %s author=%s", QuestDiagName(Struct).c_str(), QuestDiagName(Message->Author.Subject.Get()).c_str());
 
     if (Struct == DamageTaken)
     {
@@ -1475,8 +1260,6 @@ static bool HasGameplayEventObjective(UFortQuestManager* QuestManager, FGameplay
         }
 
         ProfileQuests.Free();
-
-        QuestLog("gameplay event objectives qm=%p tags=%d", QuestManager, (int)State.GameplayEventTags.size());
     }
 
     return std::find(State.GameplayEventTags.begin(), State.GameplayEventTags.end(), EventTag.TagName.ComparisonIndex) != State.GameplayEventTags.end();
@@ -1523,14 +1306,9 @@ static int32 HandleGameplayEvent(UAbilitySystemComponent* AbilitySystemComponent
     if (!PlayerController)
         return Result;
 
-    static std::unordered_set<int32> DiagSeen;
-
-    if (DiagSeen.size() < 64 && DiagSeen.insert(EventTag.TagName.ComparisonIndex).second)
-        QuestLog("gameplay event seen player=%s tag=%s", QuestDiagPlayer(PlayerController).c_str(), EventTag.TagName.ToString().c_str());
-
     auto QuestManager = PlayerController->GetQuestManager(ESubGame::Athena);
 
-    if (QuestManager && HasGameplayEventObjective(QuestManager, EventTag))
+    if (QuestManager && (HasGameplayEventObjective(QuestManager, EventTag) || HasAccoladeGameplayEvent(EventTag)))
         SendPlayerReceivedGameplayEvent(PlayerController, EventTag, *Payload);
 
     return Result;
@@ -1601,8 +1379,6 @@ static void OnUpdateQuestsComplete(UFortQuestManager* QuestManager, uint8* Resul
 
     auto& State = It->second;
 
-    QuestLog("UpdateQuests complete qm=%p success=%d retry=%d http=%d saveid=%d", QuestManager, Result[0], Result[56], *(int32*)(Result + 144), State.UpdateSaveId);
-
     HandleQuestUpdate(QuestManager, Result, State.UpdateSaveId);
     State.UpdateSaveId = -1;
     State.bUpdateInFlight = false;
@@ -1620,17 +1396,12 @@ static void OnEndBattleRoyaleGameComplete(UFortQuestManager* QuestManager, uint8
     if (It == FlushStates.end())
         return;
 
-    QuestLog("EndBattleRoyaleGameV2 complete qm=%p success=%d http=%d saveid=%d", QuestManager, Result[0], *(int32*)(Result + 144), It->second.EndSaveId);
-
     HandleQuestUpdate(QuestManager, Result, It->second.EndSaveId);
     It->second.EndSaveId = -1;
     It->second.bEndInFlight = false;
 
     if (QuestManager->PendingChanges.Num() > 0)
-    {
-        QuestLog("  late progress after match report qm=%p pending=%d", QuestManager, QuestManager->PendingChanges.Num());
         ScheduleFlush(QuestManager);
-    }
 
     auto PlayerController = GetPlayerController(QuestManager);
     auto Profile = GetBoundProfile(QuestManager);
@@ -1646,23 +1417,16 @@ static void SendUpdateQuests(UFortQuestManager* QuestManager, FQuestManagerFlush
 
     auto Profile = GetBoundProfile(QuestManager);
 
-    QuestLog("flush qm=%p profile=%p function=%p pending=%d", QuestManager, Profile, UpdateQuests, QuestManager->PendingChanges.Num());
-
     if (!Profile || !UpdateQuests)
         return;
 
     auto SaveRequest = ProcessPendingStatEvents(QuestManager);
-
-    QuestLog("  saverequest=%p saveid=%d entries=%d", SaveRequest, SaveRequest ? SaveRequest->SaveId : -1, SaveRequest ? SaveRequest->Changes.Num() : 0);
 
     if (!SaveRequest)
         return;
 
     Params::FortMcpProfileSubgame_UpdateQuests Parms{};
     Parms.Advance = SaveRequest->Changes;
-
-    for (auto& Change : SaveRequest->Changes)
-        QuestLog("  advance %s %d", Change.StatName.ToString().c_str(), Change.Count);
 
     State.UpdateSaveId = SaveRequest->SaveId;
     State.bUpdateInFlight = true;
@@ -1691,10 +1455,16 @@ static std::wstring GetMatchId()
     return MatchId;
 }
 
+static void OnAthenaRewardResult(AFortPlayerControllerAthena* PlayerController, const FAthenaRewardResult& Result)
+{
+    PlayerController->ClientSendEndBattleRoyaleMatchForPlayer(true, Result);
+}
+
 static void SendEndBattleRoyaleGame(UFortQuestManager* QuestManager, FQuestManagerFlushState& State)
 {
     static auto ProcessPendingStatEvents = (FFortQuestSaveRequest* (*)(UFortQuestManager*))(ImageBase + 0xA12E178);
     static auto EndBattleRoyaleGameV2 = UFortMcpProfileAthena::StaticClass()->FindFunction("EndBattleRoyaleGameV2");
+    static auto AddUObject = (void (*)(void*, uint64*, UObject*, void (*)(AFortPlayerControllerAthena*, const FAthenaRewardResult&)))(ImageBase + 0x7E14B08);
 
     auto PlayerController = GetPlayerController(QuestManager);
     auto Profile = GetBoundProfile(QuestManager);
@@ -1702,10 +1472,7 @@ static void SendEndBattleRoyaleGame(UFortQuestManager* QuestManager, FQuestManag
     State.bEnded = true;
 
     if (!PlayerController || !Profile || !EndBattleRoyaleGameV2)
-    {
-        QuestLog("EndBattleRoyaleGameV2 skipped qm=%p player=%p profile=%p pending=%d", QuestManager, PlayerController, Profile, QuestManager->PendingChanges.Num());
         return;
-    }
 
     State.NextFlushTime = -1.0;
     State.bEndInFlight = true;
@@ -1728,8 +1495,8 @@ static void SendEndBattleRoyaleGame(UFortQuestManager* QuestManager, FQuestManag
     Parms.MatchStats.MatchID = FString(MatchId.c_str());
     Parms.TotalXPAccum = PlayerController->XPComponent ? PlayerController->XPComponent->TotalXpEarned : 0;
 
-    QuestLog("EndBattleRoyaleGameV2 player=%s qm=%p profile=%p saveid=%d entries=%d playlist=%ls match=%ls xp=%d", QuestDiagPlayer(PlayerController).c_str(), QuestManager, Profile, State.EndSaveId,
-             Parms.Advance.Num(), PlaylistName.c_str(), MatchId.c_str(), Parms.TotalXPAccum);
+    uint64 RewardResultHandle = 0;
+    AddUObject((uint8*)Profile + 0x4E0, &RewardResultHandle, PlayerController, OnAthenaRewardResult);
 
     CallMcpOperation(QuestManager, Profile, EndBattleRoyaleGameV2, &Parms, &Parms.Context, OnEndBattleRoyaleGameComplete);
 
@@ -1768,11 +1535,12 @@ void EndBattleRoyaleGame(AFortPlayerControllerAthena* PlayerController)
     LinkQuestManagerController(QuestManager, PlayerController);
     SendMatchFinished(PlayerController);
 
+    if (auto AccoladeCollection = (UFortControllerComponent_AccoladeCollection*)PlayerController->GetComponentByClass(UFortControllerComponent_AccoladeCollection::StaticClass()))
+        AccoladeCollection->OnEndMatchForPlayer(UFortControllerComponent_EndMatchPersistence::GetFromPlayerController(PlayerController, false));
+
     auto& State = GetFlushState(QuestManager);
     State.bEndRequested = true;
     State.EndRequestTime = UGameplayStatics::GetTimeSeconds(UWorld::GetWorld());
-
-    QuestLog("EndBattleRoyaleGameV2 requested player=%s qm=%p pending=%d", QuestDiagPlayer(PlayerController).c_str(), QuestManager, QuestManager->PendingChanges.Num());
 }
 
 static void (*HandlePawnKilledOG)(AGameModeBase*, AActor*, AController*, AFortPawn*, FGameplayTagContainer*);
@@ -1813,60 +1581,13 @@ void RegisterWithQuestManager(AFortPlayerControllerAthena* PlayerController)
     static auto OnXPEvent = FName(L"OnXPEvent");
     static auto OnXpUpdated = FName(L"OnXpUpdated");
 
-    static auto GetPlayerControllerInternal = (AController* (*)(UFortQuestManager*))(ImageBase + 0xA129990);
-    static auto HasCompletedQuest = (bool (*)(UFortQuestItem*))(ImageBase + 0xA111AB0);
-
     auto XPComponent = PlayerController->XPComponent;
     auto QuestManager = PlayerController->GetQuestManager(ESubGame::Athena);
-
-    int32 DiagActive = 0;
-
-    for (int32 i = 0; QuestManager && i < QuestManager->CurrentQuests.Num(); i++)
-    {
-        if (QuestManager->CurrentQuests[i] && !HasCompletedQuest(QuestManager->CurrentQuests[i]))
-            DiagActive++;
-    }
-
-    QuestLog("register player=%s pc=%p xp=%p qm=%p outer=%s gamelink=%p profile=%p quests=%d active=%d components=%d", QuestDiagPlayer(PlayerController).c_str(), PlayerController, XPComponent,
-             QuestManager, QuestManager ? QuestDiagName(QuestManager->Outer).c_str() : "None", QuestManager ? GetPlayerControllerInternal(QuestManager) : nullptr,
-             QuestManager ? GetBoundProfile(QuestManager) : nullptr, QuestManager ? QuestManager->CurrentQuests.Num() : -1, DiagActive, QuestManager ? QuestManager->Components.Num() : -1);
 
     if (!XPComponent)
         return;
 
     LinkQuestManagerController(QuestManager, PlayerController);
-
-    QuestLog("  link after=%p", QuestManager ? GetPlayerControllerInternal(QuestManager) : nullptr);
-
-    if (QuestManager)
-    {
-        auto ProfileQuests = GetProfileQuests(QuestManager);
-        int32 DiagResolved = 0;
-        int32 DiagFilters = 0;
-        int32 DiagFailed = 0;
-
-        for (auto Quest : ProfileQuests)
-        {
-            auto Definition = Quest ? (UFortQuestItemDefinition*)Quest->ItemDefinition : nullptr;
-
-            if (!Definition)
-            {
-                if (DiagFailed++ < 10)
-                    QuestLog("  unresolved quest item %s", QuestDiagName(Quest).c_str());
-
-                continue;
-            }
-
-            DiagResolved++;
-
-            if (Definition->Objectives.Num() > 0 && Definition->Objectives[0].ObjectiveFilters.Num() > 0)
-                DiagFilters++;
-        }
-
-        QuestLog("  profile quests=%d resolved=%d qs2=%d unresolved=%d currentquests=%d", ProfileQuests.Num(), DiagResolved, DiagFilters, DiagFailed, QuestManager->CurrentQuests.Num());
-
-        ProfileQuests.Free();
-    }
 
     for (int32 i = 0; QuestManager && i < QuestManager->Components.Num(); i++)
     {
@@ -1901,12 +1622,7 @@ void SendStatEvent(UFortQuestManager* QuestManager, AActor* PlayerController, EF
     QuestManager->GetSourceAndContextTags(&SourceTags, &ContextTags);
     SourceTags.AppendTags(AdditionalSourceTags);
 
-    bQuestDiagHookEntered = false;
-
     SendStatEventWithTags(QuestManager, StatEvent, TargetObject, &TargetTags, &SourceTags, &ContextTags, Count);
-
-    QuestLog("SendStatEvent player=%s qm=%p type=%d count=%d target=%s source=%d context=%d hook=%d", QuestDiagPlayer(PlayerController).c_str(), QuestManager, (int)StatEvent, Count,
-             QuestDiagName(TargetObject).c_str(), SourceTags.GameplayTags.Num(), ContextTags.GameplayTags.Num(), bQuestDiagHookEntered);
 
     SourceTags.GameplayTags.Free();
     SourceTags.ParentTags.Free();
@@ -1923,12 +1639,6 @@ static void QueueStatEvent(UFortQuestManager* QuestManager, EFortQuestObjectiveS
     static auto BroadcastStatEvent = (void (*)(void*, FFortQuestStatEvent*, void*))(ImageBase + 0x59E03D4);
 
     auto PlayerController = GetPlayerController(QuestManager);
-
-    bQuestDiagHookEntered = true;
-
-    QuestLog("QueueStatEvent qm=%p player=%s type=%d count=%d target=%s targettags=%d sourcetags=%d contexttags=%d", QuestManager, QuestDiagPlayer(PlayerController).c_str(), (int)InType, InCount,
-             QuestDiagName(InTargetObject).c_str(), InTargetTags ? InTargetTags->GameplayTags.Num() : -1, InSourceTags ? InSourceTags->GameplayTags.Num() : -1,
-             InContextTags ? InContextTags->GameplayTags.Num() : -1);
 
     if (!PlayerController)
         return;
@@ -1950,6 +1660,9 @@ static void QueueStatEvent(UFortQuestManager* QuestManager, EFortQuestObjectiveS
         ReapplyPendingChanges(QuestManager);
         ScheduleFlush(QuestManager);
     }
+
+    ProcessAccoladeEvent(PlayerController, &Event->ContextTags, [&](const FInstancedStruct& Filter, FName BackendName)
+                         { return EvaluateObjectiveFilter(Filter, QuestManager, BackendName, PlayerController, Event, InTargetObject, nullptr, nullptr); });
 
     DestroyStatEvent(Event);
 }
@@ -1975,20 +1688,9 @@ static void SendTimeElapsed(double Now)
     auto GameMode = (AFortGameModeAthena*)World->AuthorityGameMode;
     auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(World);
 
-    static int32 DiagLastPhase = -1;
-    int32 DiagPhase = GamePhaseLogic ? (int32)GamePhaseLogic->GamePhase : -1;
-
-    if (DiagPhase != DiagLastPhase)
-    {
-        DiagLastPhase = DiagPhase;
-        QuestLog("time elapsed phase=%d gamemode=%p alive=%d", DiagPhase, GameMode, GameMode && GameMode->IsA(AFortGameModeAthena::StaticClass()) ? GameMode->AlivePlayers.Num() : -1);
-    }
-
     if (!GameMode || !GameMode->IsA(AFortGameModeAthena::StaticClass()) || !GamePhaseLogic || GamePhaseLogic->GamePhase < EAthenaGamePhase::Aircraft ||
         GamePhaseLogic->GamePhase >= EAthenaGamePhase::EndGame)
         return;
-
-    QuestLog("time elapsed fire seconds=%d alive=%d", Seconds, GameMode->AlivePlayers.Num());
 
     for (auto PlayerController : GameMode->AlivePlayers)
     {
@@ -2005,14 +1707,6 @@ void UFortQuestManager__Tick()
         return;
 
     auto Now = UGameplayStatics::GetTimeSeconds(World);
-
-    static bool bDiagHookChecked = false;
-
-    if (!bDiagHookChecked)
-    {
-        bDiagHookChecked = true;
-        QuestLog("tick first run hookbyte=%02X now=%.1f", *(uint8*)(ImageBase + 0xA12E4E8), Now);
-    }
 
     SendTimeElapsed(Now);
     SendRequestedMatchReports(Now);
@@ -2039,16 +1733,12 @@ void UFortQuestManager__Tick()
 
 void UFortQuestManager__PostLoad()
 {
-    auto Status = MH_CreateHook((LPVOID)(ImageBase + 0xA12E4E8), (LPVOID)QueueStatEvent, nullptr);
-
-    QuestLog("init imagebase=%p queuestatevent=%p status=%d qs1disabled=%d", (void*)ImageBase, (void*)(ImageBase + 0xA12E4E8), (int)Status, **(uint8**)(ImageBase + 0x12D3EE50));
+    Hook(ImageBase + 0xA12E4E8, QueueStatEvent);
 
     UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), L"fort.DisablePartialQS1InNonCampaign 0", nullptr);
 
     if (auto DisablePartialQS1InNonCampaign = *(uint8**)(ImageBase + 0x12D3EE50))
         *DisablePartialQS1InNonCampaign = 0;
-
-    QuestLog("init qs1disabled after=%d", **(uint8**)(ImageBase + 0x12D3EE50));
 
     auto HandleGameplayEventFunction = UFortAbilitySystemComponentAthena::GetDefaultObj()->VTable[0xE3];
 
@@ -2056,7 +1746,4 @@ void UFortQuestManager__PostLoad()
     Hook(ImageBase + 0x9F2CCAC, OnDamageServer, OnDamageServerOG);
     Hook(ImageBase + 0x8F96DA4, HandlePawnKilled, HandlePawnKilledOG);
     Hook((uint64)HandleGameplayEventFunction, HandleGameplayEvent, HandleGameplayEventOG);
-
-    QuestLog("init verbs broadcast=%p damage=%p gameplayevent=%p rva=%llx processors=%d", (void*)(ImageBase + 0xA3E26F8), (void*)(ImageBase + 0x9F2CCAC), HandleGameplayEventFunction,
-             (unsigned long long)((uint64)HandleGameplayEventFunction - ImageBase), (int)GetVerbProcessors().size());
 }

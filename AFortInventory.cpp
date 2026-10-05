@@ -166,7 +166,7 @@ UFortWorldItem* GiveItem(AFortInventory* Inventory, const UFortItemDefinition* I
         auto NewData = FMemory::Malloc(sizeof(FFortItemEntryStateValue) * StateValues.Num());
         memcpy(NewData, StateValues.Data, sizeof(FFortItemEntryStateValue) * StateValues.Num());
         Item->ItemEntry.StateValues.NumElements = StateValues.Num();
-        Item->ItemEntry.StateValues.MaxElements = StateValues.Max();
+        Item->ItemEntry.StateValues.MaxElements = StateValues.Num();
         Item->ItemEntry.StateValues.Data = (FFortItemEntryStateValue*)NewData;
     }
 
@@ -178,7 +178,15 @@ UFortWorldItem* GiveItem(AFortInventory* Inventory, const UFortItemDefinition* I
             CoCreateGuid((GUID*)&Item->ItemEntry.TrackerGuid);
     }
 
-    auto& ReplicatedEntry = Inventory->Inventory.ReplicatedEntries.Add(Item->ItemEntry);
+    static auto ConstructItemEntry = (FFortItemEntry* (*)(FFortItemEntry*))(ImageBase + 0x2287D6C);
+    static auto AssignItemEntry = (FFortItemEntry* (*)(FFortItemEntry*, const FFortItemEntry*))(ImageBase + 0x16E78D8);
+
+    auto& ReplicatedEntries = Inventory->Inventory.ReplicatedEntries;
+    ReplicatedEntries.Reserve(1);
+
+    auto& ReplicatedEntry = *ConstructItemEntry(&ReplicatedEntries.Data[ReplicatedEntries.NumElements++]);
+    AssignItemEntry(&ReplicatedEntry, &Item->ItemEntry);
+    ReplicatedEntry.ParentInventory = Item->ItemEntry.ParentInventory;
     ReplicatedEntry.bIsReplicatedCopy = true;
     Inventory->Inventory.ItemInstances.Add(Item);
 
@@ -240,7 +248,9 @@ void Update(AFortInventory* Inventory, FFortItemEntry* Entry)
 
         if (ReplicatedEntry.ItemGuid == Entry->ItemGuid)
         {
-            ReplicatedEntry = *Entry;
+            static auto AssignItemEntry = (FFortItemEntry* (*)(FFortItemEntry*, const FFortItemEntry*))(ImageBase + 0x16E78D8);
+
+            AssignItemEntry(&ReplicatedEntry, Entry);
             ReplicatedEntry.bIsDirty = false;
             Inventory->Inventory.MarkItemDirty(ReplicatedEntry);
             SetRequiresUpdate(Inventory);
@@ -252,8 +262,8 @@ void Update(AFortInventory* Inventory, FFortItemEntry* Entry)
 void RemoveWeaponAbilities(AFortWeapon* Weapon)
 {
     static auto ClearAbility = (void (*)(UAbilitySystemComponent*, FGameplayAbilitySpecHandle&))(ImageBase + 0x7AE54BC);
-    auto PlayerController = (AFortPlayerControllerAthena*)((AFortPlayerPawnAthena*)Weapon->Instigator)->Controller;
-    if (!PlayerController)
+    auto PlayerController = Weapon->Instigator ? (AFortPlayerControllerAthena*)Weapon->Instigator->Controller : nullptr;
+    if (!PlayerController || !PlayerController->PlayerState || !PlayerController->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()))
         return;
     auto AbilitySystemComponent = ((AFortPlayerStateAthena*)PlayerController->PlayerState)->AbilitySystemComponent;
 
@@ -283,9 +293,6 @@ void RemoveWeaponAbilities(AFortWeapon* Weapon)
         {
             auto& Handle = Weapon->EquippedAbilityHandles[i];
 
-            if (IsBadReadPtr(&Handle, sizeof(Handle)))
-                continue;
-
             if (Handle.Handle != -1)
                 ClearAbility(AbilitySystemComponent, Handle);
         }
@@ -297,7 +304,8 @@ void RemoveWeaponAbilities(AFortWeapon* Weapon)
         for (int i = 0; i < Weapon->EquippedAbilitySetHandles.Num(); i++)
             UFortKismetLibrary::UnequipFortAbilitySet(Weapon->EquippedAbilitySetHandles[i]);
 
-        PlayerController->AppliedInGameModifierAbilitySetHandles.Reset();
+        if (PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()))
+            PlayerController->AppliedInGameModifierAbilitySetHandles.Reset();
         Weapon->EquippedAbilitySetHandles.Clear();
     }
 }
@@ -325,12 +333,17 @@ void Remove(AFortInventory* Inventory, FGuid Guid)
         }
     }
 
+    auto Instance = ItemInstanceIdx != -1 ? Inventory->Inventory.ItemInstances.Data[ItemInstanceIdx] : nullptr;
+
     if (ItemEntryIdx != -1)
+    {
+        static auto DestroyItemEntry = (void (*)(FFortItemEntry*))(ImageBase + 0x16E77DC);
+
+        DestroyItemEntry(&Inventory->Inventory.ReplicatedEntries.Data[ItemEntryIdx]);
         Inventory->Inventory.ReplicatedEntries.Remove(ItemEntryIdx);
+    }
     if (ItemInstanceIdx != -1)
         Inventory->Inventory.ItemInstances.Remove(ItemInstanceIdx);
-
-    auto Instance = ItemInstanceIdx != -1 ? Inventory->Inventory.ItemInstances.Data[ItemInstanceIdx] : nullptr;
 
     Inventory->bRequiresLocalUpdate = true;
     Inventory->bRequiresSaving = true;
@@ -715,6 +728,9 @@ static void K2_RemoveItemFromPlayerByGuid(UObject* Context, FFrame& Stack, int32
     Stack.IncrementCode();
 
     *Ret = 0;
+
+    if (!PlayerController)
+        return;
 
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
     UFortWorldItem* Item = nullptr;

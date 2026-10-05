@@ -130,7 +130,6 @@ static void RemoveVehicleMod(void* VehicleInterface, const FGameplayTag* ModTag)
 static void (*PostInitializeComponentsOG)(AFortAthenaVehicle*);
 static void PostInitializeComponents(AFortAthenaVehicle* Vehicle)
 {
-    static auto GetValueAtLevel = (float (*)(const FScalableFloat*, float, const FString*))(ImageBase + 0x1B24F08);
     static auto DamageablePartsName = FName(L"DamageableParts");
 
     PostInitializeComponentsOG(Vehicle);
@@ -148,7 +147,7 @@ static void PostInitializeComponents(AFortAthenaVehicle* Vehicle)
         Part.ConfigIndex = i;
         Part.BoneName = PartConfig.BoneName;
         Part.ShapeName = PartConfig.ShapeName;
-        Part.Health = PartConfig.bStartsDisabled ? 0.f : GetValueAtLevel(&PartConfig.MaxHealth, 0.f, nullptr);
+        Part.Health = PartConfig.bStartsDisabled ? 0.f : PartConfig.MaxHealth.Evaluate();
         Part.bConsideredCriticalHit = PartConfig.bConsideredCriticalHit;
         Part.MaxHealthOverride = -1.f;
 
@@ -161,7 +160,6 @@ static void PostInitializeComponents(AFortAthenaVehicle* Vehicle)
 
 static void RepairDamageablePart(AFortAthenaVehicle* Vehicle, const FName& ShapeName, float NewHealthPercent)
 {
-    static auto GetValueAtLevel = (float (*)(const FScalableFloat*, float, const FString*))(ImageBase + 0x1B24F08);
     static auto RefreshDamageablePartsInternal = (void (*)(AFortAthenaVehicle*, const TArray<FVehicleDamageablePart>&))(ImageBase + 0x2EA04C0);
     static auto DamageablePartsName = FName(L"DamageableParts");
 
@@ -180,7 +178,7 @@ static void RepairDamageablePart(AFortAthenaVehicle* Vehicle, const FName& Shape
         for (auto& PrevPart : Vehicle->DamageableParts)
             PrevDamageableParts.Add(PrevPart);
 
-        Part.Health = GetValueAtLevel(&VehicleConfigs->DamageableParts[Part.ConfigIndex].MaxHealth, 0.f, nullptr) * NewHealthPercent;
+        Part.Health = VehicleConfigs->DamageableParts[Part.ConfigIndex].MaxHealth.Evaluate() * NewHealthPercent;
 
         UNetPushModelHelpers::MarkPropertyDirty(Vehicle, DamageablePartsName);
         RefreshDamageablePartsInternal(Vehicle, PrevDamageableParts);
@@ -197,7 +195,6 @@ static void BreakDamageablePart(AFortAthenaVehicle* Vehicle, const FName& ShapeN
 static void (*RepairAllDamageablePartsOG)(AFortAthenaVehicle*, float);
 static void RepairAllDamageableParts(AFortAthenaVehicle* Vehicle, float NewHealthPercent)
 {
-    static auto GetValueAtLevel = (float (*)(const FScalableFloat*, float, const FString*))(ImageBase + 0x1B24F08);
     static auto RefreshDamageablePartsInternal = (void (*)(AFortAthenaVehicle*, const TArray<FVehicleDamageablePart>&))(ImageBase + 0x2EA04C0);
     static auto DamageablePartsName = FName(L"DamageableParts");
 
@@ -212,7 +209,7 @@ static void RepairAllDamageableParts(AFortAthenaVehicle* Vehicle, float NewHealt
             PrevDamageableParts.Add(Part);
 
             if (VehicleConfigs->DamageableParts.IsValidIndex(Part.ConfigIndex))
-                Part.Health = GetValueAtLevel(&VehicleConfigs->DamageableParts[Part.ConfigIndex].MaxHealth, 0.f, nullptr) * NewHealthPercent;
+                Part.Health = VehicleConfigs->DamageableParts[Part.ConfigIndex].MaxHealth.Evaluate() * NewHealthPercent;
         }
 
         UNetPushModelHelpers::MarkPropertyDirty(Vehicle, DamageablePartsName);

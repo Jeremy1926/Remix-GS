@@ -122,13 +122,7 @@ class UObject* FSoftObjectPtr::Load(const class UClass* Class)
 
 float FScalableFloat::Evaluate(float Level) const
 {
-	if (!Curve.CurveTable || Curve.RowName.IsNone())
-		return Value;
-
-	float Out = 0.f;
-	UDataTableFunctionLibrary::EvaluateCurveTableRow(Curve.CurveTable, Curve.RowName, Level, nullptr, &Out, FString());
-
-	return Value * Out;
+	return reinterpret_cast<float(*)(const FScalableFloat*, float, const FString*)>(InSDKUtils::GetImageBase() + Offsets::GetValueAtLevel)(this, Level, nullptr);
 }
 
 void ProcessScriptDelegates(const TArray<FScriptDelegate>& InvocationList, void* Params)
@@ -164,21 +158,8 @@ const FName& GetStaticName(const wchar_t* Name, FName& StaticName)
 // Predefined Function
 
 FWeakObjectPtr::FWeakObjectPtr(const class UObject* Object)
-	: ObjectIndex(-1), ObjectSerialNumber(0)
 {
-	static int32 NextSerialNumber = 676767676;
-
-	if (!Object)
-		return;
-
-	ObjectIndex = Object->GetIndex();
-
-	FUObjectItem* Item = UObject::GObjects->GetItemByIndex(ObjectIndex);
-
-	if (Item->GetSerialNumber() == 0)
-		Item->GetSerialNumber() = NextSerialNumber++;
-
-	ObjectSerialNumber = Item->GetSerialNumber();
+	reinterpret_cast<void(*)(FWeakObjectPtr*, const UObject*)>(InSDKUtils::GetImageBase() + Offsets::FWeakObjectPtrAssign)(this, Object);
 }
 
 bool FWeakObjectPtr::IsValid() const

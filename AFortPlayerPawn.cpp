@@ -66,6 +66,8 @@ static bool FinishedTargetSpline(AFortPickupAthena* Pickup)
         return FinishedTargetSplineOG(Pickup);
     }
 
+    PlayerController->bTryPickupSwap = false;
+
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
     auto FinalLoc = Pawn->K2_GetActorLocation();
     auto ForwardVector = Pawn->GetActorForwardVector();
@@ -81,14 +83,12 @@ static bool FinishedTargetSpline(AFortPickupAthena* Pickup)
     FinalLoc.X += cos(FinalAngle) * 100.f;
     FinalLoc.Y += sin(FinalAngle) * 100.f;
 
-    if (!IsPrimaryQuickbar(Pawn->CurrentWeapon->WeaponData) || !IsPrimaryQuickbar((UFortItemDefinition*)Pickup->PrimaryPickupItemEntry.ItemDefinition))
+    if (!Pawn->CurrentWeapon || !IsPrimaryQuickbar(Pawn->CurrentWeapon->WeaponData) || !IsPrimaryQuickbar((UFortItemDefinition*)Pickup->PrimaryPickupItemEntry.ItemDefinition))
     {
         SpawnPickup(PlayerController->GetViewTarget()->K2_GetActorLocation(), Pickup->PrimaryPickupItemEntry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, PlayerController->MyFortPawn, -1, true,
                     true, true, nullptr, FinalLoc);
         return FinishedTargetSplineOG(Pickup);
     }
-
-    PlayerController->bTryPickupSwap = false;
 
     auto CurrentWeapon = ((AFortPlayerPawnAthena*)PlayerController->Pawn)->CurrentWeapon;
     auto& ReplicatedEntries = WorldInventory->Inventory.ReplicatedEntries;
@@ -859,21 +859,6 @@ static void PickupHeldObject(UObject* Context, FFrame& Stack)
     HeldObjectComponent->OnHeldObjectPickedUp.Process();
 }
 
-static void PlaceHeldObject(UObject* Context, FFrame& Stack)
-{
-    Stack.IncrementCode();
-}
-
-static void ThrowHeldObject(UObject* Context, FFrame& Stack)
-{
-    FVector DetachLocation;
-    FRotator ThrowDirection;
-
-    Stack.StepCompiledIn(&DetachLocation);
-    Stack.StepCompiledIn(&ThrowDirection);
-    Stack.IncrementCode();
-}
-
 static void DropHeldObject(UObject* Context, FFrame& Stack)
 {
     Stack.IncrementCode();
@@ -987,8 +972,6 @@ void AFortPlayerPawn__PostLoad()
 
     ExecHook(HeldObjectComponentClass->FindFunction("PickupHeldObject"), PickupHeldObject);
     ExecHook(HeldObjectComponentClass->FindFunction("DropHeldObject"), DropHeldObject);
-    ExecHook(HeldObjectComponentClass->FindFunction("PlaceHeldObject"), PlaceHeldObject);
-    ExecHook(HeldObjectComponentClass->FindFunction("ThrowHeldObject"), ThrowHeldObject);
     ExecHook(UFortMissionLibrary::StaticClass()->FindFunction("TeleportPlayerPawn"), TeleportPlayerPawn);
 }
 

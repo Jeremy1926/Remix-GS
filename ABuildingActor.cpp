@@ -101,7 +101,7 @@ static void OnDamageServer(ABuildingSMActor* Actor, float Damage, const FGamepla
 
             for (auto& StateValue : ItemEntry->StateValues)
             {
-                if (StateValue.StateType != (EFortItemEntryState)2)
+                if (StateValue.StateType != EFortItemEntryState::ShouldShowItemToast)
                     continue;
 
                 StateValue.IntValue = 0;
@@ -194,10 +194,10 @@ static void SetDynamicFoundationEnabled(UObject* Context, FFrame& Stack, void* R
 
     auto Foundation = (ABuildingFoundation*)Context;
 
-    Foundation->DynamicFoundationRepData.EnabledState = (EDynamicFoundationEnabledState)(bEnabled ? 1 : 2);
+    Foundation->DynamicFoundationRepData.EnabledState = bEnabled ? EDynamicFoundationEnabledState::Enabled : EDynamicFoundationEnabledState::Disabled;
     Foundation->OnRep_DynamicFoundationRepData();
 
-    Foundation->FoundationEnabledState = (EDynamicFoundationEnabledState)(bEnabled ? 1 : 2);
+    Foundation->FoundationEnabledState = bEnabled ? EDynamicFoundationEnabledState::Enabled : EDynamicFoundationEnabledState::Disabled;
 
     bool bSetup = true;
 

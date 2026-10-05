@@ -168,6 +168,7 @@
     <ClInclude Include="MinHook.h" />
     <ClInclude Include="Shared.h" />
     <ClInclude Include="UConversationInstance.h" />
+    <ClInclude Include="UFortControllerComponent_Accolades.h" />
     <ClInclude Include="UFortControllerComponent_TournamentStatsTracker.h" />
     <ClInclude Include="UFortQuestManager.h" />
     <ClInclude Include="hde64.h" />
@@ -408,6 +409,7 @@
     </ClCompile>
     <ClCompile Include="ABuildingActor.cpp" />
     <ClCompile Include="ABuildingGameplayActorSentry.cpp" />
+    <ClCompile Include="ABuildingGameplayActorSpawnMachine.cpp" />
     <ClCompile Include="AFortAthenaAIBotController.cpp" />
     <ClCompile Include="AFortAthenaVehicle.cpp" />
     <ClCompile Include="AFortGameMode.cpp" />
@@ -420,6 +422,8 @@
     <ClCompile Include="UAbilitySystemComponent.cpp" />
     <ClCompile Include="UConversationInstance.cpp" />
     <ClCompile Include="UFortAthenaLivingWorldManager.cpp" />
+    <ClCompile Include="UFortControllerComponent_AccoladeCollection.cpp" />
+    <ClCompile Include="UFortControllerComponent_Accolades.cpp" />
     <ClCompile Include="UFortControllerComponent_IndicatedActorManagement.cpp" />
     <ClCompile Include="UFortControllerComponent_MapDiscoverability.cpp" />
     <ClCompile Include="UFortEngine.cpp" />
@@ -496,6 +500,12 @@
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="SDK\SDK\AIModule_functions.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="SDK\SDK\AccoladesRuntime_functions.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</ForcedIncludeFiles>

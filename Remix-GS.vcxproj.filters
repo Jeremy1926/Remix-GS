@@ -57,6 +57,9 @@
     <ClInclude Include="UConversationInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UFortControllerComponent_Accolades.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="UFortControllerComponent_TournamentStatsTracker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -758,6 +761,9 @@
     <ClCompile Include="ABuildingGameplayActorSentry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ABuildingGameplayActorSpawnMachine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="AFortAthenaAIBotController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -792,6 +798,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UFortAthenaLivingWorldManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UFortControllerComponent_AccoladeCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UFortControllerComponent_Accolades.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UFortControllerComponent_IndicatedActorManagement.cpp">
@@ -855,6 +867,9 @@
       <Filter>SDK</Filter>
     </ClCompile>
     <ClCompile Include="SDK\SDK\AIModule_functions.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="SDK\SDK\AccoladesRuntime_functions.cpp">
       <Filter>SDK</Filter>
     </ClCompile>
   </ItemGroup>

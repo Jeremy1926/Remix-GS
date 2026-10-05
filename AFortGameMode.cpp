@@ -61,6 +61,13 @@ static void RegisterServer(AGameSession* GameSession)
 {
     static auto GetSessionInterface = (FSharedRef* (*)(FSharedRef*, UWorld*, FName))(ImageBase + 0x71D8BA0);
     static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+    static auto InitHostBeacon = (void (*)(AGameSession*, FOnlineSessionSettings*))(ImageBase + 0x9CD9E24);
+    static auto StartMatchmakingBackfillV2 = (bool (*)(AGameSession*))(ImageBase + 0x9D2ECD8);
+    static auto GetOnlineSubsystem = (uint8* (*)(void*))(ImageBase + 0x25336F0);
+    static auto FindServicePermissions = (uint8* (*)(uint8*, void*))(ImageBase + 0x3C253EC);
+    static auto MakeServicePermissions = (void* (*)(void*, void*, void*, void*))(ImageBase + 0x2BF1684);
+    static auto AddServicePermissions = (int32 (*)(void*, void*))(ImageBase + 0x2BF1790);
+    static auto DestroyServicePermissions = (void (*)(void*))(ImageBase + 0x1805494);
 
     FSharedRef SessionInterface{};
     GetSessionInterface(&SessionInterface, UWorld::GetWorld(), FName());
@@ -68,6 +75,7 @@ static void RegisterServer(AGameSession* GameSession)
     if (SessionInterface.Object)
     {
         auto CreateSession = (bool (*)(void*, int32, FName, const FOnlineSessionSettings&))(*(void***)SessionInterface.Object)[0x9];
+        auto GetSessionSettings = (FOnlineSessionSettings* (*)(void*, FName))(*(void***)SessionInterface.Object)[0x70];
         FOnlineSessionSettings SessionSettings{};
 
         SessionSettings.NumPublicConnections = GameSession->MaxPlayers;
@@ -75,6 +83,38 @@ static void RegisterServer(AGameSession* GameSession)
         SessionSettings.bIsLANMatch = true;
 
         CreateSession(SessionInterface.Object, 0, GameSession->SessionName, SessionSettings);
+
+        auto CreatedSettings = GetSessionSettings(SessionInterface.Object, GameSession->SessionName);
+
+        if (CreatedSettings && GameSession->IsA(AFortGameSessionDedicatedAthena::StaticClass()))
+        {
+            auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
+            auto UpdateSessionSettings = (void (*)(AGameSession*, FOnlineSessionSettings*, int32, FString*, FString*))(*(void***)GameSession)[0x11D];
+
+            UpdateSessionSettings(GameSession, CreatedSettings, GameMode->CurrentPlaylistId, &GameMode->CurrentZoneInstanceId, &GameMode->CurrentWUID);
+            InitHostBeacon(GameSession, CreatedSettings);
+
+            auto OnlineSubsystem = GetOnlineSubsystem((void*)(ImageBase + 0x12D183B8));
+            auto McpService = OnlineSubsystem ? *(uint8**)(OnlineSubsystem + 0x2E8) : nullptr;
+
+            if (McpService && !FindServicePermissions(McpService + 0x10, (void*)(ImageBase + 0x12D18A90)))
+            {
+                if (auto ClientPermissions = FindServicePermissions(McpService + 0x10, (void*)(ImageBase + 0x12D18A80)))
+                {
+                    uint8 ServerPermissions[0x30];
+                    MakeServicePermissions(ServerPermissions, (void*)(ImageBase + 0x12D18A90), ClientPermissions + 0x10, ClientPermissions + 0x20);
+                    AddServicePermissions(McpService + 0x10 + 0xB8, ServerPermissions);
+                    DestroyServicePermissions(ServerPermissions);
+                }
+            }
+
+            if (((AFortGameSession*)GameSession)->ReservationBeaconHost)
+            {
+                *(bool*)(__int64(GameSession) + 0x8A8) = true;
+                *(bool*)(__int64(GameSession) + 0x8A9) = true;
+                StartMatchmakingBackfillV2(GameSession);
+            }
+        }
     }
 
     TSharedRef_Destructor(&SessionInterface);
@@ -571,7 +611,7 @@ static bool IsGameFeaturePluginActive(const std::wstring& PluginName)
     static auto GetGameFeatureDataForActivePlugin = (UGameFeatureData* (*)(UGameFeaturePluginStateMachine*))(ImageBase + 0x29EB49C);
     auto PluginDescriptor = L"/" + PluginName + L".uplugin";
 
-    for (auto& Pair : GetFirstInstance<UGameFeaturesSubsystem>()->GameFeaturePluginStateMachines)
+    for (auto& Pair : ((UGameFeaturesSubsystem*)USubsystemBlueprintLibrary::GetEngineSubsystem(UGameFeaturesSubsystem::StaticClass()))->GameFeaturePluginStateMachines)
     {
         if (Pair.Key().ToWString().ends_with(PluginDescriptor))
             return Pair.Value() && GetGameFeatureDataForActivePlugin(Pair.Value());
@@ -580,7 +620,6 @@ static bool IsGameFeaturePluginActive(const std::wstring& PluginName)
     return false;
 }
 
-static bool bIsLargeTeamGame = false;
 static std::unordered_map<int, float> WeightMap;
 static float Sum = 0;
 static float Weight;
@@ -651,6 +690,7 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
         if (Playlist)
         {
             Playlist->GarbageCollectionFrequency = 9999999999999999.f;
+            Playlist->bEnableDynamicBotBackfill = false;
             GameMode->PlaylistHotfixOriginalGCFrequency = 9999999999999999.f;
             GameMode->bDisableGCOnServerDuringMatch = true;
             GameMode->bPlaylistHotfixChangedGCDisabling = true;
@@ -680,8 +720,6 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
             GameMode->CurrentPlaylistName = Playlist->PlaylistName;
             GameMode->GameSession->MaxPlayers = Playlist->MaxPlayers;
 
-            bIsLargeTeamGame = Playlist->bIsLargeTeamGame;
-
             auto StreamingPlaylist = GameState->CurrentPlaylistInfo.OverridePlaylist ? GameState->CurrentPlaylistInfo.OverridePlaylist : GameState->CurrentPlaylistInfo.BasePlaylist;
             static auto StartStreamingAdditionalPlaylistLevel = (void (*)(AFortGameStateAthena*, FName, bool))(ImageBase + 0x984CF30);
 
@@ -709,7 +747,7 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
                     auto PluginURL = FString((L"file:../../../FortniteGame/Plugins/GameFeatures/" + PluginName + L"/" + PluginName + L".uplugin").c_str());
                     uint8 CompleteDelegate[0x10]{};
 
-                    ChangeGameFeatureTargetState(GetFirstInstance<UGameFeaturesSubsystem>(), PluginURL, EGameFeatureTargetState::Active, CompleteDelegate);
+                    ChangeGameFeatureTargetState((UGameFeaturesSubsystem*)USubsystemBlueprintLibrary::GetEngineSubsystem(UGameFeaturesSubsystem::StaticClass()), PluginURL, EGameFeatureTargetState::Active, CompleteDelegate);
                     PluginURL.Free();
                 }
             }
@@ -722,8 +760,8 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
 
         RegisterServer(GameMode->GameSession);
 
-        if (auto MeshNetworkSubsystem = GetFirstInstance<UMeshNetworkSubsystem>())
-            MeshNetworkSubsystem->NodeType = (EMeshNetworkNodeType)2;
+        if (auto MeshNetworkSubsystem = (UMeshNetworkSubsystem*)USubsystemBlueprintLibrary::GetGameInstanceSubsystem(World, UMeshNetworkSubsystem::StaticClass()))
+            MeshNetworkSubsystem->NodeType = EMeshNetworkNodeType::Edge;
 
         if (!GameMode->AIDirector)
         {
@@ -873,30 +911,24 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
                     GetLateGamePhase(GameState) < (int)GameState->MapInfo->SafeZoneDefinition.Count.Evaluate();
 
         auto AbilitySet = FindObject<UFortAbilitySet>(L"/Game/Abilities/Player/Generic/Traits/DefaultPlayer/GAS_AthenaPlayer.GAS_AthenaPlayer");
-        AbilitySet->AddToRoot();
         AbilitySets.Add(AbilitySet);
 
         auto TacticalSprintAbility = FindObject<UFortAbilitySet>(L"/TacticalSprintGame/Gameplay/AS_TacticalSprint.AS_TacticalSprint");
 
         if (!TacticalSprintAbility)
             TacticalSprintAbility = FindObject<UFortAbilitySet>(L"/TacticalSprint/Gameplay/AS_TacticalSprint.AS_TacticalSprint");
-        TacticalSprintAbility->AddToRoot();
         AbilitySets.Add(TacticalSprintAbility);
 
         auto AscenderAbility = FindObject<UFortAbilitySet>(L"/Ascender/Gameplay/Ascender/AS_Ascender.AS_Ascender");
-        AscenderAbility->AddToRoot();
         AbilitySets.Add(AscenderAbility);
 
         auto DoorBashAbility = FindObject<UFortAbilitySet>(L"/DoorBashContent/Gameplay/AS_DoorBash.AS_DoorBash");
-        DoorBashAbility->AddToRoot();
         AbilitySets.Add(DoorBashAbility);
 
         auto HillScrambleAbility = FindObject<UFortAbilitySet>(L"/HillScramble/Gameplay/AS_HillScramble.AS_HillScramble");
-        HillScrambleAbility->AddToRoot();
         AbilitySets.Add(HillScrambleAbility);
 
         auto SlideImpulseAbility = FindObject<UFortAbilitySet>(L"/SlideImpulse/Gameplay/AS_SlideImpulse.AS_SlideImpulse");
-        SlideImpulseAbility->AddToRoot();
         AbilitySets.Add(SlideImpulseAbility);
 
         for (auto& Set : AbilitySets)
@@ -1238,8 +1270,8 @@ static void OnHttpRequestJoinTokenComplete(FVoiceChatTokenRequest& Request, bool
     static auto FJsonSerializer_Deserialize = (bool (*)(void*, FSharedRef*, int32))(ImageBase + 0x1D916A4);
     static auto TryGetStringField = (bool (*)(void*, const FStringView*, FString*))(ImageBase + 0x1D8F394);
     static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
-    static const FStringView TokenField{ L"token", 5 };
-    static const FStringView ErrorCodeField{ L"errorCode", 9 };
+    alignas(16) static const FStringView TokenField{ L"token", 5 };
+    alignas(16) static const FStringView ErrorCodeField{ L"errorCode", 9 };
 
     FString Token;
     FString Error;
@@ -1323,7 +1355,7 @@ static void HandleStartingNewPlayer(UObject* Context, FFrame& Stack, void* Ret)
 
         PlayerController->WorldInventory.ObjectPointer = WorldInventory;
         PlayerController->WorldInventory.InterfacePointer = WorldInventory->GetInterface(IFortInventoryInterface::StaticClass());
-        WorldInventory->InventoryType = (EFortInventoryType)0;
+        WorldInventory->InventoryType = EFortInventoryType::World;
     }
 
     PlayerState->WorldPlayerId = 0;
@@ -1339,37 +1371,21 @@ static void HandleStartingNewPlayer(UObject* Context, FFrame& Stack, void* Ret)
     }
 }
 
-static uint8 CurrentTeam = 3;
-static uint8 PlayersOnCurTeam = 0;
-
-static uint8 PickTeam(AFortGameModeAthena* GameMode, uint8 PreferredTeam, AFortPlayerControllerAthena* Controller)
+static UClass** GetGameSessionClass(AFortGameModeAthena* GameMode, UClass** Result)
 {
-    uint8 Team = CurrentTeam;
-    auto Playlist = ((AFortGameStateAthena*)GameMode->GameState)->CurrentPlaylistInfo.BasePlaylist;
+    *Result = AFortGameSessionDedicatedAthena::StaticClass();
+    return Result;
+}
 
-    if (::Playlist == L"/DurianPlaylist/Playlist/Playlist_Durian.Playlist_Durian")
-    {
-        CurrentTeam++;
-        return Team;
-    }
+static void (*ResolvePlayerEligibilityOG)(void*, void*, void*);
+static void ResolvePlayerEligibility(void* Resolver, void* PlayerId, void* OnResolved)
+{
+    static auto CompleteEligibility = (void (*)(void*, void*, bool))(ImageBase + 0x520DA78);
 
-    if (bIsLargeTeamGame)
-    {
-        if (CurrentTeam == 4)
-            CurrentTeam = 3;
-        else
-            CurrentTeam = 4;
-    }
-    else
-    {
-        if (++PlayersOnCurTeam >= (Playlist ? Playlist->MaxSquadSize : 1))
-        {
-            CurrentTeam++;
-            PlayersOnCurTeam = 0;
-        }
-    }
+    if (!Resolver)
+        return CompleteEligibility(OnResolved, PlayerId, true);
 
-    return Team;
+    ResolvePlayerEligibilityOG(Resolver, PlayerId, OnResolved);
 }
 
 static void (*HandleMatchHasStartedOG)(AFortGameModeAthena*);
@@ -1469,7 +1485,7 @@ static void FinishWorldInitialization(AFortGameModeAthena* GameMode, AActor* Wor
         }
     }
 
-    auto GameFeaturesSubsystem = !bUseGameModeGameFeatureLoot ? GetFirstInstance<UGameFeaturesSubsystem>() : nullptr;
+    auto GameFeaturesSubsystem = !bUseGameModeGameFeatureLoot ? (UGameFeaturesSubsystem*)USubsystemBlueprintLibrary::GetEngineSubsystem(UGameFeaturesSubsystem::StaticClass()) : nullptr;
 
     if (GameFeaturesSubsystem)
     {
@@ -1718,7 +1734,8 @@ void AFortGameMode__PostLoad()
     Patch<uint16_t>(ImageBase + 0x6D57A3C, 0x9090);
     ExecHook(AGameModeBase::StaticClass()->FindFunction("HandleStartingNewPlayer"), HandleStartingNewPlayer, HandleStartingNewPlayerOG);
     Patch<uint16_t>(ImageBase + 0x28730CC, 0x9090);
-    Hook(ImageBase + 0x8F998EC, PickTeam);
+    Hook(ImageBase + 0x8F928A4, GetGameSessionClass);
+    Hook(ImageBase + 0x9924AFC, ResolvePlayerEligibility, ResolvePlayerEligibilityOG);
 
     ExecHook(AFortSafeZoneIndicator::StaticClass()->FindFunction("GetPhaseInfo"), GetPhaseInfo);
 

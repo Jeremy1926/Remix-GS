@@ -75,6 +75,8 @@ namespace Offsets
 	constexpr int32 GetInterfaceAddress  = 0x01583468;
 	constexpr int32 Step                 = 0x01948818;
 	constexpr int32 StepExplicitProperty = 0x01C0A810;
+	constexpr int32 GetValueAtLevel      = 0x01B24F08;
+	constexpr int32 FWeakObjectPtrAssign = 0x01582DA8;
 }
 
 namespace InSDKUtils

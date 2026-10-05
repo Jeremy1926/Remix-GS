@@ -16,7 +16,6 @@ static void (*OnPawnDiedOG)(AFortPlayerControllerAthena*, AFortPawn*, float, con
 static void (*ClientOnPawnDiedOG)(AFortPlayerControllerAthena*, FFortPlayerDeathReport&);
 static void (*K2_OnUnEquipOG)(AFortWeapon*);
 static void (*ServerRequestSeatChangeOG)(UObject*, FFrame&, void*);
-static void (*ServerAwardVehicleTrickPointsOG)(UObject*, FFrame&, void*);
 
 static void InitializePlayerGameplayAbilities(AFortPlayerControllerAthena* PlayerController)
 {
@@ -233,7 +232,12 @@ static void ServerAcknowledgePossession(UObject* Context, FFrame& Stack)
     if (!P)
         return;
 
+    auto bAlreadyAcknowledged = PlayerController->AcknowledgedPawn == P;
+
     ((void (*)(AFortPlayerControllerAthena*, APawn*))AFortPlayerController::GetDefaultObj()->VTable[0x135])(PlayerController, P);
+
+    if (bAlreadyAcknowledged || P != PlayerController->Pawn)
+        return;
 
     ApplyCosmeticLoadoutToPawn(PlayerController, P);
 
@@ -303,7 +307,6 @@ static void ServerAcknowledgePossession(UObject* Context, FFrame& Stack)
     }
 
     UFortKismetLibrary::UpdatePlayerCustomCharacterPartsVisualization((AFortPlayerState*)PlayerController->PlayerState);
-    InitializePlayerGameplayAbilities(PlayerController);
 }
 
 static void ServerExecuteInventoryItem(UObject* Context, FFrame& Stack)
@@ -342,6 +345,9 @@ static void ServerExecuteInventoryItem(UObject* Context, FFrame& Stack)
     auto ItemDefinition = (UFortWeaponItemDefinition*)UncastedDef;
     auto Weapon = PlayerController->MyFortPawn->EquipWeaponDefinition(ItemDefinition, ItemGuid, Entry->TrackerGuid, false);
 
+    if (!Weapon)
+        return;
+
     if (Weapon->IsA(AFortDecoTool::StaticClass()))
     {
         ((AFortDecoTool*)Weapon)->SetDecoObjectPreview(ItemDefinition, true);
@@ -363,7 +369,7 @@ static void SetEditingPlayer(ABuildingSMActor* Building, AFortPlayerStateAthena*
     if (Building->Role != ENetRole::ROLE_Authority || (Building->EditingPlayer && NewEditingPlayer))
         return;
 
-    Building->SetNetDormancy((ENetDormancy)(2 - (NewEditingPlayer != nullptr)));
+    Building->SetNetDormancy(NewEditingPlayer ? ENetDormancy::DORM_Awake : ENetDormancy::DORM_DormantAll);
     Building->ForceNetUpdate();
 
     auto Owner = Building->EditingPlayer ? Building->EditingPlayer->Owner : (NewEditingPlayer ? NewEditingPlayer->Owner : nullptr);
@@ -391,7 +397,8 @@ static void ServerCreateBuildingActor(UObject* Context, FFrame& Stack)
 
     auto PlayerController = (AFortPlayerControllerAthena*)Context;
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
-    auto BuildingClass = BuildingClassMap[CreateBuildingData.BuildingClassHandle];
+    auto BuildingClassIt = BuildingClassMap.find(CreateBuildingData.BuildingClassHandle);
+    auto BuildingClass = BuildingClassIt != BuildingClassMap.end() ? BuildingClassIt->second : nullptr;
     FVector BuildLoc = CreateBuildingData.BuildLoc;
     FRotator BuildRot = CreateBuildingData.BuildRot;
     auto bMirrored = CreateBuildingData.bMirrored;
@@ -423,11 +430,11 @@ static void ServerCreateBuildingActor(UObject* Context, FFrame& Stack)
 
     auto Building = SpawnActorUnfinished<ABuildingSMActor>(BuildingClass, BuildLoc, BuildRot, PlayerController);
 
-    Building->InitializeKismetSpawnedBuildingActor(Building, PlayerController, true, nullptr, false);
-    FinishSpawnActor(Building, BuildLoc, BuildRot);
-
     if (!Building)
         return;
+
+    Building->InitializeKismetSpawnedBuildingActor(Building, PlayerController, true, nullptr, false);
+    FinishSpawnActor(Building, BuildLoc, BuildRot);
 
     auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
 
@@ -453,7 +460,7 @@ static void ServerBeginEditingBuildingActor(UObject* Context, FFrame& Stack)
 
     auto PlayerController = (AFortPlayerControllerAthena*)Context;
 
-    if (!PlayerController || !PlayerController->MyFortPawn || !BuildingActorToEdit->IsA(ABuildingSMActor::StaticClass()))
+    if (!PlayerController || !PlayerController->MyFortPawn || !BuildingActorToEdit || !BuildingActorToEdit->IsA(ABuildingSMActor::StaticClass()))
         return;
 
     auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
@@ -465,7 +472,7 @@ static void ServerBeginEditingBuildingActor(UObject* Context, FFrame& Stack)
 
     auto Pawn = PlayerController->MyFortPawn;
 
-    if (!Pawn->CurrentWeapon->IsA(AFortWeap_EditingTool::StaticClass()))
+    if (!Pawn->CurrentWeapon || !Pawn->CurrentWeapon->IsA(AFortWeap_EditingTool::StaticClass()))
     {
         for (auto& Entry : ((AFortInventory*)PlayerController->WorldInventory.ObjectPointer)->Inventory.ReplicatedEntries)
         {
@@ -477,7 +484,7 @@ static void ServerBeginEditingBuildingActor(UObject* Context, FFrame& Stack)
         }
     }
 
-    if (Pawn->CurrentWeapon->IsA(AFortWeap_EditingTool::StaticClass()))
+    if (Pawn->CurrentWeapon && Pawn->CurrentWeapon->IsA(AFortWeap_EditingTool::StaticClass()))
     {
         auto EditTool = (AFortWeap_EditingTool*)Pawn->CurrentWeapon;
         EditTool->EditActor = BuildingActorToEdit;
@@ -501,7 +508,8 @@ static void ServerEditBuildingActor(UObject* Context, FFrame& Stack)
 
     auto PlayerController = (AFortPlayerControllerAthena*)Context;
 
-    if (!PlayerController || !BuildingActorToEdit || !NewBuildingClass || !BuildingActorToEdit->IsA(ABuildingSMActor::StaticClass()) || !((ABuildingSMActor*)NewBuildingClass->ClassDefaultObject)->bIsPlayerBuildable ||
+    if (!PlayerController || !BuildingActorToEdit || !NewBuildingClass || !BuildingActorToEdit->IsA(ABuildingSMActor::StaticClass()) || !NewBuildingClass->IsSubclassOf(ABuildingSMActor::StaticClass()) ||
+        !((ABuildingSMActor*)NewBuildingClass->ClassDefaultObject)->bIsPlayerBuildable ||
         BuildingActorToEdit->EditingPlayer != PlayerController->PlayerState || BuildingActorToEdit->bDestroyed)
         return;
 
@@ -567,7 +575,7 @@ static void ServerRepairBuildingActor(UObject* Context, FFrame& Stack)
 
     auto PlayerController = (AFortPlayerControllerAthena*)Context;
 
-    if (!PlayerController || !BuildingActorToRepair->IsA(ABuildingSMActor::StaticClass()))
+    if (!PlayerController || !BuildingActorToRepair || !BuildingActorToRepair->IsA(ABuildingSMActor::StaticClass()))
         return;
 
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
@@ -650,8 +658,11 @@ static void ServerAttemptInventoryDrop(UObject* Context, FFrame& Stack)
         }
     }
 
-    if (!Item)
+    if (!Item || !ItemEntry)
         return;
+
+    if (Count <= 0 || Count > ItemEntry->Count)
+        Count = ItemEntry->Count;
 
     ItemEntry->Count -= Count;
 
@@ -665,7 +676,6 @@ static void ServerAttemptInventoryDrop(UObject* Context, FFrame& Stack)
 
         SpawnActor<AActor>(BGA_Petrol_PickupClass, FinalLoc);
         Remove(WorldInventory, ItemGuid);
-        Update(WorldInventory, ItemEntry);
         return;
     }
 
@@ -681,7 +691,7 @@ static void ServerAttemptInventoryDrop(UObject* Context, FFrame& Stack)
     SpawnPickup(Pawn->K2_GetActorLocation() + Pawn->GetActorForwardVector() * 70.f + FVector(0, 0, 50), *ItemEntry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, PlayerController->MyFortPawn,
                 Count, true, true, true, nullptr, FinalLoc);
 
-    if (ItemEntry->Count <= 0 || Count < 0)
+    if (ItemEntry->Count <= 0)
         Remove(WorldInventory, ItemGuid);
     else
     {
@@ -722,7 +732,8 @@ static void ServerPlayEmoteItem(UObject* Context, FFrame& Stack)
     }
     else if (EmoteAsset->IsA(UAthenaToyItemDefinition::StaticClass()))
     {
-        AbilityToUse = ((UAthenaToyItemDefinition*)EmoteAsset)->ToySpawnAbility.Get()->ClassDefaultObject;
+        auto ToySpawnAbility = ((UAthenaToyItemDefinition*)EmoteAsset)->ToySpawnAbility.Get();
+        AbilityToUse = ToySpawnAbility ? ToySpawnAbility->ClassDefaultObject : nullptr;
 
         SendStatEvent(QuestManager, PlayerController, EFortQuestObjectiveStatEvent::Toy, 1, true);
     }
@@ -927,12 +938,13 @@ static void ClientOnPawnDied(AFortPlayerControllerAthena* PlayerController, FFor
     memset((PBYTE)&DeathInfo, 0, sizeof(FDeathInfo));
     DeathInfo.bDBNO = Pawn ? Pawn->IsDBNO() : false;
     DeathInfo.DeathLocation = PlayerState->PawnDeathLocation;
-    DeathInfo.DeathTags = Pawn ? *(FGameplayTagContainer*)(uint64(&Pawn->MoveSoundStimulusBroadcastInterval) + 0x10) : FGameplayTagContainer();
+    if (Pawn)
+        UBlueprintGameplayTagLibrary::AppendGameplayTagContainers(DeathInfo.DeathTags, *(FGameplayTagContainer*)(uint64(&Pawn->MoveSoundStimulusBroadcastInterval) + 0x10));
     DeathInfo.DeathClassSlot = (uint8)-1;
     DeathInfo.DeathCause = AFortPlayerStateAthena::ToDeathCause(DeathReport.Tags, DeathInfo.bDBNO);
     DeathInfo.FinisherOrDowner = KillerPlayerState ? KillerPlayerState : PlayerState;
-    DeathInfo.FinisherOrDownerTags = KillerPawn ? KillerPawn->GameplayTags : Pawn->GameplayTags;
-    DeathInfo.VictimTags = Pawn->GameplayTags;
+    UBlueprintGameplayTagLibrary::AppendGameplayTagContainers(DeathInfo.FinisherOrDownerTags, KillerPawn ? KillerPawn->GameplayTags : Pawn->GameplayTags);
+    UBlueprintGameplayTagLibrary::AppendGameplayTagContainers(DeathInfo.VictimTags, Pawn->GameplayTags);
     DeathInfo.Distance = Pawn ? (DeathInfo.DeathCause != EDeathCause::FallDamage ? (KillerPawn ? KillerPawn->GetDistanceTo(Pawn) : 0) : ((AFortPlayerPawnAthena*)PlayerController->MyFortPawn)->LastFallDistance) : 0;
     DeathInfo.bInitialized = true;
     PlayerState->OnRep_DeathInfo();
@@ -945,28 +957,6 @@ static void ClientOnPawnDied(AFortPlayerControllerAthena* PlayerController, FFor
         KillerPlayerState->OnRep_TeamKillScore();
         KillerPlayerState->ClientReportKill(PlayerState);
         KillerPlayerState->ClientReportTeamKill(KillerPlayerState->TeamKillScore);
-
-        for (auto& Damager : Pawn->Damagers)
-        {
-            if (!Damager.DamageCauser || Damager.DamageCauser == KillerPlayerController || !Damager.DamageCauser->IsA(AFortPlayerControllerAthena::StaticClass()))
-                continue;
-
-            auto DamagerController = (AFortPlayerControllerAthena*)Damager.DamageCauser;
-            auto TargetTags = GetOwnedGameplayTags(Pawn);
-
-            SendStatEvent(DamagerController->GetQuestManager(ESubGame::Athena), DamagerController, EFortQuestObjectiveStatEvent::KillContribution, 1, false, Pawn, TargetTags);
-
-            TargetTags.GameplayTags.Free();
-            TargetTags.ParentTags.Free();
-        }
-
-        auto TargetTags = GetOwnedGameplayTags(Pawn);
-
-        if (KillerPlayerController)
-            SendStatEvent(KillerPlayerController->GetQuestManager(ESubGame::Athena), KillerPlayerController, EFortQuestObjectiveStatEvent::Kill, 1, false, Pawn, TargetTags);
-
-        TargetTags.GameplayTags.Free();
-        TargetTags.ParentTags.Free();
     }
 
     if (Pawn && KillerPlayerState && KillerPlayerState->AbilitySystemComponent && KillerPawn && KillerPawn->Controller != PlayerController)
@@ -1005,20 +995,17 @@ static void OnPawnDeathNoRespawn(AFortGameModeAthena* GameMode, AFortPlayerPawnA
     auto KillerPlayerController = KillerPlayerState && KillerPlayerState->Owner && KillerPlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)KillerPlayerState->Owner : nullptr;
     auto DeathCause = PlayerState->DeathInfo.DeathCause;
 
-    PlayerState->Place = GameState->PlayersLeft;
-    PlayerState->OnRep_Place();
-
     AFortWeapon* DamageCauser = nullptr;
 
     if (DeathReportDamageCauser && DeathReportDamageCauser->IsA(AFortProjectileBase::StaticClass()))
     {
         auto Owner = DeathReportDamageCauser->Owner;
 
-        if (Owner->IsA(AFortWeapon::StaticClass()))
+        if (Owner && Owner->IsA(AFortWeapon::StaticClass()))
             DamageCauser = (AFortWeapon*)Owner;
-        else if (Owner->IsA(AFortPlayerControllerAthena::StaticClass()))
+        else if (Owner && Owner->IsA(AFortPlayerControllerAthena::StaticClass()) && ((AFortPlayerControllerAthena*)Owner)->Pawn)
             DamageCauser = ((AFortPlayerPawnAthena*)((AFortPlayerControllerAthena*)Owner)->Pawn)->CurrentWeapon;
-        else if (Owner->IsA(AFortPlayerPawnAthena::StaticClass()))
+        else if (Owner && Owner->IsA(AFortPlayerPawnAthena::StaticClass()))
             DamageCauser = ((AFortPlayerPawnAthena*)Owner)->CurrentWeapon;
     }
     else if (DeathReportDamageCauser && DeathReportDamageCauser->IsA(AFortWeapon::StaticClass()))
@@ -1026,22 +1013,28 @@ static void OnPawnDeathNoRespawn(AFortGameModeAthena* GameMode, AFortPlayerPawnA
 
     static auto RemoveFromAlivePlayers = (void (*)(AFortGameModeAthena*, AFortPlayerControllerAthena*, AFortPlayerStateAthena*, AFortPlayerPawnAthena*, UFortItemDefinition*, EDeathCause, char))(ImageBase + 0x8F9B900);
 
-    RemoveFromAlivePlayers(GameMode, PlayerController, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState, KillerPawn, DamageCauser && DamageCauser->IsA(AFortWeapon::StaticClass()) ? DamageCauser->WeaponData : nullptr,
-                           DeathCause, 0);
+    static auto StartEndGamePhaseTeam = (bool (*)(AFortGameModeAthena*, uint8, AFortPlayerStateAthena*, int32, APawn*, UFortWeaponItemDefinition*, EDeathCause))(ImageBase + 0x8F9F004);
+
+    auto KillerWeapon = DamageCauser && DamageCauser->IsA(AFortWeapon::StaticClass()) ? DamageCauser->WeaponData : nullptr;
+
+    RemoveFromAlivePlayers(GameMode, PlayerController, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState, KillerPawn, KillerWeapon, DeathCause, 0);
+
+    auto Playlist = GameState->CurrentPlaylistInfo.BasePlaylist;
+    auto TeamAliveIndex = Playlist ? PlayerState->TeamIndex - Playlist->DefaultFirstTeam : -1;
+
+    if (PlayerState->Place == 0 && GameMode->TeamAlivePlayers.IsValidIndex(TeamAliveIndex) && GameMode->TeamAlivePlayers[TeamAliveIndex] <= 0)
+        StartEndGamePhaseTeam(GameMode, PlayerState->TeamIndex, nullptr, GameState->TeamsLeft + 1, KillerPawn, KillerWeapon, DeathCause);
 
     TournamentPlayerEliminated(GameMode, PlayerState, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState);
     SendPlacementUpdate(KillerPlayerController);
-    EndBattleRoyaleGame(PlayerController);
 
     Pawn->CharacterMovement->DisableMovement();
 
     if (KillerPlayerState && KillerPlayerState != PlayerState && KillerPlayerState->Place == 1)
     {
-        auto KillerWeapon = DamageCauser ? DamageCauser->WeaponData : nullptr;
-
         if (KillerPlayerController)
         {
-            KillerPlayerController->PlayWinEffects(KillerPawn, KillerWeapon, DeathCause, false, (ERoundVictoryAnimation)0);
+            KillerPlayerController->PlayWinEffects(KillerPawn, KillerWeapon, DeathCause, false, ERoundVictoryAnimation::Default);
             KillerPlayerController->ClientNotifyWon(KillerPawn, KillerWeapon, DeathCause);
             KillerPlayerController->ClientNotifyTeamWon(KillerPawn, KillerWeapon, DeathCause);
             GiveVictoryCrown(KillerPlayerController);
@@ -1051,9 +1044,14 @@ static void OnPawnDeathNoRespawn(AFortGameModeAthena* GameMode, AFortPlayerPawnA
         GameState->OnRep_WinningTeam();
         GameState->WinningPlayerState = KillerPlayerState;
         GameState->OnRep_WinningPlayerState();
+    }
 
-        for (auto AlivePlayer : GameMode->AlivePlayers)
-            EndBattleRoyaleGame(AlivePlayer);
+    for (auto& PlacedPlayer : GameState->PlayerArray)
+    {
+        auto PlacedPlayerState = (AFortPlayerStateAthena*)PlacedPlayer;
+
+        if (PlacedPlayerState && PlacedPlayerState->IsA(AFortPlayerStateAthena::StaticClass()) && PlacedPlayerState->Place > 0 && PlacedPlayerState->Owner && PlacedPlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass()))
+            EndBattleRoyaleGame((AFortPlayerControllerAthena*)PlacedPlayerState->Owner);
     }
 }
 
@@ -1264,18 +1262,24 @@ static void ServerDropAllItems(UObject* Context, FFrame& Stack)
 
     auto PlayerController = (AFortPlayerControllerAthena*)Context;
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
+
+    if (!WorldInventory || !PlayerController->MyFortPawn)
+        return;
+
     auto Loc = PlayerController->MyFortPawn->K2_GetActorLocation();
+    std::vector<FGuid> GuidsToRemove;
 
-    for (int i = 0; i < WorldInventory->Inventory.ReplicatedEntries.Num(); i++)
+    for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
     {
-        auto& Entry = WorldInventory->Inventory.ReplicatedEntries[i];
+        if (Entry.ItemDefinition == IgnoreItemDef || !CanBeDropped((UFortItemDefinition*)Entry.ItemDefinition))
+            continue;
 
-        if (Entry.ItemDefinition != IgnoreItemDef && CanBeDropped((UFortItemDefinition*)Entry.ItemDefinition))
-        {
-            SpawnPickup(Loc, Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, PlayerController->MyFortPawn);
-            Remove(WorldInventory, Entry.ItemGuid);
-        }
+        SpawnPickup(Loc, Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, PlayerController->MyFortPawn);
+        GuidsToRemove.push_back(Entry.ItemGuid);
     }
+
+    for (auto& Guid : GuidsToRemove)
+        Remove(WorldInventory, Guid);
 }
 
 static void K2_OnUnEquip(AFortWeapon* Weapon)
@@ -1319,6 +1323,7 @@ static void ServerCraftSchematic(UObject* Context, FFrame& Stack)
 
     auto PlayerController = (AFortPlayerControllerAthena*)Context;
     auto SchematicName = ItemId.ToString();
+    ItemId.Free();
 
     if (SchematicName.rfind("Schematic:", 0) == 0)
         SchematicName.erase(0, 10);
@@ -1344,9 +1349,9 @@ static void ServerRequestSeatChange(UObject* Context, FFrame& Stack)
 
     auto PlayerController = (AFortPlayerControllerAthena*)Context;
     auto Pawn = (AFortPlayerPawnAthena*)PlayerController->Pawn;
-    auto Vehicle = Pawn->GetVehicleActor();
+    auto Vehicle = Pawn ? Pawn->GetVehicleActor() : nullptr;
 
-    if (!Vehicle && Pawn->IsA(AFortCharacterVehicle::StaticClass()))
+    if (!Vehicle && Pawn && Pawn->IsA(AFortCharacterVehicle::StaticClass()))
         Vehicle = Pawn;
 
     auto SeatWeaponComponent = Vehicle ? (UFortVehicleSeatWeaponComponent*)Vehicle->GetComponentByClass(UFortVehicleSeatWeaponComponent::StaticClass()) : nullptr;
@@ -1397,39 +1402,6 @@ static void ServerRequestSeatChange(UObject* Context, FFrame& Stack)
             break;
         }
     }
-}
-
-static void ServerAwardVehicleTrickPoints(UObject* Context, FFrame& Stack)
-{
-    int32 InPoints;
-    int32 InAirTimeX1000;
-    int32 NumberOfTricks;
-    float AirDistance;
-    float AirHeight;
-
-    Stack.StepCompiledIn(&InPoints);
-    Stack.StepCompiledIn(&InAirTimeX1000);
-    Stack.StepCompiledIn(&NumberOfTricks);
-    Stack.StepCompiledIn(&AirDistance);
-    Stack.StepCompiledIn(&AirHeight);
-
-    auto PlayerController = (AFortPlayerControllerAthena*)Context;
-
-    callOG(PlayerController, Stack.CurrentNativeFunction, ServerAwardVehicleTrickPoints, InPoints, InAirTimeX1000, NumberOfTricks, AirDistance, AirHeight);
-
-    auto Pawn = (AFortPlayerPawnAthena*)PlayerController->Pawn;
-    auto Vehicle = Pawn->GetVehicleActor();
-    auto TargetTags = GetOwnedGameplayTags(Pawn);
-    auto QuestManager = PlayerController->GetQuestManager(ESubGame::Athena);
-
-    if (auto VehicleInterface = Vehicle->GetInterface(IGameplayTagAssetInterface::StaticClass()))
-        ((void (*)(void*, FGameplayTagContainer*))(*(void***)VehicleInterface)[0x2])(VehicleInterface, &TargetTags);
-
-    SendStatEvent(QuestManager, PlayerController, EFortQuestObjectiveStatEvent::EarnVehicleTrickPoints, InPoints, false, PlayerController, TargetTags);
-    SendStatEvent(QuestManager, PlayerController, EFortQuestObjectiveStatEvent::VehicleAirTime, (int)((float)InAirTimeX1000 * 0.001f), false, PlayerController, TargetTags);
-
-    TargetTags.GameplayTags.Free();
-    TargetTags.ParentTags.Free();
 }
 
 static void ServerSetMultiProductCosmeticLoadout(UObject* Context, FFrame& Stack)
@@ -1700,7 +1672,7 @@ static void ServerAttemptAircraftJump(UObject* Context, FFrame& Stack)
 
     auto PlayerController = (AFortPlayerControllerAthena*)((UActorComponent*)Context)->GetOwner();
 
-    if (!PlayerController || !PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()))
+    if (!PlayerController || !PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()) || !PlayerController->IsInAircraft())
         return;
 
     PlayerController->StateName = FName(L"Inactive");
@@ -1739,38 +1711,18 @@ static void ServerAttemptInteract(UObject* Context, FFrame& Stack, void* Result)
     auto ReceivingActor = *(AActor**)Stack.Locals;
     auto PlayerController = (AFortPlayerControllerAthena*)((UActorComponent*)Context)->GetOwner();
 
-    if (PlayerController && !PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()))
+    if (!PlayerController || !PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()) || !ReceivingActor)
         return ServerAttemptInteractOG(Context, Stack, Result);
 
     auto Pawn = PlayerController->MyFortPawn;
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
-
-    auto SendInteractStat = [&]()
-    {
-        if (!ReceivingActor)
-            return;
-
-        FGameplayTagContainer TargetTags{};
-
-        if (auto Interface = ReceivingActor->GetInterface(IGameplayTagAssetInterface::StaticClass()))
-            ((void (*)(void*, FGameplayTagContainer*))(*(void***)Interface)[0x2])(Interface, &TargetTags);
-
-        SendStatEvent(PlayerController->GetQuestManager(ESubGame::Athena), PlayerController, EFortQuestObjectiveStatEvent::Interact, 1, false, ReceivingActor, TargetTags);
-
-        TargetTags.GameplayTags.Free();
-        TargetTags.ParentTags.Free();
-    };
 
     if (ReceivingActor->IsA(ABuildingItemCollectorActor::StaticClass()))
     {
         auto CollectorActor = (ABuildingItemCollectorActor*)ReceivingActor;
 
         if (CollectorActor->IsA(ABuildingItemWeaponUpgradeActor::StaticClass()))
-        {
-            ServerAttemptInteractOG(Context, Stack, Result);
-            SendInteractStat();
-            return;
-        }
+            return ServerAttemptInteractOG(Context, Stack, Result);
 
         CollectorActor->ControllingPlayer = PlayerController;
 
@@ -1804,10 +1756,8 @@ static void ServerAttemptInteract(UObject* Context, FFrame& Stack, void* Result)
         {
             CollectorActor->bCurrentInteractionSuccess = false;
             CollectorActor->ControllingPlayer = nullptr;
-            CollectorActor->BlueprintOnInteract(Pawn, (EInteractionBeingAttempted)0);
-            ServerAttemptInteractOG(Context, Stack, Result);
-            SendInteractStat();
-            return;
+            CollectorActor->BlueprintOnInteract(Pawn, EInteractionBeingAttempted::FirstInteraction);
+            return ServerAttemptInteractOG(Context, Stack, Result);
         }
 
         if (Cost > 0)
@@ -1834,7 +1784,7 @@ static void ServerAttemptInteract(UObject* Context, FFrame& Stack, void* Result)
 
         CollectorActor->ClientPausedActiveInputItem = CollectorActor->ActiveInputItem;
         CollectorActor->bCurrentInteractionSuccess = true;
-        CollectorActor->BlueprintOnInteract(Pawn, (EInteractionBeingAttempted)0);
+        CollectorActor->BlueprintOnInteract(Pawn, EInteractionBeingAttempted::FirstInteraction);
     }
     else if (ReceivingActor->IsA(ABuildingProp_LockDevice::StaticClass()))
     {
@@ -1844,7 +1794,6 @@ static void ServerAttemptInteract(UObject* Context, FFrame& Stack, void* Result)
     }
 
     ServerAttemptInteractOG(Context, Stack, Result);
-    SendInteractStat();
 }
 
 static void ServerNotifyStartLongUse(UObject* Context, FFrame& Stack)
@@ -1864,6 +1813,11 @@ static void ServerNotifyStartLongUse(UObject* Context, FFrame& Stack)
     auto& LongInteractValidateInfo = Component->LongInteractValidateInfo;
     LongInteractValidateInfo.Target = ReceivingActor;
     *(float*)(uint64(&LongInteractValidateInfo) + 0x8) = (float)UGameplayStatics::GetTimeSeconds(ReceivingActor);
+
+    auto MultiInteractComponent = (UFortActorComponent_MultiInteract*)ReceivingActor->GetComponentByClass(UFortActorComponent_MultiInteract::StaticClass());
+
+    if (MultiInteractComponent && MultiInteractComponent->IsMultipleInteractionEnabled())
+        MultiInteractComponent->AddInteractingActor(InteractingPawn);
 
     if (auto InteractInterface = ReceivingActor->GetInterface(IFortInteractInterface::StaticClass()))
         ((void (*)(void*, AActor*))(*(void***)InteractInterface)[0x11])(InteractInterface, InteractingPawn);
@@ -1889,6 +1843,11 @@ static void ServerNotifyEndLongUse(UObject* Context, FFrame& Stack)
 
     if (!ReceivingActor || !InteractingPawn)
         return;
+
+    auto MultiInteractComponent = (UFortActorComponent_MultiInteract*)ReceivingActor->GetComponentByClass(UFortActorComponent_MultiInteract::StaticClass());
+
+    if (MultiInteractComponent && MultiInteractComponent->IsMultipleInteractionEnabled())
+        MultiInteractComponent->RemoveInteractingActor(InteractingPawn);
 
     if (auto InteractInterface = ReceivingActor->GetInterface(IFortInteractInterface::StaticClass()))
         ((void (*)(void*, AActor*, bool))(*(void***)InteractInterface)[0x10])(InteractInterface, InteractingPawn, bUseCompleted);
@@ -1922,7 +1881,6 @@ void AFortPlayerController__PostLoad()
     ExecHook(PlayerControllerClass->FindFunction("SpawnToyInstance"), SpawnToyInstance);
     ExecHook(PlayerControllerClass->FindFunction("ServerCraftSchematic"), ServerCraftSchematic);
     ExecHook(PlayerControllerClass->FindFunction("ServerRequestSeatChange"), ServerRequestSeatChange, ServerRequestSeatChangeOG);
-    ExecHook(PlayerControllerClass->FindFunction("ServerAwardVehicleTrickPoints"), ServerAwardVehicleTrickPoints, ServerAwardVehicleTrickPointsOG);
     ExecHook(PlayerControllerClass->FindFunction("ServerSetMultiProductCosmeticLoadout"), ServerSetMultiProductCosmeticLoadout);
     ExecHook(PlayerControllerClass->FindFunction("ServerOnMaterialSelection"), ServerOnMaterialSelection);
     ExecHook(PlayerControllerClass->FindFunction("ServerPlaySquadQuickChatMessage"), ServerPlaySquadQuickChatMessage);

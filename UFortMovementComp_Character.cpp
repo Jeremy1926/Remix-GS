@@ -30,16 +30,13 @@ static void ServerMove_PerformMovement(UCharacterMovementComponent* CharacterMov
     static auto GetMovementModeExtensionLogic = (UObject** (*)(AActor*, UObject**, uint32))(ImageBase + 0x2CD640C);
     static auto MakeMovementModeExtensionContext = (FMMERuntimeContext* (*)(FMMERuntimeContext*, UObject*))(ImageBase + 0x18E5684);
     static auto PushMovementModeExtension = (void (*)(UObject*, FMMERuntimeContext*))(ImageBase + 0x33FBC4C);
-    static std::unordered_map<const UFortMovementComp_Character*, float> LastTimeStamps;
+    static auto GetPredictionData_Server_Character = (uint8* (*)(UCharacterMovementComponent*))(ImageBase + 0x6C50E6C);
 
     auto& Received = Movement->ReceivedPackMovementModeExtensionRuntimeData;
     auto& Pushed = Movement->PushedMovementModeExtensionRuntimeData;
     auto& Pending = *(TArray<uint64>*)(uint64(&Movement->SavedMoveRuntimeDataBackup) + sizeof(TArray<uint64>) * 2);
-    auto LastTimeStamp = LastTimeStamps.count(Movement) ? LastTimeStamps[Movement] : -1.f;
-    auto bNewestMove = MoveData->NetworkMoveType != FCharacterNetworkMoveData::ENetworkMoveType::OldMove && (MoveData->TimeStamp > LastTimeStamp || LastTimeStamp - MoveData->TimeStamp > 100.f);
-
-    if (bNewestMove)
-        LastTimeStamps[Movement] = MoveData->TimeStamp;
+    auto CurrentClientTimeStamp = *(float*)(GetPredictionData_Server_Character(CharacterMovement) + 0x90);
+    auto bNewestMove = MoveData->NetworkMoveType != FCharacterNetworkMoveData::ENetworkMoveType::OldMove && (MoveData->TimeStamp > CurrentClientTimeStamp || CurrentClientTimeStamp - MoveData->TimeStamp > 100.f);
 
     for (auto Runtime : Pushed)
     {
