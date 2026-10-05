@@ -63,6 +63,9 @@
     <ClInclude Include="UAthenaNavSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UFortAthenaAISpawnerDataComponent_CosmeticLibrary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="UFortControllerComponent_Accolades.h">
       <Filter>Header Files</Filter>
     </ClInclude>

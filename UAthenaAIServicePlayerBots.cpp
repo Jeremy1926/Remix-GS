@@ -4,6 +4,7 @@
 #include "AFortAthenaAIBotController.h"
 #include "UAthenaAIServicePlayerBots.h"
 #include "UAthenaNavSystem.h"
+#include "UFortAthenaAISpawnerDataComponent_CosmeticLibrary.h"
 
 INIT_MODULE(UAthenaAIServicePlayerBots);
 
@@ -52,6 +53,8 @@ static void SetSoftObject(FSoftObjectPtr& SoftObject, const std::wstring& Path)
 
 static void OnPlaylistLoaded(UAthenaAIServicePlayerBots* Service)
 {
+    static auto IsBotEnabled = (bool (*)(UWorld*, bool))(ImageBase + 0xA6A8AEC);
+
     auto ManagerData = FindObject<UCurveTable>(L"/Game/Athena/AI/Phoebe/ManagerData/Phoebe_ManagerData.Phoebe_ManagerData");
     auto PhoebeData = FindObject<UCurveTable>(L"/Game/Athena/AI/Phoebe/DataTables/Phoebe_Data.Phoebe_Data");
     auto DataByMaxSquadSize = FindObject<UCurveTable>(L"/Game/Athena/AI/Phoebe/DataTables/Phoebe_DataByMaxSquadSize.Phoebe_DataByMaxSquadSize");
@@ -62,10 +65,7 @@ static void OnPlaylistLoaded(UAthenaAIServicePlayerBots* Service)
     Service->GamePhaseToStartSpawning = EAthenaGamePhase::Warmup;
 
     if (!bNavCacheAttached)
-    {
         Service->bWaitForNavmeshToBeLoaded = false;
-        Service->bDoMapSampling = false;
-    }
 
     Service->DefaultBotAISpawnerData = FindObject<UClass>(L"/Game/Athena/AI/Phoebe/BP_AISpawnerData_Phoebe.BP_AISpawnerData_Phoebe_C");
     Service->BotItemDataTable = FindObject<UDataTable>(bClyde ? L"/Clyde/Datatables/Phoebe/Clyde_CompositePhoebeItemData.Clyde_CompositePhoebeItemData" : L"/Game/Athena/AI/Phoebe/ManagerData/PhoebeItemData.PhoebeItemData");
@@ -77,7 +77,6 @@ static void OnPlaylistLoaded(UAthenaAIServicePlayerBots* Service)
     SetSoftObject(Service->EQSMapSampling, L"/Game/Athena/AI/Phoebe/EQS/EQS_Phoebe_BaseNavigation.EQS_Phoebe_BaseNavigation");
     SetSoftObject(Service->BotPOIEQS, L"/Game/Athena/AI/Phoebe/EQS/EQS_Phoebe_SystemicPOI.EQS_Phoebe_SystemicPOI");
     SetSoftObject(Service->FindLocationsAroundPOIQuery, L"/Game/Athena/AI/Phoebe/EQS/EQS_Phoebe_FindLocationInPOI.EQS_Phoebe_FindLocationInPOI");
-    SetSoftObject(Service->BotNameDataAsset, L"/Game/Athena/AI/Phoebe/Names/PhoebeNameDataAsset.PhoebeNameDataAsset");
 
     SetCurve(Service->UseCustomSupportedItemList, ManagerData, L"phoebe.UseCustomSupportedItemList");
     SetCurve(Service->UseRegionalNameList, ManagerData, L"phoebe.UseRegionalNameList");
@@ -116,6 +115,9 @@ static void OnPlaylistLoaded(UAthenaAIServicePlayerBots* Service)
     SetCurve(Service->ChanceToUseNextSafeZone, DataBySafeZoneIndex, L"Phoebe.ServicePlayerBots.DynamicBotPOI.ChanceToUseNextSafeZone");
 
     OnPlaylistLoadedOG(Service);
+
+    if ((*(uint8*)(uint64(Service) + 0x70) & 1) && IsBotEnabled(UWorld::GetWorld(), false))
+        PreloadBotCosmetics(Service->DefaultBotAISpawnerData, ((int32 (*)(UAthenaAIServicePlayerBots*))Service->VTable[0x64])(Service));
 }
 
 static void ResetSpawningInfos(TArray<FMMRSpawningInfo>& SpawningInfos, int32 Num)

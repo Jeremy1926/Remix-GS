@@ -867,7 +867,19 @@ void PauseWarmup(EGameModePauseWarmupMaskId MaskId)
 
 void UnPauseWarmup(EGameModePauseWarmupMaskId MaskId)
 {
+    auto bWasPaused = PauseWarmupMask != 0;
+
     PauseWarmupMask &= ~uint8(MaskId);
+
+    auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(UWorld::GetWorld());
+
+    if (bWasPaused && !PauseWarmupMask && GamePhaseLogic && GamePhaseLogic->GamePhase == EAthenaGamePhase::Warmup)
+    {
+        auto Time = (float)UGameplayStatics::GetTimeSeconds(UWorld::GetWorld());
+
+        GamePhaseLogic->WarmupCountdownStartTime = Time;
+        GamePhaseLogic->WarmupCountdownEndTime = Time + GamePhaseLogic->WarmupCountdownDuration;
+    }
 }
 
 static void SetGamePhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic, EAthenaGamePhase GamePhase)
@@ -944,33 +956,7 @@ static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogi
         auto& FlightInfo = GameState->MapInfo->FlightInfos[0];
 
         if (bLateGame)
-        {
             GameState->DefaultParachuteDeployTraceForGroundDistance = 2500.f;
-
-            auto BusPhase = GetLateGamePhase(GameState) - 1;
-            auto& Center = SafeZoneLocations.Data[BusPhase];
-            auto Radius = GameState->MapInfo->SafeZoneDefinition.Radius.Evaluate((float)BusPhase);
-
-            if (bLateGameMovingBus && Radius > 0.f)
-            {
-                auto Speed = FlightInfo.FlightSpeed > 0.f && Radius / 10.f > FlightInfo.FlightSpeed ? FlightInfo.FlightSpeed : Radius / 10.f;
-                auto Yaw = FlightInfo.FlightStartRotation.Yaw;
-
-                (FVector&)FlightInfo.FlightStartLocation = FVector(Center.X - UKismetMathLibrary::DegCos(Yaw) * Speed * 5.f, Center.Y - UKismetMathLibrary::DegSin(Yaw) * Speed * 5.f, 17500.);
-                FlightInfo.FlightSpeed = Speed;
-                FlightInfo.TimeTillFlightEnd = 10.f;
-                FlightInfo.TimeTillDropEnd = 10.f;
-            }
-            else
-            {
-                (FVector&)FlightInfo.FlightStartLocation = FVector(Center.X, Center.Y, 17500.);
-                FlightInfo.FlightSpeed = 0.f;
-                FlightInfo.TimeTillFlightEnd = 7.f;
-                FlightInfo.TimeTillDropEnd = 7.f;
-            }
-
-            FlightInfo.TimeTillDropStart = 0.f;
-        }
 
         if (!GameState->MapInfo->AircraftClass.Get())
             return;
@@ -1651,6 +1637,40 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
 
         bLateGame = bLateGame && Playlist && (Playlist->RespawnType == EAthenaRespawnType::None || bForceRespawns) && !bSkipAircraft && GameState->MapInfo && LateGameZone >= 1 && GetLateGamePhase(GameState) >= 1 &&
                     GetLateGamePhase(GameState) < (int)GameState->MapInfo->SafeZoneDefinition.Count.Evaluate();
+
+        if (bLateGame && GameState->MapInfo->FlightInfos.Num() > 0)
+        {
+            auto& FlightInfo = GameState->MapInfo->FlightInfos[0];
+            auto BusPhase = GetLateGamePhase(GameState) - 1;
+            auto& Center = SafeZoneLocations.Data[BusPhase];
+            auto Radius = GameState->MapInfo->SafeZoneDefinition.Radius.Evaluate((float)BusPhase);
+
+            if (bLateGameMovingBus && Radius > 0.f)
+            {
+                auto Speed = FlightInfo.FlightSpeed > 0.f && Radius / 10.f > FlightInfo.FlightSpeed ? FlightInfo.FlightSpeed : Radius / 10.f;
+                auto Yaw = FlightInfo.FlightStartRotation.Yaw;
+
+                (FVector&)FlightInfo.FlightStartLocation = FVector(Center.X - UKismetMathLibrary::DegCos(Yaw) * Speed * 5.f, Center.Y - UKismetMathLibrary::DegSin(Yaw) * Speed * 5.f, 17500.);
+                FlightInfo.FlightSpeed = Speed;
+                FlightInfo.TimeTillFlightEnd = 10.f;
+                FlightInfo.TimeTillDropEnd = 10.f;
+            }
+            else
+            {
+                (FVector&)FlightInfo.FlightStartLocation = FVector(Center.X, Center.Y, 17500.);
+                FlightInfo.FlightSpeed = 0.f;
+                FlightInfo.TimeTillFlightEnd = 7.f;
+                FlightInfo.TimeTillDropEnd = 7.f;
+            }
+
+            FlightInfo.TimeTillDropStart = 0.f;
+
+            if (GameState->TeamFlightPaths.Num() > 0)
+                GameState->TeamFlightPaths[0] = FlightInfo;
+
+            if (GameState->TeamFlightPaths.Num() == 1)
+                GameState->FlightPathMidLine = FlightInfo;
+        }
 
         auto AbilitySet = FindObject<UFortAbilitySet>(L"/Game/Abilities/Player/Generic/Traits/DefaultPlayer/GAS_AthenaPlayer.GAS_AthenaPlayer");
         AbilitySets.Add(AbilitySet);

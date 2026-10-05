@@ -8,7 +8,9 @@ INIT_TICKER(UAthenaNavSystem);
 
 static void (*RemoveNavigationLocksOG)(UAthenaNavSystem*);
 
+static constexpr uint32 CacheMagic = 0x31434E52;
 static std::fstream CacheStream;
+static int64 CacheSize = 0;
 static uint32 FortniteMainVersion[10] = {};
 static void* CustomVersions[2] = {};
 static void* ArchiveVTable[0x2F] = {};
@@ -36,11 +38,25 @@ static void Serialize(T& Value)
     ArchiveSerialize(Archive, &Value, sizeof(T));
 }
 
+static bool CanRead(uint64 Bytes)
+{
+    if (!(Archive[5] & 1) || (CacheStream && Bytes <= uint64(CacheSize - int64(CacheStream.tellg()))))
+        return true;
+
+    CacheStream.setstate(std::ios::failbit);
+
+    return false;
+}
+
 static void Serialize(std::vector<uint64>& Values)
 {
     auto Num = uint32(Values.size());
 
     Serialize(Num);
+
+    if (!CanRead(uint64(Num) * sizeof(uint64)))
+        Num = 0;
+
     Values.resize(Num);
     ArchiveSerialize(Archive, Values.data(), Num * sizeof(uint64));
 }
@@ -50,6 +66,10 @@ static void Serialize(std::vector<std::pair<std::wstring, int32>>& Areas)
     auto Num = uint32(Areas.size());
 
     Serialize(Num);
+
+    if (!CanRead(uint64(Num) * (sizeof(uint32) + sizeof(int32))))
+        Num = 0;
+
     Areas.resize(Num);
 
     for (auto& [Name, Id] : Areas)
@@ -57,27 +77,51 @@ static void Serialize(std::vector<std::pair<std::wstring, int32>>& Areas)
         auto Length = uint32(Name.size());
 
         Serialize(Length);
+
+        if (!CanRead(uint64(Length) * sizeof(wchar_t)))
+            Length = 0;
+
         Name.resize(Length);
         ArchiveSerialize(Archive, Name.data(), Length * sizeof(wchar_t));
         Serialize(Id);
     }
 }
 
-static void SerializeHeader(uint32& Stamp, uint8 (&Params)[0x7C], std::vector<std::pair<std::wstring, int32>>& Areas, std::vector<uint64>& Links, std::vector<uint64>& Columns, int32& Version)
+static bool SerializeHeader(uint32 Stamp, uint8 (&Params)[0x7C], std::vector<std::pair<std::wstring, int32>>& Areas, std::vector<uint64>& Links, std::vector<uint64>& Columns, int32& Version, int64& PayloadSize)
 {
-    Serialize(Stamp);
-    Serialize(Params);
+    auto Magic = CacheMagic;
+    auto SavedStamp = Stamp;
+    uint8 SavedParams[0x7C];
+
+    memcpy(SavedParams, Params, sizeof(SavedParams));
+
+    Serialize(Magic);
+    Serialize(SavedStamp);
+    Serialize(SavedParams);
+
+    if (!CacheStream || Magic != CacheMagic || SavedStamp != Stamp || memcmp(SavedParams, Params, sizeof(SavedParams)))
+        return false;
+
     Serialize(Areas);
     Serialize(Links);
     Serialize(Columns);
     Serialize(Version);
+    Serialize(PayloadSize);
+
+    return bool(CacheStream);
 }
 
 static bool OpenCache(const std::wstring& Path, bool bLoading)
 {
     CacheStream.clear();
-    CacheStream.open(Path, std::ios::binary | (bLoading ? std::ios::in : std::ios::out | std::ios::trunc));
+    CacheStream.open(Path, std::ios::binary | (bLoading ? std::ios::in | std::ios::ate : std::ios::out | std::ios::trunc));
     Archive[5] = bLoading ? 1 : 4;
+
+    if (bLoading)
+    {
+        CacheSize = int64(CacheStream.tellg());
+        CacheStream.seekg(0);
+    }
 
     return CacheStream.is_open();
 }
@@ -173,27 +217,27 @@ static bool AttachCache(UNavigationSystemV1* NavSystem, ARecastNavMesh* NavMesh)
     if (Path.empty() || !*(void**)(uint64(NavMesh) + 0x750) || !OpenCache(Path, true))
         return false;
 
-    uint32 Stamp = 0;
-    uint8 Params[0x7C] = {};
-    uint8 RuntimeParams[0x7C];
+    uint8 Params[0x7C];
     std::vector<uint64> Columns;
     int32 Version = 0;
+    int64 PayloadSize = 0;
     UObject* Chunk = nullptr;
 
-    GetParams(NavMesh, RuntimeParams);
-    SerializeHeader(Stamp, Params, CachedAreas, CachedLinks, Columns, Version);
+    GetParams(NavMesh, Params);
 
-    if (CacheStream && Stamp == GetImageStamp() && !memcmp(Params, RuntimeParams, sizeof(Params)) && Version >= 20 && Version <= 26 &&
-        IsSubset(GetAreas(NavMesh), CachedAreas, false) && IsSubset(GetLinks(NavSystem), CachedLinks, false))
+    if (SerializeHeader(GetImageStamp(), Params, CachedAreas, CachedLinks, Columns, Version, PayloadSize) && PayloadSize == CacheSize - int64(CacheStream.tellg()) &&
+        Version >= 20 && Version <= 26 && IsSubset(GetAreas(NavMesh), CachedAreas, false) && IsSubset(GetLinks(NavSystem), CachedLinks, false))
     {
         Chunk = UGameplayStatics::SpawnObject(URecastNavMeshDataChunk::StaticClass(), NavMesh);
         *(FName*)(uint64(Chunk) + 0x28) = NavMesh->Name;
         SerializeRecastData(Chunk, Archive, Version);
     }
 
+    auto bConsumed = CacheStream && int64(CacheStream.tellg()) == CacheSize;
+
     CacheStream.close();
 
-    auto Tiles = Chunk && !CacheStream.fail() ? *(int32*)(uint64(Chunk) + 0x38) : 0;
+    auto Tiles = Chunk && bConsumed ? *(int32*)(uint64(Chunk) + 0x38) : 0;
 
     if (!Tiles)
         return false;
@@ -267,15 +311,16 @@ static void BakeCache(UNavigationSystemV1* NavSystem, ARecastNavMesh* NavMesh)
     ((void (*)(ARecastNavMesh*, FBox*, ANavigationDataChunkActor*, FBox*))NavMesh->VTable[0xEC])(NavMesh, &Bounds, ChunkActor, &TilesBounds);
 
     auto Chunk = ChunkActor->NavDataChunks.Num() > 0 ? ChunkActor->NavDataChunks[0] : nullptr;
+    auto TempPath = Path + L"." + std::to_wstring(GetCurrentProcessId()) + L".tmp";
 
-    if (Chunk && OpenCache(Path, false))
+    if (Chunk && OpenCache(TempPath, false))
     {
-        auto Stamp = GetImageStamp();
         uint8 Params[0x7C];
         auto Areas = GetAreas(NavMesh);
         auto Links = GetLinks(NavSystem);
         std::vector<uint64> Columns;
         int32 Version = 26;
+        int64 PayloadSize = 0;
 
         GetParams(NavMesh, Params);
 
@@ -285,12 +330,18 @@ static void BakeCache(UNavigationSystemV1* NavSystem, ARecastNavMesh* NavMesh)
                 Columns.push_back(*(uint64*)Element);
         });
 
-        SerializeHeader(Stamp, Params, Areas, Links, Columns, Version);
+        SerializeHeader(GetImageStamp(), Params, Areas, Links, Columns, Version, PayloadSize);
+
+        auto PayloadStart = int64(CacheStream.tellp());
+
         SerializeRecastData(Chunk, Archive, Version);
+        PayloadSize = int64(CacheStream.tellp()) - PayloadStart;
+        CacheStream.seekp(PayloadStart - int64(sizeof(PayloadSize)));
+        Serialize(PayloadSize);
         CacheStream.close();
 
-        if (CacheStream.fail())
-            DeleteFileW(Path.c_str());
+        if (CacheStream.fail() || !MoveFileExW(TempPath.c_str(), Path.c_str(), MOVEFILE_REPLACE_EXISTING))
+            DeleteFileW(TempPath.c_str());
     }
 
     ChunkActor->K2_DestroyActor();
@@ -326,10 +377,16 @@ void UAthenaNavSystem__Tick()
         return;
 
     auto World = UWorld::GetWorld();
-    auto NavSystem = World ? (UNavigationSystemV1*)World->NavigationSystem : nullptr;
+
+    if (!World || !World->GameState || !World->GameState->HasMatchStarted())
+        return;
+
+    bNavCacheDone = true;
+
+    auto NavSystem = (UNavigationSystemV1*)World->NavigationSystem;
     auto NavMesh = NavSystem ? (ARecastNavMesh*)NavSystem->MainNavData : nullptr;
 
-    if (!NavMesh || !NavMesh->IsA(AAthenaNavMesh::StaticClass()) || !*(void**)(uint64(NavMesh) + 0x368) || !World->GameState || !World->GameState->HasMatchStarted())
+    if (!NavMesh || !NavMesh->IsA(AAthenaNavMesh::StaticClass()) || !*(void**)(uint64(NavMesh) + 0x368))
         return;
 
     if (bNavCacheAttached && (!IsSubset(GetAreas(NavMesh), CachedAreas, true) || !IsSubset(GetLinks(NavSystem), CachedLinks, true)))
@@ -338,14 +395,6 @@ void UAthenaNavSystem__Tick()
         DeleteFileW(GetCachePath().c_str());
         bNavCacheAttached = false;
     }
-
-    if (!bNavCacheAttached)
-    {
-        if (UNavigationSystemV1::IsNavigationBeingBuiltOrLocked(World))
-            return;
-
+    else if (!bNavCacheAttached && !UNavigationSystemV1::IsNavigationBeingBuiltOrLocked(World))
         BakeCache(NavSystem, NavMesh);
-    }
-
-    bNavCacheDone = true;
 }

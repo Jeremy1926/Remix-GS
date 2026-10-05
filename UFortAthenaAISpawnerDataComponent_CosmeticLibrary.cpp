@@ -1,7 +1,26 @@
 #include "pch.h"
 #include "Shared.h"
+#include "UFortAthenaAISpawnerDataComponent_CosmeticLibrary.h"
 
 INIT_MODULE(UFortAthenaAISpawnerDataComponent_CosmeticLibrary);
+
+struct FBotLoadout
+{
+    UAthenaCharacterItemDefinition* Character;
+    UAthenaBackpackItemDefinition* Backpack;
+    UAthenaGliderItemDefinition* Glider;
+    UAthenaPickaxeItemDefinition* Pickaxe;
+    UAthenaSkyDiveContrailItemDefinition* SkyDiveContrail;
+};
+
+struct FEmoteRowsInfo
+{
+    std::vector<std::pair<UAthenaDanceItemDefinition*, float>> Rows;
+    float TotalWeight = 0.f;
+};
+
+static std::vector<FBotLoadout> Loadouts;
+static std::unordered_map<UDataTable*, FEmoteRowsInfo> EmoteRowsInfos;
 
 static float RandomFraction()
 {
@@ -48,11 +67,13 @@ static UObject* PickItem(std::vector<FPrimaryAssetId>& Ids, const UClass* Class)
     return nullptr;
 }
 
-static bool HasOwnedTag(UObject* Object, const FName& TagName)
+static bool IsExcludedCosmetic(UObject* Object)
 {
+    static FName ExcludedTags[] = { FName(L"Cosmetics.UserFacingFlags.BuiltinEmote"), FName(L"Cosmetics.UserFacingFlags.Synced") };
+
     auto TagInterface = Object->GetInterface(IGameplayTagAssetInterface::StaticClass());
     FGameplayTagContainer OwnedTags{};
-    bool bHasTag = false;
+    bool bExcluded = false;
 
     if (!TagInterface)
         return false;
@@ -60,15 +81,18 @@ static bool HasOwnedTag(UObject* Object, const FName& TagName)
     ((void (*)(void*, FGameplayTagContainer*))(*(void***)TagInterface)[0x2])(TagInterface, &OwnedTags);
 
     for (auto& Tag : OwnedTags.GameplayTags)
-        bHasTag |= Tag.TagName == TagName;
+    {
+        for (auto& ExcludedTag : ExcludedTags)
+            bExcluded |= Tag.TagName == ExcludedTag;
+    }
 
     OwnedTags.GameplayTags.Free();
     OwnedTags.ParentTags.Free();
 
-    return bHasTag;
+    return bExcluded;
 }
 
-static void GetLoadout(UFortAthenaAISpawnerDataComponent_CosmeticLibrary*, FFortAthenaLoadout* Loadout)
+static FBotLoadout PickLoadout()
 {
     static auto Characters = GetPrimaryAssetIds(L"AthenaCharacter");
     static auto Backpacks = GetPrimaryAssetIds(L"AthenaBackpack");
@@ -76,46 +100,43 @@ static void GetLoadout(UFortAthenaAISpawnerDataComponent_CosmeticLibrary*, FFort
     static auto Pickaxes = GetPrimaryAssetIds(L"AthenaPickaxe");
     static auto Contrails = GetPrimaryAssetIds(L"AthenaSkyDiveContrail");
 
-    Loadout->Character = (UAthenaCharacterItemDefinition*)PickItem(Characters, UAthenaCharacterItemDefinition::StaticClass());
-    Loadout->Backpack = (UAthenaBackpackItemDefinition*)PickItem(Backpacks, UAthenaBackpackItemDefinition::StaticClass());
-    Loadout->Glider = (UAthenaGliderItemDefinition*)PickItem(Gliders, UAthenaGliderItemDefinition::StaticClass());
-    Loadout->Pickaxe = (UAthenaPickaxeItemDefinition*)PickItem(Pickaxes, UAthenaPickaxeItemDefinition::StaticClass());
-    Loadout->SkyDiveContrail = (UAthenaSkyDiveContrailItemDefinition*)PickItem(Contrails, UAthenaSkyDiveContrailItemDefinition::StaticClass());
+    return {
+        (UAthenaCharacterItemDefinition*)PickItem(Characters, UAthenaCharacterItemDefinition::StaticClass()),
+        (UAthenaBackpackItemDefinition*)PickItem(Backpacks, UAthenaBackpackItemDefinition::StaticClass()),
+        (UAthenaGliderItemDefinition*)PickItem(Gliders, UAthenaGliderItemDefinition::StaticClass()),
+        (UAthenaPickaxeItemDefinition*)PickItem(Pickaxes, UAthenaPickaxeItemDefinition::StaticClass()),
+        (UAthenaSkyDiveContrailItemDefinition*)PickItem(Contrails, UAthenaSkyDiveContrailItemDefinition::StaticClass())
+    };
 }
 
-static void GetDances(UFortAthenaAISpawnerDataComponent_CosmeticLibrary* Component, TArray<UAthenaDanceItemDefinition*>* Dances, AFortAthenaAIBotController*)
+static std::vector<float> GetLibraryWeights(UFortAthenaAISpawnerDataComponent_CosmeticLibrary* Component)
 {
-    static auto Synced = FName(L"Cosmetics.UserFacingFlags.Synced");
+    std::vector<float> Weights;
 
-    auto& Libraries = Component->CosmeticLibraries;
-    std::vector<float> LibraryWeights;
-    float TotalWeight = 0.f;
-
-    for (int32 i = 0; i < Libraries.Num(); i++)
+    for (int32 i = 0; i < Component->CosmeticLibraries.Num(); i++)
     {
         auto Weight = Component->DefaultCosmeticLibraryWeight.Evaluate(float(i));
 
-        LibraryWeights.push_back(Weight > 0.f ? Weight : 0.f);
-        TotalWeight += LibraryWeights.back();
+        Weights.push_back(Weight > 0.f ? Weight : 0.f);
     }
 
-    if (TotalWeight <= 0.f)
-        return;
+    return Weights;
+}
 
-    auto Roll = RandomFraction() * TotalWeight;
-    int32 LibraryIndex = 0;
+static UDataTable* GetEmotesDataTable(UFortAthenaAISpawnerDataComponent_CosmeticLibrary* Component, int32 LibraryIndex)
+{
+    auto Library = Component->CosmeticLibraries.Data[LibraryIndex].Get();
 
-    for (; LibraryIndex < Libraries.Num() - 1 && Roll >= LibraryWeights[LibraryIndex]; LibraryIndex++)
-        Roll -= LibraryWeights[LibraryIndex];
+    return Library ? Library->EmotesDataTable.Get() : nullptr;
+}
 
-    auto Library = Libraries.Data[LibraryIndex].Get();
-    auto EmotesDataTable = Library ? Library->EmotesDataTable.Get() : nullptr;
+static FEmoteRowsInfo& GetEmoteRowsInfo(UDataTable* EmotesDataTable)
+{
+    auto [It, bInserted] = EmoteRowsInfos.try_emplace(EmotesDataTable);
+    auto& Info = It->second;
 
-    if (!EmotesDataTable)
-        return;
-
-    std::vector<FFortBotCosmeticItemDataTableRow*> Rows;
-    float RowsWeight = 0.f;
+    if (!bInserted)
+        return Info;
 
     for (auto& Pair : EmotesDataTable->RowMap)
     {
@@ -124,27 +145,105 @@ static void GetDances(UFortAthenaAISpawnerDataComponent_CosmeticLibrary* Compone
         if (!Row || Row->Weight <= 0.f)
             continue;
 
-        Rows.push_back(Row);
-        RowsWeight += Row->Weight;
+        auto Dance = LoadPrimaryAsset(Row->PrimaryAssetId);
+
+        if (!Dance || !Dance->IsA(UAthenaDanceItemDefinition::StaticClass()) || IsExcludedCosmetic(Dance))
+            continue;
+
+        Dance->AddToRoot();
+        Info.Rows.push_back({ (UAthenaDanceItemDefinition*)Dance, Row->Weight });
+        Info.TotalWeight += Row->Weight;
     }
+
+    return Info;
+}
+
+void PreloadBotCosmetics(UClass* SpawnerDataClass, int32 Count)
+{
+    for (int32 i = 0; i < Count; i++)
+    {
+        auto Loadout = PickLoadout();
+
+        for (UObject* Item : { (UObject*)Loadout.Character, (UObject*)Loadout.Backpack, (UObject*)Loadout.Glider, (UObject*)Loadout.Pickaxe, (UObject*)Loadout.SkyDiveContrail })
+        {
+            if (Item)
+                Item->AddToRoot();
+        }
+
+        Loadouts.push_back(Loadout);
+    }
+
+    auto SpawnerData = SpawnerDataClass ? (UFortAthenaAISpawnerData*)SpawnerDataClass->ClassDefaultObject : nullptr;
+    auto CosmeticClass = SpawnerData ? SpawnerData->CosmeticComponent.Get() : nullptr;
+    auto Component = CosmeticClass ? (UFortAthenaAISpawnerDataComponent_CosmeticLibrary*)CosmeticClass->ClassDefaultObject : nullptr;
+
+    if (!Component || !Component->IsA(UFortAthenaAISpawnerDataComponent_CosmeticLibrary::StaticClass()))
+        return;
+
+    auto Weights = GetLibraryWeights(Component);
+
+    for (int32 i = 0; i < int32(Weights.size()); i++)
+    {
+        if (Weights[i] <= 0.f)
+            continue;
+
+        if (auto EmotesDataTable = GetEmotesDataTable(Component, i))
+            GetEmoteRowsInfo(EmotesDataTable);
+    }
+}
+
+static void GetLoadout(UFortAthenaAISpawnerDataComponent_CosmeticLibrary*, FFortAthenaLoadout* Loadout)
+{
+    auto BotLoadout = Loadouts.empty() ? PickLoadout() : Loadouts.back();
+
+    if (!Loadouts.empty())
+        Loadouts.pop_back();
+
+    Loadout->Character = BotLoadout.Character;
+    Loadout->Backpack = BotLoadout.Backpack;
+    Loadout->Glider = BotLoadout.Glider;
+    Loadout->Pickaxe = BotLoadout.Pickaxe;
+    Loadout->SkyDiveContrail = BotLoadout.SkyDiveContrail;
+}
+
+static void GetDances(UFortAthenaAISpawnerDataComponent_CosmeticLibrary* Component, TArray<UAthenaDanceItemDefinition*>* Dances, AFortAthenaAIBotController*)
+{
+    auto LibraryWeights = GetLibraryWeights(Component);
+    float TotalWeight = 0.f;
+
+    for (auto Weight : LibraryWeights)
+        TotalWeight += Weight;
+
+    if (TotalWeight <= 0.f)
+        return;
+
+    auto Roll = RandomFraction() * TotalWeight;
+    int32 LibraryIndex = 0;
+
+    for (; LibraryIndex < int32(LibraryWeights.size()) - 1 && Roll >= LibraryWeights[LibraryIndex]; LibraryIndex++)
+        Roll -= LibraryWeights[LibraryIndex];
+
+    auto EmotesDataTable = GetEmotesDataTable(Component, LibraryIndex);
+
+    if (!EmotesDataTable)
+        return;
+
+    auto& Info = GetEmoteRowsInfo(EmotesDataTable);
+    auto Rows = Info.Rows;
+    auto RowsWeight = Info.TotalWeight;
 
     for (auto Remaining = int32(Component->EmotesMaxCount.Evaluate()); Remaining > 0 && !Rows.empty(); Remaining--)
     {
         auto RowRoll = RandomFraction() * RowsWeight;
         size_t RowIndex = 0;
 
-        for (; RowIndex < Rows.size() - 1 && RowRoll >= Rows[RowIndex]->Weight; RowIndex++)
-            RowRoll -= Rows[RowIndex]->Weight;
+        for (; RowIndex < Rows.size() - 1 && RowRoll >= Rows[RowIndex].second; RowIndex++)
+            RowRoll -= Rows[RowIndex].second;
 
-        auto Row = Rows[RowIndex];
-        auto Dance = LoadPrimaryAsset(Row->PrimaryAssetId);
-
-        RowsWeight -= Row->Weight;
+        Dances->Add(Rows[RowIndex].first);
+        RowsWeight -= Rows[RowIndex].second;
         Rows[RowIndex] = Rows.back();
         Rows.pop_back();
-
-        if (Dance && Dance->IsA(UAthenaDanceItemDefinition::StaticClass()) && !HasOwnedTag(Dance, Synced))
-            Dances->Add((UAthenaDanceItemDefinition*)Dance);
     }
 }
 

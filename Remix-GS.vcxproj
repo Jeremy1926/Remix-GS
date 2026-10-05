@@ -170,6 +170,7 @@
     <ClInclude Include="UAthenaAIServicePlayerBots.h" />
     <ClInclude Include="UAthenaNavSystem.h" />
     <ClInclude Include="UConversationInstance.h" />
+    <ClInclude Include="UFortAthenaAISpawnerDataComponent_CosmeticLibrary.h" />
     <ClInclude Include="UFortControllerComponent_Accolades.h" />
     <ClInclude Include="UFortControllerComponent_TournamentStatsTracker.h" />
     <ClInclude Include="UFortQuestManager.h" />
