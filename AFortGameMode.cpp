@@ -931,10 +931,6 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
         auto SlideImpulseAbility = FindObject<UFortAbilitySet>(L"/SlideImpulse/Gameplay/AS_SlideImpulse.AS_SlideImpulse");
         AbilitySets.Add(SlideImpulseAbility);
 
-        for (auto& Set : AbilitySets)
-            if (Set)
-                Set->AddToRoot();
-
         if (Playlist)
             for (auto& ModifierPtr : Playlist->ModifierList)
             {
@@ -952,6 +948,10 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
                         AbilitySets.Add(AbilitySetPtr.Get());
                 }
             }
+
+        for (auto& Set : AbilitySets)
+            if (Set)
+                Set->AddToRoot();
 
         GameState->DefaultParachuteDeployTraceForGroundDistance = 10000;
 

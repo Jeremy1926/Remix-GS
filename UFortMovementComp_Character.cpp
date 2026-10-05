@@ -5,15 +5,8 @@ INIT_POSTLOAD(UFortMovementComp_Character);
 
 struct FCharacterNetworkMoveData
 {
-    enum class ENetworkMoveType : uint8
-    {
-        NewMove,
-        PendingMove,
-        OldMove
-    };
-
     void* Vft;
-    ENetworkMoveType NetworkMoveType;
+    uint32 NetworkMoveType;
     float TimeStamp;
 };
 
@@ -24,19 +17,21 @@ static void ServerMove_PerformMovement(UCharacterMovementComponent* CharacterMov
     auto Movement = (UFortMovementComp_Character*)CharacterMovement;
     auto Pawn = Movement && MoveData && Movement->IsA(UFortMovementComp_Character::StaticClass()) ? Movement->PawnOwner : nullptr;
 
-    if (!Pawn)
+    if (!Pawn || !Pawn->IsA(AFortPawn::StaticClass()))
         return ServerMove_PerformMovementOG(CharacterMovement, MoveData);
 
     static auto GetMovementModeExtensionLogic = (UObject** (*)(AActor*, UObject**, uint32))(ImageBase + 0x2CD640C);
     static auto MakeMovementModeExtensionContext = (FMMERuntimeContext* (*)(FMMERuntimeContext*, UObject*))(ImageBase + 0x18E5684);
     static auto PushMovementModeExtension = (void (*)(UObject*, FMMERuntimeContext*))(ImageBase + 0x33FBC4C);
     static auto GetPredictionData_Server_Character = (uint8* (*)(UCharacterMovementComponent*))(ImageBase + 0x6C50E6C);
+    static auto IsClientTimeStampValid = (bool (*)(UCharacterMovementComponent*, float, uint8*, bool*))(ImageBase + 0x6C51AEC);
+    static auto bEndMMEOnServerIfNoUpdateReceived = (bool*)(ImageBase + 0x12A9CD0C);
 
     auto& Received = Movement->ReceivedPackMovementModeExtensionRuntimeData;
     auto& Pushed = Movement->PushedMovementModeExtensionRuntimeData;
     auto& Pending = *(TArray<uint64>*)(uint64(&Movement->SavedMoveRuntimeDataBackup) + sizeof(TArray<uint64>) * 2);
-    auto CurrentClientTimeStamp = *(float*)(GetPredictionData_Server_Character(CharacterMovement) + 0x90);
-    auto bNewestMove = MoveData->NetworkMoveType != FCharacterNetworkMoveData::ENetworkMoveType::OldMove && (MoveData->TimeStamp > CurrentClientTimeStamp || CurrentClientTimeStamp - MoveData->TimeStamp > 100.f);
+    auto bTimeStampResetDetected = false;
+    auto bNewestMove = IsClientTimeStampValid(CharacterMovement, MoveData->TimeStamp, GetPredictionData_Server_Character(CharacterMovement), &bTimeStampResetDetected);
 
     for (auto Runtime : Pushed)
     {
@@ -56,7 +51,7 @@ static void ServerMove_PerformMovement(UCharacterMovementComponent* CharacterMov
             Runtime->bForceManualActivationNetworked = Source->bForceManualActivationNetworked;
             Runtime->bForceManualEndNetworked = Source->bForceManualEndNetworked;
         }
-        else if (bNewestMove)
+        else if (bNewestMove && *bEndMMEOnServerIfNoUpdateReceived)
             Runtime->bForceManualEnd = true;
     }
 
@@ -80,9 +75,6 @@ static void ServerMove_PerformMovement(UCharacterMovementComponent* CharacterMov
 
         auto Runtime = Received[SourceIndex];
         Received[SourceIndex] = nullptr;
-
-        Runtime->bForceManualActivation = false;
-        Runtime->bForceManualEnd = false;
         Pushed.Add(Runtime);
 
         FMMERuntimeContext Context;
