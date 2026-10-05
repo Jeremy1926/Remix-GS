@@ -167,6 +167,7 @@
     <ClInclude Include="Core.hpp" />
     <ClInclude Include="MinHook.h" />
     <ClInclude Include="Shared.h" />
+    <ClInclude Include="UAthenaAIServicePlayerBots.h" />
     <ClInclude Include="UAthenaNavSystem.h" />
     <ClInclude Include="UConversationInstance.h" />
     <ClInclude Include="UFortControllerComponent_Accolades.h" />

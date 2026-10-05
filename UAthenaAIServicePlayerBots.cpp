@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Shared.h"
 #include "AFortGameMode.h"
+#include "AFortAthenaAIBotController.h"
+#include "UAthenaAIServicePlayerBots.h"
 #include "UAthenaNavSystem.h"
 
 INIT_MODULE(UAthenaAIServicePlayerBots);
@@ -9,6 +11,7 @@ static void (*OnPlaylistLoadedOG)(UAthenaAIServicePlayerBots*);
 static void (*StartSpawningOG)(UAthenaAIServicePlayerBots*, void*);
 static void (*OnAllBotsSpawnedOG)(UAthenaAIServicePlayerBots*);
 static void (*UnpauseWarmupFailSafeOG)(UAthenaAIServicePlayerBots*);
+static void (*PlacePlayersInAircraftOG)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*);
 
 static const wchar_t* BotNames[] = {
     L"Kyzen", L"Vaxtrix", L"FrostByte07", L"NovaRush", L"lilzapp", L"Drexo", L"Mxrcus", L"Zynthra", L"Kaioken42", L"Ravvy",
@@ -320,6 +323,105 @@ static void FetchPlayerBotNameAndID(FString* OutBotName, FString* OutBotAccountI
     }
 }
 
+static void UnspawnBotFromWarmup(UAthenaAIServicePlayerBots* Service)
+{
+    static auto EquipWeapon = (bool (*)(AFortPawn*, AFortWeapon*))(ImageBase + 0x9F20BEC);
+    static auto SetIsInAnyStorm = (void (*)(AFortPlayerPawn*, bool))(ImageBase + 0x9F7D728);
+    static auto ProcessMulticastDelegate = (void (*)(void*, void*))(ImageBase + 0x1FA44EC);
+    static auto UnPossess = (void (*)(AController*))(ImageBase + 0x1D96B00);
+    static auto Destroy = (bool (*)(AActor*, bool, bool))(ImageBase + 0x23CC010);
+    static auto ResizeGrow = (void (*)(TArray<FFortServerBotInfo>*, int32))(ImageBase + 0x5B06384);
+
+    if (!Service->CachedAIPopulationTracker)
+        return;
+
+    for (int32 i = 0; i < Service->PlayerBots.Num(); i++)
+    {
+        if (auto Controller = Service->PlayerBots.Data[i].BotController)
+        {
+            if (auto StartupInventory = Controller->StartupInventory)
+            {
+                auto InventoryOwner = (void*)(uint64(Controller) + 0x3F0);
+
+                ((void (*)(void*, TArray<FItemAndCount>*))(*(void***)InventoryOwner)[0x4])(InventoryOwner, &StartupInventory->Items);
+            }
+
+            if (auto Pawn = Controller->PlayerBotPawn)
+            {
+                EquipWeapon(Pawn, nullptr);
+                SetIsInAnyStorm(Pawn, false);
+                ((void (*)(AFortPlayerPawnAthena*, bool))Pawn->VTable[0x271])(Pawn, true);
+                ProcessMulticastDelegate(&Pawn->OnEnteredAircraft, nullptr);
+                UnPossess(Controller);
+                Destroy(Pawn, false, true);
+            }
+        }
+
+        auto& PlayerBotsRestartLeft = Service->PlayerBotsRestartLeft;
+        auto Num = PlayerBotsRestartLeft.NumElements;
+
+        PlayerBotsRestartLeft.NumElements = Num + 1;
+
+        if (PlayerBotsRestartLeft.NumElements > PlayerBotsRestartLeft.MaxElements)
+            ResizeGrow(&PlayerBotsRestartLeft, Num);
+
+        PlayerBotsRestartLeft.Data[Num] = Service->PlayerBots.Data[i];
+    }
+}
+
+static void PlacePlayerBotsInAircraft(UAthenaAIServicePlayerBots* Service, UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic)
+{
+    static auto IsBotEnabled = (bool (*)(UWorld*, bool))(ImageBase + 0xA6A8AEC);
+    static auto GetAircraftIndex = (int32 (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, APlayerState*))(ImageBase + 0x1BB1F9C);
+    static auto GetAircraft = (AFortAthenaAircraft* (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, int32))(ImageBase + 0x1BB1E8C);
+    static auto ComputePOISquadRepartition = (void (*)(UAthenaAIServicePlayerBots*))(ImageBase + 0xA69F304);
+
+    if (!IsBotEnabled(UWorld::GetWorld(), false) || !Service->CachedGameState || !Service->CachedAIPopulationTracker)
+        return;
+
+    for (int32 i = 0; i < Service->PlayerBots.Num(); i++)
+    {
+        auto Controller = Service->PlayerBots.Data[i].BotController;
+
+        if (!Controller)
+            continue;
+
+        auto AircraftIndex = GetAircraftIndex(GamePhaseLogic, Controller->PlayerState);
+
+        if (AircraftIndex >= 0 && AircraftIndex < GamePhaseLogic->Aircrafts_GameState.Num())
+            EnterAircraft(Controller, GetAircraft(GamePhaseLogic, AircraftIndex));
+    }
+
+    ComputePOISquadRepartition(Service);
+}
+
+void ForceAllExitAircraft(UAthenaAIServicePlayerBots* Service)
+{
+    if (!Service->CachedAIPopulationTracker)
+        return;
+
+    for (int32 i = 0; i < Service->PlayerBots.Num(); i++)
+    {
+        auto Controller = Service->PlayerBots.Data[i].BotController;
+
+        if (Controller && !Controller->PlayerBotPawn)
+            ExitAircraft(Controller);
+    }
+}
+
+static void PlacePlayersInAircraft(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic)
+{
+    static auto GetService = (UAthenaAIServicePlayerBots* (*)(UWorld*))(ImageBase + 0x8D45068);
+
+    PlacePlayersInAircraftOG(GamePhaseLogic);
+
+    if (auto Service = GetService(UWorld::GetWorld()))
+    {
+        UnspawnBotFromWarmup(Service);
+        PlacePlayerBotsInAircraft(Service, GamePhaseLogic);
+    }
+}
+
 void UAthenaAIServicePlayerBots__Init()
 {
     static constexpr uint8_t FetchCall[] = { 0x48, 0x8D, 0x54, 0x24, 0x40, 0x4C, 0x8B, 0xC6, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x90, 0x90 };
@@ -328,6 +430,7 @@ void UAthenaAIServicePlayerBots__Init()
     Hook(ImageBase + 0xA6B9420, StartSpawning, StartSpawningOG);
     Hook(ImageBase + 0xA6AC1A8, OnAllBotsSpawned, OnAllBotsSpawnedOG);
     Hook(ImageBase + 0xA6BAC00, UnpauseWarmupFailSafe, UnpauseWarmupFailSafeOG);
+    Hook(ImageBase + 0x2B54F10, PlacePlayersInAircraft, PlacePlayersInAircraftOG);
 
     for (int32 i = 0; i < int32(sizeof(FetchCall)); i++)
         Patch<uint8_t>(ImageBase + 0xA549BBE + i, FetchCall[i]);

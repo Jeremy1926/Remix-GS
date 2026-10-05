@@ -1663,14 +1663,20 @@ static void EnterAircraft(UFortControllerComponent_Aircraft* AircraftComponent, 
     EnterAircraftOG(AircraftComponent, Aircraft);
 }
 
-static void ServerAttemptAircraftJump(UObject* Context, FFrame& Stack)
+static void ServerAttemptAircraftJump(UFortControllerComponent_Aircraft* AircraftComponent, const FRotator& ClientRotation)
 {
-    FRotator ClientRotation;
+    static auto IsAircraftJumpAllowed = (bool (*)(UFortControllerComponent_Aircraft*))(ImageBase + 0x946741C);
+    static auto KickFromAircraft = (void (*)(UFortControllerComponent_Aircraft*))(ImageBase + 0x94678A4);
 
-    Stack.StepCompiledIn(&ClientRotation);
-    Stack.IncrementCode();
+    auto PlayerController = (AFortPlayerControllerAthena*)AircraftComponent->GetOwner();
 
-    auto PlayerController = (AFortPlayerControllerAthena*)((UActorComponent*)Context)->GetOwner();
+    if (PlayerController && PlayerController->IsA(AFortAthenaAIBotController::StaticClass()))
+    {
+        if (IsAircraftJumpAllowed(AircraftComponent))
+            KickFromAircraft(AircraftComponent);
+
+        return;
+    }
 
     if (!PlayerController || !PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()) || !PlayerController->IsInAircraft())
         return;
@@ -1888,7 +1894,7 @@ void AFortPlayerController__PostLoad()
     Hook(ImageBase + 0xA02DACC, RemoveInventoryItem);
 
     Hook(ImageBase + 0x945F42C, EnterAircraft, EnterAircraftOG);
-    ExecHook(UFortControllerComponent_Aircraft::StaticClass()->FindFunction("ServerAttemptAircraftJump"), ServerAttemptAircraftJump);
+    Hook<UFortControllerComponent_Aircraft>(uint32(0xAA), ServerAttemptAircraftJump);
 
     Hook(ImageBase + 0x947710C, RefreshCosmeticLoadoutFromProfile);
 

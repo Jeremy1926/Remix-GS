@@ -9,6 +9,7 @@
 #include "UFortQuestManager.h"
 #include "AFortPlayerController.h"
 #include "AFortAthenaAIBotController.h"
+#include "UAthenaAIServicePlayerBots.h"
 #include "UFortControllerComponent_TournamentStatsTracker.h"
 
 INIT_MODULE(AFortGameMode);
@@ -59,12 +60,6 @@ struct FOnlineSessionSettings
     bool bUsesStats;
     bool bAllowInvites;
     uint8 Pad_16[0xC2];
-};
-
-struct FNativeDelegate
-{
-    uint8* Instance;
-    int32 Size;
 };
 
 struct FJsonKey
@@ -1794,16 +1789,21 @@ static void SpawnDefaultPawnFor(UObject* Context, FFrame& Stack, APawn** Ret)
     Stack.IncrementCode();
     auto GameMode = (AFortGameModeAthena*)Context;
 
-    if (!NewPlayer || !StartSpot)
+    if (!NewPlayer || (!NewPlayer->IsA(AFortPlayerControllerAthena::StaticClass()) && (!NewPlayer->PlayerState || !NewPlayer->PlayerState->bIsABot)) || !StartSpot)
         return;
 
-    auto Pawn = (APawn*)SpawnActor(GameMode->GetDefaultPawnClassForController(NewPlayer), StartSpot->GetTransform(), NewPlayer, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding);
+    auto PawnClass = GameMode->GetDefaultPawnClassForController(NewPlayer);
+
+    if (!PawnClass)
+        return;
+
+    auto Pawn = (APawn*)SpawnActor(PawnClass, StartSpot->GetTransform(), NewPlayer, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding);
 
     while (!Pawn)
     {
         auto PlayerStart = GameMode->ChoosePlayerStart(NewPlayer);
         if (PlayerStart)
-            Pawn = (APawn*)SpawnActor(GameMode->GetDefaultPawnClassForController(NewPlayer), PlayerStart->GetTransform(), NewPlayer, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding);
+            Pawn = (APawn*)SpawnActor(PawnClass, PlayerStart->GetTransform(), NewPlayer, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding);
     }
 
     *Ret = Pawn;
@@ -2565,6 +2565,11 @@ void AFortGameMode__Tick()
                         if (Player->IsInAircraft())
                             Player->GetAircraftComponent()->ServerAttemptAircraftJump(FRotator{});
                     }
+
+                    static auto GetPlayerBotsService = (UAthenaAIServicePlayerBots* (*)(UWorld*))(ImageBase + 0x8D45068);
+
+                    if (auto PlayerBotsService = GetPlayerBotsService(UWorld::GetWorld()))
+                        ForceAllExitAircraft(PlayerBotsService);
 
                     GamePhaseLogic->SafeZonesStartTime = bLateGame ? (float)Time : (float)Time + 60.f;
 

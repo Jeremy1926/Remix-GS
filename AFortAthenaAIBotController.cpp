@@ -2,6 +2,7 @@
 #include "Shared.h"
 #include "AFortInventory.h"
 #include "AFortPickup.h"
+#include "AFortGameMode.h"
 #include "UConversationInstance.h"
 
 INIT_MODULE(AFortAthenaAIBotController);
@@ -189,6 +190,88 @@ static void ApplyCosmeticLoadout(AFortAthenaAIBotController* Controller, void* C
 
     if (Controller->PlayerState && Controller->PlayerBotPawn)
         ApplyCharacterCustomization(Controller->PlayerState, nullptr, false);
+}
+
+static void ThankBusDriver(AFortAthenaAIBotController* Controller)
+{
+    static auto FindAircraftComponent = (UFortControllerComponent_Aircraft* (*)(AActor*))(ImageBase + 0x17EF184);
+
+    auto AircraftComponent = FindAircraftComponent(Controller);
+    auto PlayerState = (AFortPlayerStateAthena*)Controller->PlayerState;
+
+    if (AircraftComponent && !*(bool*)(uint64(AircraftComponent) + 0x140) && PlayerState && PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) && !PlayerState->bThankedBusDriver)
+        PlayerState->bThankedBusDriver = true;
+}
+
+void EnterAircraft(AFortAthenaAIBotController* Controller, AFortAthenaAircraft* Aircraft)
+{
+    static auto FindAircraftComponent = (UFortControllerComponent_Aircraft* (*)(AActor*))(ImageBase + 0x17EF184);
+    static auto EnterAircraftComponent = (void (*)(UFortControllerComponent_Aircraft*, AFortAthenaAircraft*))(ImageBase + 0x945F42C);
+    static auto BindTimerDelegate = (void (*)(FNativeDelegate*, UObject*, void*))(ImageBase + 0x9816384);
+    static auto GetWorldTimerManager = (void* (*)(AActor*))(ImageBase + 0x15C52AC);
+    static auto MakeUnifiedTimerDelegate = (void* (*)(uint8*, FNativeDelegate*))(ImageBase + 0x15C4A14);
+    static auto InternalSetTimer = (void (*)(void*, uint64*, uint8*, float, const void*))(ImageBase + 0x1E0C500);
+    static auto DestroyDelegate = (void (*)(FNativeDelegate*))(ImageBase + 0x1C1D0C0);
+    static auto SetValueAsBool = (void (*)(UBlackboardComponent*, uint16, bool))(ImageBase + 0x7592888);
+    static auto SetHasEverSkydivedFromBusAndLanded = (void (*)(AFortPlayerStateAthena*, bool))(ImageBase + 0x59F998C);
+
+    auto Base = uint64(Controller);
+    auto AircraftComponent = FindAircraftComponent(Controller);
+
+    if (AircraftComponent && !AircraftComponent->CurrentAircraft && !*(bool*)(uint64(AircraftComponent) + 0x140))
+        EnterAircraftComponent(AircraftComponent, Aircraft);
+
+    auto Service = Controller->CachedAIServicePlayerBots;
+    auto World = UWorld::GetWorld();
+
+    if (Service && World && World->GameState && World->GameState->IsA(AFortGameStateAthena::StaticClass()) &&
+        Service->ThankBusDriverProbability.Evaluate() > float(rand() & 0x7FFF) * (1.f / 32767.f))
+    {
+        auto MaxTime = Service->ThankBusDriverMaxTime.Evaluate();
+        auto MinTime = Service->ThankBusDriverMinTime.Evaluate();
+        auto Delay = MinTime + float(rand() & 0x7FFF) * (1.f / 32767.f) * (MaxTime - MinTime);
+
+        if (Delay > 0.f)
+        {
+            FNativeDelegate TimerDelegate{};
+            uint8 UnifiedTimerDelegate[0x48];
+            struct { uint8 bLoop; uint8 bMaxOncePerFrame; float FirstDelay; } TimerParameters{ 0, 0, -1.f };
+
+            BindTimerDelegate(&TimerDelegate, Controller, (void*)ThankBusDriver);
+            MakeUnifiedTimerDelegate(UnifiedTimerDelegate, &TimerDelegate);
+            InternalSetTimer(GetWorldTimerManager(Controller), (uint64*)(Base + 0xDE8), UnifiedTimerDelegate, Delay, &TimerParameters);
+            DestroyDelegate((FNativeDelegate*)UnifiedTimerDelegate);
+            DestroyDelegate(&TimerDelegate);
+        }
+    }
+
+    if (!Controller->Blackboard)
+        return;
+
+    SetValueAsBool(Controller->Blackboard, *(uint16*)(Base + 0x145E), true);
+    SetValueAsBool(Controller->Blackboard, *(uint16*)(Base + 0x1460), false);
+
+    if (*(uint16*)(Base + 0x1462) != 0xFFFF)
+        SetValueAsBool(Controller->Blackboard, *(uint16*)(Base + 0x1462), false);
+
+    if (Controller->PlayerState && Controller->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()))
+        SetHasEverSkydivedFromBusAndLanded((AFortPlayerStateAthena*)Controller->PlayerState, false);
+}
+
+void ExitAircraft(AFortAthenaAIBotController* Controller)
+{
+    static auto GetAircraftIndex = (int32 (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, APlayerState*))(ImageBase + 0x1BB1F9C);
+    static auto GetAircraft = (AFortAthenaAircraft* (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, int32))(ImageBase + 0x1BB1E8C);
+    static auto FindAircraftComponent = (UFortControllerComponent_Aircraft* (*)(AActor*))(ImageBase + 0x17EF184);
+    static auto IsAircraftJumpAllowed = (bool (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, AController*))(ImageBase + 0xA4C3DDC);
+    static auto KickFromAircraft = (void (*)(UFortControllerComponent_Aircraft*))(ImageBase + 0x94678A4);
+
+    auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(Controller);
+    auto Aircraft = GamePhaseLogic ? GetAircraft(GamePhaseLogic, GetAircraftIndex(GamePhaseLogic, Controller->PlayerState)) : nullptr;
+    auto AircraftComponent = FindAircraftComponent(Controller);
+
+    if (AircraftComponent && AircraftComponent->CurrentAircraft && Controller->Blackboard && Aircraft && IsAircraftJumpAllowed(GamePhaseLogic, Controller))
+        KickFromAircraft(AircraftComponent);
 }
 
 void CreateSubsystems(UAthenaAISystem* AISystem, UObject* GameMode)
