@@ -10,7 +10,6 @@ INIT_TICKER(AFortAthenaAIBotController);
 static void (*InitializeInventoryOG)(void*, TArray<FItemAndCount>*);
 static void (*ApplyCosmeticLoadoutOG)(AFortAthenaAIBotController*, void*);
 static void (*DropLootOnDeathOG)(AFortAthenaAIBotController*, AFortPawn*, void*);
-static void (*AutomaticReviveFromDBNOTickOG)(AFortAthenaAIBotController*);
 
 static bool CreateInventory(void* InventoryOwnerInterface)
 {
@@ -182,19 +181,6 @@ static void DropLootOnDeath(AFortAthenaAIBotController* Controller, AFortPawn* P
             Controller->OnPickupCreated.Process(Controller, Pickup);
 }
 
-static void AutomaticReviveFromDBNOTick(AFortAthenaAIBotController* Controller)
-{
-    auto& AutomaticReviveTimerHandle = *(uint64*)(uint64(Controller) + 0x1338);
-    bool bWaitingForRevive = AutomaticReviveTimerHandle != 0;
-
-    AutomaticReviveFromDBNOTickOG(Controller);
-
-    auto Pawn = Controller->PlayerBotPawn;
-
-    if (bWaitingForRevive && !AutomaticReviveTimerHandle && Pawn && Pawn->IsDBNO())
-        Pawn->ReviveFromDBNO(Controller);
-}
-
 static void ApplyCosmeticLoadout(AFortAthenaAIBotController* Controller, void* CosmeticLoadout)
 {
     static auto ApplyCharacterCustomization = (void (*)(APlayerState*, AFortPawn*, bool))(ImageBase + 0xA0A1664);
@@ -203,132 +189,6 @@ static void ApplyCosmeticLoadout(AFortAthenaAIBotController* Controller, void* C
 
     if (Controller->PlayerState && Controller->PlayerBotPawn)
         ApplyCharacterCustomization(Controller->PlayerState, nullptr, false);
-}
-
-static void (*InitializeServiceOG)(UAthenaAIServicePlayerBots*);
-
-static void InitializeService(UAthenaAIServicePlayerBots* Service)
-{
-    if (Service->Class == UAthenaAIServicePlayerBots::StaticClass())
-    {
-        const std::pair<FSoftObjectPtr*, const wchar_t*> SoftObjectDefaults[] = {
-            { &Service->MMRSpawnTable, L"/Game/Athena/AI/Phoebe/PhoebeSpawningTables/PhoebeMMRSpawning.PhoebeMMRSpawning" },
-            { &Service->EQSMapSampling, L"/Game/Athena/AI/Phoebe/EQS/EQS_Phoebe_BaseNavigation.EQS_Phoebe_BaseNavigation" },
-            { &Service->BotPOIEQS, L"/Game/Athena/AI/Phoebe/EQS/EQS_Phoebe_SystemicPOI.EQS_Phoebe_SystemicPOI" },
-            { &Service->FindLocationsAroundPOIQuery, L"/Game/Athena/AI/Phoebe/EQS/EQS_Phoebe_FindLocationInPOI.EQS_Phoebe_FindLocationInPOI" },
-            { &Service->BotNameDataAsset, L"/Game/Athena/AI/Phoebe/Names/PhoebeNameDataAsset.PhoebeNameDataAsset" },
-        };
-
-        const std::pair<UObject**, const wchar_t*> ObjectDefaults[] = {
-            { (UObject**)&Service->BotItemDataTable, L"/Game/Athena/AI/Phoebe/ManagerData/PhoebeItemData.PhoebeItemData" },
-            { (UObject**)&Service->WeaponModRegistry, L"/Game/DataRegistries/AI/Phoebe_WeaponModRegistry.Phoebe_WeaponModRegistry" },
-            { (UObject**)&Service->VisibilitySettingsRegistry, L"/Game/DataRegistries/AI/Phoebe_VisibilityRegistry.Phoebe_VisibilityRegistry" },
-            { (UObject**)&Service->BotPOIExcludedZonesDataRegistry, L"/Game/DataRegistries/AI/Phoebe_DynamicPOI_ExcludedZones.Phoebe_DynamicPOI_ExcludedZones" },
-            { (UObject**)&Service->DefaultBotAISpawnerData, L"/Game/Athena/AI/Phoebe/BP_AISpawnerData_Phoebe.BP_AISpawnerData_Phoebe_C" },
-        };
-
-        auto PhoebeData = L"/Game/Athena/AI/Phoebe/DataTables/Phoebe_Data.Phoebe_Data";
-        auto PhoebeDataByMaxSquadSize = L"/Game/Athena/AI/Phoebe/DataTables/Phoebe_DataByMaxSquadSize.Phoebe_DataByMaxSquadSize";
-        auto PhoebeDataBySafeZoneIndex = L"/Game/Athena/AI/Phoebe/DataTables/Phoebe_DataBySafeZoneIndex.Phoebe_DataBySafeZoneIndex";
-
-        const std::tuple<FScalableFloat*, const wchar_t*, const wchar_t*> CurveDefaults[] = {
-            { &Service->DynamicBotPOIEnabled, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.Enabled" },
-            { &Service->JumpOffBusWithDynamicPOIEnabled, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.JumpOffBusWithDynamicPOIEnabled" },
-            { &Service->NavigationWithDynamicPOIEnabled, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.NavigationWithDynamicPOIEnabled" },
-            { &Service->DenyJumpBusBotPOIByProximityEnabled, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.DenyJumpBusBotPOIByProximity.Enabled" },
-            { &Service->BotPOINextPOIDurationSecondByWeight, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOINextPOIDurationSecondByWeight" },
-            { &Service->BotPOINextPOIMinDuration, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOINextPOIMinDuration" },
-            { &Service->BotPOINextPOIMaxDuration, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOINextPOIMaxDuration" },
-            { &Service->BotPOIScoringWeightFactor, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOIScoringWeightFactor" },
-            { &Service->BotPOIScoringDistanceFactor, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOIScoringDistanceFactor" },
-            { &Service->BotPOIScoringOccupancyFactor, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOIScoringOccupancyFactor" },
-            { &Service->BotPOIScoringVisitedFactor, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOIScoringVisitedFactor" },
-            { &Service->FailToReachBotPOICountMax, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.FailToReachBotPOICountMax" },
-            { &Service->BotPOIJumpMainPOICountMax, PhoebeDataByMaxSquadSize, L"Phoebe.BotPOI.JumpBus.MainPOICount" },
-            { &Service->BotPOISquadJumpOnMainPOICountMax, PhoebeDataByMaxSquadSize, L"Phoebe.BotPOI.JumpBus.SquadJumpOnMainCount" },
-            { &Service->BotPOIMinimumWeightForSquadMembers, PhoebeDataByMaxSquadSize, L"Phoebe.BotPOI.MinWeightToUsePOI" },
-            { &Service->DenyJumpBusBotPOIDistance, PhoebeDataByMaxSquadSize, L"Phoebe.BotPOI.DenyJumpBusBotPOIByProximity.Distance" },
-            { &Service->ChanceToUseNextSafeZone, PhoebeDataBySafeZoneIndex, L"Phoebe.ServicePlayerBots.DynamicBotPOI.ChanceToUseNextSafeZone" },
-        };
-
-        for (auto& [SoftObject, Path] : SoftObjectDefaults)
-        {
-            auto Object = FindObject<UObject>(Path);
-
-            if (!Object || SoftObject->WeakPtr.Get() || SoftObject->ObjectID.AssetPath.PackageName.ComparisonIndex != 0)
-                continue;
-
-            std::wstring ObjectPath = Path;
-            auto Separator = ObjectPath.find(L'.');
-
-            SoftObject->ObjectID.AssetPath.PackageName = FName(ObjectPath.substr(0, Separator).c_str());
-            SoftObject->ObjectID.AssetPath.AssetName = FName(ObjectPath.substr(Separator + 1).c_str());
-            SoftObject->WeakPtr = FWeakObjectPtr(Object);
-        }
-
-        for (auto& [Field, Path] : ObjectDefaults)
-        {
-            auto Object = FindObject<UObject>(Path);
-
-            if (Object && !*Field)
-                *Field = Object;
-        }
-
-        for (auto& [ScalableFloat, CurveTablePath, Row] : CurveDefaults)
-        {
-            if (ScalableFloat->Curve.CurveTable)
-                continue;
-
-            auto CurveTable = FindObject<UCurveTable>(CurveTablePath);
-            auto RowName = FName(Row);
-            bool bHasRow = false;
-
-            if (CurveTable)
-                for (auto& CurveRow : GetRowMap(CurveTable))
-                    if (CurveRow.Key() == RowName)
-                        bHasRow = true;
-
-            if (!bHasRow)
-                continue;
-
-            ScalableFloat->Value = 1.f;
-            *(int32*)((uint8*)ScalableFloat + 0x4) = -1;
-            ScalableFloat->Curve.CurveTable = CurveTable;
-            ScalableFloat->Curve.RowName = RowName;
-            *(void**)((uint8*)ScalableFloat + 0x20) = nullptr;
-        }
-
-        if (Service->GamePhaseToStartSpawning == EAthenaGamePhase::None)
-            Service->GamePhaseToStartSpawning = EAthenaGamePhase::Aircraft;
-    }
-
-    InitializeServiceOG(Service);
-}
-
-bool BotFinishedTargetSpline(AActor* Pickup, AActor* Controller, bool (*Original)(void*))
-{
-    auto Inventory = (AFortInventory*)((AFortAthenaAIBotController*)Controller)->Inventory.ObjectPointer;
-    auto& PickupEntry = ((AFortPickupAthena*)Pickup)->PrimaryPickupItemEntry;
-    auto CountItem = [&]()
-    {
-        int32 Count = 0;
-
-        if (Inventory && PickupEntry.ItemDefinition)
-            for (int32 i = 0; i < Inventory->Inventory.ReplicatedEntries.Num(); i++)
-                if (Inventory->Inventory.ReplicatedEntries.Data[i].ItemDefinition == PickupEntry.ItemDefinition)
-                    Count += Inventory->Inventory.ReplicatedEntries.Data[i].Count;
-
-        return Count;
-    };
-
-    auto Before = CountItem();
-    auto Result = Original(Pickup);
-    auto After = CountItem();
-
-    if (Inventory && PickupEntry.ItemDefinition && PickupEntry.Count > 0 && After <= Before)
-        GiveItem(Inventory, PickupEntry);
-
-    return Result;
 }
 
 void CreateSubsystems(UAthenaAISystem* AISystem, UObject* GameMode)
@@ -424,156 +284,6 @@ static int32 FillRuntimeParameters(void* RuntimeParametersProvider, UObject* Run
     return Result;
 }
 
-static UFortAthenaAIBotCosmeticLibraryData* LastLibrary = nullptr;
-static UFortAthenaAISpawnerDataComponent_CosmeticLibrary* LastLibraryComponent = nullptr;
-
-static float RandomFraction()
-{
-    return float(rand()) / float(RAND_MAX + 1);
-}
-
-static UFortAthenaAIBotCosmeticLibraryData* PickLibrary(UFortAthenaAISpawnerDataComponent_CosmeticLibrary* Component)
-{
-    auto& CosmeticLibraries = Component->CosmeticLibraries;
-    std::vector<std::pair<int32, float>> Weights;
-    float TotalWeight = 0.f;
-
-    for (int32 i = 0; i < CosmeticLibraries.Num(); i++)
-    {
-        auto Weight = Component->DefaultCosmeticLibraryWeight.Evaluate(float(i));
-
-        if (Weight <= 0.f)
-            continue;
-
-        Weights.push_back({ i, Weight });
-        TotalWeight += Weight;
-    }
-
-    if (Weights.empty())
-        return nullptr;
-
-    auto Roll = RandomFraction() * TotalWeight;
-    auto Chosen = Weights.back().first;
-
-    for (auto& [Index, Weight] : Weights)
-    {
-        if (Roll < Weight)
-        {
-            Chosen = Index;
-            break;
-        }
-
-        Roll -= Weight;
-    }
-
-    return CosmeticLibraries.Data[Chosen].Get();
-}
-
-static UObject* LoadPrimaryAsset(const FPrimaryAssetId& PrimaryAssetId)
-{
-    if (auto Object = UKismetSystemLibrary::GetObjectFromPrimaryAssetId(PrimaryAssetId))
-        return Object;
-
-    return UKismetSystemLibrary::LoadAsset_Blocking(UKismetSystemLibrary::GetSoftObjectReferenceFromPrimaryAssetId(PrimaryAssetId));
-}
-
-static FFortBotCosmeticItemDataTableRow* PickRow(UDataTable* DataTable, std::vector<FFortBotCosmeticItemDataTableRow*>& Excluded)
-{
-    std::vector<FFortBotCosmeticItemDataTableRow*> Rows;
-    float TotalWeight = 0.f;
-
-    for (auto& RowPair : DataTable->RowMap)
-    {
-        auto Row = (FFortBotCosmeticItemDataTableRow*)RowPair.Value();
-
-        if (!Row || Row->Weight <= 0.f || std::find(Excluded.begin(), Excluded.end(), Row) != Excluded.end())
-            continue;
-
-        Rows.push_back(Row);
-        TotalWeight += Row->Weight;
-    }
-
-    if (Rows.empty())
-        return nullptr;
-
-    auto Roll = RandomFraction() * TotalWeight;
-
-    for (auto Row : Rows)
-    {
-        if (Roll < Row->Weight)
-            return Row;
-
-        Roll -= Row->Weight;
-    }
-
-    return Rows.back();
-}
-
-static void GetLoadout(UFortAthenaAISpawnerDataComponent_CosmeticLibrary* Component, FFortAthenaLoadout* Loadout)
-{
-    auto Library = PickLibrary(Component);
-
-    LastLibrary = Library;
-    LastLibraryComponent = Component;
-
-    if (!Library)
-        return;
-
-    const std::tuple<TSoftObjectPtr<UDataTable>*, TSoftObjectPtr<UDataTable>*, UObject**> Slots[] = {
-        { &Library->CharactersDataTable, &Library->FallbackCharactersDataTable, (UObject**)&Loadout->Character },
-        { &Library->BackpacksDataTable, nullptr, (UObject**)&Loadout->Backpack },
-        { &Library->PickaxesDataTable, nullptr, (UObject**)&Loadout->Pickaxe },
-        { &Library->GlidersDataTable, nullptr, (UObject**)&Loadout->Glider },
-        { &Library->SkyDiveContrailsDataTable, nullptr, (UObject**)&Loadout->SkyDiveContrail },
-    };
-
-    for (auto& [Table, FallbackTable, LoadoutItem] : Slots)
-    {
-        auto DataTable = Table->Get();
-
-        if (!DataTable && FallbackTable)
-            DataTable = FallbackTable->Get();
-
-        if (!DataTable)
-            continue;
-
-        std::vector<FFortBotCosmeticItemDataTableRow*> Excluded;
-        auto Row = PickRow(DataTable, Excluded);
-        auto Item = Row ? LoadPrimaryAsset(Row->PrimaryAssetId) : nullptr;
-
-        if (Item)
-            *LoadoutItem = Item;
-    }
-}
-
-static void GetDances(UFortAthenaAISpawnerDataComponent_CosmeticLibrary* Component, TArray<UAthenaDanceItemDefinition*>* Dances, AFortAthenaAIBotController* BotController)
-{
-    auto Library = LastLibraryComponent == Component && LastLibrary ? LastLibrary : PickLibrary(Component);
-    auto DataTable = Library ? Library->EmotesDataTable.Get() : nullptr;
-
-    LastLibrary = nullptr;
-    LastLibraryComponent = nullptr;
-
-    if (!DataTable)
-        return;
-
-    auto EmotesMaxCount = int32(Component->EmotesMaxCount.Evaluate());
-    std::vector<FFortBotCosmeticItemDataTableRow*> Picked;
-
-    while (int32(Picked.size()) < EmotesMaxCount)
-    {
-        auto Row = PickRow(DataTable, Picked);
-
-        if (!Row)
-            break;
-
-        Picked.push_back(Row);
-
-        if (auto Dance = LoadPrimaryAsset(Row->PrimaryAssetId))
-            Dances->Add((UAthenaDanceItemDefinition*)Dance);
-    }
-}
-
 static std::unordered_map<UClass*, int32> DescriptorTags;
 
 static uint64 (*ApplyToPawnOG)(UFortAthenaAISpawnerDataComponent*, APawn*);
@@ -641,7 +351,6 @@ void AFortAthenaAIBotController__Init()
 {
     Hook(ImageBase + 0xA549788, ApplyCosmeticLoadout, ApplyCosmeticLoadoutOG);
     Hook(ImageBase + 0xA5512C8, DropLootOnDeath, DropLootOnDeathOG);
-    Hook(ImageBase + 0xA5753F4, AutomaticReviveFromDBNOTick, AutomaticReviveFromDBNOTickOG);
 
     auto InventoryOwnerInterfaceVft = *(void***)(uint64(AFortAthenaAIBotController::GetDefaultObj()) + 0x3F0);
 
@@ -649,7 +358,6 @@ void AFortAthenaAIBotController__Init()
     Patch<void*>(uint64(&InventoryOwnerInterfaceVft[0x4]), (void*)InitializeInventory);
     Patch<void*>(uint64(&InventoryOwnerInterfaceVft[0x3]), (void*)CreateInventory);
 
-    Hook<UAthenaAIServicePlayerBots>(uint32(0x59), InitializeService, InitializeServiceOG);
     Patch<uint8_t>(ImageBase + 0xA6BB9A4, 0xC3);
 
     auto BaseInterfaceVft = *(void***)(uint64(UFortAthenaAISpawnerDataComponent::GetDefaultObj()) + 0x28);
@@ -673,8 +381,6 @@ void AFortAthenaAIBotController__Init()
             Patch<void*>(uint64(&InterfaceVft[0x3]), (void*)FillRuntimeParameters);
     }
 
-    Hook<UFortAthenaAISpawnerDataComponent_CosmeticLibrary>(uint32(0x62), GetLoadout);
-    Hook<UFortAthenaAISpawnerDataComponent_CosmeticLibrary>(uint32(0x5F), GetDances);
     Hook<UFortAthenaAISpawnerDataComponent_AIBotConversation>(uint32(0x5B), ApplyToPawn, ApplyToPawnOG);
 
     auto TickFunction = UFortNearbyActorsPerceptionComponent::GetDefaultObj()->VTable[0x7B];

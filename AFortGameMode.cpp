@@ -1819,7 +1819,7 @@ void AFortGameMode__Tick()
 
                     for (auto& Player : GameMode->AlivePlayers)
                     {
-                        if (!Player->PlayerState->bIsABot && Player->IsInAircraft())
+                        if (Player->IsInAircraft())
                             Player->GetAircraftComponent()->ServerAttemptAircraftJump(FRotator{});
                     }
 

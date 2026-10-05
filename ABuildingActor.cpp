@@ -28,16 +28,12 @@ static void OnDamageServer(ABuildingSMActor* Actor, float Damage, const FGamepla
 {
     auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
     auto Controller = (AFortPlayerControllerAthena*)InstigatedBy;
-    auto bInstigatedByBot = InstigatedBy && InstigatedBy->IsA(AFortAthenaAIBotController::StaticClass());
 
-    if (!InstigatedBy || (!InstigatedBy->IsA(AFortPlayerControllerAthena::StaticClass()) && !bInstigatedByBot) || !Actor->IsA(ABuildingSMActor::StaticClass()) || Actor->bPlayerPlaced || Actor->GetHealth() == 1)
+    if (!InstigatedBy || !InstigatedBy->IsA(AFortPlayerControllerAthena::StaticClass()) || !Actor->IsA(ABuildingSMActor::StaticClass()) || Actor->bPlayerPlaced || Actor->GetHealth() == 1)
         return OnDamageServerOG(Actor, Damage, DamageTags, Momentum, HitInfo, InstigatedBy, DamageCauser, EffectContext);
 
-    auto BotPawn = bInstigatedByBot ? ((AFortAthenaAIBotController*)InstigatedBy)->PlayerBotPawn : nullptr;
-    auto Inventory = bInstigatedByBot ? (AFortInventory*)((AFortAthenaAIBotController*)InstigatedBy)->Inventory.ObjectPointer : (AFortInventory*)Controller->WorldInventory.ObjectPointer;
+    auto Inventory = (AFortInventory*)Controller->WorldInventory.ObjectPointer;
 
-    if (bInstigatedByBot && (!Inventory || !BotPawn))
-        return OnDamageServerOG(Actor, Damage, DamageTags, Momentum, HitInfo, InstigatedBy, DamageCauser, EffectContext);
     if (!DamageCauser || !DamageCauser->IsA(AFortWeapon::StaticClass()) || !((AFortWeapon*)DamageCauser)->WeaponData->IsA(UFortWeaponMeleeItemDefinition::StaticClass()))
         return OnDamageServerOG(Actor, Damage, DamageTags, Momentum, HitInfo, InstigatedBy, DamageCauser, EffectContext);
 
@@ -94,8 +90,8 @@ static void OnDamageServer(ABuildingSMActor* Actor, float Damage, const FGamepla
             ItemEntry->Count += ResCount;
             if (ItemEntry->Count > MaxMat)
             {
-                SpawnPickup(BotPawn ? BotPawn->K2_GetActorLocation() : Controller->Pawn->K2_GetActorLocation(), (UFortItemDefinition*)Item->ItemEntry.ItemDefinition, ItemEntry->Count - MaxMat, 0,
-                            EFortPickupSourceTypeFlag::Tossed, EFortPickupSpawnSource::Unset, BotPawn ? (AFortPawn*)BotPawn : Controller->MyFortPawn);
+                SpawnPickup(Controller->Pawn->K2_GetActorLocation(), (UFortItemDefinition*)Item->ItemEntry.ItemDefinition, ItemEntry->Count - MaxMat, 0, EFortPickupSourceTypeFlag::Tossed,
+                            EFortPickupSpawnSource::Unset, Controller->MyFortPawn);
                 ItemEntry->Count = MaxMat;
             }
 
@@ -116,8 +112,7 @@ static void OnDamageServer(ABuildingSMActor* Actor, float Damage, const FGamepla
         {
             if (ResCount > MaxMat)
             {
-                SpawnPickup(BotPawn ? BotPawn->K2_GetActorLocation() : Controller->Pawn->K2_GetActorLocation(), Resource, ResCount - MaxMat, 0, EFortPickupSourceTypeFlag::Tossed, EFortPickupSpawnSource::Unset,
-                            BotPawn ? (AFortPawn*)BotPawn : Controller->MyFortPawn);
+                SpawnPickup(Controller->Pawn->K2_GetActorLocation(), Resource, ResCount - MaxMat, 0, EFortPickupSourceTypeFlag::Tossed, EFortPickupSpawnSource::Unset, Controller->MyFortPawn);
                 ResCount = MaxMat;
             }
 
@@ -125,7 +120,7 @@ static void OnDamageServer(ABuildingSMActor* Actor, float Damage, const FGamepla
         }
     }
 
-    if (ResCount > 0 && !bInstigatedByBot)
+    if (ResCount > 0)
         Controller->ClientReportDamagedResourceBuilding(Actor, Actor->ResourceType, ResCount, Actor->GetHealth() - Damage <= 0, Damage == 100.f);
 
     Actor->ForceNetUpdate();

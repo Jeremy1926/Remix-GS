@@ -4,7 +4,6 @@
 #include "AFortInventory.h"
 #include "AFortPickup.h"
 #include "UFortQuestManager.h"
-#include "AFortAthenaAIBotController.h"
 #include "UConversationInstance.h"
 
 INIT_MODULE(AFortPlayerPawn);
@@ -53,12 +52,7 @@ static bool FinishedTargetSpline(AFortPickupAthena* Pickup)
     auto PlayerController = (AFortPlayerControllerAthena*)Pawn->Controller;
 
     if (!PlayerController || !PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()))
-    {
-        if (PlayerController && PlayerController->IsA(AFortAthenaAIBotController::StaticClass()))
-            return BotFinishedTargetSpline(Pickup, PlayerController, (bool (*)(void*))FinishedTargetSplineOG);
-
         return FinishedTargetSplineOG(Pickup);
-    }
 
     if (!PlayerController->bTryPickupSwap)
     {
