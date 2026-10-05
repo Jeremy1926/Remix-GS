@@ -904,6 +904,13 @@ static void SetGamePhaseStep(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*
     }
 }
 
+static void SetSafeZoneState(AFortSafeZoneIndicator* SafeZoneIndicator, EFortSafeZoneState SafeZoneState)
+{
+    static auto SetSafeZoneStateInternal = (void (*)(AFortSafeZoneIndicator*, EFortSafeZoneState))(ImageBase + 0x1FE498C);
+
+    SetSafeZoneStateInternal(SafeZoneIndicator, SafeZoneState);
+}
+
 static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic)
 {
     if (GamePhaseLogic->GamePhase >= EAthenaGamePhase::Aircraft)
@@ -1057,12 +1064,9 @@ static void StartNewSafeZonePhase(UFortGameStateComponent_BattleRoyaleGamePhaseL
 
         SafeZoneIndicator->OnSafeZonePhaseChanged.Process();
 
-        auto& SafeZoneState = *(uint8_t*)(__int64(SafeZoneIndicator) + 0x60C);
-        SafeZoneState = 2;
         bool bInitial = OldPhase <= 0;
 
-        SafeZoneIndicator->OnSafeZoneStateChange(EFortSafeZoneState::Holding, bInitial);
-        SafeZoneIndicator->SafezoneStateChangedDelegate.Process(SafeZoneIndicator, EFortSafeZoneState::Holding);
+        SetSafeZoneState(SafeZoneIndicator, EFortSafeZoneState::Holding);
 
         static auto UpdateGamePhaseStep = (void (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, float))(ImageBase + 0x1BB24D0);
 
@@ -2707,11 +2711,7 @@ void AFortGameMode__Tick()
                     {
                         bUpdatedPhase = true;
 
-                        auto& SafeZoneState = *(uint8_t*)(__int64(SafeZoneIndicator) + 0x60C);
-                        SafeZoneState = 3;
-
-                        SafeZoneIndicator->OnSafeZoneStateChange(EFortSafeZoneState::Shrinking, false);
-                        SafeZoneIndicator->SafezoneStateChangedDelegate.Process(SafeZoneIndicator, EFortSafeZoneState::Shrinking);
+                        SetSafeZoneState(SafeZoneIndicator, EFortSafeZoneState::Shrinking);
 
                         SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::StormShrinking);
                     }

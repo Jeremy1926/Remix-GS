@@ -470,7 +470,8 @@ static void ReviveFromDBNO(AFortPlayerPawnAthena* Pawn, AActor* EventInstigator,
         return;
 
     auto ReviverController = EventInstigator && EventInstigator->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)EventInstigator : nullptr;
-    auto ReviverPawn = ReviverController ? ReviverController->MyFortPawn : nullptr;
+    auto ReviverBotController = EventInstigator && EventInstigator->IsA(AFortAthenaAIBotController::StaticClass()) ? (AFortAthenaAIBotController*)EventInstigator : nullptr;
+    auto ReviverPawn = ReviverController ? ReviverController->MyFortPawn : ReviverBotController ? ReviverBotController->Pawn : nullptr;
     auto PlayerController = Pawn->Controller && Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)Pawn->Controller : nullptr;
     auto GameMode = (AFortGameModeZone*)UWorld::GetWorld()->AuthorityGameMode;
     auto ReviveGameplayEffect = GameMode ? GameMode->GetTeammateReviveGameplayEffectOverride() : TSubclassOf<UGameplayEffect>();
@@ -560,14 +561,14 @@ static void ServerReviveFromDBNO(AFortPlayerPawnAthena* Pawn, AActor* EventInsti
 
 static void ServerReviveFromDBNO(UObject* Context, FFrame& Stack)
 {
-    AFortPlayerControllerAthena* EventInstigator;
+    AController* EventInstigator;
 
     Stack.StepCompiledIn(&EventInstigator);
     Stack.IncrementCode();
 
     auto Pawn = (AFortPlayerPawnAthena*)Context;
 
-    if (Pawn->Controller && !Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()))
+    if (Pawn->Controller && (!Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()) || (EventInstigator && EventInstigator->IsA(AFortAthenaAIBotController::StaticClass()))))
         ReviveFromDBNO(Pawn, EventInstigator, false);
 }
 
