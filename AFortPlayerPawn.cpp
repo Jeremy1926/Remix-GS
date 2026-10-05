@@ -108,7 +108,7 @@ static bool FinishedTargetSpline(AFortPickupAthena* Pickup)
     Remove(WorldInventory, Entry->ItemGuid);
 
     auto Item = GiveItem(WorldInventory, Pickup->PrimaryPickupItemEntry);
-    PlayerController->ServerExecuteInventoryItem(Item->ItemEntry.ItemGuid);
+    PlayerController->ClientEquipItem(Item->ItemEntry.ItemGuid, true);
 
     return FinishedTargetSplineOG(Pickup);
 }
