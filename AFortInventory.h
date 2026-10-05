@@ -10,6 +10,7 @@ bool RemoveInventoryItem(AFortInventory* Inventory, FGuid& ItemGuid, int32 Count
 FFortItemEntry* MakeItemEntry(const UFortItemDefinition* ItemDefinition, int32 Count, int32 Level);
 FFortRangedWeaponStats* GetStats(const UFortWeaponItemDefinition* WeaponDefinition);
 bool IsPrimaryQuickbar(const UFortItemDefinition* ItemDefinition);
+bool TakesQuickbarSlot(const UFortItemDefinition* ItemDefinition);
 void UpdateEntry(AFortInventory* Inventory, FFortItemEntry& Entry);
 int32 AddItemCount(AFortInventory* Inventory, const UFortItemDefinition* ItemDefinition, int32 Count);
 void RemoveWeaponAbilities(AFortWeapon* Weapon);

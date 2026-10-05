@@ -2,10 +2,6 @@
 #include "Shared.h"
 #include "UAthenaAIServiceLoot.h"
 
-INIT_MODULE(UAthenaAIServiceLoot);
-
-static void (*BeginPlayOG)(ABuildingContainer*);
-
 static UAthenaAIServiceLoot* GetStartedServiceLoot()
 {
     auto World = UWorld::GetWorld();
@@ -22,17 +18,10 @@ void RegisterPickupLoot(AFortPickup* Pickup)
         RegisterPickupLootInOctree(Service, Pickup);
 }
 
-static void BeginPlay(ABuildingContainer* Container)
+void RegisterChestLoot(ABuildingContainer* Container)
 {
-    static auto RegisterChestLoot = (void (*)(UAthenaAIServiceLoot*, ABuildingContainer*, uint8))(ImageBase + 0xA6B3324);
-
-    BeginPlayOG(Container);
+    static auto RegisterChestLootInOctree = (void (*)(UAthenaAIServiceLoot*, ABuildingContainer*, uint8))(ImageBase + 0xA6B3324);
 
     if (auto Service = GetStartedServiceLoot())
-        RegisterChestLoot(Service, Container, ((bool (*)(ABuildingContainer*))Container->VTable[0x217])(Container));
-}
-
-void UAthenaAIServiceLoot__Init()
-{
-    Hook<ABuildingContainer>(uint32(0x74), BeginPlay, BeginPlayOG);
+        RegisterChestLootInOctree(Service, Container, ((bool (*)(ABuildingContainer*))Container->VTable[0x217])(Container));
 }

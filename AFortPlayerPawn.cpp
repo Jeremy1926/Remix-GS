@@ -568,7 +568,7 @@ static void ServerReviveFromDBNO(UObject* Context, FFrame& Stack)
 
     auto Pawn = (AFortPlayerPawnAthena*)Context;
 
-    if (Pawn->Controller && (!Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()) || (EventInstigator && EventInstigator->IsA(AFortAthenaAIBotController::StaticClass()))))
+    if (Pawn->Controller && (!Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()) || (EventInstigator && EventInstigator->IsA(AFortAthenaAIBotController::StaticClass()) && ((AFortAthenaAIBotController*)EventInstigator)->ReviveTarget == Pawn)))
         ReviveFromDBNO(Pawn, EventInstigator, false);
 }
 

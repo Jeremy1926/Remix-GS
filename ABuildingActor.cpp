@@ -3,7 +3,7 @@
 #include "ABuildingActor.h"
 #include "AFortInventory.h"
 #include "AFortPickup.h"
-#include "AFortAthenaAIBotController.h"
+#include "UAthenaAIServiceLoot.h"
 #include "UConversationInstance.h"
 
 INIT_MODULE(ABuildingActor);
@@ -120,9 +120,6 @@ static void OnDamageServer(ABuildingSMActor* Actor, float Damage, const FGamepla
             }
 
             GiveItem(Inventory, Resource, ResCount, 0, 0, false);
-
-            if (BotController)
-                RefreshSlotItems(BotController);
         }
     }
 
@@ -166,6 +163,13 @@ static bool SpawnLoot(ABuildingContainer* Container)
     Container->BounceContainer();
 
     return true;
+}
+
+static void (*BeginPlayOG)(ABuildingContainer*);
+static void BeginPlay(ABuildingContainer* Container)
+{
+    BeginPlayOG(Container);
+    RegisterChestLoot(Container);
 }
 
 static void (*OnAuthorityRandomUpgradeAppliedOG)(ABuildingContainer*, FName&);
@@ -510,6 +514,7 @@ void ABuildingActor__Init()
     Hook(ImageBase + 0x50D6D84, BroadcastNotifyBuildingNetCullDistChange, BroadcastNotifyBuildingNetCullDistChangeOG);
     Hook(ImageBase + 0x92D1784, SpawnLoot);
     Hook(ImageBase + 0x92CC584, OnAuthorityRandomUpgradeApplied, OnAuthorityRandomUpgradeAppliedOG);
+    Hook<ABuildingContainer>(uint32(0x74), BeginPlay, BeginPlayOG);
     ExecHook(ABuildingFoundation::StaticClass()->FindFunction("SetDynamicFoundationEnabled"), SetDynamicFoundationEnabled);
     ExecHook(ABuildingFoundation::StaticClass()->FindFunction("SetDynamicFoundationTransform"), SetDynamicFoundationTransform);
 

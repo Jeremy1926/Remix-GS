@@ -5,6 +5,7 @@
 #include "AFortInventory.h"
 #include "AFortPickup.h"
 #include "AFortGameMode.h"
+#include "AFortAthenaAIBotController.h"
 #include "UFortQuestManager.h"
 #include "UFortControllerComponent_TournamentStatsTracker.h"
 #include "SDK/SDK/FortniteGame_parameters.hpp"
@@ -1124,11 +1125,6 @@ void InternalPickup(AController* Controller, FFortItemEntry* PickupEntry)
     auto MaxStack = PickupDefinition->GetMaxStackSize(nullptr);
     int ItemCount = 0;
 
-    auto TakesQuickbarSlot = [](const UFortItemDefinition* ItemDefinition)
-    {
-        return IsPrimaryQuickbar(ItemDefinition) && UFortItemFunctionLibrary::IsInventorySizeLimited(ItemDefinition);
-    };
-
     for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
     {
         if (TakesQuickbarSlot((UFortItemDefinition*)Entry.ItemDefinition))
@@ -1194,6 +1190,13 @@ void InternalPickup(AController* Controller, FFortItemEntry* PickupEntry)
             {
                 PlayerController->ServerExecuteInventoryItem(Item->ItemEntry.ItemGuid);
                 PlayerController->ClientEquipItem(Item->ItemEntry.ItemGuid, true);
+            }
+            else
+            {
+                static auto EquipBestWeapon = (void (*)(AFortAthenaAIBotController*, bool))(ImageBase + 0xA551F30);
+
+                RefreshSlotItems((AFortAthenaAIBotController*)Controller);
+                EquipBestWeapon((AFortAthenaAIBotController*)Controller, true);
             }
         }
         else
@@ -1888,7 +1891,7 @@ void AFortPlayerController__PostLoad()
     ExecHook(AFortPlayerControllerGameplay::StaticClass()->FindFunction("ServerVehicleModSeatRpc"), ServerVehicleModSeatRpc);
     Hook(ImageBase + 0xA02DACC, (bool (*)(void*, FGuid&, int32, bool, bool))RemoveInventoryItem);
 
-    Hook(ImageBase + 0x945F42C, EnterAircraft, EnterAircraftOG);
+    Hook(ImageBase + 0x945F42C, (void (*)(UFortControllerComponent_Aircraft*, AActor*))EnterAircraft, EnterAircraftOG);
     Hook<UFortControllerComponent_Aircraft>(uint32(0xAA), ServerAttemptAircraftJump);
 
     Hook(ImageBase + 0x947710C, RefreshCosmeticLoadoutFromProfile);

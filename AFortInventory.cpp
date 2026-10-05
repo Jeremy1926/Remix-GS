@@ -460,6 +460,11 @@ bool IsPrimaryQuickbar(const UFortItemDefinition* ItemDefinition)
                : true;
 }
 
+bool TakesQuickbarSlot(const UFortItemDefinition* ItemDefinition)
+{
+    return IsPrimaryQuickbar(ItemDefinition) && UFortItemFunctionLibrary::IsInventorySizeLimited(ItemDefinition);
+}
+
 void UpdateEntry(AFortInventory* Inventory, FFortItemEntry& Entry)
 {
     if (!Inventory)

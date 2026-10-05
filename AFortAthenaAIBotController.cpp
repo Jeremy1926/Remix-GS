@@ -112,9 +112,29 @@ void RefreshSlotItems(AFortAthenaAIBotController* Controller)
 
     auto& ItemInstances = Inventory->Inventory.ItemInstances;
     auto& SlotItems = Controller->SlotItems;
+    auto NumSlots = (std::min)(SlotItems.Num(), Controller->MaxInventorySlots);
 
-    for (int32 i = 0; i < SlotItems.Num() && i < Controller->MaxInventorySlots; i++)
-        SetItem(&SlotItems[i], i < ItemInstances.Num() ? ItemInstances[i] : nullptr);
+    for (int32 i = 0; i < NumSlots; i++)
+        if (SlotItems[i].FortItem && !ItemInstances.Contains(SlotItems[i].FortItem))
+            SetItem(&SlotItems[i], nullptr);
+
+    for (auto Item : ItemInstances)
+    {
+        auto ItemDefinition = (UFortItemDefinition*)Item->ItemEntry.ItemDefinition;
+
+        if (!ItemDefinition || (ItemDefinition->ItemType != EFortItemType::WeaponHarvest && !TakesQuickbarSlot(ItemDefinition)))
+            continue;
+
+        int32 FreeSlot = -1;
+        int32 Slot = 0;
+
+        for (; Slot < NumSlots && SlotItems[Slot].FortItem != Item; Slot++)
+            if (FreeSlot < 0 && !SlotItems[Slot].FortItem)
+                FreeSlot = Slot;
+
+        if (Slot == NumSlots && FreeSlot >= 0)
+            SetItem(&SlotItems[FreeSlot], Item);
+    }
 }
 
 static bool RemoveInventoryItem(void* InventoryOwnerInterface, FGuid& ItemGuid, int32 Count, bool bForceRemoval, bool bForcePersistWhenEmpty)
@@ -225,7 +245,6 @@ static void DropLootOnDeath(AFortAthenaAIBotController* Controller, AFortPawn* P
     if (auto GameplayTagAssetInterface = Pawn->GetInterface(IGameplayTagAssetInterface::StaticClass()))
         ((void (*)(void*, FGameplayTagContainer*))(*(void***)GameplayTagAssetInterface)[0x2])(GameplayTagAssetInterface, &OwnedGameplayTags);
 
-    auto Inventory = (AFortInventory*)Controller->Inventory.ObjectPointer;
     auto& LootDroppingBehaviors = LootInfoRow->LootDroppingBehaviors;
     std::vector<AFortPickupAthena*> Pickups;
 
@@ -241,16 +260,8 @@ static void DropLootOnDeath(AFortAthenaAIBotController* Controller, AFortPawn* P
             !UBlueprintGameplayTagLibrary::DoesContainerMatchTagQuery(PlaylistContextTags, LootDroppingBehavior.OptionalPlaylistTagQuery))
             continue;
 
-        if (LootDroppingBehavior.bShouldDropInventoryOnDeath && Inventory)
-        {
-            for (int32 j = 0; j < Inventory->Inventory.ReplicatedEntries.Num(); j++)
-            {
-                auto& ItemEntry = Inventory->Inventory.ReplicatedEntries.Data[j];
-
-                if (ItemEntry.ItemDefinition && CanBeDropped((UFortItemDefinition*)ItemEntry.ItemDefinition))
-                    Pickups.push_back(SpawnPickup(Location, ItemEntry, EFortPickupSourceTypeFlag::AI, EFortPickupSpawnSource::NPCElimination, Pawn));
-            }
-        }
+        if (LootDroppingBehavior.bShouldDropInventoryOnDeath)
+            DropInventoryItems(Controller, Pawn);
 
         auto& LootTiers = LootDroppingBehavior.LootTiers;
 
