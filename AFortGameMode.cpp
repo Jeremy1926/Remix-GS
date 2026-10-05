@@ -18,6 +18,7 @@ INIT_TICKER(AFortGameMode);
 static TArray<UFortAbilitySet*> AbilitySets;
 static bool bSkipWarmup = false;
 static bool bSkipAircraft = false;
+static uint8 PauseWarmupMask = 0;
 
 static TArray<FVector> SafeZoneLocations;
 static TArray<FName> LevelsToStream;
@@ -862,6 +863,16 @@ static void RegisterServer(AGameSession* GameSession)
     }
 
     TSharedRef_Destructor(&SessionInterface);
+}
+
+void PauseWarmup(EGameModePauseWarmupMaskId MaskId)
+{
+    PauseWarmupMask |= uint8(MaskId);
+}
+
+void UnPauseWarmup(EGameModePauseWarmupMaskId MaskId)
+{
+    PauseWarmupMask &= ~uint8(MaskId);
 }
 
 static void SetGamePhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic, EAthenaGamePhase GamePhase)
@@ -2502,7 +2513,7 @@ void AFortGameMode__Tick()
     static bool bFinishedFlight = false;
     if (!bSkipAircraft)
     {
-        if (GamePhaseLogic->GamePhase <= EAthenaGamePhase::Warmup)
+        if (GamePhaseLogic->GamePhase <= EAthenaGamePhase::Warmup && !PauseWarmupMask)
         {
             static bool bGettingReady = false;
             if (!bGettingReady && GamePhaseLogic->GamePhase == EAthenaGamePhase::Warmup)

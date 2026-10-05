@@ -57,6 +57,9 @@
     <ClInclude Include="UConversationInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UAthenaNavSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="UFortControllerComponent_Accolades.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -834,6 +837,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UFortAthenaAISpawnerDataComponent_CosmeticLibrary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UAthenaNavSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">

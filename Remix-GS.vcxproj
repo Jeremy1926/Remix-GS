@@ -167,6 +167,7 @@
     <ClInclude Include="Core.hpp" />
     <ClInclude Include="MinHook.h" />
     <ClInclude Include="Shared.h" />
+    <ClInclude Include="UAthenaNavSystem.h" />
     <ClInclude Include="UConversationInstance.h" />
     <ClInclude Include="UFortControllerComponent_Accolades.h" />
     <ClInclude Include="UFortControllerComponent_TournamentStatsTracker.h" />
@@ -421,6 +422,7 @@
     <ClCompile Include="ASpecialEventScript.cpp" />
     <ClCompile Include="UAbilitySystemComponent.cpp" />
     <ClCompile Include="UAthenaAIServicePlayerBots.cpp" />
+    <ClCompile Include="UAthenaNavSystem.cpp" />
     <ClCompile Include="UConversationInstance.cpp" />
     <ClCompile Include="UFortAthenaAISpawnerDataComponent_CosmeticLibrary.cpp" />
     <ClCompile Include="UFortAthenaLivingWorldManager.cpp" />

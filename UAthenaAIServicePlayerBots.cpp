@@ -1,10 +1,14 @@
 #include "pch.h"
 #include "Shared.h"
+#include "AFortGameMode.h"
+#include "UAthenaNavSystem.h"
 
 INIT_MODULE(UAthenaAIServicePlayerBots);
 
 static void (*OnPlaylistLoadedOG)(UAthenaAIServicePlayerBots*);
 static void (*StartSpawningOG)(UAthenaAIServicePlayerBots*, void*);
+static void (*OnAllBotsSpawnedOG)(UAthenaAIServicePlayerBots*);
+static void (*UnpauseWarmupFailSafeOG)(UAthenaAIServicePlayerBots*);
 
 static const wchar_t* BotNames[] = {
     L"Kyzen", L"Vaxtrix", L"FrostByte07", L"NovaRush", L"lilzapp", L"Drexo", L"Mxrcus", L"Zynthra", L"Kaioken42", L"Ravvy",
@@ -53,8 +57,13 @@ static void OnPlaylistLoaded(UAthenaAIServicePlayerBots* Service)
                   Service->CachedGameMode->AISettings == StaticFindObject(L"/Clyde/Playlist/PlayerBotsFlow_AISettings_Clyde.PlayerBotsFlow_AISettings_Clyde", UAthenaAISettings::StaticClass());
 
     Service->GamePhaseToStartSpawning = EAthenaGamePhase::Warmup;
-    Service->bWaitForNavmeshToBeLoaded = false;
-    Service->bDoMapSampling = false;
+
+    if (!bNavCacheAttached)
+    {
+        Service->bWaitForNavmeshToBeLoaded = false;
+        Service->bDoMapSampling = false;
+    }
+
     Service->DefaultBotAISpawnerData = FindObject<UClass>(L"/Game/Athena/AI/Phoebe/BP_AISpawnerData_Phoebe.BP_AISpawnerData_Phoebe_C");
     Service->BotItemDataTable = FindObject<UDataTable>(bClyde ? L"/Clyde/Datatables/Phoebe/Clyde_CompositePhoebeItemData.Clyde_CompositePhoebeItemData" : L"/Game/Athena/AI/Phoebe/ManagerData/PhoebeItemData.PhoebeItemData");
     Service->VisibilitySettingsRegistry = FindObject<UDataRegistry>(L"/Game/DataRegistries/AI/Phoebe_VisibilityRegistry.Phoebe_VisibilityRegistry");
@@ -255,6 +264,29 @@ static void StartSpawning(UAthenaAIServicePlayerBots* Service, void* FlowNode)
 {
     InitializeMMRInfos(Service);
     StartSpawningOG(Service, FlowNode);
+
+    if (*(uint64*)(uint64(Service) + 0xE40))
+        PauseWarmup(EGameModePauseWarmupMaskId::PlayerBotsSpawning);
+}
+
+static void UnpauseWarmUp(UAthenaAIServicePlayerBots* Service)
+{
+    UKismetSystemLibrary::K2_ClearAndInvalidateTimerHandle(Service, *(FTimerHandle*)(uint64(Service) + 0xE40));
+    UnPauseWarmup(EGameModePauseWarmupMaskId::PlayerBotsSpawning);
+}
+
+static void OnAllBotsSpawned(UAthenaAIServicePlayerBots* Service)
+{
+    OnAllBotsSpawnedOG(Service);
+    UnpauseWarmUp(Service);
+}
+
+static void UnpauseWarmupFailSafe(UAthenaAIServicePlayerBots* Service)
+{
+    UnpauseWarmupFailSafeOG(Service);
+
+    if (!*(uint64*)(uint64(Service) + 0xE40))
+        UnpauseWarmUp(Service);
 }
 
 static void FetchPlayerBotNameAndID(FString* OutBotName, FString* OutBotAccountID, AFortAthenaAIBotController* Controller)
@@ -294,6 +326,8 @@ void UAthenaAIServicePlayerBots__Init()
 
     Hook<UAthenaAIServicePlayerBots>(uint32(0x59), OnPlaylistLoaded, OnPlaylistLoadedOG);
     Hook(ImageBase + 0xA6B9420, StartSpawning, StartSpawningOG);
+    Hook(ImageBase + 0xA6AC1A8, OnAllBotsSpawned, OnAllBotsSpawnedOG);
+    Hook(ImageBase + 0xA6BAC00, UnpauseWarmupFailSafe, UnpauseWarmupFailSafeOG);
 
     for (int32 i = 0; i < int32(sizeof(FetchCall)); i++)
         Patch<uint8_t>(ImageBase + 0xA549BBE + i, FetchCall[i]);
