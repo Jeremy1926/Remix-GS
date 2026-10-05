@@ -105,10 +105,10 @@ static bool FinishedTargetSpline(AFortPickupAthena* Pickup)
 
     SpawnPickup(PlayerController->GetViewTarget()->K2_GetActorLocation(), *Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, PlayerController->MyFortPawn, -1, true, true, true, nullptr,
                 FinalLoc);
-    Remove(WorldInventory, Entry->ItemGuid);
 
     auto Item = GiveItem(WorldInventory, Pickup->PrimaryPickupItemEntry);
-    PlayerController->ServerExecuteInventoryItem(Item->ItemEntry.ItemGuid);
+    Remove(WorldInventory, CurrentWeapon->ItemEntryGuid);
+    PlayerController->ClientEquipItem(Item->ItemEntry.ItemGuid, true);
 
     return FinishedTargetSplineOG(Pickup);
 }

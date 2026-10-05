@@ -1160,9 +1160,8 @@ void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntr
                 }
             }
 
-            Remove(WorldInventory, MyFortPawn->CurrentWeapon->ItemEntryGuid);
-
             auto Item = GiveItem(WorldInventory, *PickupEntry, PickupEntry->Count, true);
+            Remove(WorldInventory, MyFortPawn->CurrentWeapon->ItemEntryGuid);
             PlayerController->ServerExecuteInventoryItem(Item->ItemEntry.ItemGuid);
             PlayerController->ClientEquipItem(Item->ItemEntry.ItemGuid, true);
         }

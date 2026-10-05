@@ -339,8 +339,11 @@ void Remove(AFortInventory* Inventory, FGuid Guid)
     {
         static auto DestroyItemEntry = (void (*)(FFortItemEntry*))(ImageBase + 0x16E77DC);
 
-        DestroyItemEntry(&Inventory->Inventory.ReplicatedEntries.Data[ItemEntryIdx]);
-        Inventory->Inventory.ReplicatedEntries.Remove(ItemEntryIdx);
+        auto& ReplicatedEntries = Inventory->Inventory.ReplicatedEntries;
+
+        DestroyItemEntry(&ReplicatedEntries.Data[ItemEntryIdx]);
+        ReplicatedEntries.Data[ItemEntryIdx] = ReplicatedEntries.Data[ReplicatedEntries.Num() - 1];
+        ReplicatedEntries.NumElements--;
     }
     if (ItemInstanceIdx != -1)
         Inventory->Inventory.ItemInstances.Remove(ItemInstanceIdx);
