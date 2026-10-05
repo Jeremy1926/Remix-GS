@@ -1453,6 +1453,38 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
                 Playlist->bAllowJoinInProgress = true;
             }
 
+            if (auto AISettings = Playlist->AISettings.Get())
+            {
+                static auto SetAISettings = (void (*)(AFortGameModeAthena*, UAthenaAISettings*))(ImageBase + 0x8F991FC);
+
+                auto& AIServices = AISettings->AIServices;
+                bool bHasPlayerBotsService = false;
+
+                for (int32 i = 0; i < AIServices.Num(); i++)
+                {
+                    auto ServiceClass = (UClass*)AIServices[i];
+
+                    if (ServiceClass && ServiceClass->ClassDefaultObject->IsA(UAthenaAIServicePlayerBots::StaticClass()))
+                        bHasPlayerBotsService = true;
+                }
+
+                for (int32 i = 0; i < AIServices.Num() && !bHasPlayerBotsService; i++)
+                {
+                    if (!(UClass*)AIServices[i])
+                    {
+                        AIServices[i] = UAthenaAIServicePlayerBots::StaticClass();
+                        bHasPlayerBotsService = true;
+                    }
+                }
+
+                auto AISystem = (UFortAISystem*)World->AISystem;
+
+                if (AISystem && AISystem->IsA(UAthenaAISystem::StaticClass()))
+                    CreateSubsystems((UAthenaAISystem*)AISystem, GameMode);
+
+                SetAISettings(GameMode, AISettings);
+            }
+
             GameState->CurrentPlaylistInfo.BasePlaylist = Playlist;
             GameState->CurrentPlaylistInfo.PlaylistReplicationKey++;
             GameState->CurrentPlaylistInfo.MarkArrayDirty();
@@ -1511,45 +1543,6 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
             GameMode->AIDirector = SpawnActor<AFortAIDirector>(AAthenaAIDirector::StaticClass(), FVector{}, {}, GameMode);
             if (GameMode->AIDirector)
                 GameMode->AIDirector->Activate();
-        }
-
-        if (Playlist)
-        {
-            static auto SetAISettings = (void (*)(AFortGameModeAthena*, UAthenaAISettings*))(ImageBase + 0x8F991FC);
-            static auto OnGameModeInitialized = (void (*)(UAthenaAIServiceManager*, AFortGameModeAthena*))(ImageBase + 0xA6ADD4C);
-
-            if (auto AISettings = Playlist->AISettings.Get())
-            {
-                auto& AIServices = AISettings->AIServices;
-                bool bHasPlayerBotsService = false;
-
-                for (int32 i = 0; i < AIServices.Num(); i++)
-                {
-                    auto ServiceClass = (UClass*)AIServices[i];
-
-                    if (ServiceClass && ServiceClass->ClassDefaultObject->IsA(UAthenaAIServicePlayerBots::StaticClass()))
-                        bHasPlayerBotsService = true;
-                }
-
-                for (int32 i = 0; i < AIServices.Num() && !bHasPlayerBotsService; i++)
-                {
-                    if (!(UClass*)AIServices[i])
-                    {
-                        AIServices[i] = UAthenaAIServicePlayerBots::StaticClass();
-                        bHasPlayerBotsService = true;
-                    }
-                }
-
-                auto AISystem = (UFortAISystem*)World->AISystem;
-
-                if (AISystem && AISystem->IsA(UAthenaAISystem::StaticClass()))
-                    CreateSubsystems((UAthenaAISystem*)AISystem, GameMode);
-
-                SetAISettings(GameMode, AISettings);
-
-                if (AISystem && AISystem->IsA(UFortAISystem::StaticClass()) && AISystem->AIServiceManager)
-                    OnGameModeInitialized(AISystem->AIServiceManager, GameMode);
-            }
         }
 
         if (!GameMode->AIGoalManager)

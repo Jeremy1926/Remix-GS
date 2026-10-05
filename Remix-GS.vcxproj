@@ -420,7 +420,9 @@
     <ClCompile Include="AFortWeapon.cpp" />
     <ClCompile Include="ASpecialEventScript.cpp" />
     <ClCompile Include="UAbilitySystemComponent.cpp" />
+    <ClCompile Include="UAthenaAIServicePlayerBots.cpp" />
     <ClCompile Include="UConversationInstance.cpp" />
+    <ClCompile Include="UFortAthenaAISpawnerDataComponent_CosmeticLibrary.cpp" />
     <ClCompile Include="UFortAthenaLivingWorldManager.cpp" />
     <ClCompile Include="UFortControllerComponent_AccoladeCollection.cpp" />
     <ClCompile Include="UFortControllerComponent_Accolades.cpp" />

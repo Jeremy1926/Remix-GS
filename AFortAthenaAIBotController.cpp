@@ -358,8 +358,6 @@ void AFortAthenaAIBotController__Init()
     Patch<void*>(uint64(&InventoryOwnerInterfaceVft[0x4]), (void*)InitializeInventory);
     Patch<void*>(uint64(&InventoryOwnerInterfaceVft[0x3]), (void*)CreateInventory);
 
-    Patch<uint8_t>(ImageBase + 0xA6BB9A4, 0xC3);
-
     auto BaseInterfaceVft = *(void***)(uint64(UFortAthenaAISpawnerDataComponent::GetDefaultObj()) + 0x28);
 
     for (int32 i = 0; i < UObject::GObjects->Num(); i++)
