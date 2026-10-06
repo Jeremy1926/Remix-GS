@@ -5,6 +5,17 @@
 
 INIT_POSTLOAD(AFortWeapon);
 
+static UGameplayAbility* GetFirstValidInstance(TArray<UGameplayAbility*>& Instances)
+{
+    for (auto& Instance : Instances)
+    {
+        if (Instance)
+            return Instance;
+    }
+
+    return nullptr;
+}
+
 static void ServerNotifyPawnHit(UObject* Context, FFrame& Stack, void* Ret)
 {
     FHitResult Hit{};
@@ -33,10 +44,12 @@ static void ServerNotifyPawnHit(UObject* Context, FFrame& Stack, void* Ret)
         return;
 
     auto Pawn = Weapon->Owner && Weapon->Owner->IsA(AFortPlayerPawnAthena::StaticClass()) ? (AFortPlayerPawnAthena*)Weapon->Owner : nullptr;
+
     if (!Pawn || !Pawn->PlayerState)
         return;
 
     auto PlayerState = Pawn->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)Pawn->PlayerState : nullptr;
+
     if (!PlayerState || !PlayerState->AbilitySystemComponent)
         return;
 
@@ -49,27 +62,10 @@ static void ServerNotifyPawnHit(UObject* Context, FFrame& Stack, void* Ret)
             continue;
 
         Level = Spec.Level;
-
-        for (auto& Instance : Spec.NonReplicatedInstances)
-        {
-            if (Instance)
-            {
-                Ability = Instance;
-                break;
-            }
-        }
+        Ability = GetFirstValidInstance(Spec.NonReplicatedInstances);
 
         if (!Ability)
-        {
-            for (auto& Instance : Spec.ReplicatedInstances)
-            {
-                if (Instance)
-                {
-                    Ability = Instance;
-                    break;
-                }
-            }
-        }
+            Ability = GetFirstValidInstance(Spec.ReplicatedInstances);
 
         if (!Ability)
             Ability = Spec.ability;
@@ -102,26 +98,8 @@ static void ServerSetScopedThirdPersonTargeting(UObject* Context, FFrame& Stack,
     Weapon->SetFirstPersonTargeting(Weapon->CanUseScopedCameraViaOptic());
 }
 
-static void ServerSpawnDeco(UObject* Context, FFrame& Stack, void* Ret)
+static UFortDecoItemDefinition* GetDecoItemDefinition(AFortDecoTool* DecoTool, EBuildingAttachmentType InBuildingAttachmentType)
 {
-    FVector Location;
-    FRotator Rotation;
-    ABuildingSMActor* AttachedActor;
-    EBuildingAttachmentType InBuildingAttachmentType;
-    Stack.StepCompiledIn(&Location);
-    Stack.StepCompiledIn(&Rotation);
-    Stack.StepCompiledIn(&AttachedActor);
-    Stack.StepCompiledIn(&InBuildingAttachmentType);
-    Stack.IncrementCode();
-    auto DecoTool = (AFortDecoTool*)Context;
-
-    auto Pawn = (AFortPlayerPawnAthena*)DecoTool->Owner;
-    if (!Pawn)
-        return;
-    auto PlayerController = (AFortPlayerControllerAthena*)Pawn->Controller;
-    if (!PlayerController)
-        return;
-
     auto ItemDefinition = (UFortDecoItemDefinition*)DecoTool->ItemDefinition;
 
     if (DecoTool->IsA(AFortDecoTool_ContextTrap::StaticClass()))
@@ -147,6 +125,34 @@ static void ServerSpawnDeco(UObject* Context, FFrame& Stack, void* Ret)
         }
     }
 
+    return ItemDefinition;
+}
+
+static void ServerSpawnDeco(UObject* Context, FFrame& Stack, void* Ret)
+{
+    FVector Location;
+    FRotator Rotation;
+    ABuildingSMActor* AttachedActor;
+    EBuildingAttachmentType InBuildingAttachmentType;
+    Stack.StepCompiledIn(&Location);
+    Stack.StepCompiledIn(&Rotation);
+    Stack.StepCompiledIn(&AttachedActor);
+    Stack.StepCompiledIn(&InBuildingAttachmentType);
+    Stack.IncrementCode();
+
+    auto DecoTool = (AFortDecoTool*)Context;
+    auto Pawn = (AFortPlayerPawnAthena*)DecoTool->Owner;
+
+    if (!Pawn)
+        return;
+
+    auto PlayerController = (AFortPlayerControllerAthena*)Pawn->Controller;
+
+    if (!PlayerController)
+        return;
+
+    auto ItemDefinition = GetDecoItemDefinition(DecoTool, InBuildingAttachmentType);
+
     if (!ItemDefinition)
         return;
 
@@ -161,39 +167,15 @@ static void ServerSpawnDeco(UObject* Context, FFrame& Stack, void* Ret)
     SpawnDeco(DecoTool, DecoClass, Location, Rotation, AttachedActor, InBuildingAttachmentType, 0);
 
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
-    UFortWorldItem* Item = nullptr;
-    FFortItemEntry* ItemEntry = nullptr;
-
-    for (auto& ItemInstance : WorldInventory->Inventory.ItemInstances)
-    {
-        if (ItemInstance->ItemEntry.ItemDefinition == DecoTool->ItemDefinition)
-        {
-            Item = ItemInstance;
-            break;
-        }
-    }
-
-    for (auto& ReplicatedEntry : WorldInventory->Inventory.ReplicatedEntries)
-    {
-        if (ReplicatedEntry.ItemDefinition == DecoTool->ItemDefinition)
-        {
-            ItemEntry = &ReplicatedEntry;
-            break;
-        }
-    }
+    auto DecoItemDefinition = (UFortItemDefinition*)DecoTool->ItemDefinition;
+    auto Item = FindItemInstance(WorldInventory, DecoItemDefinition);
+    auto ItemEntry = FindReplicatedEntry(WorldInventory, DecoItemDefinition);
 
     if (!ItemEntry)
         return;
 
     ItemEntry->Count--;
-    if (ItemEntry->Count <= 0)
-        Remove(WorldInventory, ItemEntry->ItemGuid);
-    else
-    {
-        Item->ItemEntry.Count = ItemEntry->Count;
-        UpdateEntry(WorldInventory, *ItemEntry);
-        Item->ItemEntry.bIsDirty = true;
-    }
+    UpdateOrRemoveEntry(WorldInventory, Item, *ItemEntry);
 }
 
 static void ServerCreateBuildingAndSpawnDeco(UObject* Context, FFrame& Stack, void* Ret)
@@ -217,40 +199,18 @@ static void ServerCreateBuildingAndSpawnDeco(UObject* Context, FFrame& Stack, vo
     FRotator BuildingRotation{};
     BuildingRotation.Yaw = (uint8)BuildingDirection == 0 ? -90.f : ((uint8)BuildingDirection == 2 ? 90.f : ((uint8)BuildingDirection == 3 ? 180.f : 0.f));
 
-    auto Tool = (AFortDecoTool*)Context;
+    auto DecoTool = (AFortDecoTool*)Context;
+    auto Pawn = (AFortPlayerPawnAthena*)DecoTool->Owner;
 
-    auto Pawn = (AFortPlayerPawnAthena*)Tool->Owner;
     if (!Pawn)
         return;
 
     auto PlayerController = (AFortPlayerControllerAthena*)Pawn->Controller;
+
     if (!PlayerController)
         return;
 
-    auto ItemDefinition = (UFortDecoItemDefinition*)Tool->ItemDefinition;
-
-    if (Tool->IsA(AFortDecoTool_ContextTrap::StaticClass()))
-    {
-        auto ContextTrapItemDefinition = ((AFortDecoTool_ContextTrap*)Tool)->ContextTrapItemDefinition;
-
-        switch ((int)InBuildingAttachmentType)
-        {
-        case 0:
-        case 6:
-            ItemDefinition = ContextTrapItemDefinition->FloorTrap;
-            break;
-        case 7:
-        case 2:
-            ItemDefinition = ContextTrapItemDefinition->CeilingTrap;
-            break;
-        case 1:
-            ItemDefinition = ContextTrapItemDefinition->WallTrap;
-            break;
-        case 8:
-            ItemDefinition = ContextTrapItemDefinition->StairTrap;
-            break;
-        }
-    }
+    auto ItemDefinition = GetDecoItemDefinition(DecoTool, InBuildingAttachmentType);
 
     if (!ItemDefinition)
         return;
@@ -302,13 +262,14 @@ static void ServerCreateBuildingAndSpawnDeco(UObject* Context, FFrame& Stack, vo
     static auto CantBuild = (__int64 (*)(UWorld*, TSubclassOf<ABuildingActor>&, FVector, FRotator, bool, TArray<ABuildingSMActor*>*, char*))(ImageBase + 0x987C5E0);
 
     TArray<ABuildingSMActor*> RemoveBuildings;
-    char bCantBuildReason;
+    char CantBuildReason;
 
-    if (CantBuild(UWorld::GetWorld(), BuildingClassData.BuildingClass, BuildingLocation, BuildingRotation, false, &RemoveBuildings, &bCantBuildReason))
+    if (CantBuild(UWorld::GetWorld(), BuildingClassData.BuildingClass, BuildingLocation, BuildingRotation, false, &RemoveBuildings, &CantBuildReason))
         return;
 
     for (auto& RemoveBuilding : RemoveBuildings)
         RemoveBuilding->K2_DestroyActor();
+
     RemoveBuildings.Free();
 
     auto Building = SpawnActorUnfinished<ABuildingSMActor>(BuildingClass, BuildingLocation, BuildingRotation, PlayerController);
@@ -330,7 +291,7 @@ static void ServerCreateBuildingAndSpawnDeco(UObject* Context, FFrame& Stack, vo
         PayBuildableClassPlacementCost(PlayerController, BuildingClassData);
     }
 
-    Tool->ServerSpawnDeco(Location, Rotation, Building, InBuildingAttachmentType);
+    DecoTool->ServerSpawnDeco(Location, Rotation, Building, InBuildingAttachmentType);
 }
 
 UFortWeaponModSetData* GetRandomWeaponModSetData(const UObject* WorldContext, const UFortWeaponItemDefinition* WeaponItemDefinition)
@@ -350,8 +311,7 @@ UFortWeaponModSetData* GetRandomWeaponModSetData(const UObject* WorldContext, co
         return nullptr;
 
     FGameplayTagContainer OwnedTags{};
-    auto GetOwnedGameplayTags = (void (*)(void*, FGameplayTagContainer*))(*(void***)Interface)[0x2];
-    GetOwnedGameplayTags(Interface, &OwnedTags);
+    ((void (*)(void*, FGameplayTagContainer*))(*(void***)Interface)[0x2])(Interface, &OwnedTags);
 
     std::vector<FFortWeaponModSetRow*> BucketEntries;
     float TotalWeight = 0.f;
@@ -374,8 +334,7 @@ UFortWeaponModSetData* GetRandomWeaponModSetData(const UObject* WorldContext, co
         }
     }
 
-    OwnedTags.GameplayTags.Free();
-    OwnedTags.ParentTags.Free();
+    FreeGameplayTags(OwnedTags);
 
     if (BucketEntries.empty())
         return nullptr;

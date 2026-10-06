@@ -2,4 +2,6 @@
 #include "pch.h"
 
 void CreateSubsystems(UAthenaAISystem* AISystem, UObject* GameMode);
-bool BotFinishedTargetSpline(AActor* Pickup, AActor* Controller, bool (*Original)(void*));
+void EnterAircraft(AFortAthenaAIBotController* Controller, AFortAthenaAircraft* Aircraft);
+void ExitAircraft(AFortAthenaAIBotController* Controller);
+void RefreshSlotItems(AFortAthenaAIBotController* Controller);

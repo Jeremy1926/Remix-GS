@@ -2,60 +2,76 @@
 #include "Shared.h"
 #include "AFortPickup.h"
 #include "AFortInventory.h"
+#include "AFortPlayerController.h"
+#include "AFortAthenaAIBotController.h"
+#include "UAthenaAIServiceLoot.h"
 
 INIT_MODULE(AFortPickup);
 INIT_POSTLOAD(AFortPickup);
 INIT_TICKER(AFortPickup);
+INIT_RESET(AFortPickup);
 
 static void SetPickupItems(AFortPickupAthena* Pickup)
 {
     static auto SetPickupItemsFn = (void (*)(AFortPickupAthena*, FFortItemEntry*, TArray<FFortItemEntry>*, uint8_t, bool, uint8_t))(ImageBase + 0x9AC2504);
 
-    TArray<FFortItemEntry> a{};
-    SetPickupItemsFn(Pickup, &Pickup->PrimaryPickupItemEntry, &a, (uint8_t)EFortPickupSourceTypeFlag::Container, false, (uint8_t)EFortPickupSpawnSource::Chest);
+    TArray<FFortItemEntry> MultiItemPickupEntries{};
+    SetPickupItemsFn(Pickup, &Pickup->PrimaryPickupItemEntry, &MultiItemPickupEntries, (uint8_t)EFortPickupSourceTypeFlag::Container, false, (uint8_t)EFortPickupSpawnSource::Chest);
 }
 
-AFortPickupAthena* SpawnPickup(FVector Loc, FFortItemEntry& Entry, EFortPickupSourceTypeFlag SourceTypeFlag, EFortPickupSpawnSource SpawnSource, AFortPawn* Pawn, int OverrideCount, bool Toss, bool RandomRotation,
+static void InitializePickup(AFortPickupAthena* Pickup, const FFortItemEntry& Entry, AFortPawn* Pawn, int OverrideCount)
+{
+    auto& PickupEntry = Pickup->PrimaryPickupItemEntry;
+
+    PickupEntry.ItemDefinition = Entry.ItemDefinition;
+    PickupEntry.LoadedAmmo = Entry.LoadedAmmo;
+    PickupEntry.Count = OverrideCount != -1 ? OverrideCount : Entry.Count;
+    PickupEntry.PhantomReserveAmmo = Entry.PhantomReserveAmmo;
+    CopyWeaponModsFrom(PickupEntry, Entry);
+
+    SetPickupItems(Pickup);
+    Pickup->PawnWhoDroppedPickup = Pawn;
+}
+
+AFortPickupAthena* SpawnPickup(FVector Loc, FFortItemEntry& Entry, EFortPickupSourceTypeFlag SourceTypeFlag, EFortPickupSpawnSource SpawnSource, AFortPawn* Pawn, int OverrideCount, bool bToss, bool bRandomRotation,
                                bool bCombine, const UClass* OverrideClass, FVector FinalLoc)
 {
     auto NewPickup = SpawnActor<AFortPickupAthena>(OverrideClass ? OverrideClass : AFortPickupAthena::StaticClass(), Loc, {});
+
     if (!NewPickup)
         return nullptr;
 
-    NewPickup->bRandomRotation = RandomRotation;
+    NewPickup->bRandomRotation = bRandomRotation;
+
     if (Entry.Level != -1)
         NewPickup->PrimaryPickupItemEntry.Level = Entry.Level;
-    NewPickup->PrimaryPickupItemEntry.ItemDefinition = Entry.ItemDefinition;
-    NewPickup->PrimaryPickupItemEntry.LoadedAmmo = Entry.LoadedAmmo;
-    NewPickup->PrimaryPickupItemEntry.Count = OverrideCount != -1 ? OverrideCount : Entry.Count;
-    NewPickup->PrimaryPickupItemEntry.PhantomReserveAmmo = Entry.PhantomReserveAmmo;
-    CopyWeaponModsFrom(NewPickup->PrimaryPickupItemEntry, Entry);
 
-    SetPickupItems(NewPickup);
-    NewPickup->PawnWhoDroppedPickup = Pawn;
+    InitializePickup(NewPickup, Entry, Pawn, OverrideCount);
 
-    auto FinalLocation = Loc;
-
-    if (FinalLoc.X || FinalLoc.Y || FinalLoc.Z)
-        FinalLocation = FinalLoc;
-    NewPickup->TossPickup(FinalLocation, Pawn, -1, Toss, true, SourceTypeFlag, SpawnSource);
+    auto FinalLocation = FinalLoc.X || FinalLoc.Y || FinalLoc.Z ? FinalLoc : Loc;
+    NewPickup->TossPickup(FinalLocation, Pawn, -1, bToss, true, SourceTypeFlag, SpawnSource);
 
     NewPickup->bTossedFromContainer = SpawnSource == EFortPickupSpawnSource::Chest || SpawnSource == EFortPickupSpawnSource::AmmoBox;
+
     if (NewPickup->bTossedFromContainer)
         NewPickup->OnRep_TossedFromContainer();
+
+    RegisterPickupLoot(NewPickup);
 
     return NewPickup;
 }
 
-AFortPickupAthena* SpawnPickup(FVector Loc, const UFortItemDefinition* ItemDefinition, int Count, int LoadedAmmo, EFortPickupSourceTypeFlag SourceTypeFlag, EFortPickupSpawnSource SpawnSource, AFortPawn* Pawn, bool Toss,
+AFortPickupAthena* SpawnPickup(FVector Loc, const UFortItemDefinition* ItemDefinition, int Count, int LoadedAmmo, EFortPickupSourceTypeFlag SourceTypeFlag, EFortPickupSpawnSource SpawnSource, AFortPawn* Pawn, bool bToss,
                                bool bRandomRotation, const UClass* OverrideClass)
 {
     auto ItemEntry = MakeItemEntry(ItemDefinition, Count, -1);
+
     if (LoadedAmmo != -1)
         ItemEntry->LoadedAmmo = LoadedAmmo;
 
-    auto Pickup = SpawnPickup(Loc, *ItemEntry, SourceTypeFlag, SpawnSource, Pawn, -1, Toss, true, bRandomRotation, OverrideClass);
+    auto Pickup = SpawnPickup(Loc, *ItemEntry, SourceTypeFlag, SpawnSource, Pawn, -1, bToss, true, bRandomRotation, OverrideClass);
     free(ItemEntry);
+
     return Pickup;
 }
 
@@ -71,15 +87,7 @@ AFortPickupAthena* SpawnPickup(ABuildingContainer* Container, FFortItemEntry& En
 
     NewPickup->bRandomRotation = true;
     NewPickup->PrimaryPickupItemEntry.Level = Entry.Level;
-    NewPickup->PrimaryPickupItemEntry.ItemDefinition = Entry.ItemDefinition;
-    NewPickup->PrimaryPickupItemEntry.LoadedAmmo = Entry.LoadedAmmo;
-    NewPickup->PrimaryPickupItemEntry.Count = OverrideCount != -1 ? OverrideCount : Entry.Count;
-    NewPickup->PrimaryPickupItemEntry.PhantomReserveAmmo = Entry.PhantomReserveAmmo;
-    CopyWeaponModsFrom(NewPickup->PrimaryPickupItemEntry, Entry);
-
-    SetPickupItems(NewPickup);
-
-    NewPickup->PawnWhoDroppedPickup = Pawn;
+    InitializePickup(NewPickup, Entry, Pawn, OverrideCount);
 
     UFortKismetLibrary::TossPickupFromContainer(UWorld::GetWorld(), Container, NewPickup, 10, (int32)std::clamp((float)rand() * 0.0003357036f, 0.f, 10.f), Container->LootTossConeHalfAngle_Athena,
                                                 *(FRotator*)&Container->LootTossDirection_Athena, Container->LootTossSpeed_Athena, Container->bForceHidePickupMinimapIndicator);
@@ -87,24 +95,26 @@ AFortPickupAthena* SpawnPickup(ABuildingContainer* Container, FFortItemEntry& En
     NewPickup->bTossedFromContainer = true;
     NewPickup->OnRep_TossedFromContainer();
 
+    RegisterPickupLoot(NewPickup);
+
     return NewPickup;
 }
 
 template <typename T>
-static T* PickWeighted(TArray<T*>& Map, float (*RandFunc)(float), bool bCheckZero = true)
+static T* PickWeighted(TArray<T*>& Elements)
 {
     float TotalWeight = 0.0f;
 
-    for (auto& Element : Map)
+    for (auto& Element : Elements)
         TotalWeight += Element->Weight;
 
-    float RandomNumber = RandFunc(TotalWeight);
+    float RandomNumber = ((float)rand() / 32767.f) * TotalWeight;
 
-    for (auto& Element : Map)
+    for (auto& Element : Elements)
     {
         float Weight = Element->Weight;
 
-        if (bCheckZero && Weight == 0)
+        if (Weight == 0)
             continue;
 
         if (RandomNumber <= Weight)
@@ -116,41 +126,104 @@ static T* PickWeighted(TArray<T*>& Map, float (*RandFunc)(float), bool bCheckZer
     return nullptr;
 }
 
-static void SetupLDSForPackage(TArray<FFortItemEntry*>& LootDrops, FName Package, int i, FName TierGroup, int WorldLevel)
+static FFortItemEntry* MakeWeaponAmmoEntry(UFortItemDefinition* ItemDefinition, int WorldLevel)
 {
-    TArray<FFortLootPackageData*> LPGroups{};
+    if (!ItemDefinition->IsA(UFortWorldItemDefinition::StaticClass()))
+        return nullptr;
 
-    for (auto const& Val : LootPackageMap[Package.ComparisonIndex])
+    auto AmmoDefinition = ((UFortWorldItemDefinition*)ItemDefinition)->GetAmmoWorldItemDefinition_BP();
+
+    if (!AmmoDefinition || !AmmoDefinition->IsA(UFortAmmoItemDefinition::StaticClass()))
+        return nullptr;
+
+    auto SpawnAmmoData = FindObject<UFortWeaponPickupSpawnAmmoData>(L"/Game/Athena/Balance/Pickups/FortWeaponPickupSpawnAmmoData.FortWeaponPickupSpawnAmmoData");
+
+    FGameplayTagContainer AmmoTags{};
+    GetOwnedGameplayTags(AmmoDefinition, AmmoTags);
+
+    float AmmoCount = 0.f;
+
+    for (auto& AmmoCountData : SpawnAmmoData->WeaponPickupAmmoCountArray)
     {
-        if (!Val)
+        if (AmmoTags.HasTag(AmmoCountData.AmmoItemDefinitionTag))
+        {
+            AmmoCount = AmmoCountData.SpawnCount.Evaluate((float)WorldLevel);
+            break;
+        }
+    }
+
+    auto Multiplier = SpawnAmmoData->DefaultWeaponAmmoMultiplier.Evaluate((float)WorldLevel);
+
+    FGameplayTagContainer WeaponTags{};
+    GetOwnedGameplayTags(ItemDefinition, WeaponTags);
+
+    for (auto& MultiplierData : SpawnAmmoData->WeaponPickupAmmoMultiplierOverrideArray)
+    {
+        if (WeaponTags.HasTag(MultiplierData.Tag))
+        {
+            Multiplier = MultiplierData.CountMultiplier.Evaluate((float)WorldLevel);
+            break;
+        }
+    }
+
+    auto FinalCount = AmmoCount * Multiplier;
+    auto AmmoEntry = FinalCount > 0.f ? MakeItemEntry(AmmoDefinition, (int)FinalCount, 0) : nullptr;
+
+    FreeGameplayTags(AmmoTags);
+    FreeGameplayTags(WeaponTags);
+
+    return AmmoEntry;
+}
+
+static void AddToLootDrop(TArray<FFortItemEntry*>& LootDrops, FFortItemEntry* LootDrop, const UFortItemDefinition* ItemDefinition, int32 Count)
+{
+    LootDrop->Count += Count;
+
+    if (LootDrop->Count > ItemDefinition->GetMaxStackSize(nullptr))
+    {
+        auto TotalCount = LootDrop->Count;
+        LootDrop->Count = ItemDefinition->GetMaxStackSize(nullptr);
+
+        LootDrops.Add(MakeItemEntry(ItemDefinition, TotalCount - ItemDefinition->GetMaxStackSize(nullptr), 0));
+    }
+}
+
+static void SetupLDSForPackage(TArray<FFortItemEntry*>& LootDrops, FName Package, int LootPackageCategory, int WorldLevel)
+{
+    TArray<FFortLootPackageData*> Candidates{};
+
+    for (auto const& Candidate : LootPackageMap[Package.ComparisonIndex])
+    {
+        if (!Candidate)
             continue;
 
-        if (i != -1 && Val->LootPackageCategory != i)
+        if (LootPackageCategory != -1 && Candidate->LootPackageCategory != LootPackageCategory)
             continue;
 
         if (WorldLevel >= 0)
         {
-            if (Val->MaxWorldLevel >= 0 && WorldLevel > Val->MaxWorldLevel)
+            if (Candidate->MaxWorldLevel >= 0 && WorldLevel > Candidate->MaxWorldLevel)
                 continue;
 
-            if (Val->MinWorldLevel >= 0 && WorldLevel < Val->MinWorldLevel)
+            if (Candidate->MinWorldLevel >= 0 && WorldLevel < Candidate->MinWorldLevel)
                 continue;
         }
 
-        LPGroups.Add(Val);
+        Candidates.Add(Candidate);
     }
 
-    if (LPGroups.Num() == 0)
+    if (Candidates.Num() == 0)
         return;
 
-    auto LootPackage = PickWeighted(LPGroups, [](float Total) { return ((float)rand() / 32767.f) * Total; });
+    auto LootPackage = PickWeighted(Candidates);
+
     if (!LootPackage)
         return;
 
     if (LootPackage->LootPackageCall.Num() > 1)
     {
         for (int i = 0; i < LootPackage->Count; i++)
-            SetupLDSForPackage(LootDrops, UKismetStringLibrary::Conv_StringToName(LootPackage->LootPackageCall), -1, TierGroup, WorldLevel);
+            SetupLDSForPackage(LootDrops, UKismetStringLibrary::Conv_StringToName(LootPackage->LootPackageCall), -1, WorldLevel);
 
         return;
     }
@@ -160,138 +233,60 @@ static void SetupLDSForPackage(TArray<FFortItemEntry*>& LootDrops, FName Package
     if (!ItemDefinition)
         return;
 
-    FFortItemEntry* AmmoEntry = nullptr;
+    auto AmmoEntry = MakeWeaponAmmoEntry(ItemDefinition, WorldLevel);
+    bool bFound = false;
 
-    if (ItemDefinition->IsA(UFortWorldItemDefinition::StaticClass()))
-    {
-        auto AmmoDefinition = ((UFortWorldItemDefinition*)ItemDefinition)->GetAmmoWorldItemDefinition_BP();
-
-        if (AmmoDefinition && AmmoDefinition->IsA(UFortAmmoItemDefinition::StaticClass()))
-        {
-            auto SpawnAmmoData = FindObject<UFortWeaponPickupSpawnAmmoData>(L"/Game/Athena/Balance/Pickups/FortWeaponPickupSpawnAmmoData.FortWeaponPickupSpawnAmmoData");
-
-            FGameplayTagContainer AmmoTags{};
-
-            if (auto Interface = AmmoDefinition->GetInterface(IGameplayTagAssetInterface::StaticClass()))
-            {
-                auto GetOwnedGameplayTags = (void (*)(void*, FGameplayTagContainer*))(*(void***)Interface)[0x2];
-                GetOwnedGameplayTags(Interface, &AmmoTags);
-            }
-
-            float AmmoCount = 0.f;
-            for (auto& AmmoCountData : SpawnAmmoData->WeaponPickupAmmoCountArray)
-            {
-                if (AmmoTags.HasTag(AmmoCountData.AmmoItemDefinitionTag))
-                {
-                    AmmoCount = AmmoCountData.SpawnCount.Evaluate((float)WorldLevel);
-                    break;
-                }
-            }
-
-            auto Multiplier = SpawnAmmoData->DefaultWeaponAmmoMultiplier.Evaluate((float)WorldLevel);
-
-            FGameplayTagContainer WeaponTags{};
-
-            if (auto Interface = ItemDefinition->GetInterface(IGameplayTagAssetInterface::StaticClass()))
-            {
-                auto GetOwnedGameplayTags = (void (*)(void*, FGameplayTagContainer*))(*(void***)Interface)[0x2];
-                GetOwnedGameplayTags(Interface, &WeaponTags);
-            }
-
-            for (auto& MultiplierData : SpawnAmmoData->WeaponPickupAmmoMultiplierOverrideArray)
-            {
-                if (WeaponTags.HasTag(MultiplierData.Tag))
-                {
-                    Multiplier = MultiplierData.CountMultiplier.Evaluate((float)WorldLevel);
-                    break;
-                }
-            }
-
-            auto FinalCount = AmmoCount * Multiplier;
-
-            if (FinalCount > 0.f)
-                AmmoEntry = MakeItemEntry(AmmoDefinition, (int)FinalCount, 0);
-
-            AmmoTags.GameplayTags.Free();
-            AmmoTags.ParentTags.Free();
-            WeaponTags.GameplayTags.Free();
-            WeaponTags.ParentTags.Free();
-        }
-    }
-
-    bool found = false;
     for (auto& LootDrop : LootDrops)
     {
         if (LootDrop->ItemDefinition == (UItemDefinitionBase*)ItemDefinition && LootDrop->Count < ItemDefinition->GetMaxStackSize(nullptr))
         {
-            LootDrop->Count += LootPackage->Count;
-
-            if (LootDrop->Count > ItemDefinition->GetMaxStackSize(nullptr))
-            {
-                auto OGCount = LootDrop->Count;
-                LootDrop->Count = ItemDefinition->GetMaxStackSize(nullptr);
-
-                LootDrops.Add(MakeItemEntry(ItemDefinition, OGCount - ItemDefinition->GetMaxStackSize(nullptr), 0));
-            }
-
-            found = true;
+            AddToLootDrop(LootDrops, LootDrop, ItemDefinition, LootPackage->Count);
+            bFound = true;
             break;
         }
 
         if (AmmoEntry && AmmoEntry->ItemDefinition && LootDrop->ItemDefinition == AmmoEntry->ItemDefinition)
         {
-            auto AmmoDefinition = (UFortItemDefinition*)AmmoEntry->ItemDefinition;
-
-            LootDrop->Count += AmmoEntry->Count;
-
-            if (LootDrop->Count > AmmoDefinition->GetMaxStackSize(nullptr))
-            {
-                auto OGCount = LootDrop->Count;
-                LootDrop->Count = AmmoDefinition->GetMaxStackSize(nullptr);
-
-                LootDrops.Add(MakeItemEntry(AmmoDefinition, OGCount - AmmoDefinition->GetMaxStackSize(nullptr), 0));
-            }
-
+            AddToLootDrop(LootDrops, LootDrop, (UFortItemDefinition*)AmmoEntry->ItemDefinition, AmmoEntry->Count);
             free(AmmoEntry);
             AmmoEntry = nullptr;
         }
     }
 
-    if (!found && LootPackage->Count > 0)
+    if (!bFound && LootPackage->Count > 0)
         LootDrops.Add(MakeItemEntry(ItemDefinition, LootPackage->Count, 0));
 
     if (AmmoEntry && LootPackage->Count > 0)
         LootDrops.Add(AmmoEntry);
-    LPGroups.Free();
+
+    Candidates.Free();
 }
 
 void ChooseLootForContainer(TArray<FFortItemEntry*>& LootDrops, FName TierGroup, int LootTier, int WorldLevel)
 {
     TArray<FFortLootTierData*> TierDataGroups{};
 
-    for (auto const& Val : TierDataMap[TierGroup.ComparisonIndex])
-        if (LootTier == -1 ? true : LootTier == Val->LootTier)
-            TierDataGroups.Add(Val);
+    for (auto const& TierData : TierDataMap[TierGroup.ComparisonIndex])
+        if (LootTier == -1 || LootTier == TierData->LootTier)
+            TierDataGroups.Add(TierData);
 
-    auto LootTierData = PickWeighted(TierDataGroups, [](float Total) { return ((float)rand() / 32767.f) * Total; });
+    auto LootTierData = PickWeighted(TierDataGroups);
 
-    if (!LootTierData)
-        return;
-
-    if (LootTierData->NumLootPackageDrops <= 0)
+    if (!LootTierData || LootTierData->NumLootPackageDrops <= 0)
         return;
 
     int DropCount;
+
     if (LootTierData->NumLootPackageDrops < 1.f)
         DropCount = 1;
     else
     {
         DropCount = (int)((LootTierData->NumLootPackageDrops * 2.f) - .5f) >> 1;
 
-        float RemainderSomething = LootTierData->NumLootPackageDrops - (float)DropCount;
+        float Remainder = LootTierData->NumLootPackageDrops - (float)DropCount;
 
-        if (RemainderSomething > 0.0000099999997f)
-            DropCount += RemainderSomething >= ((float)rand() / 32767.f);
+        if (Remainder > 0.0000099999997f)
+            DropCount += Remainder >= ((float)rand() / 32767.f);
     }
 
     auto& Weights = LootTierData->LootPackageCategoryWeightArray;
@@ -339,7 +334,7 @@ void ChooseLootForContainer(TArray<FFortItemEntry*>& LootDrops, FName TierGroup,
 
     for (int32 i = 0; i < NumCategories; i++)
         for (int32 j = 0; j < CategoryDrops[i]; j++)
-            SetupLDSForPackage(LootDrops, LootTierData->LootPackage, i, TierGroup, WorldLevel);
+            SetupLDSForPackage(LootDrops, LootTierData->LootPackage, i, WorldLevel);
 
     CategoryDrops.Free();
     TierDataGroups.Free();
@@ -561,8 +556,25 @@ static void PickLootDrops(UObject* Context, FFrame& Stack, bool* Ret)
     *Ret = LootDrops.Num() > 0;
 }
 
+static void (*GivePickupToOG)(AFortPickupAthena*, void*, bool);
+
+static void GivePickupTo(AFortPickupAthena* Pickup, void* InventoryOwner, bool bDestroyAfterPickup)
+{
+    auto Pawn = (AFortPlayerPawnAthena*)Pickup->PickupLocationData.PickupTarget.Get();
+    auto Controller = Pawn ? (AFortAthenaAIBotController*)Pawn->Controller : nullptr;
+
+    if (Pickup->Role == ENetRole::ROLE_Authority && Controller && Controller->IsA(AFortAthenaAIBotController::StaticClass()) && InventoryOwner == (void*)(uint64(Controller) + 0x3F0) && Controller->Inventory.ObjectPointer)
+    {
+        InternalPickup(Controller, &Pickup->PrimaryPickupItemEntry);
+        RefreshSlotItems(Controller);
+    }
+
+    GivePickupToOG(Pickup, InventoryOwner, bDestroyAfterPickup);
+}
+
 void AFortPickup__Init()
 {
+    Hook(ImageBase + 0x9ABE14C, GivePickupTo, GivePickupToOG);
     ExecHook(UFortKismetLibrary::StaticClass()->FindFunction("K2_SpawnPickupInWorld"), K2_SpawnPickupInWorld);
     ExecHook(UFortKismetLibrary::StaticClass()->FindFunction("K2_SpawnPickupInWorldWithClassAndItemEntry"), K2_SpawnPickupInWorldWithClassAndItemEntry);
     ExecHook(UFortKismetLibrary::StaticClass()->FindFunction("SpawnItemVariantPickupInWorld"), SpawnItemVariantPickupInWorld);
@@ -624,4 +636,17 @@ void AFortPickup__Tick()
 
         PendingQueries.erase(PendingQueries.begin() + i);
     }
+}
+
+void AFortPickup__Reset()
+{
+    for (auto& [TierGroup, TierData] : TierDataMap)
+        TierData.Free();
+
+    for (auto& [LootPackageID, LootPackages] : LootPackageMap)
+        LootPackages.Free();
+
+    TierDataMap.clear();
+    LootPackageMap.clear();
+    PendingQueries.clear();
 }

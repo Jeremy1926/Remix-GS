@@ -10,6 +10,7 @@
 
 INIT_MODULE(UFortControllerComponent_TournamentStatsTracker);
 INIT_TICKER(UFortControllerComponent_TournamentStatsTracker);
+INIT_RESET(UFortControllerComponent_TournamentStatsTracker);
 
 constexpr auto MaxSendAttempts = 3;
 constexpr auto SendRetryDelay = 2000;
@@ -273,6 +274,7 @@ static std::string GetAccountId(AFortPlayerStateAthena* PlayerState)
         return "";
 
     auto AccountId = Text.substr(Text.size() - 32);
+
     for (auto& Char : AccountId)
     {
         if (!isxdigit((uint8)Char))
@@ -329,6 +331,25 @@ static void BuildAndSendTournamentStats(uint8 TeamIndex, int32 Placement)
         Queue(L"/results", R"({"results":[)" + Results + "]}", false);
 }
 
+static std::set<uint8> GetAliveTeams(AFortGameModeAthena* GameMode)
+{
+    std::set<uint8> AliveTeams;
+
+    for (auto& PlayerController : GameMode->AlivePlayers)
+    {
+        if (PlayerController && PlayerController->PlayerState)
+            AliveTeams.insert(((AFortPlayerStateAthena*)PlayerController->PlayerState)->TeamIndex);
+    }
+
+    for (auto& BotController : GameMode->AliveBots)
+    {
+        if (BotController && BotController->PlayerState)
+            AliveTeams.insert(((AFortPlayerStateAthena*)BotController->PlayerState)->TeamIndex);
+    }
+
+    return AliveTeams;
+}
+
 void TournamentMatchStarted(AFortGameModeAthena* GameMode)
 {
     if (!Session)
@@ -341,7 +362,6 @@ void TournamentMatchStarted(AFortGameModeAthena* GameMode)
     TournamentPlayers.clear();
     TeamEliminations.clear();
 
-    std::set<uint8> Teams;
     std::string AccountIds;
 
     for (auto& PlayerController : GameMode->AlivePlayers)
@@ -353,11 +373,10 @@ void TournamentMatchStarted(AFortGameModeAthena* GameMode)
             continue;
 
         TournamentPlayers[AccountId] = { TWeakObjectPtr<AFortPlayerStateAthena>(PlayerState), PlayerState->TeamIndex };
-        Teams.insert(PlayerState->TeamIndex);
         AccountIds += std::format(R"({}"{}")", AccountIds.empty() ? "" : ",", AccountId);
     }
 
-    StartingTeams = (int32)Teams.size();
+    StartingTeams = (int32)GetAliveTeams(GameMode).size();
 
     if (!AccountIds.empty())
         Queue(L"/players", R"({"accountIds":[)" + AccountIds + "]}", true);
@@ -369,18 +388,14 @@ void TournamentPlayerEliminated(AFortGameModeAthena* GameMode, AFortPlayerStateA
         return;
 
     auto Found = TournamentPlayers.find(GetAccountId(PlayerState));
+
     if (Found != TournamentPlayers.end() && Found->second.EliminatedTime < 0.f)
         Found->second.EliminatedTime = GetMatchTime();
 
     if (KillerPlayerState && KillerPlayerState->TeamIndex != PlayerState->TeamIndex)
         ReportTeamEliminations(KillerPlayerState->TeamIndex, ++TeamEliminations[KillerPlayerState->TeamIndex]);
 
-    std::set<uint8> AliveTeams;
-    for (auto& PlayerController : GameMode->AlivePlayers)
-    {
-        if (PlayerController && PlayerController->PlayerState)
-            AliveTeams.insert(((AFortPlayerStateAthena*)PlayerController->PlayerState)->TeamIndex);
-    }
+    auto AliveTeams = GetAliveTeams(GameMode);
 
     if (!AliveTeams.contains(PlayerState->TeamIndex))
         BuildAndSendTournamentStats(PlayerState->TeamIndex, (int32)AliveTeams.size() + 1);
@@ -420,12 +435,14 @@ void UFortControllerComponent_TournamentStatsTracker__Tick()
     for (auto& Assignment : Ready)
     {
         auto Found = TournamentPlayers.find(Assignment.AccountId);
+
         if (Found == TournamentPlayers.end())
             continue;
 
         Found->second.bInTournament = true;
 
         auto PlayerState = Found->second.PlayerState.Get();
+
         if (!PlayerState)
             continue;
 
@@ -438,4 +455,19 @@ void UFortControllerComponent_TournamentStatsTracker__Tick()
         EventIds.EventId.Free();
         EventIds.WindowId.Free();
     }
+}
+
+void UFortControllerComponent_TournamentStatsTracker__Reset()
+{
+    {
+        std::lock_guard Lock(AssignmentMutex);
+        Assignments.clear();
+        bAssignmentsReady = false;
+    }
+
+    TournamentPlayers.clear();
+    TeamEliminations.clear();
+    MatchId.clear();
+    MatchStartTime = 0.f;
+    StartingTeams = 0;
 }

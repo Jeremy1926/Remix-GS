@@ -57,6 +57,18 @@
     <ClInclude Include="UConversationInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UAthenaAIServicePlayerBots.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UAthenaAIServiceLoot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UAthenaNavSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UFortAthenaAISpawnerDataComponent_CosmeticLibrary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="UFortControllerComponent_Accolades.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -828,6 +840,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UAthenaAIServicePlayerBots.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UAthenaAIServiceLoot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UFortAthenaBTService_PickUpLoot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UFortAthenaAISpawnerDataComponent_CosmeticLibrary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UAthenaNavSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">

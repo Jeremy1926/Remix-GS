@@ -1,16 +1,20 @@
 #include "pch.h"
 #include "Shared.h"
+#include "Config.h"
+#include "AFortAthenaAIBotController.h"
 #include "AFortInventory.h"
 #include "AFortPickup.h"
+#include "AFortGameMode.h"
+#include "AFortPlayerController.h"
 #include "UConversationInstance.h"
 
 INIT_MODULE(AFortAthenaAIBotController);
 INIT_TICKER(AFortAthenaAIBotController);
+INIT_RESET(AFortAthenaAIBotController);
 
 static void (*InitializeInventoryOG)(void*, TArray<FItemAndCount>*);
 static void (*ApplyCosmeticLoadoutOG)(AFortAthenaAIBotController*, void*);
-static void (*DropLootOnDeathOG)(AFortAthenaAIBotController*, AFortPawn*, void*);
-static void (*AutomaticReviveFromDBNOTickOG)(AFortAthenaAIBotController*);
+static void (*OnPossesedPawnDiedOG)(AFortAthenaAIBotController*, AFortPawn*, float, AController*, AActor*);
 
 static bool CreateInventory(void* InventoryOwnerInterface)
 {
@@ -70,129 +74,266 @@ static void InitializeInventory(void* InventoryOwnerInterface, TArray<FItemAndCo
         }
     }
 
+    if (Inventory && InventoryRuntimeParameters->bGrantPickAxe)
+    {
+        auto CosmeticLoadoutProvider = (void*)(uint64(Controller) + 0x3D0);
+        auto GetCosmeticLoadout = (FFortAthenaLoadout* (*)(void*, uint8))(*(void***)CosmeticLoadoutProvider)[0x3];
+        auto Pickaxe = GetCosmeticLoadout(CosmeticLoadoutProvider, 2)->Pickaxe;
+
+        if (!Pickaxe)
+            Pickaxe = GetCosmeticLoadout(CosmeticLoadoutProvider, 0)->Pickaxe;
+
+        if (auto PickaxeWeaponDefinition = Pickaxe ? Pickaxe->WeaponDefinition : nullptr)
+        {
+            auto& ReplicatedEntries = Inventory->Inventory.ReplicatedEntries;
+
+            for (int32 i = ReplicatedEntries.Num() - 1; i >= 0; i--)
+            {
+                auto ItemDefinition = (UFortItemDefinition*)ReplicatedEntries[i].ItemDefinition;
+
+                if (ItemDefinition && ItemDefinition->ItemType == EFortItemType::WeaponHarvest)
+                    Remove(Inventory, ReplicatedEntries[i].ItemGuid);
+            }
+
+            GiveItem(Inventory, PickaxeWeaponDefinition, 1);
+        }
+    }
+
     InventoryRuntimeParameters->bRemoveAllItemsOnInitialization = false;
     InitializeInventoryOG(InventoryOwnerInterface, Items);
     InventoryRuntimeParameters->bRemoveAllItemsOnInitialization = bRemoveAllItemsOnInitialization;
 }
 
-static void DropLootOnDeath(AFortAthenaAIBotController* Controller, AFortPawn* Pawn, void* Context)
+void RefreshSlotItems(AFortAthenaAIBotController* Controller)
 {
-    DropLootOnDeathOG(Controller, Pawn, Context);
-
-    auto InventoryRuntimeParameters = Controller->CachedInventoryRuntimeParameters;
-
-    if (!InventoryRuntimeParameters || !Pawn)
-        return;
-
-    auto LoopStateComponent = (UFortAthenaNPCLoopStateComponent*)Pawn->GetComponentByClass(UFortAthenaNPCLoopStateComponent::StaticClass());
-
-    if (LoopStateComponent && LoopStateComponent->bSpawnOutsideTheLoop)
-        return;
-
-    auto& LootInfo = InventoryRuntimeParameters->LootInfo;
-    FFortAthenaAILootInfoDataTableRow* LootInfoRow = nullptr;
-
-    if (LootInfo.DataTable)
-    {
-        for (auto& Row : LootInfo.DataTable->RowMap)
-        {
-            if (Row.Key() == LootInfo.RowName)
-            {
-                LootInfoRow = (FFortAthenaAILootInfoDataTableRow*)Row.Value();
-                break;
-            }
-        }
-    }
-
-    if (!LootInfoRow)
-        return;
-
-    auto Location = Pawn->K2_GetActorLocation();
-    auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
-    auto PlaylistContextTags = GameState ? GameState->GetAthenaPlaylistContextTags() : FGameplayTagContainer{};
-    FGameplayTagContainer OwnedGameplayTags{};
-
-    if (auto GameplayTagAssetInterface = Pawn->GetInterface(IGameplayTagAssetInterface::StaticClass()))
-        ((void (*)(void*, FGameplayTagContainer*))(*(void***)GameplayTagAssetInterface)[0x2])(GameplayTagAssetInterface, &OwnedGameplayTags);
+    static auto SetItem = (void (*)(FFortBotInventoryInfo*, UFortWorldItem*))(ImageBase + 0xA5700A8);
 
     auto Inventory = (AFortInventory*)Controller->Inventory.ObjectPointer;
-    auto& LootDroppingBehaviors = LootInfoRow->LootDroppingBehaviors;
-    std::vector<AFortPickupAthena*> Pickups;
 
-    for (int32 i = 0; i < LootDroppingBehaviors.Num(); i++)
+    if (!Inventory)
+        return;
+
+    auto& ItemInstances = Inventory->Inventory.ItemInstances;
+    auto& SlotItems = Controller->SlotItems;
+    auto NumSlots = (std::min)(SlotItems.Num(), Controller->MaxInventorySlots);
+
+    for (int32 i = 0; i < NumSlots; i++)
+        if (SlotItems[i].FortItem && !ItemInstances.Contains(SlotItems[i].FortItem))
+            SetItem(&SlotItems[i], nullptr);
+
+    for (auto Item : ItemInstances)
     {
-        auto& LootDroppingBehavior = LootDroppingBehaviors.Data[i];
+        auto ItemDefinition = (UFortItemDefinition*)Item->ItemEntry.ItemDefinition;
 
-        if (!UBlueprintGameplayTagLibrary::IsTagQueryEmpty(LootDroppingBehavior.OptionalTagQuery) &&
-            !UBlueprintGameplayTagLibrary::DoesContainerMatchTagQuery(OwnedGameplayTags, LootDroppingBehavior.OptionalTagQuery))
+        if (!ItemDefinition || (ItemDefinition->ItemType != EFortItemType::WeaponHarvest && !TakesQuickbarSlot(ItemDefinition)))
             continue;
 
-        if (!UBlueprintGameplayTagLibrary::IsTagQueryEmpty(LootDroppingBehavior.OptionalPlaylistTagQuery) &&
-            !UBlueprintGameplayTagLibrary::DoesContainerMatchTagQuery(PlaylistContextTags, LootDroppingBehavior.OptionalPlaylistTagQuery))
-            continue;
+        int32 FreeSlot = -1;
+        int32 Slot = 0;
 
-        if (LootDroppingBehavior.bShouldDropInventoryOnDeath && Inventory)
-        {
-            for (int32 j = 0; j < Inventory->Inventory.ReplicatedEntries.Num(); j++)
-            {
-                auto& ItemEntry = Inventory->Inventory.ReplicatedEntries.Data[j];
+        for (; Slot < NumSlots && SlotItems[Slot].FortItem != Item; Slot++)
+            if (FreeSlot < 0 && !SlotItems[Slot].FortItem)
+                FreeSlot = Slot;
 
-                if (ItemEntry.ItemDefinition && CanBeDropped((UFortItemDefinition*)ItemEntry.ItemDefinition))
-                    Pickups.push_back(SpawnPickup(Location, ItemEntry, EFortPickupSourceTypeFlag::AI, EFortPickupSpawnSource::NPCElimination, Pawn));
-            }
-        }
-
-        auto& LootTiers = LootDroppingBehavior.LootTiers;
-
-        if (!LootDroppingBehavior.bShouldDropLootOnDeath || LootTiers.Num() == 0)
-            continue;
-
-        int32 FirstTier = 0;
-        int32 LastTier = LootTiers.Num();
-
-        if (LootDroppingBehavior.bShouldBotPickRandomLootTier)
-        {
-            FirstTier = rand() % LootTiers.Num();
-            LastTier = FirstTier + 1;
-        }
-
-        for (int32 Tier = FirstTier; Tier < LastTier; Tier++)
-        {
-            TArray<FFortItemEntry*> LootDrops{};
-
-            ChooseLootForContainer(LootDrops, LootTiers.Data[Tier]);
-
-            for (auto& LootDrop : LootDrops)
-            {
-                Pickups.push_back(SpawnPickup(Location, *LootDrop, EFortPickupSourceTypeFlag::AI, EFortPickupSpawnSource::NPCElimination, Pawn));
-                free(LootDrop);
-            }
-
-            LootDrops.Free();
-        }
+        if (Slot == NumSlots && FreeSlot >= 0)
+            SetItem(&SlotItems[FreeSlot], Item);
     }
-
-    OwnedGameplayTags.GameplayTags.Free();
-    OwnedGameplayTags.ParentTags.Free();
-    PlaylistContextTags.GameplayTags.Free();
-    PlaylistContextTags.ParentTags.Free();
-
-    for (auto& Pickup : Pickups)
-        if (Pickup)
-            Controller->OnPickupCreated.Process(Controller, Pickup);
 }
 
-static void AutomaticReviveFromDBNOTick(AFortAthenaAIBotController* Controller)
+static bool RemoveInventoryItem(void* InventoryOwnerInterface, FGuid& ItemGuid, int32 Count, bool bForceRemoval, bool bForcePersistWhenEmpty)
 {
-    auto& AutomaticReviveTimerHandle = *(uint64*)(uint64(Controller) + 0x1338);
-    bool bWaitingForRevive = AutomaticReviveTimerHandle != 0;
+    auto Controller = (AFortAthenaAIBotController*)(uint64(InventoryOwnerInterface) - 0x3F0);
+    auto Inventory = (AFortInventory*)Controller->Inventory.ObjectPointer;
 
-    AutomaticReviveFromDBNOTickOG(Controller);
+    if (!Inventory || !RemoveInventoryItem(Inventory, ItemGuid, Count, bForceRemoval, bForcePersistWhenEmpty))
+        return false;
 
-    auto Pawn = Controller->PlayerBotPawn;
+    RefreshSlotItems(Controller);
+    return true;
+}
 
-    if (bWaitingForRevive && !AutomaticReviveTimerHandle && Pawn && Pawn->IsDBNO())
-        Pawn->ReviveFromDBNO(Controller);
+static int32 GetNumInStack(UFortWorldItem* Item)
+{
+    return ((int32 (*)(UFortWorldItem*))Item->VTable[0x80])(Item);
+}
+
+static void DropInventoryItems(AFortAthenaAIBotController* Controller, AFortPawn* FortPawn)
+{
+    static auto ExternalShouldAlwaysDropItemOnDeathOrLogout = (bool (*)(UFortWorldItem*, bool))(ImageBase + 0x900D9F0);
+    static auto ExternalShouldDropOrDestroyByItemType = (void (*)(AController*, UFortWorldItemDefinition*, bool*, bool*))(ImageBase + 0x900DA7C);
+    static auto GetPickupComponentData = (FFortItemComponentData_Pickup* (*)(UFortWorldItemDefinition*))(ImageBase + 0x1C73DE8);
+    static auto HandlePickupPostSpawnOnDeath = (void (*)(AActor*, AFortPickup*, int32))(ImageBase + 0xA55DB94);
+
+    auto Inventory = (AFortInventory*)Controller->Inventory.ObjectPointer;
+
+    if (!Inventory || !Controller->Inventory.InterfacePointer || !FortPawn)
+        return;
+
+    TArray<UFortWorldItem*> ItemsToDropViaPickup;
+    TArray<UFortWorldItem*> ItemsToDropViaDestruction;
+
+    for (auto Item : Inventory->Inventory.ItemInstances)
+    {
+        auto ItemDefinition = ((UFortWorldItemDefinition* (*)(UFortWorldItem*))Item->VTable[0xB8])(Item);
+
+        if (!ItemDefinition || !ItemDefinition->IsA(UFortWorldItemDefinition::StaticClass()))
+            continue;
+
+        bool bShouldDestroy = false;
+        bool bShouldDrop = ExternalShouldAlwaysDropItemOnDeathOrLogout(Item, false);
+
+        ExternalShouldDropOrDestroyByItemType(Controller, ItemDefinition, &bShouldDrop, &bShouldDestroy);
+
+        if (!bShouldDrop && !bShouldDestroy)
+            continue;
+
+        auto PickupComponentData = GetPickupComponentData(ItemDefinition);
+        auto DropBehavior = PickupComponentData ? PickupComponentData->DropBehavior : EWorldItemDropBehavior::DropAsPickup;
+
+        if (bShouldDestroy || (DropBehavior != EWorldItemDropBehavior::DropAsPickup && DropBehavior != EWorldItemDropBehavior::DropAsPickupEvenWhenEmpty &&
+                               (DropBehavior != EWorldItemDropBehavior::DropAsPickupDestroyOnEmpty || GetNumInStack(Item) <= 0)))
+            ItemsToDropViaDestruction.Add(Item);
+        else
+            ItemsToDropViaPickup.Add(Item);
+    }
+
+    DropItemsAsPickups(ItemsToDropViaPickup, FortPawn, Inventory, Controller, HandlePickupPostSpawnOnDeath);
+
+    auto InventoryOwnerInterface = (void*)(uint64(Controller) + 0x3F0);
+    auto OwnerRemoveInventoryItem = (bool (*)(void*, FGuid&, int32, bool, bool))(*(void***)InventoryOwnerInterface)[0x3D];
+
+    for (auto Item : ItemsToDropViaDestruction)
+    {
+        auto ItemGuid = Item->ItemEntry.ItemGuid;
+
+        OwnerRemoveInventoryItem(InventoryOwnerInterface, ItemGuid, GetNumInStack(Item), true, false);
+    }
+
+    ItemsToDropViaPickup.Free();
+    ItemsToDropViaDestruction.Free();
+}
+
+static void DropLootOnDeath(AFortAthenaAIBotController* Controller, AFortPawn* FortPawn)
+{
+    static auto NotifyPickupsSpawnedOnDeath = (void (*)(AFortAthenaAIBotController*, TArray<AFortPickup*>*, int32))(ImageBase + 0xA564440);
+
+    if (FortPawn)
+    {
+        auto LoopStateComponent = (UFortAthenaNPCLoopStateComponent*)FortPawn->GetComponentByClass(UFortAthenaNPCLoopStateComponent::StaticClass());
+
+        if (LoopStateComponent && LoopStateComponent->bSpawnOutsideTheLoop)
+            return;
+    }
+
+    auto InventoryRuntimeParameters = Controller->CachedInventoryRuntimeParameters;
+    auto AbilitySystemInterface = FortPawn ? FortPawn->GetInterface(IAbilitySystemInterface::StaticClass()) : nullptr;
+    auto AbilitySystemComponent = AbilitySystemInterface ? ((UAbilitySystemComponent* (*)(void*))(*(void***)AbilitySystemInterface)[0x2])(AbilitySystemInterface) : nullptr;
+    TArray<AFortPickup*> SpawnedPickups;
+
+    if (InventoryRuntimeParameters && (InventoryRuntimeParameters->LootInfo.DataTable || InventoryRuntimeParameters->LootInfo.RowName.ComparisonIndex) && AbilitySystemComponent)
+    {
+        auto& LootInfo = InventoryRuntimeParameters->LootInfo;
+        FFortAthenaAILootInfoDataTableRow* LootInfoRow = nullptr;
+
+        if (LootInfo.DataTable)
+        {
+            for (auto& Row : LootInfo.DataTable->RowMap)
+            {
+                if (Row.Key() == LootInfo.RowName)
+                {
+                    LootInfoRow = (FFortAthenaAILootInfoDataTableRow*)Row.Value();
+                    break;
+                }
+            }
+        }
+
+        if (LootInfoRow && LootInfoRow->LootDroppingBehaviors.Num() > 0)
+        {
+            auto Location = FortPawn->K2_GetActorLocation();
+            auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
+            auto PlaylistContextTags = GameState ? GameState->GetAthenaPlaylistContextTags() : FGameplayTagContainer{};
+            FGameplayTagContainer OwnedGameplayTags{};
+            GetOwnedGameplayTags(FortPawn, OwnedGameplayTags);
+
+            auto& LootDroppingBehaviors = LootInfoRow->LootDroppingBehaviors;
+
+            for (int32 i = 0; i < LootDroppingBehaviors.Num(); i++)
+            {
+                auto& LootDroppingBehavior = LootDroppingBehaviors.Data[i];
+
+                if (!UBlueprintGameplayTagLibrary::IsTagQueryEmpty(LootDroppingBehavior.OptionalTagQuery) &&
+                    !UBlueprintGameplayTagLibrary::DoesContainerMatchTagQuery(OwnedGameplayTags, LootDroppingBehavior.OptionalTagQuery))
+                    continue;
+
+                if (!UBlueprintGameplayTagLibrary::IsTagQueryEmpty(LootDroppingBehavior.OptionalPlaylistTagQuery) &&
+                    !UBlueprintGameplayTagLibrary::DoesContainerMatchTagQuery(PlaylistContextTags, LootDroppingBehavior.OptionalPlaylistTagQuery))
+                    continue;
+
+                if (LootDroppingBehavior.bShouldDropInventoryOnDeath)
+                    DropInventoryItems(Controller, FortPawn);
+
+                auto& LootTiers = LootDroppingBehavior.LootTiers;
+
+                if (!LootDroppingBehavior.bShouldDropLootOnDeath || LootTiers.Num() == 0)
+                    continue;
+
+                int32 FirstTier = 0;
+                int32 LastTier = LootTiers.Num();
+
+                if (LootDroppingBehavior.bShouldBotPickRandomLootTier)
+                {
+                    FirstTier = rand() % LootTiers.Num();
+                    LastTier = FirstTier + 1;
+                }
+
+                for (int32 Tier = FirstTier; Tier < LastTier; Tier++)
+                {
+                    TArray<FFortItemEntry*> LootDrops{};
+
+                    ChooseLootForContainer(LootDrops, LootTiers.Data[Tier]);
+
+                    for (auto& LootDrop : LootDrops)
+                    {
+                        if (auto Pickup = SpawnPickup(Location, *LootDrop, EFortPickupSourceTypeFlag::Tossed, EFortPickupSpawnSource::Unset, FortPawn))
+                            SpawnedPickups.Add(Pickup);
+
+                        free(LootDrop);
+                    }
+
+                    LootDrops.Free();
+                }
+            }
+
+            FreeGameplayTags(OwnedGameplayTags);
+            FreeGameplayTags(PlaylistContextTags);
+        }
+    }
+    else if (FortPawn && FortPawn->IsA(AFortPlayerPawnAthena::StaticClass()) && ((AFortPlayerPawnAthena*)FortPawn)->bShouldDropItemsOnDeath)
+        DropInventoryItems(Controller, FortPawn);
+
+    NotifyPickupsSpawnedOnDeath(Controller, &SpawnedPickups, -1);
+    SpawnedPickups.Free();
+}
+
+static void OnPossesedPawnDied(AFortAthenaAIBotController* Controller, AFortPawn* Pawn, float Damage, AController* InstigatedBy, AActor* DamageCauser)
+{
+    auto PlayerState = (AFortPlayerStateAthena*)Controller->PlayerState;
+
+    if (!Pawn || (AFortPawn*)Controller->PlayerBotPawn != Pawn || !Controller->bIsAnAthenaGameParticipant || !PlayerState || !PlayerState->IsA(AFortPlayerStateAthena::StaticClass()))
+        return OnPossesedPawnDiedOG(Controller, Pawn, Damage, InstigatedBy, DamageCauser);
+
+    auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
+    auto KillerPlayerState = InstigatedBy && InstigatedBy->PlayerState && InstigatedBy->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)InstigatedBy->PlayerState : nullptr;
+    auto KillerPawn = InstigatedBy && InstigatedBy->Pawn && InstigatedBy->Pawn->IsA(AFortPawn::StaticClass()) ? (AFortPlayerPawnAthena*)InstigatedBy->Pawn : nullptr;
+
+    ReportDeath(Controller, PlayerState, (AFortPlayerPawnAthena*)Pawn, KillerPlayerState, KillerPawn, Pawn->DeathTags);
+
+    auto bWasAlive = GameMode && GameMode->IsA(AFortGameModeAthena::StaticClass()) && GameMode->AliveBots.Contains(Controller);
+
+    OnPossesedPawnDiedOG(Controller, Pawn, Damage, InstigatedBy, DamageCauser);
+
+    if (bWasAlive && !GameMode->AliveBots.Contains(Controller))
+        ReportElimination(GameMode, PlayerState, KillerPlayerState, KillerPawn, GetKillerWeapon(DamageCauser), PlayerState->DeathInfo.DeathCause);
 }
 
 static void ApplyCosmeticLoadout(AFortAthenaAIBotController* Controller, void* CosmeticLoadout)
@@ -205,130 +346,113 @@ static void ApplyCosmeticLoadout(AFortAthenaAIBotController* Controller, void* C
         ApplyCharacterCustomization(Controller->PlayerState, nullptr, false);
 }
 
-static void (*InitializeServiceOG)(UAthenaAIServicePlayerBots*);
-
-static void InitializeService(UAthenaAIServicePlayerBots* Service)
+static bool IsLateGameBot(AFortAthenaAIBotController* Controller)
 {
-    if (Service->Class == UAthenaAIServicePlayerBots::StaticClass())
-    {
-        const std::pair<FSoftObjectPtr*, const wchar_t*> SoftObjectDefaults[] = {
-            { &Service->MMRSpawnTable, L"/Game/Athena/AI/Phoebe/PhoebeSpawningTables/PhoebeMMRSpawning.PhoebeMMRSpawning" },
-            { &Service->EQSMapSampling, L"/Game/Athena/AI/Phoebe/EQS/EQS_Phoebe_BaseNavigation.EQS_Phoebe_BaseNavigation" },
-            { &Service->BotPOIEQS, L"/Game/Athena/AI/Phoebe/EQS/EQS_Phoebe_SystemicPOI.EQS_Phoebe_SystemicPOI" },
-            { &Service->FindLocationsAroundPOIQuery, L"/Game/Athena/AI/Phoebe/EQS/EQS_Phoebe_FindLocationInPOI.EQS_Phoebe_FindLocationInPOI" },
-            { &Service->BotNameDataAsset, L"/Game/Athena/AI/Phoebe/Names/PhoebeNameDataAsset.PhoebeNameDataAsset" },
-        };
-
-        const std::pair<UObject**, const wchar_t*> ObjectDefaults[] = {
-            { (UObject**)&Service->BotItemDataTable, L"/Game/Athena/AI/Phoebe/ManagerData/PhoebeItemData.PhoebeItemData" },
-            { (UObject**)&Service->WeaponModRegistry, L"/Game/DataRegistries/AI/Phoebe_WeaponModRegistry.Phoebe_WeaponModRegistry" },
-            { (UObject**)&Service->VisibilitySettingsRegistry, L"/Game/DataRegistries/AI/Phoebe_VisibilityRegistry.Phoebe_VisibilityRegistry" },
-            { (UObject**)&Service->BotPOIExcludedZonesDataRegistry, L"/Game/DataRegistries/AI/Phoebe_DynamicPOI_ExcludedZones.Phoebe_DynamicPOI_ExcludedZones" },
-            { (UObject**)&Service->DefaultBotAISpawnerData, L"/Game/Athena/AI/Phoebe/BP_AISpawnerData_Phoebe.BP_AISpawnerData_Phoebe_C" },
-        };
-
-        auto PhoebeData = L"/Game/Athena/AI/Phoebe/DataTables/Phoebe_Data.Phoebe_Data";
-        auto PhoebeDataByMaxSquadSize = L"/Game/Athena/AI/Phoebe/DataTables/Phoebe_DataByMaxSquadSize.Phoebe_DataByMaxSquadSize";
-        auto PhoebeDataBySafeZoneIndex = L"/Game/Athena/AI/Phoebe/DataTables/Phoebe_DataBySafeZoneIndex.Phoebe_DataBySafeZoneIndex";
-
-        const std::tuple<FScalableFloat*, const wchar_t*, const wchar_t*> CurveDefaults[] = {
-            { &Service->DynamicBotPOIEnabled, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.Enabled" },
-            { &Service->JumpOffBusWithDynamicPOIEnabled, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.JumpOffBusWithDynamicPOIEnabled" },
-            { &Service->NavigationWithDynamicPOIEnabled, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.NavigationWithDynamicPOIEnabled" },
-            { &Service->DenyJumpBusBotPOIByProximityEnabled, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.DenyJumpBusBotPOIByProximity.Enabled" },
-            { &Service->BotPOINextPOIDurationSecondByWeight, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOINextPOIDurationSecondByWeight" },
-            { &Service->BotPOINextPOIMinDuration, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOINextPOIMinDuration" },
-            { &Service->BotPOINextPOIMaxDuration, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOINextPOIMaxDuration" },
-            { &Service->BotPOIScoringWeightFactor, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOIScoringWeightFactor" },
-            { &Service->BotPOIScoringDistanceFactor, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOIScoringDistanceFactor" },
-            { &Service->BotPOIScoringOccupancyFactor, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOIScoringOccupancyFactor" },
-            { &Service->BotPOIScoringVisitedFactor, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.BotPOIScoringVisitedFactor" },
-            { &Service->FailToReachBotPOICountMax, PhoebeData, L"Phoebe.ServicePlayerBots.DynamicBotPOI.FailToReachBotPOICountMax" },
-            { &Service->BotPOIJumpMainPOICountMax, PhoebeDataByMaxSquadSize, L"Phoebe.BotPOI.JumpBus.MainPOICount" },
-            { &Service->BotPOISquadJumpOnMainPOICountMax, PhoebeDataByMaxSquadSize, L"Phoebe.BotPOI.JumpBus.SquadJumpOnMainCount" },
-            { &Service->BotPOIMinimumWeightForSquadMembers, PhoebeDataByMaxSquadSize, L"Phoebe.BotPOI.MinWeightToUsePOI" },
-            { &Service->DenyJumpBusBotPOIDistance, PhoebeDataByMaxSquadSize, L"Phoebe.BotPOI.DenyJumpBusBotPOIByProximity.Distance" },
-            { &Service->ChanceToUseNextSafeZone, PhoebeDataBySafeZoneIndex, L"Phoebe.ServicePlayerBots.DynamicBotPOI.ChanceToUseNextSafeZone" },
-        };
-
-        for (auto& [SoftObject, Path] : SoftObjectDefaults)
-        {
-            auto Object = FindObject<UObject>(Path);
-
-            if (!Object || SoftObject->WeakPtr.Get() || SoftObject->ObjectID.AssetPath.PackageName.ComparisonIndex != 0)
-                continue;
-
-            std::wstring ObjectPath = Path;
-            auto Separator = ObjectPath.find(L'.');
-
-            SoftObject->ObjectID.AssetPath.PackageName = FName(ObjectPath.substr(0, Separator).c_str());
-            SoftObject->ObjectID.AssetPath.AssetName = FName(ObjectPath.substr(Separator + 1).c_str());
-            SoftObject->WeakPtr = FWeakObjectPtr(Object);
-        }
-
-        for (auto& [Field, Path] : ObjectDefaults)
-        {
-            auto Object = FindObject<UObject>(Path);
-
-            if (Object && !*Field)
-                *Field = Object;
-        }
-
-        for (auto& [ScalableFloat, CurveTablePath, Row] : CurveDefaults)
-        {
-            if (ScalableFloat->Curve.CurveTable)
-                continue;
-
-            auto CurveTable = FindObject<UCurveTable>(CurveTablePath);
-            auto RowName = FName(Row);
-            bool bHasRow = false;
-
-            if (CurveTable)
-                for (auto& CurveRow : GetRowMap(CurveTable))
-                    if (CurveRow.Key() == RowName)
-                        bHasRow = true;
-
-            if (!bHasRow)
-                continue;
-
-            ScalableFloat->Value = 1.f;
-            *(int32*)((uint8*)ScalableFloat + 0x4) = -1;
-            ScalableFloat->Curve.CurveTable = CurveTable;
-            ScalableFloat->Curve.RowName = RowName;
-            *(void**)((uint8*)ScalableFloat + 0x20) = nullptr;
-        }
-
-        if (Service->GamePhaseToStartSpawning == EAthenaGamePhase::None)
-            Service->GamePhaseToStartSpawning = EAthenaGamePhase::Aircraft;
-    }
-
-    InitializeServiceOG(Service);
+    return bLateGame && Controller->bIsAnAthenaGameParticipant && Controller->PlayerBotPawn && Controller->Inventory.ObjectPointer;
 }
 
-bool BotFinishedTargetSpline(AActor* Pickup, AActor* Controller, bool (*Original)(void*))
+static void GiveBotLateGameLoadout(AFortAthenaAIBotController* Controller)
 {
-    auto Inventory = (AFortInventory*)((AFortAthenaAIBotController*)Controller)->Inventory.ObjectPointer;
-    auto& PickupEntry = ((AFortPickupAthena*)Pickup)->PrimaryPickupItemEntry;
-    auto CountItem = [&]()
+    GiveLateGameLoadout((AFortInventory*)Controller->Inventory.ObjectPointer, Controller->PlayerBotPawn);
+    RefreshSlotItems(Controller);
+}
+
+static bool (*RestartBotOG)(AFortAthenaAIBotController*, AActor*, const FVector*);
+
+static bool RestartBot(AFortAthenaAIBotController* Controller, AActor* StartSpot, const FVector* Location)
+{
+    auto bRestarted = RestartBotOG(Controller, StartSpot, Location);
+
+    if (bRestarted && IsLateGameBot(Controller))
     {
-        int32 Count = 0;
+        PlaceLateGamePawn(Controller, Controller->PlayerBotPawn);
+        GiveBotLateGameLoadout(Controller);
+    }
 
-        if (Inventory && PickupEntry.ItemDefinition)
-            for (int32 i = 0; i < Inventory->Inventory.ReplicatedEntries.Num(); i++)
-                if (Inventory->Inventory.ReplicatedEntries.Data[i].ItemDefinition == PickupEntry.ItemDefinition)
-                    Count += Inventory->Inventory.ReplicatedEntries.Data[i].Count;
+    return bRestarted;
+}
 
-        return Count;
-    };
+static void (*RespawnPlayerAfterDeathOG)(AFortAthenaAIBotController*, const FVector*, const FRotator*, float, bool);
 
-    auto Before = CountItem();
-    auto Result = Original(Pickup);
-    auto After = CountItem();
+static void RespawnPlayerAfterDeath(AFortAthenaAIBotController* Controller, const FVector* RespawnLocation, const FRotator* RespawnRotation, float RespawnCameraDist, bool bBeginSkydiving)
+{
+    RespawnPlayerAfterDeathOG(Controller, RespawnLocation, RespawnRotation, RespawnCameraDist, bBeginSkydiving);
 
-    if (Inventory && PickupEntry.ItemDefinition && PickupEntry.Count > 0 && After <= Before)
-        GiveItem(Inventory, PickupEntry);
+    auto bAlive = (*(uint8*)(uint64(Controller) + 0xB6C) & 0x10) != 0;
 
-    return Result;
+    if (bAlive && IsLateGameBot(Controller))
+        GiveBotLateGameLoadout(Controller);
+}
+
+static float FRand()
+{
+    return float(rand() & 0x7FFF) * (1.f / 32767.f);
+}
+
+static void ThankBusDriver(AFortAthenaAIBotController* Controller)
+{
+    static auto FindAircraftComponent = (UFortControllerComponent_Aircraft* (*)(AActor*))(ImageBase + 0x17EF184);
+
+    auto AircraftComponent = FindAircraftComponent(Controller);
+    auto PlayerState = (AFortPlayerStateAthena*)Controller->PlayerState;
+
+    if (AircraftComponent && !*(bool*)(uint64(AircraftComponent) + 0x140) && PlayerState && PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) && !PlayerState->bThankedBusDriver)
+        PlayerState->bThankedBusDriver = true;
+}
+
+void EnterAircraft(AFortAthenaAIBotController* Controller, AFortAthenaAircraft* Aircraft)
+{
+    static auto FindAircraftComponent = (UFortControllerComponent_Aircraft* (*)(AActor*))(ImageBase + 0x17EF184);
+    static auto EnterAircraftComponent = (void (*)(UFortControllerComponent_Aircraft*, AFortAthenaAircraft*))(ImageBase + 0x945F42C);
+    static auto SetValueAsBool = (void (*)(UBlackboardComponent*, uint16, bool))(ImageBase + 0x7592888);
+    static auto SetHasEverSkydivedFromBusAndLanded = (void (*)(AFortPlayerStateAthena*, bool))(ImageBase + 0x59F998C);
+
+    auto Base = uint64(Controller);
+    auto AircraftComponent = FindAircraftComponent(Controller);
+
+    if (AircraftComponent && !AircraftComponent->CurrentAircraft && !*(bool*)(uint64(AircraftComponent) + 0x140))
+        EnterAircraftComponent(AircraftComponent, Aircraft);
+
+    auto Service = Controller->CachedAIServicePlayerBots;
+    auto World = UWorld::GetWorld();
+
+    if (Service && World && World->GameState && World->GameState->IsA(AFortGameStateAthena::StaticClass()) && Service->ThankBusDriverProbability.Evaluate() > FRand())
+    {
+        auto MaxTime = Service->ThankBusDriverMaxTime.Evaluate();
+        auto MinTime = Service->ThankBusDriverMinTime.Evaluate();
+        auto Delay = MinTime + FRand() * (MaxTime - MinTime);
+
+        if (Delay > 0.f)
+            SetActorTimer(Controller, (void*)ThankBusDriver, *(uint64*)(Base + 0xDE8), Delay);
+    }
+
+    if (!Controller->Blackboard)
+        return;
+
+    SetValueAsBool(Controller->Blackboard, *(uint16*)(Base + 0x145E), true);
+    SetValueAsBool(Controller->Blackboard, *(uint16*)(Base + 0x1460), false);
+
+    if (*(uint16*)(Base + 0x1462) != 0xFFFF)
+        SetValueAsBool(Controller->Blackboard, *(uint16*)(Base + 0x1462), false);
+
+    if (Controller->PlayerState && Controller->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()))
+        SetHasEverSkydivedFromBusAndLanded((AFortPlayerStateAthena*)Controller->PlayerState, false);
+}
+
+void ExitAircraft(AFortAthenaAIBotController* Controller)
+{
+    static auto GetAircraftIndex = (int32 (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, APlayerState*))(ImageBase + 0x1BB1F9C);
+    static auto GetAircraft = (AFortAthenaAircraft* (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, int32))(ImageBase + 0x1BB1E8C);
+    static auto FindAircraftComponent = (UFortControllerComponent_Aircraft* (*)(AActor*))(ImageBase + 0x17EF184);
+    static auto IsAircraftJumpAllowed = (bool (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, AController*))(ImageBase + 0xA4C3DDC);
+    static auto KickFromAircraft = (void (*)(UFortControllerComponent_Aircraft*))(ImageBase + 0x94678A4);
+
+    auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(Controller);
+    auto Aircraft = GamePhaseLogic ? GetAircraft(GamePhaseLogic, GetAircraftIndex(GamePhaseLogic, Controller->PlayerState)) : nullptr;
+    auto AircraftComponent = FindAircraftComponent(Controller);
+
+    if (AircraftComponent && AircraftComponent->CurrentAircraft && Controller->Blackboard && Aircraft && IsAircraftJumpAllowed(GamePhaseLogic, Controller))
+        KickFromAircraft(AircraftComponent);
 }
 
 void CreateSubsystems(UAthenaAISystem* AISystem, UObject* GameMode)
@@ -424,156 +548,6 @@ static int32 FillRuntimeParameters(void* RuntimeParametersProvider, UObject* Run
     return Result;
 }
 
-static UFortAthenaAIBotCosmeticLibraryData* LastLibrary = nullptr;
-static UFortAthenaAISpawnerDataComponent_CosmeticLibrary* LastLibraryComponent = nullptr;
-
-static float RandomFraction()
-{
-    return float(rand()) / float(RAND_MAX + 1);
-}
-
-static UFortAthenaAIBotCosmeticLibraryData* PickLibrary(UFortAthenaAISpawnerDataComponent_CosmeticLibrary* Component)
-{
-    auto& CosmeticLibraries = Component->CosmeticLibraries;
-    std::vector<std::pair<int32, float>> Weights;
-    float TotalWeight = 0.f;
-
-    for (int32 i = 0; i < CosmeticLibraries.Num(); i++)
-    {
-        auto Weight = Component->DefaultCosmeticLibraryWeight.Evaluate(float(i));
-
-        if (Weight <= 0.f)
-            continue;
-
-        Weights.push_back({ i, Weight });
-        TotalWeight += Weight;
-    }
-
-    if (Weights.empty())
-        return nullptr;
-
-    auto Roll = RandomFraction() * TotalWeight;
-    auto Chosen = Weights.back().first;
-
-    for (auto& [Index, Weight] : Weights)
-    {
-        if (Roll < Weight)
-        {
-            Chosen = Index;
-            break;
-        }
-
-        Roll -= Weight;
-    }
-
-    return CosmeticLibraries.Data[Chosen].Get();
-}
-
-static UObject* LoadPrimaryAsset(const FPrimaryAssetId& PrimaryAssetId)
-{
-    if (auto Object = UKismetSystemLibrary::GetObjectFromPrimaryAssetId(PrimaryAssetId))
-        return Object;
-
-    return UKismetSystemLibrary::LoadAsset_Blocking(UKismetSystemLibrary::GetSoftObjectReferenceFromPrimaryAssetId(PrimaryAssetId));
-}
-
-static FFortBotCosmeticItemDataTableRow* PickRow(UDataTable* DataTable, std::vector<FFortBotCosmeticItemDataTableRow*>& Excluded)
-{
-    std::vector<FFortBotCosmeticItemDataTableRow*> Rows;
-    float TotalWeight = 0.f;
-
-    for (auto& RowPair : DataTable->RowMap)
-    {
-        auto Row = (FFortBotCosmeticItemDataTableRow*)RowPair.Value();
-
-        if (!Row || Row->Weight <= 0.f || std::find(Excluded.begin(), Excluded.end(), Row) != Excluded.end())
-            continue;
-
-        Rows.push_back(Row);
-        TotalWeight += Row->Weight;
-    }
-
-    if (Rows.empty())
-        return nullptr;
-
-    auto Roll = RandomFraction() * TotalWeight;
-
-    for (auto Row : Rows)
-    {
-        if (Roll < Row->Weight)
-            return Row;
-
-        Roll -= Row->Weight;
-    }
-
-    return Rows.back();
-}
-
-static void GetLoadout(UFortAthenaAISpawnerDataComponent_CosmeticLibrary* Component, FFortAthenaLoadout* Loadout)
-{
-    auto Library = PickLibrary(Component);
-
-    LastLibrary = Library;
-    LastLibraryComponent = Component;
-
-    if (!Library)
-        return;
-
-    const std::tuple<TSoftObjectPtr<UDataTable>*, TSoftObjectPtr<UDataTable>*, UObject**> Slots[] = {
-        { &Library->CharactersDataTable, &Library->FallbackCharactersDataTable, (UObject**)&Loadout->Character },
-        { &Library->BackpacksDataTable, nullptr, (UObject**)&Loadout->Backpack },
-        { &Library->PickaxesDataTable, nullptr, (UObject**)&Loadout->Pickaxe },
-        { &Library->GlidersDataTable, nullptr, (UObject**)&Loadout->Glider },
-        { &Library->SkyDiveContrailsDataTable, nullptr, (UObject**)&Loadout->SkyDiveContrail },
-    };
-
-    for (auto& [Table, FallbackTable, LoadoutItem] : Slots)
-    {
-        auto DataTable = Table->Get();
-
-        if (!DataTable && FallbackTable)
-            DataTable = FallbackTable->Get();
-
-        if (!DataTable)
-            continue;
-
-        std::vector<FFortBotCosmeticItemDataTableRow*> Excluded;
-        auto Row = PickRow(DataTable, Excluded);
-        auto Item = Row ? LoadPrimaryAsset(Row->PrimaryAssetId) : nullptr;
-
-        if (Item)
-            *LoadoutItem = Item;
-    }
-}
-
-static void GetDances(UFortAthenaAISpawnerDataComponent_CosmeticLibrary* Component, TArray<UAthenaDanceItemDefinition*>* Dances, AFortAthenaAIBotController* BotController)
-{
-    auto Library = LastLibraryComponent == Component && LastLibrary ? LastLibrary : PickLibrary(Component);
-    auto DataTable = Library ? Library->EmotesDataTable.Get() : nullptr;
-
-    LastLibrary = nullptr;
-    LastLibraryComponent = nullptr;
-
-    if (!DataTable)
-        return;
-
-    auto EmotesMaxCount = int32(Component->EmotesMaxCount.Evaluate());
-    std::vector<FFortBotCosmeticItemDataTableRow*> Picked;
-
-    while (int32(Picked.size()) < EmotesMaxCount)
-    {
-        auto Row = PickRow(DataTable, Picked);
-
-        if (!Row)
-            break;
-
-        Picked.push_back(Row);
-
-        if (auto Dance = LoadPrimaryAsset(Row->PrimaryAssetId))
-            Dances->Add((UAthenaDanceItemDefinition*)Dance);
-    }
-}
-
 static std::unordered_map<UClass*, int32> DescriptorTags;
 
 static uint64 (*ApplyToPawnOG)(UFortAthenaAISpawnerDataComponent*, APawn*);
@@ -640,17 +614,18 @@ static void TickComponent(UFortNearbyActorsPerceptionComponent* Component, float
 void AFortAthenaAIBotController__Init()
 {
     Hook(ImageBase + 0xA549788, ApplyCosmeticLoadout, ApplyCosmeticLoadoutOG);
-    Hook(ImageBase + 0xA5512C8, DropLootOnDeath, DropLootOnDeathOG);
-    Hook(ImageBase + 0xA5753F4, AutomaticReviveFromDBNOTick, AutomaticReviveFromDBNOTickOG);
+    Hook(ImageBase + 0xA5512C8, DropLootOnDeath);
+    Hook(ImageBase + 0xA5510C8, DropInventoryItems);
+    Hook(ImageBase + 0xA566F04, OnPossesedPawnDied, OnPossesedPawnDiedOG);
+    Hook(ImageBase + 0xA56DF24, RestartBot, RestartBotOG);
+    Hook(ImageBase + 0xA56CF74, RespawnPlayerAfterDeath, RespawnPlayerAfterDeathOG);
 
     auto InventoryOwnerInterfaceVft = *(void***)(uint64(AFortAthenaAIBotController::GetDefaultObj()) + 0x3F0);
 
     InitializeInventoryOG = decltype(InitializeInventoryOG)(InventoryOwnerInterfaceVft[0x4]);
     Patch<void*>(uint64(&InventoryOwnerInterfaceVft[0x4]), (void*)InitializeInventory);
     Patch<void*>(uint64(&InventoryOwnerInterfaceVft[0x3]), (void*)CreateInventory);
-
-    Hook<UAthenaAIServicePlayerBots>(uint32(0x59), InitializeService, InitializeServiceOG);
-    Patch<uint8_t>(ImageBase + 0xA6BB9A4, 0xC3);
+    Patch<void*>(uint64(&InventoryOwnerInterfaceVft[0x3D]), (void*)(bool (*)(void*, FGuid&, int32, bool, bool))RemoveInventoryItem);
 
     auto BaseInterfaceVft = *(void***)(uint64(UFortAthenaAISpawnerDataComponent::GetDefaultObj()) + 0x28);
 
@@ -673,8 +648,6 @@ void AFortAthenaAIBotController__Init()
             Patch<void*>(uint64(&InterfaceVft[0x3]), (void*)FillRuntimeParameters);
     }
 
-    Hook<UFortAthenaAISpawnerDataComponent_CosmeticLibrary>(uint32(0x62), GetLoadout);
-    Hook<UFortAthenaAISpawnerDataComponent_CosmeticLibrary>(uint32(0x5F), GetDances);
     Hook<UFortAthenaAISpawnerDataComponent_AIBotConversation>(uint32(0x5B), ApplyToPawn, ApplyToPawnOG);
 
     auto TickFunction = UFortNearbyActorsPerceptionComponent::GetDefaultObj()->VTable[0x7B];
@@ -781,4 +754,15 @@ void AFortAthenaAIBotController__Tick()
     }
     else if (bBoundsReannounced && Now - StageTime >= 10000)
         BotNavigationStage = EBotNavigationStage::Done;
+}
+
+void AFortAthenaAIBotController__Reset()
+{
+    DescriptorTags.clear();
+
+    BotNavigationStage = EBotNavigationStage::WaitingForRelease;
+    BotNavigationSystem = nullptr;
+    NavDataCountBeforeSpawn = 0;
+    StageTime = 0;
+    bBoundsReannounced = false;
 }

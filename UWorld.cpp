@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Shared.h"
 #include "hde64.h"
+
 INIT_MODULE(UWorld);
 
 static int AttemptDeriveFromURL()
@@ -10,7 +11,20 @@ static int AttemptDeriveFromURL()
 
 static constexpr uint8_t FlagNeutralOpcodes[] = { 0x10, 0x11, 0x14, 0x28, 0x29, 0x2A, 0x57, 0x58, 0x59, 0x5A, 0x5C, 0x5E, 0x6E, 0x6F, 0x7E, 0x7F, 0xB6, 0xB7, 0xBE, 0xBF, 0xC6, 0xD6 };
 
-static void PatchAllNetModes(uint64_t AttemptDeriveFromURL)
+static uint32_t DecodeInstruction(const uint8_t* Code, hde64s& Insn)
+{
+    auto Len = hde64_disasm(Code, &Insn);
+
+    return (Insn.flags & F_ERROR) ? 0 : Len;
+}
+
+static void PatchNops(uint8_t* Address, uint32_t Length)
+{
+    for (uint32_t i = 0; i < Length; i++)
+        Patch<uint8_t>(uint64_t(Address + i), 0x90);
+}
+
+static void PatchAllNetModes(uint64_t AttemptDeriveFromURLAddress)
 {
     auto IsMovOrLea = [](const hde64s& Insn)
     {
@@ -29,7 +43,7 @@ static void PatchAllNetModes(uint64_t AttemptDeriveFromURL)
         if (TextStart[i] != 0xE8 && TextStart[i] != 0xE9)
             continue;
 
-        if (uint64_t(TextStart + i + 5 + *(int32_t*)(TextStart + i + 1)) != AttemptDeriveFromURL)
+        if (uint64_t(TextStart + i + 5 + *(int32_t*)(TextStart + i + 1)) != AttemptDeriveFromURLAddress)
             continue;
 
         for (uint32_t Back = 1; Back < 0x1000 && Back <= i; Back++)
@@ -40,9 +54,9 @@ static void PatchAllNetModes(uint64_t AttemptDeriveFromURL)
                 continue;
 
             hde64s CompareInsn;
-            auto CompareLen = hde64_disasm(Compare, &CompareInsn);
+            auto CompareLen = DecodeInstruction(Compare, CompareInsn);
 
-            if (!CompareLen || (CompareInsn.flags & F_ERROR) || !CompareInsn.rex_w || CompareInsn.modrm_mod != 1 || CompareInsn.modrm_rm == 4 || CompareInsn.disp.disp8 != offsetof(UWorld, NetDriver))
+            if (!CompareLen || !CompareInsn.rex_w || CompareInsn.modrm_mod != 1 || CompareInsn.modrm_rm == 4 || CompareInsn.disp.disp8 != offsetof(UWorld, NetDriver))
                 continue;
 
             if (CompareInsn.opcode != 0x39 && (CompareInsn.opcode != 0x83 || CompareInsn.modrm_reg != 7 || CompareInsn.imm.imm8 != 0))
@@ -54,9 +68,9 @@ static void PatchAllNetModes(uint64_t AttemptDeriveFromURL)
 
             for (int x = 0; x < 12; x++)
             {
-                auto Len = hde64_disasm(Branch, &BranchInsn);
+                auto Len = DecodeInstruction(Branch, BranchInsn);
 
-                if (!Len || (BranchInsn.flags & F_ERROR))
+                if (!Len)
                     break;
 
                 if (BranchInsn.opcode == 0x74 || BranchInsn.opcode == 0x75 || (BranchInsn.opcode == 0x0F && (BranchInsn.opcode2 == 0x84 || BranchInsn.opcode2 == 0x85)))
@@ -92,9 +106,9 @@ static void PatchAllNetModes(uint64_t AttemptDeriveFromURL)
             for (int x = 0; x < 4; x++)
             {
                 hde64s Insn;
-                auto Len = hde64_disasm(Code, &Insn);
+                auto Len = DecodeInstruction(Code, Insn);
 
-                if (!Len || (Insn.flags & F_ERROR))
+                if (!Len)
                     break;
 
                 Code += Len;
@@ -106,9 +120,9 @@ static void PatchAllNetModes(uint64_t AttemptDeriveFromURL)
 
                     for (int y = 0; y < 5; y++)
                     {
-                        Len = hde64_disasm(Code, &Insn);
+                        Len = DecodeInstruction(Code, Insn);
 
-                        if (!Len || (Insn.flags & F_ERROR))
+                        if (!Len)
                             break;
 
                         if (!bTested && Insn.opcode == 0x85 && Insn.rex_w && Insn.modrm_mod == 3 && (Insn.modrm_reg | (Insn.rex_r << 3)) == Register && (Insn.modrm_rm | (Insn.rex_b << 3)) == Register)
@@ -134,14 +148,10 @@ static void PatchAllNetModes(uint64_t AttemptDeriveFromURL)
             if (!bDemoNetDriverCheck)
                 continue;
 
-            for (uint32_t x = 0; x < CompareLen; x++)
-                Patch<uint8_t>(uint64_t(Compare + x), 0x90);
+            PatchNops(Compare, CompareLen);
 
             if (bJumpsIfNetDriver)
-            {
-                for (uint32_t x = 0; x < BranchInsn.len; x++)
-                    Patch<uint8_t>(uint64_t(Branch + x), 0x90);
-            }
+                PatchNops(Branch, BranchInsn.len);
             else if (bNear)
                 Patch<uint16_t>(uint64_t(Branch), 0xE990);
             else
@@ -155,9 +165,11 @@ static void PatchAllNetModes(uint64_t AttemptDeriveFromURL)
 
 void UWorld__Init()
 {
-    Hook(ImageBase + 0x2B510B4, AttemptDeriveFromURL);
+    auto AttemptDeriveFromURLAddress = ImageBase + 0x2B510B4;
 
-    PatchAllNetModes(ImageBase + 0x2B510B4);
+    Hook(AttemptDeriveFromURLAddress, AttemptDeriveFromURL);
+
+    PatchAllNetModes(AttemptDeriveFromURLAddress);
 
     Patch<uint8_t>(ImageBase + 0x2D30000, 0x1);
 }

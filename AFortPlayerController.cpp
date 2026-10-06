@@ -5,17 +5,34 @@
 #include "AFortInventory.h"
 #include "AFortPickup.h"
 #include "AFortGameMode.h"
+#include "AFortAthenaAIBotController.h"
 #include "UFortQuestManager.h"
 #include "UFortControllerComponent_TournamentStatsTracker.h"
 #include "SDK/SDK/FortniteGame_parameters.hpp"
 
 INIT_POSTLOAD(AFortPlayerController);
+INIT_RESET(AFortPlayerController);
 
 static void (*GetPlayerViewPointOG)(AFortPlayerControllerAthena*, FVector&, FRotator&);
 static void (*OnPawnDiedOG)(AFortPlayerControllerAthena*, AFortPawn*, float, const FGameplayTagContainer&, const FGameplayEffectContextHandle&, AController*, AActor*, AActor*);
 static void (*ClientOnPawnDiedOG)(AFortPlayerControllerAthena*, FFortPlayerDeathReport&);
 static void (*K2_OnUnEquipOG)(AFortWeapon*);
 static void (*ServerRequestSeatChangeOG)(UObject*, FFrame&, void*);
+static void (*OnPawnDeathNoRespawnOG)(AFortGameModeAthena*, AFortPlayerPawnAthena*);
+static void (*EnterAircraftOG)(UFortControllerComponent_Aircraft*, AActor*);
+static void (*ServerAttemptInteractOG)(UObject*, FFrame&, void*);
+
+static std::optional<UFortItemDefinition*> CachedDefaultPickaxe;
+static std::optional<UFortItemDefinition*> CachedWallBuild;
+static std::optional<UFortItemDefinition*> CachedFloorBuild;
+static std::optional<UFortItemDefinition*> CachedStairBuild;
+static std::optional<UFortItemDefinition*> CachedConeBuild;
+static std::optional<UFortItemDefinition*> CachedEditTool;
+static std::optional<UFortWorldItemDefinition*> CachedWID_Launcher_Petrol;
+static std::optional<UClass*> CachedBGA_Petrol_PickupClass;
+static std::optional<UClass*> CachedSprayAbilityClass;
+static std::optional<UClass*> CachedEmoteAbilityClass;
+static std::optional<UClass*> CachedOutsideSafeZoneEffect;
 
 static void InitializePlayerGameplayAbilities(AFortPlayerControllerAthena* PlayerController)
 {
@@ -23,16 +40,6 @@ static void InitializePlayerGameplayAbilities(AFortPlayerControllerAthena* Playe
 
     if (auto Interface = PlayerController->PlayerState->GetInterface(IFortAbilitySystemInterface::StaticClass()))
         InitializePlayerGameplayAbilities_(Interface);
-}
-
-static FGameplayTagContainer GetOwnedGameplayTags(UObject* Object)
-{
-    FGameplayTagContainer OwnedTags{};
-
-    if (auto Interface = Object ? Object->GetInterface(IGameplayTagAssetInterface::StaticClass()) : nullptr)
-        ((void (*)(void*, FGameplayTagContainer*))(*(void***)Interface)[0x2])(Interface, &OwnedTags);
-
-    return OwnedTags;
 }
 
 static void GetPlayerViewPoint(AFortPlayerControllerAthena* PlayerController, FVector& Location, FRotator& Rotation)
@@ -52,6 +59,36 @@ static void ApplyCosmeticLoadoutToPawn(AFortPlayerControllerAthena* PlayerContro
         return;
 
     ((void (*)(APawn*, const FFortAthenaLoadout*, bool, UObject*))Pawn->VTable[0x29E])(Pawn, &PlayerController->CosmeticLoadoutPC, true, nullptr);
+}
+
+static AFortPlayerControllerAthena* GetPlayerControllerAthena(AFortPlayerStateAthena* PlayerState)
+{
+    return PlayerState && PlayerState->Owner && PlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)PlayerState->Owner : nullptr;
+}
+
+static void RemoveDroppableEntries(AFortInventory* WorldInventory)
+{
+    std::vector<FGuid> GuidsToRemove;
+
+    for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
+    {
+        if (CanBeDropped((UFortItemDefinition*)Entry.ItemDefinition))
+            GuidsToRemove.push_back(Entry.ItemGuid);
+    }
+
+    for (auto& Guid : GuidsToRemove)
+        Remove(WorldInventory, Guid);
+}
+
+static FFortItemEntry* FindEditToolEntry(AFortInventory* WorldInventory)
+{
+    for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
+    {
+        if (Entry.ItemDefinition->Class == UFortEditToolItemDefinition::StaticClass())
+            return &Entry;
+    }
+
+    return nullptr;
 }
 
 struct FLateGameItem
@@ -86,15 +123,15 @@ static void AddLateGameItem(std::vector<FLateGameItem>& Items, UFortItemDefiniti
     Items.push_back({ ItemDefinition, Count, Weight });
 }
 
+static FLateGamePool LateGamePool;
+static bool bLateGamePoolBuilt = false;
+
 static FLateGamePool& GetLateGamePool()
 {
-    static FLateGamePool Pool;
-    static bool bBuilt = false;
+    if (bLateGamePoolBuilt)
+        return LateGamePool;
 
-    if (bBuilt)
-        return Pool;
-
-    bBuilt = true;
+    bLateGamePoolBuilt = true;
 
     auto LightAmmo = FindObject<UFortWorldItemDefinition>(L"/Game/Athena/Items/Ammo/AthenaAmmoDataBulletsLight.AthenaAmmoDataBulletsLight");
     auto MediumAmmo = FindObject<UFortWorldItemDefinition>(L"/Game/Athena/Items/Ammo/AthenaAmmoDataBulletsMedium.AthenaAmmoDataBulletsMedium");
@@ -116,26 +153,26 @@ static FLateGamePool& GetLateGamePool()
             auto Count = Package->Count > 0 ? Package->Count : 1;
 
             if (ItemDefinition->IsA(UFortAmmoItemDefinition::StaticClass()))
-                AddLateGameItem(Pool.Ammo, ItemDefinition, Count, Package->Weight);
+                AddLateGameItem(LateGamePool.Ammo, ItemDefinition, Count, Package->Weight);
             else if (ItemDefinition->ItemType == EFortItemType::Trap)
-                AddLateGameItem(Pool.Traps, ItemDefinition, Count, Package->Weight);
+                AddLateGameItem(LateGamePool.Traps, ItemDefinition, Count, Package->Weight);
             else if (ItemDefinition->ItemType == EFortItemType::Consumable)
-                AddLateGameItem(Pool.Heals, ItemDefinition, Count, Package->Weight);
+                AddLateGameItem(LateGamePool.Heals, ItemDefinition, Count, Package->Weight);
             else if (ItemDefinition->IsA(UFortWeaponRangedItemDefinition::StaticClass()))
             {
                 auto AmmoDefinition = ((UFortWorldItemDefinition*)ItemDefinition)->GetAmmoWorldItemDefinition_BP();
 
                 if (AmmoDefinition && AmmoDefinition == ShellsAmmo)
-                    AddLateGameItem(Pool.Shotguns, ItemDefinition, 1, Package->Weight);
+                    AddLateGameItem(LateGamePool.Shotguns, ItemDefinition, 1, Package->Weight);
                 else if (AmmoDefinition && AmmoDefinition == MediumAmmo)
-                    AddLateGameItem(Pool.Rifles, ItemDefinition, 1, Package->Weight);
+                    AddLateGameItem(LateGamePool.Rifles, ItemDefinition, 1, Package->Weight);
                 else if (AmmoDefinition && (AmmoDefinition == LightAmmo || AmmoDefinition == HeavyAmmo))
-                    AddLateGameItem(Pool.Utilities, ItemDefinition, 1, Package->Weight);
+                    AddLateGameItem(LateGamePool.Utilities, ItemDefinition, 1, Package->Weight);
             }
         }
     }
 
-    return Pool;
+    return LateGamePool;
 }
 
 static const FLateGameItem* PickLateGameItem(const std::vector<FLateGameItem>& Items)
@@ -177,9 +214,11 @@ static int32 GetLateGameCount(const UFortItemDefinition* ItemDefinition, int32 M
     return UKismetMathLibrary::RandomIntegerInRange((std::min)(Min, Max), Max);
 }
 
-static void GiveLateGameLoadout(AFortPlayerControllerAthena* PlayerController)
+void GiveLateGameLoadout(AFortInventory* WorldInventory, AFortPawn* Pawn)
 {
-    auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
+    RemoveDroppableEntries(WorldInventory);
+    Pawn->SetShield(100.f);
+
     auto& Pool = GetLateGamePool();
     std::vector<FLateGameItem> Loadout;
 
@@ -251,37 +290,23 @@ static void ServerAcknowledgePossession(UObject* Context, FFrame& Stack)
     if (Num != 0)
     {
         if (bLateGame)
-        {
-            std::vector<FGuid> GuidsToRemove;
-
-            for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
-            {
-                if (CanBeDropped((UFortItemDefinition*)Entry.ItemDefinition))
-                    GuidsToRemove.push_back(Entry.ItemGuid);
-            }
-
-            for (auto& Guid : GuidsToRemove)
-                Remove(WorldInventory, Guid);
-
-            ((AFortPawn*)P)->SetShield(100.f);
-            GiveLateGameLoadout(PlayerController);
-        }
+            GiveLateGameLoadout(WorldInventory, (AFortPawn*)P);
 
         return;
     }
 
-    static auto DefaultPickaxe = FindObject<UFortItemDefinition>(L"/Game/Athena/Items/Weapons/WID_Harvest_Pickaxe_Athena_C_T01.WID_Harvest_Pickaxe_Athena_C_T01");
+    auto DefaultPickaxe = FindCachedObject(CachedDefaultPickaxe, L"/Game/Athena/Items/Weapons/WID_Harvest_Pickaxe_Athena_C_T01.WID_Harvest_Pickaxe_Athena_C_T01");
 
     auto Pickaxe = PlayerController->CosmeticLoadoutPC.Pickaxe && PlayerController->CosmeticLoadoutPC.Pickaxe->WeaponDefinition ? (UFortItemDefinition*)PlayerController->CosmeticLoadoutPC.Pickaxe->WeaponDefinition
                                                                                                                                  : DefaultPickaxe;
 
     if (GameMode->StartingItems.Num() == 0)
     {
-        static auto WallBuild = FindObject<UFortItemDefinition>(L"/Game/Items/Weapons/BuildingTools/BuildingItemData_Wall.BuildingItemData_Wall");
-        static auto FloorBuild = FindObject<UFortItemDefinition>(L"/Game/Items/Weapons/BuildingTools/BuildingItemData_Floor.BuildingItemData_Floor");
-        static auto StairBuild = FindObject<UFortItemDefinition>(L"/Game/Items/Weapons/BuildingTools/BuildingItemData_Stair_W.BuildingItemData_Stair_W");
-        static auto ConeBuild = FindObject<UFortItemDefinition>(L"/Game/Items/Weapons/BuildingTools/BuildingItemData_RoofS.BuildingItemData_RoofS");
-        static auto EditTool = FindObject<UFortItemDefinition>(L"/Game/Items/Weapons/BuildingTools/EditTool.EditTool");
+        auto WallBuild = FindCachedObject(CachedWallBuild, L"/Game/Items/Weapons/BuildingTools/BuildingItemData_Wall.BuildingItemData_Wall");
+        auto FloorBuild = FindCachedObject(CachedFloorBuild, L"/Game/Items/Weapons/BuildingTools/BuildingItemData_Floor.BuildingItemData_Floor");
+        auto StairBuild = FindCachedObject(CachedStairBuild, L"/Game/Items/Weapons/BuildingTools/BuildingItemData_Stair_W.BuildingItemData_Stair_W");
+        auto ConeBuild = FindCachedObject(CachedConeBuild, L"/Game/Items/Weapons/BuildingTools/BuildingItemData_RoofS.BuildingItemData_RoofS");
+        auto EditTool = FindCachedObject(CachedEditTool, L"/Game/Items/Weapons/BuildingTools/EditTool.EditTool");
 
         GiveItem(WorldInventory, Pickaxe);
         GiveItem(WorldInventory, WallBuild);
@@ -321,16 +346,7 @@ static void ServerExecuteInventoryItem(UObject* Context, FFrame& Stack)
     if (!PlayerController || !PlayerController->MyFortPawn)
         return;
 
-    FFortItemEntry* Entry = nullptr;
-
-    for (auto& ReplicatedEntry : ((AFortInventory*)PlayerController->WorldInventory.ObjectPointer)->Inventory.ReplicatedEntries)
-    {
-        if (ReplicatedEntry.ItemGuid == ItemGuid)
-        {
-            Entry = &ReplicatedEntry;
-            break;
-        }
-    }
+    auto Entry = FindReplicatedEntry((AFortInventory*)PlayerController->WorldInventory.ObjectPointer, ItemGuid);
 
     if (!Entry)
         return;
@@ -372,20 +388,20 @@ static void SetEditingPlayer(ABuildingSMActor* Building, AFortPlayerStateAthena*
     Building->SetNetDormancy(NewEditingPlayer ? ENetDormancy::DORM_Awake : ENetDormancy::DORM_DormantAll);
     Building->ForceNetUpdate();
 
-    auto Owner = Building->EditingPlayer ? Building->EditingPlayer->Owner : (NewEditingPlayer ? NewEditingPlayer->Owner : nullptr);
+    auto EditingPlayer = Building->EditingPlayer ? Building->EditingPlayer : NewEditingPlayer;
 
-    if (!Building->EditingPlayer && !NewEditingPlayer)
-    {
-        Building->EditingPlayer = NewEditingPlayer;
-        Building->OnRep_EditingPlayer();
+    if (EditingPlayer && (!EditingPlayer->Owner || !EditingPlayer->Owner->IsA(AFortPlayerControllerAthena::StaticClass())))
         return;
-    }
 
-    if (Owner && Owner->IsA(AFortPlayerControllerAthena::StaticClass()))
-    {
-        Building->EditingPlayer = NewEditingPlayer;
-        Building->OnRep_EditingPlayer();
-    }
+    Building->EditingPlayer = NewEditingPlayer;
+    Building->OnRep_EditingPlayer();
+}
+
+static void SetEditActor(AFortWeap_EditingTool* EditTool, ABuildingSMActor* EditActor)
+{
+    EditTool->EditActor = EditActor;
+    EditTool->ForceNetUpdate();
+    EditTool->OnRep_EditActor();
 }
 
 static void ServerCreateBuildingActor(UObject* Context, FFrame& Stack)
@@ -474,23 +490,12 @@ static void ServerBeginEditingBuildingActor(UObject* Context, FFrame& Stack)
 
     if (!Pawn->CurrentWeapon || !Pawn->CurrentWeapon->IsA(AFortWeap_EditingTool::StaticClass()))
     {
-        for (auto& Entry : ((AFortInventory*)PlayerController->WorldInventory.ObjectPointer)->Inventory.ReplicatedEntries)
-        {
-            if (Entry.ItemDefinition->Class == UFortEditToolItemDefinition::StaticClass())
-            {
-                Pawn->EquipWeaponDefinition((UFortWeaponItemDefinition*)Entry.ItemDefinition, Entry.ItemGuid, Entry.TrackerGuid, false);
-                break;
-            }
-        }
+        if (auto EditToolEntry = FindEditToolEntry((AFortInventory*)PlayerController->WorldInventory.ObjectPointer))
+            Pawn->EquipWeaponDefinition((UFortWeaponItemDefinition*)EditToolEntry->ItemDefinition, EditToolEntry->ItemGuid, EditToolEntry->TrackerGuid, false);
     }
 
     if (Pawn->CurrentWeapon && Pawn->CurrentWeapon->IsA(AFortWeap_EditingTool::StaticClass()))
-    {
-        auto EditTool = (AFortWeap_EditingTool*)Pawn->CurrentWeapon;
-        EditTool->EditActor = BuildingActorToEdit;
-        EditTool->ForceNetUpdate();
-        EditTool->OnRep_EditActor();
-    }
+        SetEditActor((AFortWeap_EditingTool*)Pawn->CurrentWeapon, BuildingActorToEdit);
 }
 
 static void ServerEditBuildingActor(UObject* Context, FFrame& Stack)
@@ -536,33 +541,18 @@ static void ServerEndEditingBuildingActor(UObject* Context, FFrame& Stack)
 
     SetEditingPlayer(BuildingActorToStopEditing, nullptr);
 
-    FFortItemEntry* EditToolEntry = nullptr;
-
-    for (auto& Entry : ((AFortInventory*)PlayerController->WorldInventory.ObjectPointer)->Inventory.ReplicatedEntries)
-    {
-        if (Entry.ItemDefinition->Class == UFortEditToolItemDefinition::StaticClass())
-        {
-            EditToolEntry = &Entry;
-            break;
-        }
-    }
+    auto EditToolEntry = FindEditToolEntry((AFortInventory*)PlayerController->WorldInventory.ObjectPointer);
 
     if (!EditToolEntry)
         return;
 
     for (auto Weapon : PlayerController->MyFortPawn->CurrentWeaponList)
     {
-        if (Weapon->ItemEntryGuid != EditToolEntry->ItemGuid)
-            continue;
-
-        if (auto EditTool = (AFortWeap_EditingTool*)Weapon)
+        if (Weapon->ItemEntryGuid == EditToolEntry->ItemGuid)
         {
-            EditTool->EditActor = nullptr;
-            EditTool->ForceNetUpdate();
-            EditTool->OnRep_EditActor();
+            SetEditActor((AFortWeap_EditingTool*)Weapon, nullptr);
+            break;
         }
-
-        break;
     }
 }
 
@@ -581,40 +571,14 @@ static void ServerRepairBuildingActor(UObject* Context, FFrame& Stack)
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
     auto Price = (int32)std::floor((10.f * (1.f - BuildingActorToRepair->GetHealthPercent())) * 0.75f);
     auto ResourceItemDefinition = UFortKismetLibrary::K2_GetResourceItemDefinition(BuildingActorToRepair->ResourceType);
-    UFortWorldItem* Item = nullptr;
-    FFortItemEntry* ItemEntry = nullptr;
-
-    for (auto Instance : WorldInventory->Inventory.ItemInstances)
-    {
-        if (Instance->ItemEntry.ItemDefinition == ResourceItemDefinition)
-        {
-            Item = Instance;
-            break;
-        }
-    }
-
-    for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
-    {
-        if (Entry.ItemDefinition == ResourceItemDefinition)
-        {
-            ItemEntry = &Entry;
-            break;
-        }
-    }
+    auto Item = FindItemInstance(WorldInventory, ResourceItemDefinition);
+    auto ItemEntry = FindReplicatedEntry(WorldInventory, ResourceItemDefinition);
 
     if (!Item || ItemEntry->Count - Price < 0)
         return;
 
     ItemEntry->Count -= Price;
-
-    if (ItemEntry->Count <= 0)
-        Remove(WorldInventory, ItemEntry->ItemGuid);
-    else
-    {
-        Item->ItemEntry.Count = ItemEntry->Count;
-        UpdateEntry(WorldInventory, *ItemEntry);
-        Item->ItemEntry.bIsDirty = true;
-    }
+    UpdateOrRemoveEntry(WorldInventory, Item, *ItemEntry);
 
     BuildingActorToRepair->RepairBuilding(PlayerController, Price);
 }
@@ -637,26 +601,8 @@ static void ServerAttemptInventoryDrop(UObject* Context, FFrame& Stack)
 
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
     auto Pawn = PlayerController->Pawn;
-    UFortWorldItem* Item = nullptr;
-    FFortItemEntry* ItemEntry = nullptr;
-
-    for (auto Instance : WorldInventory->Inventory.ItemInstances)
-    {
-        if (Instance->ItemEntry.ItemGuid == ItemGuid)
-        {
-            Item = Instance;
-            break;
-        }
-    }
-
-    for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
-    {
-        if (Entry.ItemGuid == ItemGuid)
-        {
-            ItemEntry = &Entry;
-            break;
-        }
-    }
+    auto Item = FindItemInstance(WorldInventory, ItemGuid);
+    auto ItemEntry = FindReplicatedEntry(WorldInventory, ItemGuid);
 
     if (!Item || !ItemEntry)
         return;
@@ -668,11 +614,11 @@ static void ServerAttemptInventoryDrop(UObject* Context, FFrame& Stack)
 
     auto FinalLoc = Pawn->K2_GetActorLocation();
 
-    static auto WID_Launcher_Petrol = FindObject<UFortWorldItemDefinition>(L"/Game/Athena/Items/Weapons/Prototype/WID_Launcher_Petrol.WID_Launcher_Petrol");
+    auto WID_Launcher_Petrol = FindCachedObject(CachedWID_Launcher_Petrol, L"/Game/Athena/Items/Weapons/Prototype/WID_Launcher_Petrol.WID_Launcher_Petrol");
 
     if (ItemEntry->ItemDefinition == WID_Launcher_Petrol)
     {
-        static auto BGA_Petrol_PickupClass = FindObject<UClass>(L"/Game/Athena/Items/Weapons/Prototype/PetrolPump/BGA_Petrol_Pickup.BGA_Petrol_Pickup_C");
+        auto BGA_Petrol_PickupClass = FindCachedObject(CachedBGA_Petrol_PickupClass, L"/Game/Athena/Items/Weapons/Prototype/PetrolPump/BGA_Petrol_Pickup.BGA_Petrol_Pickup_C");
 
         SpawnActor<AActor>(BGA_Petrol_PickupClass, FinalLoc);
         Remove(WorldInventory, ItemGuid);
@@ -691,14 +637,7 @@ static void ServerAttemptInventoryDrop(UObject* Context, FFrame& Stack)
     SpawnPickup(Pawn->K2_GetActorLocation() + Pawn->GetActorForwardVector() * 70.f + FVector(0, 0, 50), *ItemEntry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, PlayerController->MyFortPawn,
                 Count, true, true, true, nullptr, FinalLoc);
 
-    if (ItemEntry->Count <= 0)
-        Remove(WorldInventory, ItemGuid);
-    else
-    {
-        Item->ItemEntry.Count = ItemEntry->Count;
-        UpdateEntry(WorldInventory, *ItemEntry);
-        Item->ItemEntry.bIsDirty = true;
-    }
+    UpdateOrRemoveEntry(WorldInventory, Item, *ItemEntry);
 }
 
 static void ServerPlayEmoteItem(UObject* Context, FFrame& Stack)
@@ -725,7 +664,7 @@ static void ServerPlayEmoteItem(UObject* Context, FFrame& Stack)
 
     if (EmoteAsset->IsA(UAthenaSprayItemDefinition::StaticClass()))
     {
-        static auto SprayAbilityClass = FindObject<UClass>(L"/Game/Abilities/Sprays/GAB_Spray_Generic.GAB_Spray_Generic_C");
+        auto SprayAbilityClass = FindCachedObject(CachedSprayAbilityClass, L"/Game/Abilities/Sprays/GAB_Spray_Generic.GAB_Spray_Generic_C");
         AbilityToUse = SprayAbilityClass->ClassDefaultObject;
 
         SendStatEvent(QuestManager, PlayerController, EFortQuestObjectiveStatEvent::Spray, 1, true);
@@ -739,7 +678,7 @@ static void ServerPlayEmoteItem(UObject* Context, FFrame& Stack)
     }
     else if (EmoteAsset->IsA(UAthenaDanceItemDefinition::StaticClass()))
     {
-        static auto EmoteAbilityClass = FindObject<UClass>(L"/Game/Abilities/Emotes/GAB_Emote_Generic.GAB_Emote_Generic_C");
+        auto EmoteAbilityClass = FindCachedObject(CachedEmoteAbilityClass, L"/Game/Abilities/Emotes/GAB_Emote_Generic.GAB_Emote_Generic_C");
 
         auto DanceAsset = (UAthenaDanceItemDefinition*)EmoteAsset;
         auto CustomAbility = DanceAsset->CustomDanceAbility.Get();
@@ -772,18 +711,15 @@ static void ServerPlayEmoteItem(UObject* Context, FFrame& Stack)
     Pawn->OnRep_LastReplicatedEmoteExecuted(OldEmote);
 }
 
-const UClass* ApplyOutsideSafeZoneEffect(UAbilitySystemComponent* AbilitySystemComponent, bool bApply)
+const UClass* ApplyOutsideSafeZoneEffect(UAbilitySystemComponent* AbilitySystemComponent)
 {
-    static auto Effect = FindObject<UClass>(L"/Game/Athena/SafeZone/GE_OutsideSafeZoneDamage.GE_OutsideSafeZoneDamage_C");
+    auto Effect = FindCachedObject(CachedOutsideSafeZoneEffect, L"/Game/Athena/SafeZone/GE_OutsideSafeZoneDamage.GE_OutsideSafeZoneDamage_C");
 
     for (auto& ActiveEffect : AbilitySystemComponent->ActiveGameplayEffects.GameplayEffects_Internal)
     {
         if (ActiveEffect.Spec.Def && ActiveEffect.Spec.Def->IsA(Effect))
             return Effect;
     }
-
-    if (!bApply)
-        return nullptr;
 
     auto ActiveEffectHandle = AbilitySystemComponent->BP_ApplyGameplayEffectToSelf((UClass*)Effect, 0.f, FGameplayEffectContextHandle());
 
@@ -792,12 +728,12 @@ const UClass* ApplyOutsideSafeZoneEffect(UAbilitySystemComponent* AbilitySystemC
     return ActiveEffectHandle.Handle != -1 ? Effect : nullptr;
 }
 
+static UClass* HealthEffect = nullptr;
+static UClass* ShieldEffect = nullptr;
+static bool bResolvedEffects = false;
+
 static void ApplySiphon(AFortPlayerStateAthena* KillerPlayerState, AFortPlayerPawnAthena* KillerPawn, AFortPlayerControllerAthena* KillerPlayerController)
 {
-    static UClass* HealthEffect = nullptr;
-    static UClass* ShieldEffect = nullptr;
-    static bool bResolvedEffects = false;
-
     if (!bResolvedEffects)
     {
         bResolvedEffects = true;
@@ -859,7 +795,9 @@ static void ApplySiphon(AFortPlayerStateAthena* KillerPlayerState, AFortPlayerPa
     AbilitySystemComponent->NetMulticast_InvokeGameplayCueAdded(SiphonCueTag, FPredictionKey{}, EffectContext);
     AbilitySystemComponent->NetMulticast_InvokeGameplayCueExecuted(SiphonCueTag, FPredictionKey{}, EffectContext);
 
-    auto WorldInventory = KillerPlayerController ? (AFortInventory*)KillerPlayerController->WorldInventory.ObjectPointer : nullptr;
+    auto KillerBotController = !KillerPlayerController && KillerPlayerState->Owner && KillerPlayerState->Owner->IsA(AFortAthenaAIBotController::StaticClass()) ? (AFortAthenaAIBotController*)KillerPlayerState->Owner : nullptr;
+    auto WorldInventory = KillerPlayerController ? (AFortInventory*)KillerPlayerController->WorldInventory.ObjectPointer
+                                                 : (KillerBotController && KillerBotController->bIsAnAthenaGameParticipant ? (AFortInventory*)KillerBotController->Inventory.ObjectPointer : nullptr);
 
     if (!WorldInventory)
         return;
@@ -887,6 +825,31 @@ static void GiveVictoryCrown(AFortPlayerControllerAthena* PlayerController)
     StateValues.Free();
 }
 
+void DropItemsAsPickups(TArray<UFortWorldItem*>& ItemsToDropViaPickup, AFortPawn* DestructionPawn, AFortInventory* Inventory, AActor* PickupPostSpawnObject, void (*PickupPostSpawn)(AActor*, AFortPickup*, int32))
+{
+    auto Location = DestructionPawn->K2_GetActorLocation();
+
+    for (auto Item : ItemsToDropViaPickup)
+    {
+        auto ItemGuid = Item->ItemEntry.ItemGuid;
+
+        for (auto& Entry : Inventory->Inventory.ReplicatedEntries)
+        {
+            if (Entry.ItemGuid != ItemGuid)
+                continue;
+
+            auto Pickup = SpawnPickup(Location, Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::PlayerElimination, DestructionPawn);
+
+            if (Pickup && PickupPostSpawn)
+                PickupPostSpawn(PickupPostSpawnObject, Pickup, -1);
+
+            break;
+        }
+
+        Remove(Inventory, ItemGuid);
+    }
+}
+
 static void OnPawnDied(AFortPlayerControllerAthena* PlayerController, AFortPawn* DeadPawn, float Damage, const FGameplayTagContainer& DamageTags, const FGameplayEffectContextHandle& EffectContext,
                        AController* InstigatedBy, AActor* DamageCauser, AActor* KillerActor)
 {
@@ -901,35 +864,9 @@ static void OnPawnDied(AFortPlayerControllerAthena* PlayerController, AFortPawn*
     OnPawnDiedOG(PlayerController, DeadPawn, Damage, DamageTags, EffectContext, InstigatedBy, DamageCauser, KillerActor);
 }
 
-static void ClientOnPawnDied(AFortPlayerControllerAthena* PlayerController, FFortPlayerDeathReport& DeathReport)
+void ReportDeath(AController* Controller, AFortPlayerStateAthena* PlayerState, AFortPlayerPawnAthena* Pawn, AFortPlayerStateAthena* KillerPlayerState, AFortPlayerPawnAthena* KillerPawn, const FGameplayTagContainer& Tags)
 {
-    if (!PlayerController)
-        return ClientOnPawnDiedOG(PlayerController, DeathReport);
-
-    auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
-    auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
-    auto Pawn = (AFortPlayerPawnAthena*)PlayerController->Pawn;
-
-    if (WorldInventory && Pawn && Pawn->bShouldDropItemsOnDeath)
-    {
-        std::vector<FGuid> GuidsToRemove;
-
-        for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
-        {
-            if (!CanBeDropped((UFortItemDefinition*)Entry.ItemDefinition))
-                continue;
-
-            SpawnPickup(Pawn->K2_GetActorLocation(), Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::PlayerElimination, PlayerController->MyFortPawn);
-            GuidsToRemove.push_back(Entry.ItemGuid);
-        }
-
-        for (auto& Guid : GuidsToRemove)
-            Remove(WorldInventory, Guid);
-    }
-
-    auto KillerPlayerState = (AFortPlayerStateAthena*)DeathReport.KillerPlayerState;
-    auto KillerPawn = (AFortPlayerPawnAthena*)DeathReport.KillerPawn.Get();
-    auto KillerPlayerController = KillerPlayerState && KillerPlayerState->Owner && KillerPlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)KillerPlayerState->Owner : nullptr;
+    auto KillerPlayerController = GetPlayerControllerAthena(KillerPlayerState);
 
     PlayerState->PawnDeathLocation = Pawn ? Pawn->K2_GetActorLocation() : FVector();
 
@@ -941,26 +878,55 @@ static void ClientOnPawnDied(AFortPlayerControllerAthena* PlayerController, FFor
     if (Pawn)
         UBlueprintGameplayTagLibrary::AppendGameplayTagContainers(DeathInfo.DeathTags, *(FGameplayTagContainer*)(uint64(&Pawn->MoveSoundStimulusBroadcastInterval) + 0x10));
     DeathInfo.DeathClassSlot = (uint8)-1;
-    DeathInfo.DeathCause = AFortPlayerStateAthena::ToDeathCause(DeathReport.Tags, DeathInfo.bDBNO);
+    DeathInfo.DeathCause = AFortPlayerStateAthena::ToDeathCause(Tags, DeathInfo.bDBNO);
     DeathInfo.FinisherOrDowner = KillerPlayerState ? KillerPlayerState : PlayerState;
     UBlueprintGameplayTagLibrary::AppendGameplayTagContainers(DeathInfo.FinisherOrDownerTags, KillerPawn ? KillerPawn->GameplayTags : Pawn->GameplayTags);
     UBlueprintGameplayTagLibrary::AppendGameplayTagContainers(DeathInfo.VictimTags, Pawn->GameplayTags);
-    DeathInfo.Distance = Pawn ? (DeathInfo.DeathCause != EDeathCause::FallDamage ? (KillerPawn ? KillerPawn->GetDistanceTo(Pawn) : 0) : ((AFortPlayerPawnAthena*)PlayerController->MyFortPawn)->LastFallDistance) : 0;
+    DeathInfo.Distance = Pawn ? (DeathInfo.DeathCause != EDeathCause::FallDamage ? (KillerPawn ? KillerPawn->GetDistanceTo(Pawn) : 0) : Pawn->LastFallDistance) : 0;
     DeathInfo.bInitialized = true;
     PlayerState->OnRep_DeathInfo();
 
-    if (KillerPlayerState && KillerPawn && KillerPawn->Controller && KillerPawn->Controller != PlayerController)
+    if (KillerPlayerState && KillerPawn && KillerPawn->Controller && KillerPawn->Controller != Controller)
     {
         KillerPlayerState->KillScore++;
         KillerPlayerState->OnRep_Kills();
+
+        if (!PlayerState->bIsABot)
+            KillerPlayerState->HumanKillScore++;
+
         KillerPlayerState->TeamKillScore++;
         KillerPlayerState->OnRep_TeamKillScore();
         KillerPlayerState->ClientReportKill(PlayerState);
         KillerPlayerState->ClientReportTeamKill(KillerPlayerState->TeamKillScore);
     }
 
-    if (Pawn && KillerPlayerState && KillerPlayerState->AbilitySystemComponent && KillerPawn && KillerPawn->Controller != PlayerController)
+    if (Pawn && KillerPlayerState && KillerPlayerState->AbilitySystemComponent && KillerPawn && KillerPawn->Controller != Controller)
         ApplySiphon(KillerPlayerState, KillerPawn, KillerPlayerController);
+}
+
+static void ClientOnPawnDied(AFortPlayerControllerAthena* PlayerController, FFortPlayerDeathReport& DeathReport)
+{
+    if (!PlayerController)
+        return ClientOnPawnDiedOG(PlayerController, DeathReport);
+
+    auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
+    auto Pawn = (AFortPlayerPawnAthena*)PlayerController->Pawn;
+
+    if (WorldInventory && Pawn && Pawn->bShouldDropItemsOnDeath)
+    {
+        TArray<UFortWorldItem*> ItemsToDrop;
+
+        for (auto Item : WorldInventory->Inventory.ItemInstances)
+        {
+            if (CanBeDropped((UFortItemDefinition*)Item->ItemEntry.ItemDefinition))
+                ItemsToDrop.Add(Item);
+        }
+
+        DropItemsAsPickups(ItemsToDrop, Pawn, WorldInventory, nullptr, nullptr);
+        ItemsToDrop.Free();
+    }
+
+    ReportDeath(PlayerController, (AFortPlayerStateAthena*)PlayerController->PlayerState, Pawn, (AFortPlayerStateAthena*)DeathReport.KillerPlayerState, (AFortPlayerPawnAthena*)DeathReport.KillerPawn.Get(), DeathReport.Tags);
 
     ClientOnPawnDiedOG(PlayerController, DeathReport);
 }
@@ -976,59 +942,43 @@ static void StartRespawnTimer(AFortPlayerControllerAthena* PlayerController, flo
     StartRespawnTimerOG(PlayerController, RespawnTime, bNextRespawnInAir);
 }
 
-static void (*OnPawnDeathNoRespawnOG)(AFortGameModeAthena*, AFortPlayerPawnAthena*);
-static void OnPawnDeathNoRespawn(AFortGameModeAthena* GameMode, AFortPlayerPawnAthena* Pawn)
+UFortWeaponItemDefinition* GetKillerWeapon(AActor* DamageCauser)
 {
-    OnPawnDeathNoRespawnOG(GameMode, Pawn);
+    AFortWeapon* Weapon = nullptr;
 
-    auto PlayerController = Pawn->Controller && Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)Pawn->Controller : nullptr;
-
-    if (!PlayerController)
-        return;
-
-    auto GameState = (AFortGameStateAthena*)GameMode->GameState;
-    auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
-    auto& DeathReport = PlayerController->PlayerDeathReport;
-    auto KillerPlayerState = (AFortPlayerStateAthena*)DeathReport.KillerPlayerState;
-    auto KillerPawn = (AFortPlayerPawnAthena*)DeathReport.KillerPawn.Get();
-    auto DeathReportDamageCauser = DeathReport.DamageCauser.Get();
-    auto KillerPlayerController = KillerPlayerState && KillerPlayerState->Owner && KillerPlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)KillerPlayerState->Owner : nullptr;
-    auto DeathCause = PlayerState->DeathInfo.DeathCause;
-
-    AFortWeapon* DamageCauser = nullptr;
-
-    if (DeathReportDamageCauser && DeathReportDamageCauser->IsA(AFortProjectileBase::StaticClass()))
+    if (DamageCauser && DamageCauser->IsA(AFortProjectileBase::StaticClass()))
     {
-        auto Owner = DeathReportDamageCauser->Owner;
+        auto Owner = DamageCauser->Owner;
 
         if (Owner && Owner->IsA(AFortWeapon::StaticClass()))
-            DamageCauser = (AFortWeapon*)Owner;
+            Weapon = (AFortWeapon*)Owner;
         else if (Owner && Owner->IsA(AFortPlayerControllerAthena::StaticClass()) && ((AFortPlayerControllerAthena*)Owner)->Pawn)
-            DamageCauser = ((AFortPlayerPawnAthena*)((AFortPlayerControllerAthena*)Owner)->Pawn)->CurrentWeapon;
+            Weapon = ((AFortPlayerPawnAthena*)((AFortPlayerControllerAthena*)Owner)->Pawn)->CurrentWeapon;
         else if (Owner && Owner->IsA(AFortPlayerPawnAthena::StaticClass()))
-            DamageCauser = ((AFortPlayerPawnAthena*)Owner)->CurrentWeapon;
+            Weapon = ((AFortPlayerPawnAthena*)Owner)->CurrentWeapon;
     }
-    else if (DeathReportDamageCauser && DeathReportDamageCauser->IsA(AFortWeapon::StaticClass()))
-        DamageCauser = (AFortWeapon*)DeathReportDamageCauser;
+    else if (DamageCauser && DamageCauser->IsA(AFortWeapon::StaticClass()))
+        Weapon = (AFortWeapon*)DamageCauser;
 
-    static auto RemoveFromAlivePlayers = (void (*)(AFortGameModeAthena*, AFortPlayerControllerAthena*, AFortPlayerStateAthena*, AFortPlayerPawnAthena*, UFortItemDefinition*, EDeathCause, char))(ImageBase + 0x8F9B900);
+    return Weapon && Weapon->IsA(AFortWeapon::StaticClass()) ? Weapon->WeaponData : nullptr;
+}
 
+void ReportElimination(AFortGameModeAthena* GameMode, AFortPlayerStateAthena* PlayerState, AFortPlayerStateAthena* KillerPlayerState, AFortPlayerPawnAthena* KillerPawn, UFortWeaponItemDefinition* KillerWeapon, EDeathCause DeathCause)
+{
     static auto StartEndGamePhaseTeam = (bool (*)(AFortGameModeAthena*, uint8, AFortPlayerStateAthena*, int32, APawn*, UFortWeaponItemDefinition*, EDeathCause))(ImageBase + 0x8F9F004);
 
-    auto KillerWeapon = DamageCauser && DamageCauser->IsA(AFortWeapon::StaticClass()) ? DamageCauser->WeaponData : nullptr;
-
-    RemoveFromAlivePlayers(GameMode, PlayerController, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState, KillerPawn, KillerWeapon, DeathCause, 0);
-
+    auto GameState = (AFortGameStateAthena*)GameMode->GameState;
+    auto KillerPlayerController = GetPlayerControllerAthena(KillerPlayerState);
     auto Playlist = GameState->CurrentPlaylistInfo.BasePlaylist;
     auto TeamAliveIndex = Playlist ? PlayerState->TeamIndex - Playlist->DefaultFirstTeam : -1;
+    auto TeamInfo = ((AFortTeamInfo* (*)(AFortGameStateAthena*, uint8))GameState->VTable[0x136])(GameState, PlayerState->TeamIndex);
+    auto bTeamPlaced = TeamInfo && TeamInfo->IsA(AFortTeamInfoAthena::StaticClass()) && *(int32*)(uint64(TeamInfo) + 0x410) > 0;
 
-    if (PlayerState->Place == 0 && GameMode->TeamAlivePlayers.IsValidIndex(TeamAliveIndex) && GameMode->TeamAlivePlayers[TeamAliveIndex] <= 0)
+    if (PlayerState->Place == 0 && !bTeamPlaced && GameMode->TeamAlivePlayers.IsValidIndex(TeamAliveIndex) && GameMode->TeamAlivePlayers[TeamAliveIndex] <= 0)
         StartEndGamePhaseTeam(GameMode, PlayerState->TeamIndex, nullptr, GameState->TeamsLeft + 1, KillerPawn, KillerWeapon, DeathCause);
 
     TournamentPlayerEliminated(GameMode, PlayerState, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState);
     SendPlacementUpdate(KillerPlayerController);
-
-    Pawn->CharacterMovement->DisableMovement();
 
     if (KillerPlayerState && KillerPlayerState != PlayerState && KillerPlayerState->Place == 1)
     {
@@ -1050,9 +1000,37 @@ static void OnPawnDeathNoRespawn(AFortGameModeAthena* GameMode, AFortPlayerPawnA
     {
         auto PlacedPlayerState = (AFortPlayerStateAthena*)PlacedPlayer;
 
-        if (PlacedPlayerState && PlacedPlayerState->IsA(AFortPlayerStateAthena::StaticClass()) && PlacedPlayerState->Place > 0 && PlacedPlayerState->Owner && PlacedPlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass()))
-            EndBattleRoyaleGame((AFortPlayerControllerAthena*)PlacedPlayerState->Owner);
+        if (!PlacedPlayerState || !PlacedPlayerState->IsA(AFortPlayerStateAthena::StaticClass()) || PlacedPlayerState->Place <= 0)
+            continue;
+
+        if (auto PlacedPlayerController = GetPlayerControllerAthena(PlacedPlayerState))
+            EndBattleRoyaleGame(PlacedPlayerController);
     }
+}
+
+static void OnPawnDeathNoRespawn(AFortGameModeAthena* GameMode, AFortPlayerPawnAthena* Pawn)
+{
+    static auto RemoveFromAlivePlayers = (void (*)(AFortGameModeAthena*, AFortPlayerControllerAthena*, AFortPlayerStateAthena*, AFortPlayerPawnAthena*, UFortItemDefinition*, EDeathCause, char))(ImageBase + 0x8F9B900);
+
+    OnPawnDeathNoRespawnOG(GameMode, Pawn);
+
+    auto PlayerController = Pawn->Controller && Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)Pawn->Controller : nullptr;
+
+    if (!PlayerController)
+        return;
+
+    auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
+    auto& DeathReport = PlayerController->PlayerDeathReport;
+    auto KillerPlayerState = (AFortPlayerStateAthena*)DeathReport.KillerPlayerState;
+    auto KillerPawn = (AFortPlayerPawnAthena*)DeathReport.KillerPawn.Get();
+    auto KillerWeapon = GetKillerWeapon(DeathReport.DamageCauser.Get());
+    auto DeathCause = PlayerState->DeathInfo.DeathCause;
+
+    RemoveFromAlivePlayers(GameMode, PlayerController, KillerPlayerState == PlayerState ? nullptr : KillerPlayerState, KillerPawn, KillerWeapon, DeathCause, 0);
+
+    Pawn->CharacterMovement->DisableMovement();
+
+    ReportElimination(GameMode, PlayerState, KillerPlayerState, KillerPawn, KillerWeapon, DeathCause);
 }
 
 static void ServerSpectateActor(AFortPlayerControllerAthena* PlayerController, AActor* NewViewTarget, bool bAllowStateChange)
@@ -1089,22 +1067,18 @@ static void ServerSpectateActor(AFortPlayerControllerAthena* PlayerController, A
     PlayerController->ClientSetViewTarget(NewViewTarget, TransitionParams);
 }
 
-void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntry* PickupEntry)
+void InternalPickup(AController* Controller, FFortItemEntry* PickupEntry)
 {
     if (!PickupEntry || !PickupEntry->ItemDefinition)
         return;
 
-    auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
-    auto Pawn = PlayerController->Pawn;
-    auto MyFortPawn = PlayerController->MyFortPawn;
+    auto PlayerController = Controller->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)Controller : nullptr;
+    auto WorldInventory = (AFortInventory*)(PlayerController ? PlayerController->WorldInventory.ObjectPointer : ((AFortAthenaAIBotController*)Controller)->Inventory.ObjectPointer);
+    auto Pawn = Controller->Pawn;
+    auto MyFortPawn = PlayerController ? PlayerController->MyFortPawn : (AFortPawn*)Pawn;
     auto PickupDefinition = (UFortItemDefinition*)PickupEntry->ItemDefinition;
     auto MaxStack = PickupDefinition->GetMaxStackSize(nullptr);
     int ItemCount = 0;
-
-    auto TakesQuickbarSlot = [](const UFortItemDefinition* ItemDefinition)
-    {
-        return IsPrimaryQuickbar(ItemDefinition) && UFortItemFunctionLibrary::IsInventorySizeLimited(ItemDefinition);
-    };
 
     for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
     {
@@ -1128,15 +1102,21 @@ void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntr
 
     auto SendCollectStat = [&](int Count)
     {
-        auto TargetTags = GetOwnedGameplayTags(PickupDefinition);
+        if (!PlayerController)
+            return;
+
+        FGameplayTagContainer TargetTags{};
+        GetOwnedGameplayTags(PickupDefinition, TargetTags);
 
         SendStatEvent(PlayerController->GetQuestManager(ESubGame::Athena), PlayerController, EFortQuestObjectiveStatEvent::Collect, Count, true, PickupDefinition, TargetTags);
 
-        TargetTags.GameplayTags.Free();
-        TargetTags.ParentTags.Free();
+        FreeGameplayTags(TargetTags);
     };
 
-    auto DropLocation = [&]() { return Pawn->K2_GetActorLocation() + Pawn->GetActorForwardVector() * 70.f + FVector(0, 0, 50); };
+    auto DropPickup = [&](FFortItemEntry& Entry, int Count)
+    {
+        SpawnPickup(Pawn->K2_GetActorLocation() + Pawn->GetActorForwardVector() * 70.f + FVector(0, 0, 50), Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, MyFortPawn, Count, true, true, true, nullptr, FinalLoc);
+    };
 
     auto GiveOrSwap = [&]()
     {
@@ -1147,7 +1127,7 @@ void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntr
 
             if (!IsPrimaryQuickbar(MyFortPawn->CurrentWeapon->WeaponData))
             {
-                SpawnPickup(DropLocation(), *PickupEntry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, MyFortPawn, -1, true, true, true, nullptr, FinalLoc);
+                DropPickup(*PickupEntry, -1);
                 return;
             }
 
@@ -1155,15 +1135,26 @@ void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntr
             {
                 if (Entry.ItemGuid == MyFortPawn->CurrentWeapon->ItemEntryGuid)
                 {
-                    SpawnPickup(DropLocation(), Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, MyFortPawn, -1, true, true, true, nullptr, FinalLoc);
+                    DropPickup(Entry, -1);
                     break;
                 }
             }
 
             auto Item = GiveItem(WorldInventory, *PickupEntry, PickupEntry->Count, true);
             Remove(WorldInventory, MyFortPawn->CurrentWeapon->ItemEntryGuid);
-            PlayerController->ServerExecuteInventoryItem(Item->ItemEntry.ItemGuid);
-            PlayerController->ClientEquipItem(Item->ItemEntry.ItemGuid, true);
+
+            if (PlayerController)
+            {
+                PlayerController->ServerExecuteInventoryItem(Item->ItemEntry.ItemGuid);
+                PlayerController->ClientEquipItem(Item->ItemEntry.ItemGuid, true);
+            }
+            else
+            {
+                static auto EquipBestWeapon = (void (*)(AFortAthenaAIBotController*, bool))(ImageBase + 0xA551F30);
+
+                RefreshSlotItems((AFortAthenaAIBotController*)Controller);
+                EquipBestWeapon((AFortAthenaAIBotController*)Controller, true);
+            }
         }
         else
             GiveItem(WorldInventory, *PickupEntry, PickupEntry->Count, true);
@@ -1202,7 +1193,7 @@ void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntr
     {
         if (!ItemEntry && FullItemEntry)
         {
-            SpawnPickup(DropLocation(), *PickupEntry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, MyFortPawn, PickupEntry->Count, true, true, true, nullptr, FinalLoc);
+            DropPickup(*PickupEntry, PickupEntry->Count);
             return;
         }
 
@@ -1211,7 +1202,7 @@ void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntr
             auto OriginalCount = PickupEntry->Count;
             PickupEntry->Count = MaxStack;
 
-            SpawnPickup(DropLocation(), *PickupEntry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, MyFortPawn, OriginalCount - MaxStack, true, true, true, nullptr, FinalLoc);
+            DropPickup(*PickupEntry, OriginalCount - MaxStack);
         }
 
         return GiveOrSwap();
@@ -1224,7 +1215,7 @@ void InternalPickup(AFortPlayerControllerAthena* PlayerController, FFortItemEntr
         auto OriginalCount = ItemEntry->Count;
         ItemEntry->Count = MaxStack;
 
-        SpawnPickup(DropLocation(), *PickupEntry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, MyFortPawn, OriginalCount - MaxStack, true, true, true, nullptr, FinalLoc);
+        DropPickup(*PickupEntry, OriginalCount - MaxStack);
     }
 
     bool bFound = false;
@@ -1498,21 +1489,7 @@ static void ServerSetMultiProductCosmeticLoadout(UObject* Context, FFrame& Stack
     for (auto& OldPickaxe : OldPickaxes)
         Remove(WorldInventory, OldPickaxe);
 
-    UFortWorldItem* NewPickaxe = nullptr;
-
-    if (bHasPickaxe)
-    {
-        for (auto Instance : WorldInventory->Inventory.ItemInstances)
-        {
-            if (Instance->ItemEntry.ItemDefinition == Pickaxe->WeaponDefinition)
-            {
-                NewPickaxe = Instance;
-                break;
-            }
-        }
-    }
-    else
-        NewPickaxe = GiveItem(WorldInventory, Pickaxe->WeaponDefinition);
+    auto NewPickaxe = bHasPickaxe ? FindItemInstance(WorldInventory, Pickaxe->WeaponDefinition) : GiveItem(WorldInventory, Pickaxe->WeaponDefinition);
 
     if (bWasEquipped && NewPickaxe && MyFortPawn)
         MyFortPawn->EquipWeaponDefinition((UFortWeaponItemDefinition*)NewPickaxe->ItemEntry.ItemDefinition, NewPickaxe->ItemEntry.ItemGuid, NewPickaxe->ItemEntry.TrackerGuid, false);
@@ -1597,46 +1574,9 @@ static void ServerVehicleModSeatRpc(UObject* Context, FFrame& Stack)
 static bool RemoveInventoryItem(void* Interface, FGuid& ItemGuid, int32 Count, bool bForceRemoval, bool bForcePersistWhenEmpty)
 {
     auto PlayerController = (AFortPlayerControllerAthena*)(__int64(Interface) - 0x878);
-    auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
-    UFortWorldItem* Item = nullptr;
-    FFortItemEntry* ItemEntry = nullptr;
 
-    for (auto Instance : WorldInventory->Inventory.ItemInstances)
-    {
-        if (Instance->ItemEntry.ItemGuid == ItemGuid)
-        {
-            Item = Instance;
-            break;
-        }
-    }
-
-    for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
-    {
-        if (Entry.ItemGuid == ItemGuid)
-        {
-            ItemEntry = &Entry;
-            break;
-        }
-    }
-
-    if (!Item)
-        return false;
-
-    ItemEntry->Count -= (std::max)(Count, 0);
-
-    if ((Count < 0 || ItemEntry->Count <= 0 || bForceRemoval) && !(bForcePersistWhenEmpty && Count >= 0 && !bForceRemoval))
-        Remove(WorldInventory, ItemGuid);
-    else
-    {
-        Item->ItemEntry.Count = ItemEntry->Count;
-        UpdateEntry(WorldInventory, *ItemEntry);
-        Item->ItemEntry.bIsDirty = true;
-    }
-
-    return true;
+    return RemoveInventoryItem((AFortInventory*)PlayerController->WorldInventory.ObjectPointer, ItemGuid, Count, bForceRemoval, bForcePersistWhenEmpty);
 }
-
-static void (*EnterAircraftOG)(UFortControllerComponent_Aircraft*, AActor*);
 
 static void EnterAircraft(UFortControllerComponent_Aircraft* AircraftComponent, AActor* Aircraft)
 {
@@ -1646,30 +1586,25 @@ static void EnterAircraft(UFortControllerComponent_Aircraft* AircraftComponent, 
         return EnterAircraftOG(AircraftComponent, Aircraft);
 
     if (auto WorldInventory = (AFortInventory*)((AFortPlayerControllerAthena*)PlayerController)->WorldInventory.ObjectPointer)
-    {
-        std::vector<FGuid> GuidsToRemove;
-
-        for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
-        {
-            if (CanBeDropped((UFortItemDefinition*)Entry.ItemDefinition))
-                GuidsToRemove.push_back(Entry.ItemGuid);
-        }
-
-        for (auto& Guid : GuidsToRemove)
-            Remove(WorldInventory, Guid);
-    }
+        RemoveDroppableEntries(WorldInventory);
 
     EnterAircraftOG(AircraftComponent, Aircraft);
 }
 
-static void ServerAttemptAircraftJump(UObject* Context, FFrame& Stack)
+static void ServerAttemptAircraftJump(UFortControllerComponent_Aircraft* AircraftComponent, const FRotator& ClientRotation)
 {
-    FRotator ClientRotation;
+    static auto IsAircraftJumpAllowed = (bool (*)(UFortControllerComponent_Aircraft*))(ImageBase + 0x946741C);
+    static auto KickFromAircraft = (void (*)(UFortControllerComponent_Aircraft*))(ImageBase + 0x94678A4);
 
-    Stack.StepCompiledIn(&ClientRotation);
-    Stack.IncrementCode();
+    auto PlayerController = (AFortPlayerControllerAthena*)AircraftComponent->GetOwner();
 
-    auto PlayerController = (AFortPlayerControllerAthena*)((UActorComponent*)Context)->GetOwner();
+    if (PlayerController && PlayerController->IsA(AFortAthenaAIBotController::StaticClass()))
+    {
+        if (IsAircraftJumpAllowed(AircraftComponent))
+            KickFromAircraft(AircraftComponent);
+
+        return;
+    }
 
     if (!PlayerController || !PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()) || !PlayerController->IsInAircraft())
         return;
@@ -1682,11 +1617,13 @@ static void ServerAttemptAircraftJump(UObject* Context, FFrame& Stack)
     UWorld::GetWorld()->AuthorityGameMode->RestartPlayer(PlayerController);
     PlayerController->SetControlRotation(ClientRotation);
 
-    if (!bLateGame)
-        return;
+    if (bLateGame)
+        PlaceLateGamePawn(PlayerController, (AFortPawn*)PlayerController->Pawn);
+}
 
-    auto Pawn = (AFortPawn*)PlayerController->Pawn;
-    auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(PlayerController);
+void PlaceLateGamePawn(AController* Controller, AFortPawn* Pawn)
+{
+    auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(Controller);
     auto Aircraft = GamePhaseLogic && GamePhaseLogic->Aircrafts_GameState.Num() > 0 ? GamePhaseLogic->Aircrafts_GameState.Data[0].Get() : nullptr;
 
     if (!Pawn || !Aircraft)
@@ -1702,8 +1639,6 @@ static void ServerAttemptAircraftJump(UObject* Context, FFrame& Stack)
 static void RefreshCosmeticLoadoutFromProfile(UFortControllerComponent_CosmeticLoadout* Component)
 {
 }
-
-static void (*ServerAttemptInteractOG)(UObject*, FFrame&, void*);
 
 static void ServerAttemptInteract(UObject* Context, FFrame& Stack, void* Result)
 {
@@ -1736,20 +1671,8 @@ static void ServerAttemptInteract(UObject* Context, FFrame& Stack, void* Result)
             }
         }
 
-        UFortWorldItem* Item = nullptr;
         auto Cost = Collection ? Collection->InputCount.Evaluate((float)CollectorActor->StartingGoalLevel) : 0.f;
-
-        if (Collection && Cost > 0)
-        {
-            for (auto Instance : WorldInventory->Inventory.ItemInstances)
-            {
-                if (Instance->ItemEntry.ItemDefinition == Collection->InputItem)
-                {
-                    Item = Instance;
-                    break;
-                }
-            }
-        }
+        auto Item = Collection && Cost > 0 ? FindItemInstance(WorldInventory, Collection->InputItem) : nullptr;
 
         if (!Collection || (Cost > 0 && (!Item || Item->ItemEntry.Count < (int)Cost)))
         {
@@ -1759,26 +1682,10 @@ static void ServerAttemptInteract(UObject* Context, FFrame& Stack, void* Result)
             return ServerAttemptInteractOG(Context, Stack, Result);
         }
 
-        if (Cost > 0)
+        if (auto Entry = Cost > 0 ? FindReplicatedEntry(WorldInventory, Collection->InputItem) : nullptr)
         {
-            for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
-            {
-                if (Entry.ItemDefinition != Collection->InputItem)
-                    continue;
-
-                Entry.Count -= (int)Cost;
-
-                if (Entry.Count <= 0)
-                    Remove(WorldInventory, Entry.ItemGuid);
-                else
-                {
-                    Item->ItemEntry.Count = Entry.Count;
-                    UpdateEntry(WorldInventory, Entry);
-                    Item->ItemEntry.bIsDirty = true;
-                }
-
-                break;
-            }
+            Entry->Count -= (int)Cost;
+            UpdateOrRemoveEntry(WorldInventory, Item, *Entry);
         }
 
         CollectorActor->ClientPausedActiveInputItem = CollectorActor->ActiveInputItem;
@@ -1884,14 +1791,36 @@ void AFortPlayerController__PostLoad()
     ExecHook(PlayerControllerClass->FindFunction("ServerOnMaterialSelection"), ServerOnMaterialSelection);
     ExecHook(PlayerControllerClass->FindFunction("ServerPlaySquadQuickChatMessage"), ServerPlaySquadQuickChatMessage);
     ExecHook(AFortPlayerControllerGameplay::StaticClass()->FindFunction("ServerVehicleModSeatRpc"), ServerVehicleModSeatRpc);
-    Hook(ImageBase + 0xA02DACC, RemoveInventoryItem);
+    Hook(ImageBase + 0xA02DACC, (bool (*)(void*, FGuid&, int32, bool, bool))RemoveInventoryItem);
 
-    Hook(ImageBase + 0x945F42C, EnterAircraft, EnterAircraftOG);
-    ExecHook(UFortControllerComponent_Aircraft::StaticClass()->FindFunction("ServerAttemptAircraftJump"), ServerAttemptAircraftJump);
+    Hook(ImageBase + 0x945F42C, (void (*)(UFortControllerComponent_Aircraft*, AActor*))EnterAircraft, EnterAircraftOG);
+    Hook<UFortControllerComponent_Aircraft>(uint32(0xAA), ServerAttemptAircraftJump);
 
     Hook(ImageBase + 0x947710C, RefreshCosmeticLoadoutFromProfile);
 
     ExecHook(UFortControllerComponent_Interaction::StaticClass()->FindFunction("ServerAttemptInteract"), ServerAttemptInteract, ServerAttemptInteractOG);
     ExecHook(UFortControllerComponent_Interaction::StaticClass()->FindFunction("ServerNotifyStartLongUse"), ServerNotifyStartLongUse);
     ExecHook(UFortControllerComponent_Interaction::StaticClass()->FindFunction("ServerNotifyEndLongUse"), ServerNotifyEndLongUse);
+}
+
+void AFortPlayerController__Reset()
+{
+    LateGamePool = {};
+    bLateGamePoolBuilt = false;
+
+    CachedDefaultPickaxe.reset();
+    CachedWallBuild.reset();
+    CachedFloorBuild.reset();
+    CachedStairBuild.reset();
+    CachedConeBuild.reset();
+    CachedEditTool.reset();
+    CachedWID_Launcher_Petrol.reset();
+    CachedBGA_Petrol_PickupClass.reset();
+    CachedSprayAbilityClass.reset();
+    CachedEmoteAbilityClass.reset();
+    CachedOutsideSafeZoneEffect.reset();
+
+    HealthEffect = nullptr;
+    ShieldEffect = nullptr;
+    bResolvedEffects = false;
 }

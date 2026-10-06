@@ -9,6 +9,7 @@
 #include <intrin.h>
 #include <map>
 #include <mutex>
+#include <optional>
 #include <random>
 #include <set>
 #include <string>

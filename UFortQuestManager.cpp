@@ -1,12 +1,14 @@
 #include "pch.h"
 #include "Shared.h"
 #include "UFortQuestManager.h"
+#include "AFortGameMode.h"
 #include "UFortControllerComponent_Accolades.h"
 #include "SDK/SDK/AccoladesRuntime_classes.hpp"
 #include "SDK/SDK/FortniteGame_parameters.hpp"
 
 INIT_POSTLOAD(UFortQuestManager);
 INIT_TICKER(UFortQuestManager);
+INIT_RESET(UFortQuestManager);
 
 struct FFortQuestStatEvent
 {
@@ -42,12 +44,6 @@ struct FFortQuestSaveRequest
     uint8 Pad_18[0x10];
 };
 static_assert(sizeof(FFortQuestSaveRequest) == 0x28);
-
-struct FDelegateAllocation
-{
-    uint8* Data = nullptr;
-    int32 Num = 0;
-};
 
 struct FVerbMessageView
 {
@@ -219,12 +215,6 @@ static bool IsInRange(const TRange& Range, TValue Value)
 static bool IsRequirementMet(EObjectiveProcessorPropertyRequirement Requirement, bool bValue)
 {
     return Requirement == EObjectiveProcessorPropertyRequirement::Ignored || (Requirement == EObjectiveProcessorPropertyRequirement::Required) == bValue;
-}
-
-static void FreeGameplayTags(FGameplayTagContainer& Tags)
-{
-    Tags.GameplayTags.Free();
-    Tags.ParentTags.Free();
 }
 
 static int32 AccumulateProgress(UFortQuestManager* QuestManager, FName BackendName, double Amount)
@@ -405,10 +395,16 @@ static bool IsAllowed(const TArray<T>& Allowed, const TArray<T>& Prohibited, T V
     return false;
 }
 
-static EFortTeamAffiliation GetTeamAffiliation(AFortPlayerControllerAthena* PlayerController, UObject* TargetObject)
+static AFortPlayerStateAthena* GetTargetPlayerState(UObject* TargetObject)
 {
     auto TargetPawn = TargetObject && TargetObject->IsA(APawn::StaticClass()) ? (APawn*)TargetObject : nullptr;
-    auto TargetPlayerState = TargetPawn && TargetPawn->PlayerState && TargetPawn->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)TargetPawn->PlayerState : nullptr;
+
+    return TargetPawn && TargetPawn->PlayerState && TargetPawn->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)TargetPawn->PlayerState : nullptr;
+}
+
+static EFortTeamAffiliation GetTeamAffiliation(AFortPlayerControllerAthena* PlayerController, UObject* TargetObject)
+{
+    auto TargetPlayerState = GetTargetPlayerState(TargetObject);
     auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
 
     if (!TargetPlayerState || !PlayerState)
@@ -621,23 +617,23 @@ static int32 EvaluateVerbFilter(void* Memory, UFortQuestManager* QuestManager, F
 static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestManager* QuestManager, FName BackendName, AFortPlayerControllerAthena* PlayerController, FFortQuestStatEvent* Event, UObject* TargetObject,
                                      const FVerbProcessor* Verb, FVerbMessage* Message)
 {
-    static auto KillContribution = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_KillContribution");
-    static auto Visit = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_Visit");
-    static auto DiscoverPOI = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_DiscoverPOI");
-    static auto Land = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_Land");
-    static auto LandFromBus = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_LandFromBus");
-    static auto Emote = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_Emote");
-    static auto Spray = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_Spray");
-    static auto Build = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_Build");
-    static auto AddToInventory = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_AddToInventory");
-    static auto Acquire = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_Acquire");
-    static auto Interact = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_Interact");
-    static auto RevivePlayer = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_RevivePlayer");
-    static auto RevivedFromDBNO = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_RevivedFromDBNO");
-    static auto StormPhaseChanged = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_StormPhaseChanged");
-    static auto PlacementUpdate = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_PlacementUpdate");
-    static auto MatchTimeElapsed = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_MatchTimeElapsed");
-    static auto DistanceTraveled = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortObjectiveFilter_DistanceTraveled");
+    static auto KillContribution = FindFortniteGameStruct(L"FortObjectiveFilter_KillContribution");
+    static auto Visit = FindFortniteGameStruct(L"FortObjectiveFilter_Visit");
+    static auto DiscoverPOI = FindFortniteGameStruct(L"FortObjectiveFilter_DiscoverPOI");
+    static auto Land = FindFortniteGameStruct(L"FortObjectiveFilter_Land");
+    static auto LandFromBus = FindFortniteGameStruct(L"FortObjectiveFilter_LandFromBus");
+    static auto Emote = FindFortniteGameStruct(L"FortObjectiveFilter_Emote");
+    static auto Spray = FindFortniteGameStruct(L"FortObjectiveFilter_Spray");
+    static auto Build = FindFortniteGameStruct(L"FortObjectiveFilter_Build");
+    static auto AddToInventory = FindFortniteGameStruct(L"FortObjectiveFilter_AddToInventory");
+    static auto Acquire = FindFortniteGameStruct(L"FortObjectiveFilter_Acquire");
+    static auto Interact = FindFortniteGameStruct(L"FortObjectiveFilter_Interact");
+    static auto RevivePlayer = FindFortniteGameStruct(L"FortObjectiveFilter_RevivePlayer");
+    static auto RevivedFromDBNO = FindFortniteGameStruct(L"FortObjectiveFilter_RevivedFromDBNO");
+    static auto StormPhaseChanged = FindFortniteGameStruct(L"FortObjectiveFilter_StormPhaseChanged");
+    static auto PlacementUpdate = FindFortniteGameStruct(L"FortObjectiveFilter_PlacementUpdate");
+    static auto MatchTimeElapsed = FindFortniteGameStruct(L"FortObjectiveFilter_MatchTimeElapsed");
+    static auto DistanceTraveled = FindFortniteGameStruct(L"FortObjectiveFilter_DistanceTraveled");
 
     auto Struct = Filter.ScriptStruct;
     auto Memory = Filter.StructMemory;
@@ -720,15 +716,10 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
     if (Verb)
         return EvaluateVerbFilter(Memory, QuestManager, BackendName, PlayerController, *Verb, Message);
 
-    auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
-
     switch (Event->Type)
     {
     case EFortQuestObjectiveStatEvent::KillContribution:
     {
-        if (Struct != KillContribution)
-            return 0;
-
         auto Data = (FFortObjectiveFilter_KillContribution*)Memory;
 
         if (Data->bUseDamageContributed || Data->bUseDamageContributedPercent || Data->bUseDistanceFromEliminatedPawn)
@@ -739,8 +730,7 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
 
         if (Data->FinalBlowGivesCredit == EFinalBlowAllowance::Never)
         {
-            auto TargetPawn = TargetObject && TargetObject->IsA(APawn::StaticClass()) ? (APawn*)TargetObject : nullptr;
-            auto TargetPlayerState = TargetPawn && TargetPawn->PlayerState && TargetPawn->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)TargetPawn->PlayerState : nullptr;
+            auto TargetPlayerState = GetTargetPlayerState(TargetObject);
 
             if (TargetPlayerState && TargetPlayerState->DeathInfo.FinisherOrDowner.Get() == PlayerController->PlayerState)
                 return 0;
@@ -749,14 +739,11 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
         return DoesTagQueryMatch(Data->KilledActor.TagQuery, Event->TargetTags) && DoesTagQueryMatch(Data->KillerTags.TagQuery, Event->SourceTags) ? 1 : 0;
     }
     case EFortQuestObjectiveStatEvent::Visit:
-        return Struct == Visit && DoesLocationMatch(((FFortObjectiveFilter_Visit*)Memory)->Location.TagQuery, Event) ? Event->Count : 0;
+        return DoesLocationMatch(((FFortObjectiveFilter_Visit*)Memory)->Location.TagQuery, Event) ? Event->Count : 0;
     case EFortQuestObjectiveStatEvent::VisitDiscoverPOI:
-        return Struct == DiscoverPOI && DoesLocationMatch(((FFortObjectiveFilter_DiscoverPOI*)Memory)->PoiTags.TagQuery, Event) ? Event->Count : 0;
+        return DoesLocationMatch(((FFortObjectiveFilter_DiscoverPOI*)Memory)->PoiTags.TagQuery, Event) ? Event->Count : 0;
     case EFortQuestObjectiveStatEvent::Land:
     {
-        if (Struct != Land && Struct != LandFromBus)
-            return 0;
-
         auto Data = (FFortObjectiveFilter_Land*)Memory;
 
         if (Data->NearbyPlayersFilter.bFilterEnabled || Data->AllowedSurfaces.Num() > 0)
@@ -769,9 +756,6 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
     }
     case EFortQuestObjectiveStatEvent::Emote:
     {
-        if (Struct != Emote)
-            return 0;
-
         auto Data = (FFortObjectiveFilter_Emote*)Memory;
 
         if (Data->NearbyPlayersFilter.bFilterEnabled || Data->Target.TagQuery.QueryTokenStream.Num() > 0)
@@ -781,18 +765,12 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
     }
     case EFortQuestObjectiveStatEvent::Spray:
     {
-        if (Struct != Spray)
-            return 0;
-
         auto Data = (FFortObjectiveFilter_Spray*)Memory;
 
         return Data->Target.TagQuery.QueryTokenStream.Num() == 0 && DoesTagQueryMatch(Data->Spray.TagQuery, Event->TargetTags) ? 1 : 0;
     }
     case EFortQuestObjectiveStatEvent::Build:
     {
-        if (Struct != Build)
-            return 0;
-
         auto Data = (FFortObjectiveFilter_Build*)Memory;
 
         return !Data->bUseResourcesSpent && !Data->bIncrementByResourcesSpent && DoesTagQueryMatch(Data->Building.TagQuery, Event->TargetTags) ? 1 : 0;
@@ -871,16 +849,13 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
         return bHorizontal ? Event->Count : AccumulateProgress(QuestManager, BackendName, Event->Count / 100.0);
     }
     case EFortQuestObjectiveStatEvent::Interact:
-        return Struct == Interact && DoesTagQueryMatch(((FFortObjectiveFilter_Interact*)Memory)->Target.TagQuery, Event->TargetTags) ? 1 : 0;
+        return DoesTagQueryMatch(((FFortObjectiveFilter_Interact*)Memory)->Target.TagQuery, Event->TargetTags) ? 1 : 0;
     case EFortQuestObjectiveStatEvent::RevivePlayer:
-        return Struct == RevivePlayer && DoesTagQueryMatch(((FFortObjectiveFilter_RevivePlayer*)Memory)->RevivedPlayer.TagQuery, Event->TargetTags) ? 1 : 0;
+        return DoesTagQueryMatch(((FFortObjectiveFilter_RevivePlayer*)Memory)->RevivedPlayer.TagQuery, Event->TargetTags) ? 1 : 0;
     case EFortQuestObjectiveStatEvent::RevivedFromDBNO:
-        return Struct == RevivedFromDBNO && DoesTagQueryMatch(((FFortObjectiveFilter_RevivedFromDBNO*)Memory)->RevivingPlayer.TagQuery, Event->TargetTags) ? 1 : 0;
+        return DoesTagQueryMatch(((FFortObjectiveFilter_RevivedFromDBNO*)Memory)->RevivingPlayer.TagQuery, Event->TargetTags) ? 1 : 0;
     case EFortQuestObjectiveStatEvent::StormPhase:
     {
-        if (Struct != StormPhaseChanged)
-            return 0;
-
         auto Data = (FFortObjectiveFilter_StormPhaseChanged*)Memory;
 
         if (Data->StormStepRequirement == EStormStepVerbRequirement::OnlyStormShrinking)
@@ -898,7 +873,9 @@ static int32 EvaluateObjectiveFilter(const FInstancedStruct& Filter, UFortQuestM
     }
     case EFortQuestObjectiveStatEvent::PlacementUpdate:
     {
-        if (Struct != PlacementUpdate || !GameState)
+        auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
+
+        if (!GameState)
             return 0;
 
         auto Data = (FFortObjectiveFilter_PlacementUpdate*)Memory;
@@ -983,13 +960,12 @@ static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlay
     static auto IsObjectiveInStage = (bool (*)(FFortMcpQuestObjectiveInfo*, int32, UFortQuestItemDefinition*))(ImageBase + 0xA11360C);
     static auto DoesObjectiveStatHandleMatch = (bool (*)(FDataTableRowHandle*, FDataTableRowHandle*))(ImageBase + 0x2197B60);
     static auto DoesObjectiveMatchStatEvent = (bool (*)(FFortMcpQuestObjectiveInfo*, FFortQuestStatEvent*, FString*))(ImageBase + 0xA107868);
+    static auto GetObjectiveCompletionCount = (int32 (*)(UFortQuestItem*, FName*))(ImageBase + 0xA10B850);
 
     std::vector<int32> CountedNames;
     FString ContextString;
     bool bChanged = false;
     bool bHasObjectiveStat = Event->ObjectiveStat.DataTable || !Event->ObjectiveStat.RowName.IsNone();
-
-    static auto GetObjectiveCompletionCount = (int32 (*)(UFortQuestItem*, FName*))(ImageBase + 0xA10B850);
 
     auto ProfileQuests = GetProfileQuests(QuestManager);
     auto ProductTag = GetProductTag(PlayerController);
@@ -1060,6 +1036,19 @@ static bool ProcessStatEventForQuests(UFortQuestManager* QuestManager, AFortPlay
     return bChanged;
 }
 
+static void ProcessStatEvent(UFortQuestManager* QuestManager, AFortPlayerControllerAthena* PlayerController, FFortQuestStatEvent* Event, UObject* TargetObject, const FVerbProcessor* Verb,
+                             FVerbMessage* Message)
+{
+    if (ProcessStatEventForQuests(QuestManager, PlayerController, Event, TargetObject, Verb, Message))
+    {
+        ReapplyPendingChanges(QuestManager);
+        ScheduleFlush(QuestManager);
+    }
+
+    ProcessAccoladeEvent(PlayerController, &Event->ContextTags, [&](const FInstancedStruct& Filter, FName BackendName)
+                         { return EvaluateObjectiveFilter(Filter, QuestManager, BackendName, PlayerController, Event, TargetObject, Verb, Message); });
+}
+
 static void InitVerbMessage(FVerbMessage* Message, AFortPlayerControllerAthena* PlayerController)
 {
     static auto GetVerbContextTags = (void (*)(UObject*, FGameplayTagContainer*))(ImageBase + 0xA4CBE90);
@@ -1101,14 +1090,7 @@ static void ProcessVerbMessage(AFortPlayerControllerAthena* PlayerController, co
 
     auto Event = ConstructStatEvent((FFortQuestStatEvent*)EventStorage, Verb.Type, TargetObject, &TargetTags, &Message->Author.Tags, &ContextTags, &EmptyObjectiveStat, FName(), 1, &EventId);
 
-    if (ProcessStatEventForQuests(QuestManager, PlayerController, Event, TargetObject, &Verb, Message))
-    {
-        ReapplyPendingChanges(QuestManager);
-        ScheduleFlush(QuestManager);
-    }
-
-    ProcessAccoladeEvent(PlayerController, &Event->ContextTags, [&](const FInstancedStruct& Filter, FName BackendName)
-                         { return EvaluateObjectiveFilter(Filter, QuestManager, BackendName, PlayerController, Event, TargetObject, &Verb, Message); });
+    ProcessStatEvent(QuestManager, PlayerController, Event, TargetObject, &Verb, Message);
 
     DestroyStatEvent(Event);
     FreeGameplayTags(ContextTags);
@@ -1249,9 +1231,12 @@ static bool HasGameplayEventObjective(UFortQuestManager* QuestManager, FGameplay
         {
             auto Definition = Quest ? (UFortQuestItemDefinition*)Quest->ItemDefinition : nullptr;
 
-            for (int32 i = 0; Definition && i < Definition->Objectives.Num(); i++)
+            if (!Definition)
+                continue;
+
+            for (auto& Objective : Definition->Objectives)
             {
-                for (auto& Filter : Definition->Objectives[i].ObjectiveFilters)
+                for (auto& Filter : Objective.ObjectiveFilters)
                 {
                     if (Filter.ScriptStruct == FilterStruct && Filter.StructMemory)
                         State.GameplayEventTags.push_back(((FFortObjectiveFilter_PlayerReceivedGameplayEvent*)Filter.StructMemory)->GameplayEventTag.TagName.ComparisonIndex);
@@ -1338,13 +1323,13 @@ static void SendMatchFinished(AFortPlayerControllerAthena* PlayerController)
 
 static void CallMcpOperation(UFortQuestManager* QuestManager, UFortMcpProfile* Profile, UFunction* Function, void* Parms, FDedicatedServerUrlContext* Context, void (*OnComplete)(UFortQuestManager*, uint8*))
 {
-    static auto AllocateDelegateInstance = (uint8* (*)(int32, FDelegateAllocation*))(ImageBase + 0x26E76B0);
+    static auto AllocateDelegateInstance = (uint8* (*)(int32, FNativeDelegate*))(ImageBase + 0x26E76B0);
     static auto ConstructQuestManagerDelegateInstance = (void (*)(uint8*, UFortQuestManager*))(ImageBase + 0xA11C088);
-    static auto DestroyDelegate = (void (*)(FDelegateAllocation*))(ImageBase + 0x1C1D0C0);
-    static auto ConstructDedicatedServerUrlContext = (void (*)(FDedicatedServerUrlContext*, FDelegateAllocation*))(ImageBase + 0x4982030);
+    static auto DestroyDelegate = (void (*)(FNativeDelegate*))(ImageBase + 0x1C1D0C0);
+    static auto ConstructDedicatedServerUrlContext = (void (*)(FDedicatedServerUrlContext*, FNativeDelegate*))(ImageBase + 0x4982030);
     static auto DestroyUrlContext = (void (*)(FDedicatedServerUrlContext*))(ImageBase + 0x4A430D4);
 
-    FDelegateAllocation OnCompleteDelegate{};
+    FNativeDelegate OnCompleteDelegate{};
 
     if (auto Instance = AllocateDelegateInstance(40, &OnCompleteDelegate))
     {
@@ -1396,9 +1381,11 @@ static void OnEndBattleRoyaleGameComplete(UFortQuestManager* QuestManager, uint8
     if (It == FlushStates.end())
         return;
 
-    HandleQuestUpdate(QuestManager, Result, It->second.EndSaveId);
-    It->second.EndSaveId = -1;
-    It->second.bEndInFlight = false;
+    auto& State = It->second;
+
+    HandleQuestUpdate(QuestManager, Result, State.EndSaveId);
+    State.EndSaveId = -1;
+    State.bEndInFlight = false;
 
     if (QuestManager->PendingChanges.Num() > 0)
         ScheduleFlush(QuestManager);
@@ -1434,25 +1421,25 @@ static void SendUpdateQuests(UFortQuestManager* QuestManager, FQuestManagerFlush
     CallMcpOperation(QuestManager, Profile, UpdateQuests, &Parms, &Parms.Context, OnUpdateQuestsComplete);
 }
 
+static std::wstring CurrentMatchId;
+
 static std::wstring GetMatchId()
 {
-    static std::wstring MatchId;
-
-    if (!MatchId.empty())
-        return MatchId;
+    if (!CurrentMatchId.empty())
+        return CurrentMatchId;
 
     auto GameState = (AFortGameState*)UWorld::GetWorld()->GameState;
 
     if (GameState && GameState->GameSessionId.Num() > 1)
-        MatchId = GameState->GameSessionId.ToWString();
+        CurrentMatchId = GameState->GameSessionId.ToWString();
     else
     {
         auto GuidString = UKismetGuidLibrary::Conv_GuidToString(UKismetGuidLibrary::NewGuid());
-        MatchId = GuidString.ToWString();
+        CurrentMatchId = GuidString.ToWString();
         GuidString.Free();
     }
 
-    return MatchId;
+    return CurrentMatchId;
 }
 
 static void OnAthenaRewardResult(AFortPlayerControllerAthena* PlayerController, const FAthenaRewardResult& Result)
@@ -1624,10 +1611,8 @@ void SendStatEvent(UFortQuestManager* QuestManager, AActor* PlayerController, EF
 
     SendStatEventWithTags(QuestManager, StatEvent, TargetObject, &TargetTags, &SourceTags, &ContextTags, Count);
 
-    SourceTags.GameplayTags.Free();
-    SourceTags.ParentTags.Free();
-    ContextTags.GameplayTags.Free();
-    ContextTags.ParentTags.Free();
+    FreeGameplayTags(SourceTags);
+    FreeGameplayTags(ContextTags);
 }
 
 static void QueueStatEvent(UFortQuestManager* QuestManager, EFortQuestObjectiveStatEvent InType, UObject* InTargetObject, FGameplayTagContainer* InTargetTags, FGameplayTagContainer* InSourceTags,
@@ -1655,34 +1640,27 @@ static void QueueStatEvent(UFortQuestManager* QuestManager, EFortQuestObjectiveS
 
     BroadcastStatEvent((void*)(__int64(QuestManager) + 0x140), Event, nullptr);
 
-    if (ProcessStatEventForQuests(QuestManager, PlayerController, Event, InTargetObject, nullptr, nullptr))
-    {
-        ReapplyPendingChanges(QuestManager);
-        ScheduleFlush(QuestManager);
-    }
-
-    ProcessAccoladeEvent(PlayerController, &Event->ContextTags, [&](const FInstancedStruct& Filter, FName BackendName)
-                         { return EvaluateObjectiveFilter(Filter, QuestManager, BackendName, PlayerController, Event, InTargetObject, nullptr, nullptr); });
+    ProcessStatEvent(QuestManager, PlayerController, Event, InTargetObject, nullptr, nullptr);
 
     DestroyStatEvent(Event);
 }
 
+static double TimeElapsedCountedUntil = -1.0;
+
 static void SendTimeElapsed(double Now)
 {
-    static double LastTime = -1.0;
-
-    if (LastTime < 0.0 || Now < LastTime)
+    if (TimeElapsedCountedUntil < 0.0 || Now < TimeElapsedCountedUntil)
     {
-        LastTime = Now;
+        TimeElapsedCountedUntil = Now;
         return;
     }
 
-    auto Seconds = (int32)(Now - LastTime);
+    auto Seconds = (int32)(Now - TimeElapsedCountedUntil);
 
     if (Seconds <= 0)
         return;
 
-    LastTime += Seconds;
+    TimeElapsedCountedUntil += Seconds;
 
     auto World = UWorld::GetWorld();
     auto GameMode = (AFortGameModeAthena*)World->AuthorityGameMode;
@@ -1746,4 +1724,15 @@ void UFortQuestManager__PostLoad()
     Hook(ImageBase + 0x9F2CCAC, OnDamageServer, OnDamageServerOG);
     Hook(ImageBase + 0x8F96DA4, HandlePawnKilled, HandlePawnKilledOG);
     Hook((uint64)HandleGameplayEventFunction, HandleGameplayEvent, HandleGameplayEventOG);
+}
+
+void UFortQuestManager__Reset()
+{
+    FreeGameplayTags(PendingDamageTaken.DamageSourceTags);
+    FreeGameplayTags(PendingDamageTaken.DamageTypeTags);
+
+    PendingDamageTaken = FPendingDamageTaken{};
+    FlushStates.clear();
+    CurrentMatchId.clear();
+    TimeElapsedCountedUntil = -1.0;
 }

@@ -3,10 +3,14 @@
 #include "ABuildingActor.h"
 #include "AFortInventory.h"
 #include "AFortPickup.h"
+#include "UAthenaAIServiceLoot.h"
 #include "UConversationInstance.h"
 
 INIT_MODULE(ABuildingActor);
 INIT_POSTLOAD(ABuildingActor);
+INIT_RESET(ABuildingActor);
+
+static std::optional<UCurveTable*> ResourceRates;
 
 static void (*BroadcastNotifyBuildingNetCullDistChangeOG)(void*, ABuildingActor*, float);
 static void BroadcastNotifyBuildingNetCullDistChange(void* Delegate, ABuildingActor* BuildingActor, float CullDistance)
@@ -27,28 +31,32 @@ static void OnDamageServer(ABuildingSMActor* Actor, float Damage, const FGamepla
                            const FGameplayEffectContextHandle& EffectContext)
 {
     auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
-    auto Controller = (AFortPlayerControllerAthena*)InstigatedBy;
-    auto bInstigatedByBot = InstigatedBy && InstigatedBy->IsA(AFortAthenaAIBotController::StaticClass());
+    auto Controller = InstigatedBy && InstigatedBy->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)InstigatedBy : nullptr;
+    auto BotController = InstigatedBy && InstigatedBy->IsA(AFortAthenaAIBotController::StaticClass()) ? (AFortAthenaAIBotController*)InstigatedBy : nullptr;
 
-    if (!InstigatedBy || (!InstigatedBy->IsA(AFortPlayerControllerAthena::StaticClass()) && !bInstigatedByBot) || !Actor->IsA(ABuildingSMActor::StaticClass()) || Actor->bPlayerPlaced || Actor->GetHealth() == 1)
+    if ((!Controller && !BotController) || !Actor->IsA(ABuildingSMActor::StaticClass()) || Actor->bPlayerPlaced || Actor->GetHealth() == 1)
         return OnDamageServerOG(Actor, Damage, DamageTags, Momentum, HitInfo, InstigatedBy, DamageCauser, EffectContext);
 
-    auto BotPawn = bInstigatedByBot ? ((AFortAthenaAIBotController*)InstigatedBy)->PlayerBotPawn : nullptr;
-    auto Inventory = bInstigatedByBot ? (AFortInventory*)((AFortAthenaAIBotController*)InstigatedBy)->Inventory.ObjectPointer : (AFortInventory*)Controller->WorldInventory.ObjectPointer;
+    auto Inventory = (AFortInventory*)(Controller ? Controller->WorldInventory.ObjectPointer : BotController->Inventory.ObjectPointer);
+    auto InstigatorPawn = Controller ? Controller->MyFortPawn : (AFortPawn*)BotController->Pawn;
 
-    if (bInstigatedByBot && (!Inventory || !BotPawn))
-        return OnDamageServerOG(Actor, Damage, DamageTags, Momentum, HitInfo, InstigatedBy, DamageCauser, EffectContext);
-    if (!DamageCauser || !DamageCauser->IsA(AFortWeapon::StaticClass()) || !((AFortWeapon*)DamageCauser)->WeaponData->IsA(UFortWeaponMeleeItemDefinition::StaticClass()))
+    if (!Inventory || !DamageCauser || !DamageCauser->IsA(AFortWeapon::StaticClass()) || !((AFortWeapon*)DamageCauser)->WeaponData->IsA(UFortWeaponMeleeItemDefinition::StaticClass()))
         return OnDamageServerOG(Actor, Damage, DamageTags, Momentum, HitInfo, InstigatedBy, DamageCauser, EffectContext);
 
     auto Resource = UFortKismetLibrary::K2_GetResourceItemDefinition(Actor->ResourceType);
+
     if (!Resource)
         return OnDamageServerOG(Actor, Damage, DamageTags, Momentum, HitInfo, InstigatedBy, DamageCauser, EffectContext);
+
     auto MaxMat = Resource->GetMaxStackSize(nullptr);
 
-    static auto Playlist = GameState->CurrentPlaylistInfo.BasePlaylist;
-    static auto ResourceRates = Playlist ? Playlist->ResourceRates.Get() : nullptr;
     if (!ResourceRates)
+    {
+        auto Playlist = GameState->CurrentPlaylistInfo.BasePlaylist;
+        ResourceRates = Playlist ? Playlist->ResourceRates.Get() : nullptr;
+    }
+
+    if (!*ResourceRates)
         ResourceRates = FindObject<UCurveTable>(L"/Game/Athena/Balance/DataTables/AthenaResourceRates.AthenaResourceRates");
 
     static auto GetSparseClassData = (FBuildingSMActorClassData* (*)(UClass*, uint8))(ImageBase + 0x21E0B6C);
@@ -59,7 +67,7 @@ static void OnDamageServer(ABuildingSMActor* Actor, float Damage, const FGamepla
     if (!BuildingResourceAmountOverride.RowName.IsNone())
     {
         float Out = 0.f;
-        UDataTableFunctionLibrary::EvaluateCurveTableRow(ResourceRates, BuildingResourceAmountOverride.RowName, 0.f, nullptr, &Out, FString());
+        UDataTableFunctionLibrary::EvaluateCurveTableRow(*ResourceRates, BuildingResourceAmountOverride.RowName, 0.f, nullptr, &Out, FString());
 
         float RC = Out / (Actor->GetMaxHealth() / Damage);
 
@@ -68,34 +76,16 @@ static void OnDamageServer(ABuildingSMActor* Actor, float Damage, const FGamepla
 
     if (ResCount > 0)
     {
-        UFortWorldItem* Item = nullptr;
-        FFortItemEntry* ItemEntry = nullptr;
-
-        for (auto& ItemInstance : Inventory->Inventory.ItemInstances)
-        {
-            if (ItemInstance->ItemEntry.ItemDefinition == (UItemDefinitionBase*)Resource)
-            {
-                Item = ItemInstance;
-                break;
-            }
-        }
-
-        for (auto& ReplicatedEntry : Inventory->Inventory.ReplicatedEntries)
-        {
-            if (ReplicatedEntry.ItemDefinition == (UItemDefinitionBase*)Resource)
-            {
-                ItemEntry = &ReplicatedEntry;
-                break;
-            }
-        }
+        auto Item = FindItemInstance(Inventory, Resource);
+        auto ItemEntry = FindReplicatedEntry(Inventory, Resource);
 
         if (Item)
         {
             ItemEntry->Count += ResCount;
             if (ItemEntry->Count > MaxMat)
             {
-                SpawnPickup(BotPawn ? BotPawn->K2_GetActorLocation() : Controller->Pawn->K2_GetActorLocation(), (UFortItemDefinition*)Item->ItemEntry.ItemDefinition, ItemEntry->Count - MaxMat, 0,
-                            EFortPickupSourceTypeFlag::Tossed, EFortPickupSpawnSource::Unset, BotPawn ? (AFortPawn*)BotPawn : Controller->MyFortPawn);
+                SpawnPickup(InstigatedBy->Pawn->K2_GetActorLocation(), (UFortItemDefinition*)Item->ItemEntry.ItemDefinition, ItemEntry->Count - MaxMat, 0, EFortPickupSourceTypeFlag::Tossed,
+                            EFortPickupSpawnSource::Unset, InstigatorPawn);
                 ItemEntry->Count = MaxMat;
             }
 
@@ -116,8 +106,7 @@ static void OnDamageServer(ABuildingSMActor* Actor, float Damage, const FGamepla
         {
             if (ResCount > MaxMat)
             {
-                SpawnPickup(BotPawn ? BotPawn->K2_GetActorLocation() : Controller->Pawn->K2_GetActorLocation(), Resource, ResCount - MaxMat, 0, EFortPickupSourceTypeFlag::Tossed, EFortPickupSpawnSource::Unset,
-                            BotPawn ? (AFortPawn*)BotPawn : Controller->MyFortPawn);
+                SpawnPickup(InstigatedBy->Pawn->K2_GetActorLocation(), Resource, ResCount - MaxMat, 0, EFortPickupSourceTypeFlag::Tossed, EFortPickupSpawnSource::Unset, InstigatorPawn);
                 ResCount = MaxMat;
             }
 
@@ -125,7 +114,7 @@ static void OnDamageServer(ABuildingSMActor* Actor, float Damage, const FGamepla
         }
     }
 
-    if (ResCount > 0 && !bInstigatedByBot)
+    if (ResCount > 0 && Controller)
         Controller->ClientReportDamagedResourceBuilding(Actor, Actor->ResourceType, ResCount, Actor->GetHealth() - Damage <= 0, Damage == 100.f);
 
     Actor->ForceNetUpdate();
@@ -165,6 +154,13 @@ static bool SpawnLoot(ABuildingContainer* Container)
     Container->BounceContainer();
 
     return true;
+}
+
+static void (*BeginPlayOG)(ABuildingContainer*);
+static void BeginPlay(ABuildingContainer* Container)
+{
+    BeginPlayOG(Container);
+    RegisterChestLoot(Container);
 }
 
 static void (*OnAuthorityRandomUpgradeAppliedOG)(ABuildingContainer*, FName&);
@@ -364,6 +360,17 @@ static AActor* GetInteractingPlayerState(AActor* InteractingActor)
     return nullptr;
 }
 
+static void OnInteractingActorsChanged(UFortActorComponent_MultiInteract* Component, AActor* PlayerState, TArray<AActor*>& InteractingActors)
+{
+    if (PlayerState)
+        Component->OnRep_InteractingPlayers();
+    else
+    {
+        Component->InteractingNonPlayerActorCount = InteractingActors.Num();
+        Component->OnRep_InteractingNonPlayerActorCount();
+    }
+}
+
 static void AddInteractingActor(UObject* Context, FFrame& Stack, void* Ret)
 {
     AActor* InteractingActorToAdd;
@@ -393,14 +400,7 @@ static void AddInteractingActor(UObject* Context, FFrame& Stack, void* Ret)
     }
 
     InteractingActors.Add(InteractingActor);
-
-    if (PlayerState)
-        Component->OnRep_InteractingPlayers();
-    else
-    {
-        Component->InteractingNonPlayerActorCount = InteractingActors.Num();
-        Component->OnRep_InteractingNonPlayerActorCount();
-    }
+    OnInteractingActorsChanged(Component, PlayerState, InteractingActors);
 }
 
 static void RemoveInteractingActor(UObject* Context, FFrame& Stack, void* Ret)
@@ -425,14 +425,7 @@ static void RemoveInteractingActor(UObject* Context, FFrame& Stack, void* Ret)
             continue;
 
         InteractingActors.Remove(i);
-
-        if (PlayerState)
-            Component->OnRep_InteractingPlayers();
-        else
-        {
-            Component->InteractingNonPlayerActorCount = InteractingActors.Num();
-            Component->OnRep_InteractingNonPlayerActorCount();
-        }
+        OnInteractingActorsChanged(Component, PlayerState, InteractingActors);
 
         if (Component->GetInteractingActorCount(true, true) == 0 && !Component->bAllowGradualReset)
             Component->ResetGradualInteractionTimer();
@@ -509,6 +502,7 @@ void ABuildingActor__Init()
     Hook(ImageBase + 0x50D6D84, BroadcastNotifyBuildingNetCullDistChange, BroadcastNotifyBuildingNetCullDistChangeOG);
     Hook(ImageBase + 0x92D1784, SpawnLoot);
     Hook(ImageBase + 0x92CC584, OnAuthorityRandomUpgradeApplied, OnAuthorityRandomUpgradeAppliedOG);
+    Hook<ABuildingContainer>(uint32(0x74), BeginPlay, BeginPlayOG);
     ExecHook(ABuildingFoundation::StaticClass()->FindFunction("SetDynamicFoundationEnabled"), SetDynamicFoundationEnabled);
     ExecHook(ABuildingFoundation::StaticClass()->FindFunction("SetDynamicFoundationTransform"), SetDynamicFoundationTransform);
 
@@ -539,4 +533,9 @@ void ABuildingActor__PostLoad()
 
     HookServerOnAttemptInteract<ABuildingGameplayActorConversationCompatible>();
     HookServerOnAttemptInteract<ABuildingProp_ConversationCompatible>();
+}
+
+void ABuildingActor__Reset()
+{
+    ResourceRates.reset();
 }

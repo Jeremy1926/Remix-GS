@@ -3,6 +3,7 @@
 
 INIT_MODULE(ABuildingGameplayActorSpawnMachine);
 INIT_TICKER(ABuildingGameplayActorSpawnMachine);
+INIT_RESET(ABuildingGameplayActorSpawnMachine);
 
 static void (*SetSpawnMachineStateOG)(ABuildingGameplayActorSpawnMachine*, ESpawnMachineState);
 
@@ -75,6 +76,16 @@ static void SetSpawnMachineState(ABuildingGameplayActorSpawnMachine* SpawnMachin
     SpawnMachineRepData.MarkItemDirty(*RepData);
 }
 
+static AFortPlayerControllerAthena* GetTeamPlayerController(APlayerState* Player, uint8 TeamIndex)
+{
+    auto PlayerState = (AFortPlayerStateAthena*)Player;
+
+    if (!PlayerState || !PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) || PlayerState->TeamIndex != TeamIndex || !PlayerState->Owner || !PlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass()))
+        return nullptr;
+
+    return (AFortPlayerControllerAthena*)PlayerState->Owner;
+}
+
 static void ResurrectNextPlayer(ABuildingGameplayActorSpawnMachine* SpawnMachine)
 {
     static auto AddToAlivePlayers = (void (*)(AFortGameModeAthena*, AFortPlayerControllerAthena*))(ImageBase + 0x8F86B68);
@@ -90,13 +101,9 @@ static void ResurrectNextPlayer(ABuildingGameplayActorSpawnMachine* SpawnMachine
 
     for (auto& Player : GameState->PlayerArray)
     {
-        auto PlayerState = (AFortPlayerStateAthena*)Player;
-        auto PlayerController = PlayerState && PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) && PlayerState->bResurrectingNow && PlayerState->TeamIndex == SpawnMachine->ActiveTeam && PlayerState->Owner &&
-                                        PlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass())
-                                    ? (AFortPlayerControllerAthena*)PlayerState->Owner
-                                    : nullptr;
+        auto PlayerController = GetTeamPlayerController(Player, SpawnMachine->ActiveTeam);
 
-        if (!PlayerController || !PlayerController->ResurrectionComponent || PlayerController->ResurrectionComponent->ResurrectionLocation.Get() != SpawnMachine->ResurrectLocation)
+        if (!PlayerController || !((AFortPlayerStateAthena*)Player)->bResurrectingNow || !PlayerController->ResurrectionComponent || PlayerController->ResurrectionComponent->ResurrectionLocation.Get() != SpawnMachine->ResurrectLocation)
             continue;
 
         if (ResurrectedPlayer)
@@ -138,11 +145,7 @@ static void ResurrectNextPlayer(ABuildingGameplayActorSpawnMachine* SpawnMachine
 
         for (auto& Player : GameState->PlayerArray)
         {
-            auto PlayerState = (AFortPlayerStateAthena*)Player;
-            auto TeamController = PlayerState && PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) && PlayerState->TeamIndex == SpawnMachine->ActiveTeam && PlayerState->Owner &&
-                                          PlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass())
-                                      ? (AFortPlayerControllerAthena*)PlayerState->Owner
-                                      : nullptr;
+            auto TeamController = GetTeamPlayerController(Player, SpawnMachine->ActiveTeam);
 
             if (TeamController && TeamController->ResurrectionComponent)
                 RemovePlayerIdForResurrection(TeamController->ResurrectionComponent, ResurrectedPlayer->PlayerState->UniqueID);
@@ -189,4 +192,9 @@ void ABuildingGameplayActorSpawnMachine__Tick()
 
     for (auto SpawnMachine : SpawnMachines)
         ResurrectNextPlayer(SpawnMachine);
+}
+
+void ABuildingGameplayActorSpawnMachine__Reset()
+{
+    PendingResurrections.clear();
 }

@@ -16,6 +16,15 @@ inline T* GetFirstInstance(const UClass* Class = T::StaticClass())
     return nullptr;
 }
 
+template <typename T>
+inline T* FindCachedObject(std::optional<T*>& Cache, const wchar_t* Path)
+{
+    if (!Cache)
+        Cache = FindObject<T>(Path);
+
+    return *Cache;
+}
+
 template <typename T = AActor>
 inline void GetAll(const UClass* Class, TArray<T*>& Out)
 {
@@ -56,12 +65,6 @@ template <typename T>
 inline T* SpawnActor(FVector Loc, FRotator Rot = {}, AActor* Owner = nullptr)
 {
     return (T*)SpawnActor(T::StaticClass(), Loc, Rot, Owner);
-}
-
-template <typename T>
-inline T* SpawnActor(const FTransform& Transform, AActor* Owner = nullptr)
-{
-    return (T*)SpawnActor(T::StaticClass(), Transform, Owner);
 }
 
 template <typename T = AActor>
@@ -179,6 +182,7 @@ inline void Rel32Hook(uint64_t _Ptr, void* _Detour)
 inline std::vector<void (*)()> Initters;
 inline std::vector<void (*)()> PostLoaders;
 inline std::vector<void (*)()> Tickers;
+inline std::vector<void (*)()> Resetters;
 
 #define INIT_MODULE(Name)                                                                          \
     void Name##__Init();                                                                           \
@@ -191,6 +195,10 @@ inline std::vector<void (*)()> Tickers;
 #define INIT_TICKER(Name)                                                                          \
     void Name##__Tick();                                                                           \
     auto Ticker__##Name = ([]() { Tickers.push_back(Name##__Tick); return 1; })();
+
+#define INIT_RESET(Name)                                                                           \
+    void Name##__Reset();                                                                          \
+    auto Resetter__##Name = ([]() { Resetters.push_back(Name##__Reset); return 1; })();
 
 #define callOG(_Tr, _Fn, _Th, ...)                                 \
     ([&]()                                                         \
@@ -213,3 +221,36 @@ inline TMap<FName, FRealCurve*>& GetRowMap(const UCurveTable* CurveTable)
 {
     return *(TMap<FName, FRealCurve*>*)(__int64(CurveTable) + 0x30);
 }
+
+inline void GetOwnedGameplayTags(const UObject* Object, FGameplayTagContainer& OwnedTags)
+{
+    if (auto Interface = Object ? Object->GetInterface(IGameplayTagAssetInterface::StaticClass()) : nullptr)
+        ((void (*)(void*, FGameplayTagContainer*))(*(void***)Interface)[0x2])(Interface, &OwnedTags);
+}
+
+inline void FreeGameplayTags(FGameplayTagContainer& Tags)
+{
+    Tags.GameplayTags.Free();
+    Tags.ParentTags.Free();
+}
+
+struct FSharedRef
+{
+    void* Object;
+    void* SharedReferenceCount;
+};
+
+struct FJsonKey
+{
+    const wchar_t* Data;
+    int32 Len;
+};
+
+enum class EHttpRequestStatus : int32
+{
+    NotStarted,
+    Processing,
+    Failed,
+    Failed_ConnectionError,
+    Succeeded
+};

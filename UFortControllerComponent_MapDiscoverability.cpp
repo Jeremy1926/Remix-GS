@@ -2,6 +2,7 @@
 #include "Shared.h"
 
 INIT_MODULE(UFortControllerComponent_MapDiscoverability);
+INIT_RESET(UFortControllerComponent_MapDiscoverability);
 
 struct FDiscoverablePOI
 {
@@ -10,23 +11,24 @@ struct FDiscoverablePOI
     FName QuestObjectiveBackendName;
 };
 
+static std::vector<FDiscoverablePOI> CachedDiscoverablePOIs;
+static TWeakObjectPtr<AFortPoiManager> CachedPoiManager;
+static int32 CachedVolumes = -1;
+
 static std::vector<FDiscoverablePOI>& GetDiscoverablePOIs(AFortPoiManager* PoiManager)
 {
     static auto MatchesTag = (bool (*)(const FGameplayTag*, const FGameplayTag*))(ImageBase + 0x1D74320);
     static auto POITag = FGameplayTag{ FName(L"Athena.Location.POI") };
     static auto UnNamedPOITag = FGameplayTag{ FName(L"Athena.Location.UnNamedPOI") };
-    static std::vector<FDiscoverablePOI> DiscoverablePOIs;
-    static TWeakObjectPtr<AFortPoiManager> CachedPoiManager;
-    static int32 CachedVolumes = -1;
 
     auto Volumes = PoiManager->SmallTickUpdatedPoi.Num() + PoiManager->LargePoiVolumes.Num() + PoiManager->PendingLargePoiVolumes.Num();
 
     if (CachedPoiManager.Get() == PoiManager && CachedVolumes == Volumes)
-        return DiscoverablePOIs;
+        return CachedDiscoverablePOIs;
 
     CachedPoiManager = TWeakObjectPtr<AFortPoiManager>(PoiManager);
     CachedVolumes = Volumes;
-    DiscoverablePOIs.clear();
+    CachedDiscoverablePOIs.clear();
 
     for (auto List : { &PoiManager->SmallTickUpdatedPoi, &PoiManager->LargePoiVolumes, &PoiManager->PendingLargePoiVolumes })
     {
@@ -42,15 +44,15 @@ static std::vector<FDiscoverablePOI>& GetDiscoverablePOIs(AFortPoiManager* PoiMa
                 if (!MatchesTag(&Tag, &UnNamedPOITag) && !MatchesTag(&Tag, &POITag))
                     continue;
 
-                if (std::none_of(DiscoverablePOIs.begin(), DiscoverablePOIs.end(), [&](auto& DiscoverablePOI) { return DiscoverablePOI.POITag.TagName == Tag.TagName; }))
-                    DiscoverablePOIs.push_back({ Tag, Discoverable->QuestPartOf.Get(), Discoverable->QuestObjectiveBackendName });
+                if (std::none_of(CachedDiscoverablePOIs.begin(), CachedDiscoverablePOIs.end(), [&](auto& DiscoverablePOI) { return DiscoverablePOI.POITag.TagName == Tag.TagName; }))
+                    CachedDiscoverablePOIs.push_back({ Tag, Discoverable->QuestPartOf.Get(), Discoverable->QuestObjectiveBackendName });
 
                 break;
             }
         }
     }
 
-    return DiscoverablePOIs;
+    return CachedDiscoverablePOIs;
 }
 
 static FPoiDiscoverabilityDataEntry* FindEntry(UFortControllerComponent_MapDiscoverability* Component, const FGameplayTag& POITag)
@@ -161,4 +163,11 @@ static void ProcessTagDeltaForController(AFortPoiManager* PoiManager, AFortPlaye
 void UFortControllerComponent_MapDiscoverability__Init()
 {
     Hook(ImageBase + 0x908CF5C, ProcessTagDeltaForController, ProcessTagDeltaForControllerOG);
+}
+
+void UFortControllerComponent_MapDiscoverability__Reset()
+{
+    CachedDiscoverablePOIs.clear();
+    CachedPoiManager = TWeakObjectPtr<AFortPoiManager>();
+    CachedVolumes = -1;
 }

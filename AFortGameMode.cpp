@@ -9,18 +9,24 @@
 #include "UFortQuestManager.h"
 #include "AFortPlayerController.h"
 #include "AFortAthenaAIBotController.h"
+#include "UAthenaAIServicePlayerBots.h"
 #include "UFortControllerComponent_TournamentStatsTracker.h"
 
 INIT_MODULE(AFortGameMode);
 INIT_POSTLOAD(AFortGameMode);
 INIT_TICKER(AFortGameMode);
+INIT_RESET(AFortGameMode);
 
 static TArray<UFortAbilitySet*> AbilitySets;
 static bool bSkipWarmup = false;
 static bool bSkipAircraft = false;
+static uint8 PauseWarmupMask = 0;
 
 static TArray<FVector> SafeZoneLocations;
 static TArray<FName> LevelsToStream;
+
+static std::wstring ConfiguredPlaylist;
+static bool bConfiguredLateGame = false;
 
 static int GetLateGamePhase(AFortGameStateAthena* GameState)
 {
@@ -40,12 +46,6 @@ static int GetLateGamePhase(AFortGameStateAthena* GameState)
     return FinalPhase - 9 + LateGameZone;
 }
 
-struct FSharedRef
-{
-    void* Object;
-    void* SharedReferenceCount;
-};
-
 struct FOnlineSessionSettings
 {
     uint8 Pad_0[0x8];
@@ -54,70 +54,1067 @@ struct FOnlineSessionSettings
     bool bShouldAdvertise;
     bool bAllowJoinInProgress;
     bool bIsLANMatch;
-    uint8 Pad_13[0xC5];
+    bool bIsDedicated;
+    bool bUsesStats;
+    bool bAllowInvites;
+    uint8 Pad_16[0xC2];
 };
 
-static void RegisterServer(AGameSession* GameSession)
+struct FMatchAssignment
 {
-    static auto GetSessionInterface = (FSharedRef* (*)(FSharedRef*, UWorld*, FName))(ImageBase + 0x71D8BA0);
-    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
-    static auto InitHostBeacon = (void (*)(AGameSession*, FOnlineSessionSettings*))(ImageBase + 0x9CD9E24);
-    static auto StartMatchmakingBackfillV2 = (bool (*)(AGameSession*))(ImageBase + 0x9D2ECD8);
-    static auto GetOnlineSubsystem = (uint8* (*)(void*))(ImageBase + 0x25336F0);
-    static auto FindServicePermissions = (uint8* (*)(uint8*, void*))(ImageBase + 0x3C253EC);
-    static auto MakeServicePermissions = (void* (*)(void*, void*, void*, void*))(ImageBase + 0x2BF1684);
-    static auto AddServicePermissions = (int32 (*)(void*, void*))(ImageBase + 0x2BF1790);
-    static auto DestroyServicePermissions = (void (*)(void*))(ImageBase + 0x1805494);
+    bool bResponded;
+    FString MatchId;
+    FString BucketId;
+    FName PlaylistName;
+    FString RegionId;
+    FString GroupId;
+    TArray<TArray<TArray<FSharedRef>>> Teams;
+    TArray<FSharedRef> Spectators;
+    FSharedRef MatchOptions;
+    FString PayloadJwt;
+};
+
+static uint64 CreateSessionCompleteHandle = 0;
+static uint64 LeaveMeshNetworkCompleteHandle = 0;
+static int32 ShutdownExitCode = 0;
+
+static FName GetGameSessionName()
+{
+    static auto GetHardcodedNames = (uint8* (*)())(ImageBase + 0x1723804);
+    static auto DecodeName = (uint32* (*)(const uint8*, uint32*))(ImageBase + 0x50D6B70);
+    static auto EncodeName = (FName* (*)(FName*, uint32))(ImageBase + 0x4A41EC0);
+
+    uint32 NameIndex;
+    FName Name;
+
+    DecodeName(GetHardcodedNames() + 0x144BC, &NameIndex);
+    EncodeName(&Name, NameIndex);
+    return Name;
+}
+
+static FJsonKey JsonKey(const wchar_t* Key)
+{
+    return { Key, int32(wcslen(Key)) };
+}
+
+static FJsonKey JsonKey(const FString& String)
+{
+    return { String.Data, String.NumElements ? String.NumElements - 1 : 0 };
+}
+
+static void IncrementSharedReferenceCount(const FSharedRef& Ref)
+{
+    if (Ref.SharedReferenceCount)
+        _InterlockedIncrement((volatile long*)((uint8*)Ref.SharedReferenceCount + 0x8));
+}
+
+static void AddSharedRef(TArray<FSharedRef>& Array, const FSharedRef& Ref)
+{
+    Array.Add(Ref);
+    IncrementSharedReferenceCount(Ref);
+}
+
+static FSharedRef GetSessionInterface()
+{
+    static auto GetSessionInterfaceInternal = (FSharedRef* (*)(FSharedRef*, UWorld*, FName))(ImageBase + 0x71D8BA0);
 
     FSharedRef SessionInterface{};
-    GetSessionInterface(&SessionInterface, UWorld::GetWorld(), FName());
+    GetSessionInterfaceInternal(&SessionInterface, UWorld::GetWorld(), FName());
+    return SessionInterface;
+}
+
+static FOnlineSessionSettings* GetSessionSettings(const FSharedRef& SessionInterface, FName SessionName)
+{
+    auto GetSessionSettingsInternal = (FOnlineSessionSettings* (*)(void*, FName))(*(void***)SessionInterface.Object)[0x70];
+
+    return GetSessionSettingsInternal(SessionInterface.Object, SessionName);
+}
+
+static void ClearTimer(AActor* Actor, uint64& Handle)
+{
+    static auto GetWorldTimerManager = (void* (*)(AActor*))(ImageBase + 0x15C52AC);
+    static auto FindTimer = (void* (*)(void*, uint64*))(ImageBase + 0x15C33A8);
+    static auto InternalClearTimer = (void (*)(void*, uint64))(ImageBase + 0x15C4BA4);
+
+    auto TimerManager = GetWorldTimerManager(Actor);
+
+    if (FindTimer(TimerManager, &Handle))
+        InternalClearTimer(TimerManager, Handle);
+
+    Handle = 0;
+}
+
+void SetActorTimer(AActor* Actor, void* Callback, uint64& Handle, float Delay)
+{
+    static auto BindTimerDelegate = (void (*)(FNativeDelegate*, UObject*, void*))(ImageBase + 0x9816384);
+    static auto GetWorldTimerManager = (void* (*)(AActor*))(ImageBase + 0x15C52AC);
+    static auto MakeUnifiedTimerDelegate = (void* (*)(uint8*, FNativeDelegate*))(ImageBase + 0x15C4A14);
+    static auto InternalSetTimer = (void (*)(void*, uint64*, uint8*, float, const void*))(ImageBase + 0x1E0C500);
+    static auto DestroyDelegate = (void (*)(FNativeDelegate*))(ImageBase + 0x1C1D0C0);
+
+    FNativeDelegate TimerDelegate{};
+    uint8 UnifiedTimerDelegate[0x48];
+    struct { uint8 bLoop; uint8 bMaxOncePerFrame; float FirstDelay; } TimerParameters{ 0, 0, -1.f };
+
+    BindTimerDelegate(&TimerDelegate, Actor, Callback);
+    MakeUnifiedTimerDelegate(UnifiedTimerDelegate, &TimerDelegate);
+    InternalSetTimer(GetWorldTimerManager(Actor), &Handle, UnifiedTimerDelegate, Delay, &TimerParameters);
+    DestroyDelegate((FNativeDelegate*)UnifiedTimerDelegate);
+    DestroyDelegate(&TimerDelegate);
+}
+
+static bool HasJsonField(uint8* Object, const FJsonKey& Key)
+{
+    static auto HashKey = (uint32 (*)(const FJsonKey*))(ImageBase + 0x180B5B8);
+    static auto KeyEquals = (bool (*)(const FString*, const FJsonKey*))(ImageBase + 0x1C9D40C);
+
+    if (*(int32*)(Object + 0x8) == *(int32*)(Object + 0x34))
+        return false;
+
+    auto Buckets = *(int32**)(Object + 0x40) ? *(int32**)(Object + 0x40) : (int32*)(Object + 0x38);
+
+    for (auto Index = Buckets[HashKey(&Key) & (*(int32*)(Object + 0x48) - 1)]; Index != -1; Index = *(int32*)(*(uint8**)Object + 0x28 * Index + 0x20))
+    {
+        auto Element = *(uint8**)Object + 0x28 * Index;
+
+        if (KeyEquals((FString*)Element, &Key))
+            return *(void**)(Element + 0x10) != nullptr;
+    }
+
+    return false;
+}
+
+static void OnCreateSessionComplete(AFortGameSessionDedicatedAthena* GameSession, FName SessionName, bool bWasSuccessful)
+{
+    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+
+    auto SessionInterface = GetSessionInterface();
 
     if (SessionInterface.Object)
     {
-        auto CreateSession = (bool (*)(void*, int32, FName, const FOnlineSessionSettings&))(*(void***)SessionInterface.Object)[0x9];
-        auto GetSessionSettings = (FOnlineSessionSettings* (*)(void*, FName))(*(void***)SessionInterface.Object)[0x70];
-        FOnlineSessionSettings SessionSettings{};
+        auto ClearOnCreateSessionCompleteDelegate = (void (*)(void*, uint64*))(*(void***)SessionInterface.Object)[0xB];
 
-        SessionSettings.NumPublicConnections = GameSession->MaxPlayers;
-        SessionSettings.bAllowJoinInProgress = true;
-        SessionSettings.bIsLANMatch = true;
+        ClearOnCreateSessionCompleteDelegate(SessionInterface.Object, &CreateSessionCompleteHandle);
+    }
 
-        CreateSession(SessionInterface.Object, 0, GameSession->SessionName, SessionSettings);
+    TSharedRef_Destructor(&SessionInterface);
 
-        auto CreatedSettings = GetSessionSettings(SessionInterface.Object, GameSession->SessionName);
+    if (SessionName == GetGameSessionName() && bWasSuccessful && !*(uint8*)(__int64(GameSession) + 0x430))
+    {
+        auto ConnectToMatchmakingServiceV2 = (bool (*)(AFortGameSessionDedicatedAthena*, bool))GameSession->VTable[0x138];
 
-        if (CreatedSettings && GameSession->IsA(AFortGameSessionDedicatedAthena::StaticClass()))
+        ConnectToMatchmakingServiceV2(GameSession, false);
+    }
+}
+
+static bool HandleMatchAssignmentV2(AFortPartyBeaconHost* ReservationBeaconHost, FMatchAssignment& MatchAssignment)
+{
+    static auto GetAthenaPlaylist = (UFortPlaylistAthena* (*)(UFortPlaylistManager*, FName))(ImageBase + 0x9947A68);
+    static auto GetMaxNumberOfTeams = (int32 (*)(UObject*, UFortPlaylistAthena*))(ImageBase + 0x9086DCC);
+    static auto GetMaxPlayerCount = (int32 (*)(UObject*, UFortPlaylistAthena*))(ImageBase + 0x9086E3C);
+    static auto GetMaxTeamSize = (int32 (*)(UObject*, UFortPlaylistAthena*))(ImageBase + 0x9086ED0);
+    static auto AssignString = (void (*)(FString*, const wchar_t*, int32))(ImageBase + 0x18104B4);
+    static auto MakeUniqueNetIdRepl = (FUniqueNetIdRepl* (*)(FUniqueNetIdRepl*, const FSharedRef*))(ImageBase + 0x6D3A7E8);
+    static auto AssignUniqueNetIdRepl = (void (*)(FUniqueNetIdRepl*, const FUniqueNetIdRepl*))(ImageBase + 0x1D91138);
+    static auto DestroyUniqueNetIdRepl = (void (*)(FUniqueNetIdRepl*))(ImageBase + 0x175D9E8);
+    static auto IsValidUniqueNetIdRepl = (bool (*)(const FUniqueNetIdRepl*))(ImageBase + 0x15F6428);
+    static auto TryGetBoolField = (bool (*)(void*, const FJsonKey*, bool*))(ImageBase + 0x180A030);
+    static auto GrowPlayerReservations = (void (*)(TArray<FPlayerReservation>*, int32))(ImageBase + 0x5C173E0);
+    static auto CopyPlayerReservation = (FPlayerReservation* (*)(FPlayerReservation*, const FPlayerReservation*))(ImageBase + 0x71D2C78);
+    static auto DestroyPartyReservation = (void (*)(FPartyReservation*))(ImageBase + 0x71D30A8);
+    static auto ChangeSessionOwner = (void (*)(UFortPartyBeaconState*, const FSharedRef*))(ImageBase + 0x9E32CE8);
+
+    auto GameInstance = (UFortGameInstance*)UWorld::GetWorld()->OwningGameInstance;
+
+    if (!GameInstance || !GameInstance->IsA(UFortGameInstance::StaticClass()) || !GameInstance->PlaylistManager)
+        return false;
+
+    auto Playlist = GetAthenaPlaylist(GameInstance->PlaylistManager, MatchAssignment.PlaylistName);
+
+    if (!Playlist)
+        return false;
+
+    auto MaxTeams = GetMaxNumberOfTeams(ReservationBeaconHost, Playlist);
+    auto MaxTeamSize = GetMaxTeamSize(ReservationBeaconHost, Playlist);
+    auto MaxPlayers = GetMaxPlayerCount(ReservationBeaconHost, Playlist);
+    auto bAllowJoinInProgress = Playlist->bAllowJoinInProgress;
+    auto ReconfigureTeamAndPlayerCount = (bool (*)(AFortPartyBeaconHost*, int32, int32, int32))ReservationBeaconHost->VTable[0xEC];
+
+    ReconfigureTeamAndPlayerCount(ReservationBeaconHost, MaxTeams, MaxTeamSize, MaxPlayers);
+
+    auto State = ReservationBeaconHost->State;
+    auto FortState = *(UFortPartyBeaconState**)(__int64(ReservationBeaconHost) + 0x348);
+    auto SetTeamAssignmentMethod = (void (*)(UFortPartyBeaconState*, FName))FortState->VTable[0x5C];
+
+    SetTeamAssignmentMethod(FortState, *(FName*)(ImageBase + 0x12D186A4));
+
+    auto& ReservationData = FortState->ReservationData;
+    FUniqueNetIdRepl InvalidId{};
+    *(void**)&InvalidId = (void*)(ImageBase + 0xD593168);
+
+    ReservationData.PlaylistId = -1;
+    AssignString(&ReservationData.ZoneInstanceId, L"", 0);
+    AssignString(&ReservationData.WUID, L"", 0);
+    AssignUniqueNetIdRepl(&ReservationData.WorldDataOwner, &InvalidId);
+    ReservationData.bMakePrivate = false;
+    ReservationData.MatchmakingPool = EFortMatchmakingPool(0);
+    ReservationData.bUsesMatchmakingV2 = bAllowJoinInProgress;
+
+    bool bCrossplayLocked = false;
+    auto CrossplayLockedKey = JsonKey(L"match.option.crossplayLocked");
+    TryGetBoolField(MatchAssignment.MatchOptions.Object, &CrossplayLockedKey, &bCrossplayLocked);
+    *(bool*)(__int64(FortState) + 0x148) = bCrossplayLocked;
+
+    auto DoesReservationFit = (bool (*)(UPartyBeaconState*, FPartyReservation*))State->VTable[0x6B];
+    auto AddReservation = (bool (*)(UPartyBeaconState*, FPartyReservation*))State->VTable[0x5D];
+    int32 NumTooManyPlayers = 0;
+    int32 NumAddFailures = 0;
+
+    for (int32 TeamIdx = 0; TeamIdx < MatchAssignment.Teams.Num(); TeamIdx++)
+    {
+        for (auto& Party : MatchAssignment.Teams[TeamIdx])
         {
-            auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
-            auto UpdateSessionSettings = (void (*)(AGameSession*, FOnlineSessionSettings*, int32, FString*, FString*))(*(void***)GameSession)[0x11D];
+            FPartyReservation Reservation{};
+            Reservation.TeamNum = TeamIdx;
+            Reservation.PartyLeader = InvalidId;
 
-            UpdateSessionSettings(GameSession, CreatedSettings, GameMode->CurrentPlaylistId, &GameMode->CurrentZoneInstanceId, &GameMode->CurrentWUID);
-            InitHostBeacon(GameSession, CreatedSettings);
-
-            auto OnlineSubsystem = GetOnlineSubsystem((void*)(ImageBase + 0x12D183B8));
-            auto McpService = OnlineSubsystem ? *(uint8**)(OnlineSubsystem + 0x2E8) : nullptr;
-
-            if (McpService && !FindServicePermissions(McpService + 0x10, (void*)(ImageBase + 0x12D18A90)))
+            for (auto& Player : Party)
             {
-                if (auto ClientPermissions = FindServicePermissions(McpService + 0x10, (void*)(ImageBase + 0x12D18A80)))
+                FPlayerReservation PlayerReservation{};
+                FUniqueNetIdRepl PlayerId;
+
+                PlayerReservation.UniqueID = InvalidId;
+                PlayerReservation.bAllowCrossplay = !bCrossplayLocked;
+                AssignUniqueNetIdRepl(&PlayerReservation.UniqueID, MakeUniqueNetIdRepl(&PlayerId, &Player));
+                DestroyUniqueNetIdRepl(&PlayerId);
+
+                auto Index = Reservation.PartyMembers.NumElements++;
+
+                if (Reservation.PartyMembers.NumElements > Reservation.PartyMembers.MaxElements)
+                    GrowPlayerReservations(&Reservation.PartyMembers, Index);
+
+                CopyPlayerReservation(&Reservation.PartyMembers.Data[Index], &PlayerReservation);
+                DestroyUniqueNetIdRepl(&PlayerReservation.UniqueID);
+            }
+
+            if (Reservation.PartyMembers.Num() > 0)
+            {
+                AssignUniqueNetIdRepl(&Reservation.PartyLeader, &Reservation.PartyMembers.Data[0].UniqueID);
+
+                if (bAllowJoinInProgress && !*(void**)(__int64(&FortState->GameSessionOwner) + 0x8) && IsValidUniqueNetIdRepl(&Reservation.PartyLeader))
+                    ChangeSessionOwner(FortState, &Party.Data[0]);
+
+                if (!DoesReservationFit(State, &Reservation))
+                    NumTooManyPlayers++;
+                else if (!AddReservation(State, &Reservation))
+                    NumAddFailures++;
+            }
+
+            DestroyPartyReservation(&Reservation);
+        }
+    }
+
+    auto GetNumConsumedReservations = (int32 (*)(UPartyBeaconState*))State->VTable[0x6A];
+
+    if (NumTooManyPlayers || NumAddFailures || !GetNumConsumedReservations(State))
+    {
+        auto DumpReservations = (void (*)(AFortPartyBeaconHost*))ReservationBeaconHost->VTable[0x105];
+
+        DumpReservations(ReservationBeaconHost);
+        return false;
+    }
+
+    return true;
+}
+
+static void OnPlaylistAssetUpdateComplete(AFortGameSessionDedicatedAthena* GameSession, uint8 Result, void* PatchedAssetIds)
+{
+    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+    static auto AssignString = (void (*)(FString*, const wchar_t*, int32))(ImageBase + 0x18104B4);
+    static auto NameToString = (FString* (*)(const FName*, FString*))(ImageBase + 0x17222B8);
+    static auto SetStringSetting = (void (*)(FOnlineSessionSettings*, FName, const FString*, int32))(ImageBase + 0x7183BAC);
+    static auto SetBoolSetting = (void (*)(FOnlineSessionSettings*, FName, const bool*, int32))(ImageBase + 0x7183E78);
+    static auto MakeOnUpdateSessionCompleteDelegate = (FNativeDelegate* (*)(FNativeDelegate*, AGameSession*))(ImageBase + 0x9CFA688);
+    static auto MakeOnRegisterPlayersCompleteDelegate = (FNativeDelegate* (*)(FNativeDelegate*, AGameSession*, void*, const FString*))(ImageBase + 0x9CFA6CC);
+    static auto DestroyDelegate = (void (*)(FNativeDelegate*))(ImageBase + 0x1C1D0C0);
+    static auto UpdateSession = (void (*)(AGameSession*, FName, FOnlineSessionSettings*, FNativeDelegate*))(ImageBase + 0x9CF3A70);
+    static auto AdvertiseSessionJoinability = (void (*)(AGameSession*))(ImageBase + 0x9CCD0FC);
+    static auto TryGetStringField = (bool (*)(void*, const FJsonKey*, FString*))(ImageBase + 0x1D8F394);
+    static auto HasTypedField = (bool (*)(void*, const FJsonKey*, int32))(ImageBase + 0x3BD6E48);
+    static auto GetObjectField = (FSharedRef* (*)(void*, const FJsonKey*))(ImageBase + 0x2BECAF0);
+    static auto TryGetObjectField = (bool (*)(void*, const FJsonKey*, FSharedRef**))(ImageBase + 0x5AE4FCC);
+    static auto TryGetBoolField = (bool (*)(void*, const FJsonKey*, bool*))(ImageBase + 0x180A030);
+    static auto ParseIntoArray = (int32 (*)(const FString*, TArray<FString>*, const wchar_t*, bool))(ImageBase + 0x1D85898);
+    static auto DestroyStringArray = (void (*)(TArray<FString>*))(ImageBase + 0x17656C0);
+    static auto MakeUniqueNetIdRepl = (FUniqueNetIdRepl* (*)(FUniqueNetIdRepl*, const FSharedRef*))(ImageBase + 0x6D3A7E8);
+    static auto CopyUniqueNetIdRepl = (FUniqueNetIdRepl* (*)(FUniqueNetIdRepl*, const FUniqueNetIdRepl*))(ImageBase + 0x175D5A0);
+    static auto DestroyUniqueNetIdRepl = (void (*)(FUniqueNetIdRepl*))(ImageBase + 0x175D9E8);
+    static auto GrowUniqueNetIdRepls = (void (*)(TArray<FUniqueNetIdRepl>*, int32))(ImageBase + 0x15DD080);
+    static auto EmplacePlayerToSquadId = (int32* (*)(void*, int32*, const void*))(ImageBase + 0x9CFAA4C);
+    static auto FindSquadIdToPlayer = (int32 (*)(void*, uint32, const uint8*))(ImageBase + 0x1921EDC);
+    static auto AddSquadIdToPlayer = (int32* (*)(void*, int32*, uint32, const uint8**))(ImageBase + 0x9CFD4C0);
+    static auto FindInitialTeamAssignment = (int32 (*)(void*, uint32, const uint8*))(ImageBase + 0x264ACA0);
+    static auto AddInitialTeamAssignment = (int32* (*)(void*, int32*, uint32, const uint8**))(ImageBase + 0x9CFD5F0);
+    static auto EmplaceTeamMember = (int32* (*)(void*, int32*, const FUniqueNetIdRepl*))(ImageBase + 0x7FA437C);
+    static auto EmplaceSquadFill = (int32* (*)(void*, int32*, const void*))(ImageBase + 0x8F84848);
+    static auto FindTeamIndexToSquadId = (int32 (*)(void*, uint32, const int32*))(ImageBase + 0x151C4F8);
+    static auto AddTeamIndexToSquadId = (int32* (*)(void*, int32*, uint32, const int32**))(ImageBase + 0x79C313C);
+    static auto QueryUserInfoForMatchmaking = (void (*)(AGameSession*, const FString*, const TArray<FSharedRef>*))(ImageBase + 0x9D26D68);
+    static auto EmplaceRegisterPlayerHandle = (int32* (*)(void*, int32*, const void*))(ImageBase + 0x7BDD844);
+    static auto DestroySharedRefArray = (void (*)(TArray<FSharedRef>*))(ImageBase + 0x1F7A130);
+    static auto DeclineMatchmaking = (void (*)(AFortGameSessionDedicatedAthena*, uint8, const FString*))(ImageBase + 0x9D15934);
+
+    auto Base = __int64(GameSession);
+    auto ReservationBeaconHost = GameSession->ReservationBeaconHost;
+    FString NoBackfillId;
+
+    if (!ReservationBeaconHost)
+        return DeclineMatchmaking(GameSession, 7, &NoBackfillId);
+
+    auto& MatchAssignment = *(FMatchAssignment*)(Base + 0x7D8);
+    uint8 DeclineReason = 0;
+
+    if (uint8(Result - 1) > 1)
+        DeclineReason = 5;
+    else if (!HandleMatchAssignmentV2(ReservationBeaconHost, MatchAssignment))
+        DeclineReason = 8;
+    else
+    {
+        auto MatchOptions = MatchAssignment.MatchOptions.Object;
+
+        ClearTimer(GameSession, *(uint64*)(Base + 0x4A0));
+
+        auto GetNumConsumedReservations = (int32 (*)(AFortPartyBeaconHost*))ReservationBeaconHost->VTable[0xF1];
+        GameSession->MaxPlayers = GameSession->MaxSpectators + GetNumConsumedReservations(ReservationBeaconHost);
+
+        auto GameMode = (AFortGameMode*)UWorld::GetWorld()->AuthorityGameMode;
+
+        if (GameMode && GameMode->IsA(AFortGameMode::StaticClass()))
+        {
+            AssignString(&GameMode->CurrentBucketId, MatchAssignment.BucketId.Data, JsonKey(MatchAssignment.BucketId).Len);
+            AssignString(&GameMode->MatchmakingRegionId, MatchAssignment.RegionId.Data, JsonKey(MatchAssignment.RegionId).Len);
+        }
+        else
+            GameMode = nullptr;
+
+        auto bMeshNode = GameSession->bEnableMeshNetwork && *(uint8*)(Base + 0x430) != 0;
+
+        auto SessionInterface = GetSessionInterface();
+
+        if (SessionInterface.Object)
+        {
+            auto GameSessionName = GetGameSessionName();
+
+            if (auto SessionSettings = GetSessionSettings(SessionInterface, GameSessionName))
+            {
+                FString PlaylistName;
+                bool bAllowBroadcasting = false;
+
+                NameToString(&GameMode->CurrentPlaylistName, &PlaylistName);
+                SetStringSetting(SessionSettings, FName(L"PLAYLISTNAME"), &PlaylistName, 2);
+                SetBoolSetting(SessionSettings, FName(L"ALLOWBROADCASTING"), &bAllowBroadcasting, 2);
+                PlaylistName.Free();
+
+                SessionSettings->bShouldAdvertise = false;
+                SessionSettings->bAllowJoinInProgress = bMeshNode;
+                SessionSettings->bAllowInvites = bMeshNode;
+
+                if (bMeshNode)
+                    GameSession->BulkUnregisterTimerDelay = 0.f;
+
+                FString TournamentId;
+                FString WindowId;
+                auto TournamentIdKey = JsonKey(L"match.option.events.tournamentid");
+                auto WindowIdKey = JsonKey(L"match.option.events.windowid");
+
+                TryGetStringField(MatchOptions, &TournamentIdKey, &TournamentId);
+                TryGetStringField(MatchOptions, &WindowIdKey, &WindowId);
+
+                if (TournamentId.Num() > 1 && WindowId.Num() > 1)
                 {
-                    uint8 ServerPermissions[0x30];
-                    MakeServicePermissions(ServerPermissions, (void*)(ImageBase + 0x12D18A90), ClientPermissions + 0x10, ClientPermissions + 0x20);
-                    AddServicePermissions(McpService + 0x10 + 0xB8, ServerPermissions);
-                    DestroyServicePermissions(ServerPermissions);
+                    SetStringSetting(SessionSettings, FName(L"EVENTID"), &TournamentId, 2);
+                    SetStringSetting(SessionSettings, FName(L"EVENTWINDOWID"), &WindowId, 2);
+                }
+
+                TournamentId.Free();
+                WindowId.Free();
+
+                FNativeDelegate OnUpdateSessionComplete;
+                MakeOnUpdateSessionCompleteDelegate(&OnUpdateSessionComplete, GameSession);
+                UpdateSession(GameSession, GameSessionName, SessionSettings, &OnUpdateSessionComplete);
+                DestroyDelegate(&OnUpdateSessionComplete);
+                AdvertiseSessionJoinability(GameSession);
+            }
+
+            std::vector<std::vector<int32>> TeamLayouts;
+            FString Squads;
+            auto SquadsKey = JsonKey(L"match.option.squads");
+
+            if (TryGetStringField(MatchOptions, &SquadsKey, &Squads) && Squads.Num() > 1)
+            {
+                TArray<FString> TeamStrings;
+                ParseIntoArray(&Squads, &TeamStrings, L";", true);
+
+                for (auto& TeamString : TeamStrings)
+                {
+                    TArray<FString> SquadSizes;
+                    auto& TeamLayout = TeamLayouts.emplace_back();
+
+                    ParseIntoArray(&TeamString, &SquadSizes, L",", true);
+
+                    for (auto& SquadSize : SquadSizes)
+                        TeamLayout.push_back(_wtoi(SquadSize.Num() ? SquadSize.Data : L""));
+
+                    DestroyStringArray(&SquadSizes);
+                }
+
+                DestroyStringArray(&TeamStrings);
+            }
+
+            Squads.Free();
+
+            FSharedRef PlayerData{};
+            auto PlayerDataKey = JsonKey(L"match.option.player.data");
+
+            if (HasTypedField(MatchOptions, &PlayerDataKey, 6))
+            {
+                PlayerData = *GetObjectField(MatchOptions, &PlayerDataKey);
+                IncrementSharedReferenceCount(PlayerData);
+            }
+
+            uint8 SquadId = 1;
+            TArray<FSharedRef> Players;
+
+            if (GameSession->MaxPlayers > 0)
+                Players.Reserve(GameSession->MaxPlayers);
+
+            for (int32 TeamIdx = 0; TeamIdx < MatchAssignment.Teams.Num(); TeamIdx++)
+            {
+                int32 PartiesInSquad = 0;
+                int32 SquadLayoutIdx = 0;
+
+                for (auto& Party : MatchAssignment.Teams[TeamIdx])
+                {
+                    for (auto& Player : Party)
+                    {
+                        FUniqueNetIdRepl PlayerId;
+                        int32 ElementId;
+                        uint8 TeamKey = uint8(TeamIdx);
+                        bool bSquadFilled = false;
+
+                        AddSharedRef(Players, Player);
+                        MakeUniqueNetIdRepl(&PlayerId, &Player);
+
+                        const void* PlayerToSquadId[] = { &PlayerId, &SquadId };
+                        EmplacePlayerToSquadId((void*)(Base + 0x648), &ElementId, PlayerToSquadId);
+
+                        auto SquadIndex = FindSquadIdToPlayer((void*)(Base + 0x698), SquadId, &SquadId);
+
+                        if (SquadIndex == -1)
+                        {
+                            const uint8* SquadKey = &SquadId;
+                            AddSquadIdToPlayer((void*)(Base + 0x698), &SquadIndex, SquadId, &SquadKey);
+                        }
+
+                        auto& SquadMembers = *(TArray<FUniqueNetIdRepl>*)(*(uint8**)(Base + 0x698) + 0x20 * SquadIndex + 0x8);
+                        auto MemberIndex = SquadMembers.NumElements++;
+
+                        if (SquadMembers.NumElements > SquadMembers.MaxElements)
+                            GrowUniqueNetIdRepls(&SquadMembers, MemberIndex);
+
+                        CopyUniqueNetIdRepl(&SquadMembers.Data[MemberIndex], &PlayerId);
+
+                        auto TeamIndex = FindInitialTeamAssignment((void*)(Base + 0x788), TeamKey, &TeamKey);
+
+                        if (TeamIndex == -1)
+                        {
+                            const uint8* TeamKeyPtr = &TeamKey;
+                            AddInitialTeamAssignment((void*)(Base + 0x788), &TeamIndex, TeamKey, &TeamKeyPtr);
+                        }
+
+                        EmplaceTeamMember(*(uint8**)(Base + 0x788) + 0x60 * TeamIndex + 0x8, &ElementId, &PlayerId);
+
+                        if (PlayerData.Object)
+                        {
+                            FString PlayerIdString;
+                            FSharedRef* PlayerObject = nullptr;
+                            auto ToString = (FString* (*)(void*, FString*))(*(void***)Player.Object)[0x6];
+
+                            ToString(Player.Object, &PlayerIdString);
+
+                            auto PlayerKey = JsonKey(PlayerIdString);
+                            auto bFound = TryGetObjectField(PlayerData.Object, &PlayerKey, &PlayerObject);
+
+                            PlayerIdString.Free();
+
+                            if (bFound)
+                            {
+                                auto FilledKey = JsonKey(L"filled");
+                                TryGetBoolField(PlayerObject->Object, &FilledKey, &bSquadFilled);
+                            }
+                        }
+
+                        const void* SquadFill[] = { &PlayerId, &bSquadFilled };
+                        EmplaceSquadFill((void*)(Base + 0x738), &ElementId, SquadFill);
+                        DestroyUniqueNetIdRepl(&PlayerId);
+                    }
+
+                    if (!TeamLayouts.empty())
+                    {
+                        auto bLayoutValid = TeamIdx < int32(TeamLayouts.size()) && SquadLayoutIdx < int32(TeamLayouts[TeamIdx].size());
+
+                        if (++PartiesInSquad == (bLayoutValid ? TeamLayouts[TeamIdx][SquadLayoutIdx] : 0))
+                        {
+                            PartiesInSquad = 0;
+                            SquadLayoutIdx++;
+                            SquadId++;
+                        }
+                    }
+                }
+
+                if (TeamLayouts.empty())
+                {
+                    auto TeamIndexKey = TeamIdx;
+                    auto Index = FindTeamIndexToSquadId((void*)(Base + 0x6E8), uint32(TeamIndexKey), &TeamIndexKey);
+
+                    if (Index == -1)
+                    {
+                        const int32* TeamIndexKeyPtr = &TeamIndexKey;
+                        AddTeamIndexToSquadId((void*)(Base + 0x6E8), &Index, uint32(TeamIndexKey), &TeamIndexKeyPtr);
+                    }
+
+                    *(*(uint8**)(Base + 0x6E8) + 0x10 * Index + 0x4) = SquadId;
+                    SquadId++;
                 }
             }
 
-            if (((AFortGameSession*)GameSession)->ReservationBeaconHost)
-            {
-                *(bool*)(__int64(GameSession) + 0x8A8) = true;
-                *(bool*)(__int64(GameSession) + 0x8A9) = true;
-                StartMatchmakingBackfillV2(GameSession);
-            }
+            for (auto& Spectator : MatchAssignment.Spectators)
+                AddSharedRef(Players, Spectator);
+
+            FString BackfillId;
+            FNativeDelegate OnRegisterPlayersComplete;
+            uint64 RegisterPlayersCompleteHandle = 0;
+            int32 ElementId;
+            auto AddOnRegisterPlayersCompleteDelegate = (uint64* (*)(void*, uint64*, FNativeDelegate*))(*(void***)SessionInterface.Object)[0x74];
+            auto RegisterPlayers = (bool (*)(void*, FName, TArray<FSharedRef>*, bool))(*(void***)SessionInterface.Object)[0x73];
+
+            QueryUserInfoForMatchmaking(GameSession, &BackfillId, &Players);
+            MakeOnRegisterPlayersCompleteDelegate(&OnRegisterPlayersComplete, GameSession, nullptr, &BackfillId);
+            AddOnRegisterPlayersCompleteDelegate(SessionInterface.Object, &RegisterPlayersCompleteHandle, &OnRegisterPlayersComplete);
+
+            const void* RegisterPlayerHandle[] = { &BackfillId, &RegisterPlayersCompleteHandle };
+            EmplaceRegisterPlayerHandle((void*)(Base + 0x940), &ElementId, RegisterPlayerHandle);
+
+            if (!RegisterPlayers(SessionInterface.Object, GameSessionName, &Players, false))
+                DeclineReason = 13;
+
+            DestroyDelegate(&OnRegisterPlayersComplete);
+            DestroySharedRefArray(&Players);
+            TSharedRef_Destructor(&PlayerData);
+        }
+        else
+            DeclineReason = 12;
+
+        TSharedRef_Destructor(&SessionInterface);
+    }
+
+    if (DeclineReason)
+        DeclineMatchmaking(GameSession, DeclineReason, &NoBackfillId);
+}
+
+static void OnMatchmakingSessionAssignMatchRequestV2(AFortGameSessionDedicatedAthena* GameSession, FMatchAssignment* MatchAssignment)
+{
+    static auto CopyString = (FString* (*)(FString*, const FString*))(ImageBase + 0x160DDC4);
+    static auto MoveMatchAssignment = (FMatchAssignment* (*)(FMatchAssignment*, FMatchAssignment*))(ImageBase + 0x8A2D654);
+    static auto DestroyMatchAssignment = (void (*)(FMatchAssignment*))(ImageBase + 0x8A2D11C);
+    static auto ResizeAllocation = (void (*)(void*, int32, int32, uint64))(ImageBase + 0x16C9908);
+    static auto GetNumberField = (double (*)(void*, const FJsonKey*))(ImageBase + 0x40C5710);
+    static auto GetAthenaPlaylist = (UFortPlaylistAthena* (*)(UFortPlaylistManager*, FName))(ImageBase + 0x9947A68);
+    static auto GetGlobalGameplayTags = (uint8* (*)())(ImageBase + 0x1BC4494);
+    static auto ContainsTag = (bool (*)(const TArray<FGameplayTag>*, const FGameplayTag*))(ImageBase + 0x1BC4FB4);
+    static auto AllocateDelegate = (uint8* (*)(int32, FNativeDelegate*))(ImageBase + 0x26E76B0);
+    static auto ConstructDataAssetDirectoryDelegate = (void* (*)(uint8*, UObject*))(ImageBase + 0x9CC3A18);
+    static auto DestroyDelegate = (void (*)(FNativeDelegate*))(ImageBase + 0x1C1D0C0);
+
+    auto Base = __int64(GameSession);
+    FMatchAssignment Copy{};
+
+    Copy.bResponded = MatchAssignment->bResponded;
+    CopyString(&Copy.MatchId, &MatchAssignment->MatchId);
+    CopyString(&Copy.BucketId, &MatchAssignment->BucketId);
+    Copy.PlaylistName = MatchAssignment->PlaylistName;
+    CopyString(&Copy.RegionId, &MatchAssignment->RegionId);
+    CopyString(&Copy.GroupId, &MatchAssignment->GroupId);
+
+    for (auto& Team : MatchAssignment->Teams)
+    {
+        TArray<TArray<FSharedRef>> TeamCopy;
+
+        for (auto& Party : Team)
+        {
+            TArray<FSharedRef> PartyCopy;
+
+            for (auto& Player : Party)
+                AddSharedRef(PartyCopy, Player);
+
+            TeamCopy.Add(PartyCopy);
+        }
+
+        Copy.Teams.Add(TeamCopy);
+    }
+
+    for (auto& Spectator : MatchAssignment->Spectators)
+        AddSharedRef(Copy.Spectators, Spectator);
+
+    Copy.MatchOptions = MatchAssignment->MatchOptions;
+    IncrementSharedReferenceCount(Copy.MatchOptions);
+    CopyString(&Copy.PayloadJwt, &MatchAssignment->PayloadJwt);
+    MoveMatchAssignment((FMatchAssignment*)(Base + 0x7D8), &Copy);
+    DestroyMatchAssignment(&Copy);
+
+    *(bool*)(Base + 0x8A9) = true;
+
+    auto& TemplateFilter = *(TArray<FName>*)(Base + 0x4B8);
+    TemplateFilter.NumElements = 0;
+
+    if (TemplateFilter.MaxElements)
+    {
+        ResizeAllocation(&TemplateFilter.Data, 0, 0, sizeof(FName));
+        TemplateFilter.MaxElements = 0;
+    }
+
+    auto GameInstance = (UFortGameInstance*)UWorld::GetWorld()->OwningGameInstance;
+
+    if (!GameInstance || !GameInstance->IsA(UFortGameInstance::StaticClass()) || !GameInstance->DataAssetDirectoryManager)
+        return OnPlaylistAssetUpdateComplete(GameSession, 0, nullptr);
+
+    auto& CurrentMatchAssignment = *(FMatchAssignment*)(Base + 0x7D8);
+    auto MatchOptions = CurrentMatchAssignment.MatchOptions.Object;
+    auto RevisionKey = JsonKey(L"match.option.playlistRevision");
+    int32 Revision = 0;
+
+    if (HasJsonField((uint8*)MatchOptions, RevisionKey))
+        Revision = int32(GetNumberField(MatchOptions, &RevisionKey));
+
+    auto Playlist = GetAthenaPlaylist(GameInstance->PlaylistManager, CurrentMatchAssignment.PlaylistName);
+
+    if (!Playlist)
+        return OnPlaylistAssetUpdateComplete(GameSession, 0, nullptr);
+
+    auto GlobalGameplayTags = GetGlobalGameplayTags();
+    auto HasPlaylistTag = [&](uint32 TagOffset)
+    {
+        auto Tag = (FGameplayTag*)(GlobalGameplayTags + TagOffset);
+
+        return !Tag->TagName.IsNone() && (ContainsTag(&Playlist->GameplayTagContainer.GameplayTags, Tag) || ContainsTag(&Playlist->GameplayTagContainer.ParentTags, Tag));
+    };
+
+    if (HasPlaylistTag(0x1270) || HasPlaylistTag(0x1244) || HasPlaylistTag(0x1248))
+    {
+        ResizeAllocation(&TemplateFilter.Data, 0, 4, sizeof(FName));
+        TemplateFilter.MaxElements = 4;
+        TemplateFilter.NumElements = 4;
+        TemplateFilter.Data[0] = *(FName*)(ImageBase + 0x12DF0304);
+        TemplateFilter.Data[1] = *(FName*)(ImageBase + 0x12DF0388);
+        TemplateFilter.Data[2] = *(FName*)(ImageBase + 0x12DF02C0);
+        TemplateFilter.Data[3] = *(FName*)(ImageBase + 0x12DF028C);
+    }
+    else
+        ClearTimer(GameSession, *(uint64*)(Base + 0x4B0));
+
+    *(int32*)(Base + 0xAD0) = Playlist->DADTestValue;
+
+    FPrimaryAssetId AssetId;
+    FNativeDelegate OnComplete{};
+    auto GetPrimaryAssetId = (FPrimaryAssetId* (*)(UObject*, FPrimaryAssetId*))Playlist->VTable[0x3E];
+    auto DataAssetDirectoryManager = (UObject*)GameInstance->DataAssetDirectoryManager;
+    auto ApplyAssetRevision = (void (*)(UObject*, int32, FPrimaryAssetId*, int32, FNativeDelegate*))DataAssetDirectoryManager->VTable[0x5F];
+    auto Instance = AllocateDelegate(0x28, &OnComplete);
+
+    GetPrimaryAssetId(Playlist, &AssetId);
+    ConstructDataAssetDirectoryDelegate(Instance, GameSession);
+    *(void**)(Instance + 0x20) = OnPlaylistAssetUpdateComplete;
+    ApplyAssetRevision(DataAssetDirectoryManager, 0, &AssetId, Revision, &OnComplete);
+    DestroyDelegate(&OnComplete);
+}
+
+static void ProcessQueryResults(AFortGameSessionDedicatedAthena* GameSession, const FString* BackfillId)
+{
+    static auto HashString = (uint32 (*)(int32, const wchar_t*))(ImageBase + 0x160F930);
+    static auto FindString = (int32 (*)(void*, uint32, const FString*))(ImageBase + 0x5144CF8);
+    static auto RemoveString = (int32 (*)(void*, const FString*))(ImageBase + 0x5A96088);
+    static auto DeclineMatchmaking = (void (*)(AFortGameSessionDedicatedAthena*, uint8, const FString*))(ImageBase + 0x9D15934);
+
+    auto Base = __int64(GameSession);
+    auto RegisterPlayerResults = (void*)(Base + 0x8F0);
+    auto QueryUserInfoResults = (void*)(Base + 0x990);
+    auto Hash = HashString(JsonKey(*BackfillId).Len, BackfillId->Num() ? BackfillId->Data : L"");
+    auto RegisterPlayerResult = FindString(RegisterPlayerResults, Hash, BackfillId);
+
+    if (RegisterPlayerResult == -1 || FindString(QueryUserInfoResults, Hash, BackfillId) == -1)
+        return;
+
+    auto MatchmakingService = *(void**)(Base + 0x8B0);
+
+    if (!*(bool*)(*(uint8**)RegisterPlayerResults + 0x20 * RegisterPlayerResult + 0x10))
+        DeclineMatchmaking(GameSession, 15, BackfillId);
+    else if (MatchmakingService && ((bool (*)(void*))(*(void***)MatchmakingService)[0x3])(MatchmakingService))
+    {
+        if (*(bool*)(Base + 0x8D8))
+        {
+            auto RespondToMatchBackfill = (bool (*)(void*, const FString*, uint8))(*(void***)MatchmakingService)[0x5];
+
+            RespondToMatchBackfill(MatchmakingService, BackfillId, 0);
+            SetActorTimer(GameSession, (void*)(ImageBase + 0x5375284), *(uint64*)(Base + 0x8E8), *(float*)(Base + 0x8DC));
+        }
+        else
+        {
+            auto RespondToMatchAssignment = (bool (*)(void*, uint8))(*(void***)MatchmakingService)[0x4];
+
+            RespondToMatchAssignment(MatchmakingService, 0);
+        }
+    }
+
+    RemoveString(RegisterPlayerResults, BackfillId);
+    RemoveString(QueryUserInfoResults, BackfillId);
+}
+
+static void (*OnRegisterPlayersCompleteOG)(AFortGameSessionDedicatedAthena*, FName, void*, bool, FString*);
+static void OnRegisterPlayersComplete(AFortGameSessionDedicatedAthena* GameSession, FName SessionName, void* Players, bool bWasSuccessful, FString* BackfillId)
+{
+    static auto CopyString = (FString* (*)(FString*, const FString*))(ImageBase + 0x160DDC4);
+
+    FString Id;
+    CopyString(&Id, BackfillId);
+
+    OnRegisterPlayersCompleteOG(GameSession, SessionName, Players, bWasSuccessful, BackfillId);
+
+    if (*(bool*)(__int64(GameSession) + 0x8A9) && SessionName == GetGameSessionName())
+        ProcessQueryResults(GameSession, &Id);
+
+    Id.Free();
+}
+
+static void (*OnQueryUserInfoCompleteOG)(AFortGameSessionDedicatedAthena*, int32, bool, void*, const FString*, FString*);
+static void OnQueryUserInfoComplete(AFortGameSessionDedicatedAthena* GameSession, int32 LocalUserNum, bool bWasSuccessful, void* Users, const FString* ErrorString, FString* BackfillId)
+{
+    static auto CopyString = (FString* (*)(FString*, const FString*))(ImageBase + 0x160DDC4);
+
+    FString Id;
+    CopyString(&Id, BackfillId);
+
+    OnQueryUserInfoCompleteOG(GameSession, LocalUserNum, bWasSuccessful, Users, ErrorString, BackfillId);
+
+    if (*(bool*)(__int64(GameSession) + 0x8A9))
+        ProcessQueryResults(GameSession, &Id);
+
+    Id.Free();
+}
+
+static void RegisterServer(AGameSession* GameSession)
+{
+    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+    static auto InitHostBeacon = (void (*)(AGameSession*, FOnlineSessionSettings*))(ImageBase + 0x9CD9E24);
+    static auto CreateGameSessionDelegate = (FNativeDelegate* (*)(FNativeDelegate*, AGameSession*))(ImageBase + 0x9CFA688);
+    static auto DestroyDelegate = (void (*)(FNativeDelegate*))(ImageBase + 0x1C1D0C0);
+
+    auto GameInstance = UWorld::GetWorld()->OwningGameInstance;
+    auto& EligibilityResolver = *(uint8**)(__int64(GameInstance) + 0xD38);
+
+    if (!EligibilityResolver)
+    {
+        auto ReferenceController = (uint8*)FMemory::Malloc(0x28, 0x10);
+
+        *(void**)ReferenceController = (void*)(ImageBase + 0xF396090);
+        *(int32*)(ReferenceController + 0x8) = 1;
+        *(int32*)(ReferenceController + 0xC) = 1;
+        *(void**)(ReferenceController + 0x10) = nullptr;
+        *(void**)(ReferenceController + 0x18) = nullptr;
+        *(FWeakObjectPtr*)(ReferenceController + 0x20) = FWeakObjectPtr(GameInstance);
+
+        EligibilityResolver = ReferenceController + 0x10;
+        *(uint8**)(__int64(GameInstance) + 0xD40) = ReferenceController;
+    }
+
+    auto SessionInterface = GetSessionInterface();
+
+    if (SessionInterface.Object)
+    {
+        auto AddOnCreateSessionCompleteDelegate = (uint64* (*)(void*, uint64*, FNativeDelegate*))(*(void***)SessionInterface.Object)[0xA];
+        auto CreateSession = (bool (*)(void*, int32, FName, const FOnlineSessionSettings&))(*(void***)SessionInterface.Object)[0x9];
+        FOnlineSessionSettings SessionSettings{};
+        FNativeDelegate OnCreateSessionCompleteDelegate;
+
+        SessionSettings.NumPublicConnections = GameSession->MaxPlayers;
+        SessionSettings.bAllowJoinInProgress = true;
+
+        CreateGameSessionDelegate(&OnCreateSessionCompleteDelegate, GameSession);
+        *(void**)(OnCreateSessionCompleteDelegate.Instance + 0x20) = OnCreateSessionComplete;
+        AddOnCreateSessionCompleteDelegate(SessionInterface.Object, &CreateSessionCompleteHandle, &OnCreateSessionCompleteDelegate);
+        DestroyDelegate(&OnCreateSessionCompleteDelegate);
+
+        CreateSession(SessionInterface.Object, 0, GameSession->SessionName, SessionSettings);
+
+        if (auto CreatedSettings = GetSessionSettings(SessionInterface, GameSession->SessionName))
+        {
+            auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
+            auto UpdateSessionSettings = (void (*)(AGameSession*, FOnlineSessionSettings*, int32, FString*, FString*))GameSession->VTable[0x11D];
+
+            UpdateSessionSettings(GameSession, CreatedSettings, GameMode->CurrentPlaylistId, &GameMode->CurrentZoneInstanceId, &GameMode->CurrentWUID);
+            InitHostBeacon(GameSession, CreatedSettings);
         }
     }
 
     TSharedRef_Destructor(&SessionInterface);
+}
+
+static bool HasGameSession()
+{
+    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+
+    auto SessionInterface = GetSessionInterface();
+    auto bHasGameSession = SessionInterface.Object && GetSessionSettings(SessionInterface, GetGameSessionName());
+
+    TSharedRef_Destructor(&SessionInterface);
+
+    return bHasGameSession;
+}
+
+static void OnDestroySessionComplete(AFortGameSessionDedicatedAthena* GameSession, FName SessionName, bool bWasSuccessful)
+{
+    auto Base = __int64(GameSession);
+
+    if (*(bool*)(Base + 0xAD8))
+        ClearTimer(GameSession, *(uint64*)(Base + 0xAA8));
+
+    RegisterServer(GameSession);
+}
+
+static void CleanupDedicatedServerSession(AGameSession* GameSession, void* OnComplete)
+{
+    static auto CreateGameSessionDelegate = (FNativeDelegate* (*)(FNativeDelegate*, AGameSession*))(ImageBase + 0x9CFA688);
+    static auto SafeSessionDelete = (void (*)(UGameInstance*, FName, FNativeDelegate*, void*))(ImageBase + 0x980D828);
+
+    FNativeDelegate CompletionDelegate;
+
+    CreateGameSessionDelegate(&CompletionDelegate, GameSession);
+    *(void**)(CompletionDelegate.Instance + 0x20) = OnComplete;
+    SafeSessionDelete(UWorld::GetWorld()->OwningGameInstance, GetGameSessionName(), &CompletionDelegate, nullptr);
+}
+
+static void ClearSessionTimers(AFortGameSessionDedicatedAthena* GameSession)
+{
+    auto Base = __int64(GameSession);
+
+    ClearTimer(GameSession, *(uint64*)(Base + 0x5D8));
+    ClearTimer(GameSession, *(uint64*)(Base + 0x4A0));
+    ClearTimer(GameSession, *(uint64*)(Base + 0x4B0));
+    ClearTimer(GameSession, *(uint64*)(Base + 0x4D0));
+}
+
+static void OnShutdownSessionDestroyed(AFortGameSessionDedicatedAthena* GameSession, FName SessionName, bool bWasSuccessful)
+{
+    static auto RequestExitWithStatus = (void (*)(bool, uint8, const wchar_t*))(ImageBase + 0x41D939C);
+
+    if (SessionName == GetGameSessionName())
+        RequestExitWithStatus(false, uint8(ShutdownExitCode), nullptr);
+}
+
+static void DedicatedShutdownDedicatedServer(AFortGameSessionDedicatedAthena* GameSession, int32 ExitCode)
+{
+    static auto Broadcast = (void (*)(void*, int32))(ImageBase + 0x59E4F90);
+
+    auto StopMeshNetwork = (void (*)(AFortGameSessionDedicatedAthena*))GameSession->VTable[0x125];
+    auto ClearServerDelegates = (void (*)(AFortGameSessionDedicatedAthena*))GameSession->VTable[0x11C];
+    auto DestroyHostBeacon = (void (*)(AFortGameSessionDedicatedAthena*, bool))GameSession->VTable[0x11A];
+
+    Broadcast((void*)(ImageBase + 0x12A9CEB0), ExitCode);
+    StopMeshNetwork(GameSession);
+    ClearServerDelegates(GameSession);
+    DestroyHostBeacon(GameSession, false);
+    ClearSessionTimers(GameSession);
+    CleanupDedicatedServerSession(GameSession, OnShutdownSessionDestroyed);
+}
+
+static void OnAllPlayersUnregistered(AFortGameSessionDedicatedAthena* GameSession)
+{
+    static auto Broadcast = (void (*)(void*))(ImageBase + 0x59E4F90);
+    static auto GetMapName = (FString* (*)(UWorld*, FString*))(ImageBase + 0x2268120);
+    static auto AssignString = (FString* (*)(FString*, const FString*))(ImageBase + 0x4A3CC98);
+    static auto LeavingMap = FName(L"LeavingMap");
+
+    if (*(bool*)(ImageBase + 0x12C11FE4))
+    {
+        auto ShutdownDedicatedServer = (void (*)(AFortGameSessionDedicatedAthena*, int32))GameSession->VTable[0x12B];
+
+        return ShutdownDedicatedServer(GameSession, *(int32*)(ImageBase + 0x12C11FE0));
+    }
+
+    Broadcast((void*)(ImageBase + 0x12A9CE98));
+
+    auto World = UWorld::GetWorld();
+    auto GameMode = (AFortGameMode*)World->AuthorityGameMode;
+    auto DestroyHostBeacon = (void (*)(AFortGameSessionDedicatedAthena*, bool))GameSession->VTable[0x11A];
+
+    DestroyHostBeacon(GameSession, false);
+
+    if (GameMode->MatchState == LeavingMap)
+        return;
+
+    auto CanServerTravel = (bool (*)(AFortGameMode*, const FString*, bool))GameMode->VTable[0xFF];
+    FString URL;
+
+    GameMode->bUseSeamlessTravel = false;
+    GetMapName(World, &URL);
+
+    if (CanServerTravel(GameMode, &URL, true))
+    {
+        *(uint8*)(__int64(World) + 0x749) = 0;
+
+        if (*(int32*)(__int64(World) + 0x758) <= 1)
+            AssignString((FString*)(__int64(World) + 0x750), &URL);
+    }
+
+    URL.Free();
+}
+
+static void DedicatedRestart(AFortGameSessionDedicatedAthena* GameSession)
+{
+    static auto GetCsvProfiler = (void* (*)())(ImageBase + 0x175B328);
+    static auto EndCapture = (void (*)(void*, FSharedRef*, void**))(ImageBase + 0x5AB6E74);
+    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+    static auto IsInSeamlessTravel = (bool (*)(UWorld*))(ImageBase + 0x2009328);
+    static auto PauseBeaconRequests = (void (*)(AFortGameSessionDedicatedAthena*, bool))(ImageBase + 0x9CE6B40);
+    static auto BindTimerDelegate = (void (*)(FNativeDelegate*, UObject*, void*))(ImageBase + 0x9816384);
+    static auto UnregisterAllPlayerInfos = (void (*)(UGameInstance*, FNativeDelegate*))(ImageBase + 0x9811B74);
+    static auto GetAllRegistries = (void (*)(void*, TArray<UDataRegistry*>*, bool))(ImageBase + 0x74CFAB0);
+    static auto PurgeAllOverrides = (void (*)(UDataRegistry*))(ImageBase + 0x97E9D1C);
+
+    auto CsvProfiler = GetCsvProfiler();
+
+    if (CsvProfiler && *(bool*)(ImageBase + 0x12D5C3C0))
+    {
+        FSharedRef Result{};
+        void* EventToSignal = nullptr;
+
+        EndCapture(CsvProfiler, &Result, &EventToSignal);
+        TSharedRef_Destructor(&Result);
+    }
+
+    ClearSessionTimers(GameSession);
+
+    auto World = UWorld::GetWorld();
+    auto GameMode = (AFortGameMode*)World->AuthorityGameMode;
+
+    if (GameMode->bTravelInitiated || IsInSeamlessTravel(World))
+        return;
+
+    auto ClearServerDelegates = (void (*)(AFortGameSessionDedicatedAthena*))GameSession->VTable[0x11C];
+    auto StopMeshNetwork = (void (*)(AFortGameSessionDedicatedAthena*))GameSession->VTable[0x125];
+
+    ClearServerDelegates(GameSession);
+    GameMode->bTravelInitiated = true;
+    PauseBeaconRequests(GameSession, true);
+
+    FNativeDelegate OnAllPlayersUnregisteredDelegate{};
+
+    BindTimerDelegate(&OnAllPlayersUnregisteredDelegate, GameSession, OnAllPlayersUnregistered);
+    UnregisterAllPlayerInfos(World->OwningGameInstance, &OnAllPlayersUnregisteredDelegate);
+
+    if (auto DataRegistrySubsystem = *(void**)(ImageBase + 0x12D18AE0))
+    {
+        TArray<UDataRegistry*> Registries;
+        GetAllRegistries(DataRegistrySubsystem, &Registries, false);
+
+        for (auto Registry : Registries)
+        {
+            if (Registry && Registry->IsA(UFortDataRegistry::StaticClass()))
+                PurgeAllOverrides(Registry);
+        }
+
+        Registries.Free();
+    }
+
+    StopMeshNetwork(GameSession);
+}
+
+static void StopWaitingForLeaveMeshNetwork()
+{
+    static auto RemoveDelegateInstance = (bool (*)(void*, uint64))(ImageBase + 0x1C1C39C);
+
+    RemoveDelegateInstance((void*)(ImageBase + 0x12A9CF10), LeaveMeshNetworkCompleteHandle);
+    LeaveMeshNetworkCompleteHandle = 0;
+}
+
+static bool LeaveMatchmakingAndMeshNetwork(AFortGameSessionDedicatedAthena* GameSession, void* OnLeaveMeshNetworkComplete)
+{
+    static auto LeaveMeshNetwork = (bool (*)(AFortGameSessionDedicatedAthena*))(ImageBase + 0x9D1507C);
+    static auto CreateLeaveMeshNetworkDelegate = (FNativeDelegate* (*)(FNativeDelegate*, AFortGameSessionDedicatedAthena*, void*))(ImageBase + 0x9CFA634);
+    static auto AddDelegateInstance = (uint64* (*)(void*, uint64*, FNativeDelegate*))(ImageBase + 0x2710030);
+    static auto DestroyDelegate = (void (*)(FNativeDelegate*))(ImageBase + 0x1C1D0C0);
+
+    auto DisconnectFromMatchmakingServiceV2 = (bool (*)(AFortGameSessionDedicatedAthena*, bool))GameSession->VTable[0x139];
+
+    ClearTimer(GameSession, *(uint64*)(__int64(GameSession) + 0xAA0));
+    DisconnectFromMatchmakingServiceV2(GameSession, true);
+
+    if (!LeaveMeshNetwork(GameSession))
+        return false;
+
+    FNativeDelegate OnLeaveMeshNetworkCompleteDelegate;
+
+    CreateLeaveMeshNetworkDelegate(&OnLeaveMeshNetworkCompleteDelegate, GameSession, OnLeaveMeshNetworkComplete);
+    AddDelegateInstance((void*)(ImageBase + 0x12A9CF10), &LeaveMeshNetworkCompleteHandle, &OnLeaveMeshNetworkCompleteDelegate);
+    DestroyDelegate(&OnLeaveMeshNetworkCompleteDelegate);
+    return true;
+}
+
+static void OnRestartLeaveMeshNetworkComplete(AFortGameSessionDedicatedAthena* GameSession, const FName& MeshName, const void* Error)
+{
+    StopWaitingForLeaveMeshNetwork();
+    DedicatedRestart(GameSession);
+}
+
+static void Restart(AFortGameSessionDedicatedAthena* GameSession)
+{
+    if (!LeaveMatchmakingAndMeshNetwork(GameSession, OnRestartLeaveMeshNetworkComplete))
+        DedicatedRestart(GameSession);
+}
+
+static void OnShutdownLeaveMeshNetworkComplete(AFortGameSessionDedicatedAthena* GameSession, const FName& MeshName, const void* Error)
+{
+    StopWaitingForLeaveMeshNetwork();
+    DedicatedShutdownDedicatedServer(GameSession, ShutdownExitCode);
+}
+
+static void ShutdownDedicatedServer(AFortGameSessionDedicatedAthena* GameSession, int32 ExitCode)
+{
+    ShutdownExitCode = ExitCode;
+
+    if (!LeaveMatchmakingAndMeshNetwork(GameSession, OnShutdownLeaveMeshNetworkComplete))
+        DedicatedShutdownDedicatedServer(GameSession, ExitCode);
+}
+
+void PauseWarmup(EGameModePauseWarmupMaskId MaskId)
+{
+    PauseWarmupMask |= uint8(MaskId);
+}
+
+void UnPauseWarmup(EGameModePauseWarmupMaskId MaskId)
+{
+    auto bWasPaused = PauseWarmupMask != 0;
+
+    PauseWarmupMask &= ~uint8(MaskId);
+
+    auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(UWorld::GetWorld());
+
+    if (bWasPaused && !PauseWarmupMask && GamePhaseLogic && GamePhaseLogic->GamePhase == EAthenaGamePhase::Warmup)
+    {
+        auto Time = (float)UGameplayStatics::GetTimeSeconds(UWorld::GetWorld());
+
+        GamePhaseLogic->WarmupCountdownStartTime = Time;
+        GamePhaseLogic->WarmupCountdownEndTime = Time + GamePhaseLogic->WarmupCountdownDuration;
+    }
 }
 
 static void SetGamePhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic, EAthenaGamePhase GamePhase)
@@ -129,21 +1126,29 @@ static void SetGamePhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* Gam
 
 static void SetGamePhaseStep(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic, EAthenaGamePhaseStep GamePhaseStep)
 {
+    static auto BroadcastGamePhaseStepUpdatedEvent = (void (*)(const UClass*, UObject*, EAthenaGamePhaseStep*, UObject*))(ImageBase + 0x3639070);
+
     auto OldGamePhaseStep = GamePhaseLogic->GamePhaseStep;
 
     GamePhaseLogic->GamePhaseStep = GamePhaseStep;
     GamePhaseLogic->HandleGamePhaseStepChanged(GamePhaseStep);
 
     if (OldGamePhaseStep != GamePhaseStep)
-    {
-        static auto BroadcastGamePhaseStepUpdatedEvent = (void (*)(const UClass*, UObject*, EAthenaGamePhaseStep*, UObject*))(ImageBase + 0x3639070);
-
         BroadcastGamePhaseStepUpdatedEvent(AFortGameState::StaticClass(), GamePhaseLogic->GetOwner(), &GamePhaseStep, GamePhaseLogic);
-    }
+}
+
+static void SetSafeZoneState(AFortSafeZoneIndicator* SafeZoneIndicator, EFortSafeZoneState SafeZoneState)
+{
+    static auto SetSafeZoneStateInternal = (void (*)(AFortSafeZoneIndicator*, EFortSafeZoneState))(ImageBase + 0x1FE498C);
+
+    SetSafeZoneStateInternal(SafeZoneIndicator, SafeZoneState);
 }
 
 static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic)
 {
+    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+    static auto Reset = (void (*)(AFortPlayerControllerAthena*))(ImageBase + 0x6F854DC);
+
     if (GamePhaseLogic->GamePhase >= EAthenaGamePhase::Aircraft)
         return;
 
@@ -159,18 +1164,13 @@ static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogi
     if (Playlist && Playlist->bAllowJoinInProgress)
         *(bool*)(__int64(GameMode) + 0x1018) = false;
 
-    static auto GetSessionInterface = (FSharedRef* (*)(FSharedRef*, UWorld*, FName))(ImageBase + 0x71D8BA0);
-    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
-
-    FSharedRef SessionInterface{};
-    GetSessionInterface(&SessionInterface, UWorld::GetWorld(), FName());
+    auto SessionInterface = GetSessionInterface();
 
     if (SessionInterface.Object)
     {
-        auto GetSessionSettings = (FOnlineSessionSettings* (*)(void*, FName))(*(void***)SessionInterface.Object)[0x70];
         auto UpdateSession = (bool (*)(void*, FName, FOnlineSessionSettings&, bool))(*(void***)SessionInterface.Object)[0x13];
 
-        if (auto SessionSettings = GetSessionSettings(SessionInterface.Object, GameMode->GameSession->SessionName))
+        if (auto SessionSettings = GetSessionSettings(SessionInterface, GameMode->GameSession->SessionName))
         {
             SessionSettings->bAllowJoinInProgress = Playlist && Playlist->bAllowJoinInProgress;
             UpdateSession(SessionInterface.Object, GameMode->GameSession->SessionName, *SessionSettings, false);
@@ -194,36 +1194,11 @@ static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogi
         auto& FlightInfo = GameState->MapInfo->FlightInfos[0];
 
         if (bLateGame)
-        {
             GameState->DefaultParachuteDeployTraceForGroundDistance = 2500.f;
-
-            auto BusPhase = GetLateGamePhase(GameState) - 1;
-            auto& Center = SafeZoneLocations.Data[BusPhase];
-            auto Radius = GameState->MapInfo->SafeZoneDefinition.Radius.Evaluate((float)BusPhase);
-
-            if (bLateGameMovingBus && Radius > 0.f)
-            {
-                auto Speed = FlightInfo.FlightSpeed > 0.f && Radius / 10.f > FlightInfo.FlightSpeed ? FlightInfo.FlightSpeed : Radius / 10.f;
-                auto Yaw = FlightInfo.FlightStartRotation.Yaw;
-
-                (FVector&)FlightInfo.FlightStartLocation = FVector(Center.X - UKismetMathLibrary::DegCos(Yaw) * Speed * 5.f, Center.Y - UKismetMathLibrary::DegSin(Yaw) * Speed * 5.f, 17500.);
-                FlightInfo.FlightSpeed = Speed;
-                FlightInfo.TimeTillFlightEnd = 10.f;
-                FlightInfo.TimeTillDropEnd = 10.f;
-            }
-            else
-            {
-                (FVector&)FlightInfo.FlightStartLocation = FVector(Center.X, Center.Y, 17500.);
-                FlightInfo.FlightSpeed = 0.f;
-                FlightInfo.TimeTillFlightEnd = 7.f;
-                FlightInfo.TimeTillDropEnd = 7.f;
-            }
-
-            FlightInfo.TimeTillDropStart = 0.f;
-        }
 
         if (!GameState->MapInfo->AircraftClass.Get())
             return;
+
         auto Aircraft = AFortAthenaAircraft::SpawnAircraft(UWorld::GetWorld(), GameState->MapInfo->AircraftClass, FlightInfo, nullptr);
 
         if (!Aircraft)
@@ -243,23 +1218,22 @@ static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogi
 
             if (Pawn)
             {
-                if (Pawn->Role == ENetRole::ROLE_Authority)
+                if (Pawn->Role == ENetRole::ROLE_Authority && Pawn->bIsInAnyStorm)
                 {
-                    if (Pawn->bIsInAnyStorm)
-                    {
-                        Pawn->bIsInAnyStorm = false;
-                        Pawn->OnRep_IsInAnyStorm();
-                    }
+                    Pawn->bIsInAnyStorm = false;
+                    Pawn->OnRep_IsInAnyStorm();
                 }
+
                 Pawn->bIsInsideSafeZone = true;
                 Pawn->OnRep_IsInsideSafeZone();
                 Pawn->OnEnteredAircraft.Process();
             }
 
             Player->ClientActivateSlot(EFortQuickBars(0), 0, 0.f, true, true);
+
             if (Pawn)
                 Pawn->K2_DestroyActor();
-            static auto Reset = (void (*)(AFortPlayerControllerAthena*))(ImageBase + 0x6F854DC);
+
             Reset(Player);
             Player->ClientGotoState(FName(L"Spectating"));
         }
@@ -274,73 +1248,74 @@ static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogi
 
 static void StartNewSafeZonePhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic, int NewSafeZonePhase)
 {
+    static auto UpdateGamePhaseStep = (void (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, float))(ImageBase + 0x1BB24D0);
+
     float TimeSeconds = (float)UGameplayStatics::GetTimeSeconds(UWorld::GetWorld());
     auto SafeZoneIndicator = GamePhaseLogic->SafeZoneIndicator;
-    auto& Array = SafeZoneIndicator->SafeZonePhases;
+    auto& SafeZonePhases = SafeZoneIndicator->SafeZonePhases;
 
-    if (Array.IsValidIndex(NewSafeZonePhase))
+    if (!SafeZonePhases.IsValidIndex(NewSafeZonePhase))
+        return;
+
+    if (SafeZonePhases.IsValidIndex(NewSafeZonePhase - 1))
     {
-        if (Array.IsValidIndex(NewSafeZonePhase - 1))
-        {
-            auto& PreviousPhaseInfo = Array[NewSafeZonePhase - 1];
+        auto& PreviousPhaseInfo = SafeZonePhases[NewSafeZonePhase - 1];
 
-            (FVector&)SafeZoneIndicator->PreviousCenter = PreviousPhaseInfo.Center;
-            SafeZoneIndicator->PreviousRadius = PreviousPhaseInfo.Radius;
+        (FVector&)SafeZoneIndicator->PreviousCenter = PreviousPhaseInfo.Center;
+        SafeZoneIndicator->PreviousRadius = PreviousPhaseInfo.Radius;
+    }
+
+    auto& PhaseInfo = SafeZonePhases[NewSafeZonePhase];
+
+    (FVector&)SafeZoneIndicator->NextCenter = PhaseInfo.Center;
+    SafeZoneIndicator->NextRadius = PhaseInfo.Radius;
+    SafeZoneIndicator->NextMegaStormGridCellThickness = PhaseInfo.MegaStormGridCellThickness;
+
+    if (SafeZonePhases.IsValidIndex(NewSafeZonePhase + 1))
+    {
+        auto& NextPhaseInfo = SafeZonePhases[NewSafeZonePhase + 1];
+
+        if (SafeZoneIndicator->FutureReplicator)
+        {
+            (FVector&)SafeZoneIndicator->FutureReplicator->NextNextCenter = NextPhaseInfo.Center;
+            SafeZoneIndicator->FutureReplicator->NextNextRadius = NextPhaseInfo.Radius;
         }
 
-        auto& PhaseInfo = Array[NewSafeZonePhase];
+        (FVector&)SafeZoneIndicator->NextNextCenter = NextPhaseInfo.Center;
+        SafeZoneIndicator->NextNextRadius = NextPhaseInfo.Radius;
+        SafeZoneIndicator->NextNextMegaStormGridCellThickness = NextPhaseInfo.MegaStormGridCellThickness;
+    }
 
-        (FVector&)SafeZoneIndicator->NextCenter = PhaseInfo.Center;
-        SafeZoneIndicator->NextRadius = PhaseInfo.Radius;
-        SafeZoneIndicator->NextMegaStormGridCellThickness = PhaseInfo.MegaStormGridCellThickness;
+    SafeZoneIndicator->SafeZoneStartShrinkTime = bLateGame && bLateGameLongZone ? 676767.f : TimeSeconds + PhaseInfo.WaitTime;
+    SafeZoneIndicator->SafeZoneFinishShrinkTime = SafeZoneIndicator->SafeZoneStartShrinkTime + PhaseInfo.ShrinkTime;
 
-        if (Array.IsValidIndex(NewSafeZonePhase + 1))
-        {
-            auto& NextPhaseInfo = Array[NewSafeZonePhase + 1];
+    SafeZoneIndicator->CurrentDamageInfo = PhaseInfo.DamageInfo;
+    SafeZoneIndicator->OnRep_CurrentDamageInfo();
 
-            if (SafeZoneIndicator->FutureReplicator)
-            {
-                (FVector&)SafeZoneIndicator->FutureReplicator->NextNextCenter = NextPhaseInfo.Center;
-                SafeZoneIndicator->FutureReplicator->NextNextRadius = NextPhaseInfo.Radius;
-            }
+    auto OldPhase = SafeZoneIndicator->CurrentPhase;
+    SafeZoneIndicator->CurrentPhase = NewSafeZonePhase;
+    SafeZoneIndicator->OnRep_CurrentPhase();
 
-            (FVector&)SafeZoneIndicator->NextNextCenter = NextPhaseInfo.Center;
-            SafeZoneIndicator->NextNextRadius = NextPhaseInfo.Radius;
-            SafeZoneIndicator->NextNextMegaStormGridCellThickness = NextPhaseInfo.MegaStormGridCellThickness;
-        }
+    SafeZoneIndicator->OnSafeZonePhaseChanged.Process();
 
-        SafeZoneIndicator->SafeZoneStartShrinkTime = bLateGame && bLateGameLongZone ? 676767.f : TimeSeconds + PhaseInfo.WaitTime;
-        SafeZoneIndicator->SafeZoneFinishShrinkTime = SafeZoneIndicator->SafeZoneStartShrinkTime + PhaseInfo.ShrinkTime;
+    bool bInitial = OldPhase <= 0;
 
-        SafeZoneIndicator->CurrentDamageInfo = PhaseInfo.DamageInfo;
-        SafeZoneIndicator->OnRep_CurrentDamageInfo();
+    SetSafeZoneState(SafeZoneIndicator, EFortSafeZoneState::Holding);
+    UpdateGamePhaseStep(GamePhaseLogic, 0.f);
 
-        auto OldPhase = SafeZoneIndicator->CurrentPhase;
-        SafeZoneIndicator->CurrentPhase = NewSafeZonePhase;
-        SafeZoneIndicator->OnRep_CurrentPhase();
+    auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
 
-        SafeZoneIndicator->OnSafeZonePhaseChanged.Process();
-
-        auto& SafeZoneState = *(uint8_t*)(__int64(SafeZoneIndicator) + 0x60C);
-        SafeZoneState = 2;
-        bool bInitial = OldPhase <= 0;
-
-        SafeZoneIndicator->OnSafeZoneStateChange(EFortSafeZoneState::Holding, bInitial);
-        SafeZoneIndicator->SafezoneStateChangedDelegate.Process(SafeZoneIndicator, EFortSafeZoneState::Holding);
-
-        static auto UpdateGamePhaseStep = (void (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, float))(ImageBase + 0x1BB24D0);
-
-        UpdateGamePhaseStep(GamePhaseLogic, 0.f);
-
-        auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
-        if (!bInitial)
-            for (auto& PlayerController : GameMode->AlivePlayers)
-                SendStatEvent(PlayerController->GetQuestManager(ESubGame::Athena), PlayerController, EFortQuestObjectiveStatEvent::StormPhase, 1, true);
+    if (!bInitial)
+    {
+        for (auto& PlayerController : GameMode->AlivePlayers)
+            SendStatEvent(PlayerController->GetQuestManager(ESubGame::Athena), PlayerController, EFortQuestObjectiveStatEvent::StormPhase, 1, true);
     }
 }
 
 static void InitializeSafeZoneLocations(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic)
 {
+    static auto SetSafeZoneLocations = (void (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, TArray<FVector>*))(ImageBase + 0xA4C93D4);
+
     auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
     auto Playlist = (UFortPlaylistAthena*)GameState->CurrentPlaylistInfo.BasePlaylist;
 
@@ -405,8 +1380,6 @@ static void InitializeSafeZoneLocations(UFortGameStateComponent_BattleRoyaleGame
     if (Count <= 0)
         return;
 
-    static auto SetSafeZoneLocations = (void (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, TArray<FVector>*))(ImageBase + 0xA4C93D4);
-
     TArray<FVector> Locations;
 
     for (int32 i = 0; i < Count; i++)
@@ -449,12 +1422,12 @@ static bool HasTag(const TArray<FGameplayTag>& Tags, const FGameplayTag& Tag)
     return false;
 }
 
+static bool bCalendarPlaylistDone = false;
+static ULONGLONG CalendarWaitStart = 0;
+
 static bool SelectCalendarPlaylist()
 {
-    static bool bDone = false;
-    static ULONGLONG WaitStart = 0;
-
-    if (bDone || bReload)
+    if (bCalendarPlaylistDone || bReload)
         return true;
 
     auto ManagerClass = UObject::FindClassFast("BP_Clyde_DataLayerManager_C");
@@ -462,17 +1435,17 @@ static bool SelectCalendarPlaylist()
     auto CurrentPlaylist = FindObject<UFortPlaylistAthena>(Playlist.c_str());
 
     if (!Manager || !CurrentPlaylist)
-        return bDone = true;
+        return bCalendarPlaylistDone = true;
 
     auto EventsProperty = FindProperty(Manager, "ClydeWeekCalendarEventsToWatch");
     auto WeekTagsProperty = FindProperty(Manager, "Apollo Retro Seasonly Gameplay Tags");
     auto UsePlaylistsProperty = (FBoolProperty*)FindProperty(Manager, "bShouldUseClydePlaylists");
 
     if (!EventsProperty || !WeekTagsProperty)
-        return bDone = true;
+        return bCalendarPlaylistDone = true;
 
     if (UsePlaylistsProperty && (GetProperty<uint8>(Manager, UsePlaylistsProperty) & UsePlaylistsProperty->FieldMask))
-        return bDone = true;
+        return bCalendarPlaylistDone = true;
 
     auto& Events = GetProperty<TArray<FString>>(Manager, EventsProperty);
     auto& WeekTags = GetProperty<TArray<FGameplayTag>>(Manager, WeekTagsProperty);
@@ -481,7 +1454,7 @@ static bool SelectCalendarPlaylist()
     for (auto& Tag : PlaylistTags)
     {
         if (HasTag(WeekTags, Tag))
-            return bDone = true;
+            return bCalendarPlaylistDone = true;
     }
 
     auto World = UWorld::GetWorld();
@@ -489,17 +1462,17 @@ static bool SelectCalendarPlaylist()
     auto EventManager = GameInstance ? GameInstance->SeasonalEventManager : nullptr;
 
     if (!EventManager)
-        return bDone = true;
+        return bCalendarPlaylistDone = true;
 
     if (*(uint8*)(__int64(EventManager) + 0x180))
     {
-        if (!WaitStart)
-            WaitStart = GetTickCount64();
+        if (!CalendarWaitStart)
+            CalendarWaitStart = GetTickCount64();
 
-        if (GetTickCount64() - WaitStart < 60000)
+        if (GetTickCount64() - CalendarWaitStart < 60000)
             return false;
 
-        return bDone = true;
+        return bCalendarPlaylistDone = true;
     }
 
     int32 Week = -1;
@@ -518,7 +1491,7 @@ static bool SelectCalendarPlaylist()
     }
 
     if (Week < 0 || Week >= WeekTags.Num())
-        return bDone = true;
+        return bCalendarPlaylistDone = true;
 
     auto& WeekTag = WeekTags[Week];
 
@@ -531,7 +1504,7 @@ static bool SelectCalendarPlaylist()
     auto RootEnd = PackageName.size() > 1 ? PackageName.find('/', 1) : std::string::npos;
 
     if (RootEnd == std::string::npos)
-        return bDone = true;
+        return bCalendarPlaylistDone = true;
 
     std::wstring Root(PackageName.begin(), PackageName.begin() + RootEnd + 1);
     auto Level = CurrentPlaylist->PreloadPersistentLevel.ObjectID.AssetPath.PackageName.GetRawString();
@@ -595,7 +1568,7 @@ static bool SelectCalendarPlaylist()
     if (Matches == 1)
         Playlist = MatchPath;
 
-    return bDone = true;
+    return bCalendarPlaylistDone = true;
 }
 
 static std::wstring GetPluginName(const FName& LevelToStream)
@@ -620,14 +1593,35 @@ static bool IsGameFeaturePluginActive(const std::wstring& PluginName)
     return false;
 }
 
-static std::unordered_map<int, float> WeightMap;
-static float Sum = 0;
-static float Weight;
-static float TotalWeight;
+static UFortPlaylistAthena* FindPlaylist()
+{
+    if (auto Found = FindObject<UFortPlaylistAthena>(Playlist.c_str()))
+        return Found;
+
+    return FindObject<UFortPlaylistAthena>(L"/BRPlaylists/Athena/Playlists/Playlist_DefaultSolo.Playlist_DefaultSolo");
+}
+
+static std::unordered_map<int, float> VendingRarityWeights;
+static float VendingRarityWeightSum = 0;
+static float VendingRarityZeroWeight;
+static float VendingTotalWeight;
 
 static void (*ReadyToStartMatchOG)(UObject*, FFrame&, bool*);
 static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
 {
+    static auto GetWorldContextFromWorld = (void* (*)(UEngine*, UWorld*))(ImageBase + 0x175C254);
+    static auto CreateNetDriver_Local = (UNetDriver* (*)(UEngine*, void*, FName, FName))(ImageBase + 0x1536974);
+    static auto SetWorld = (void (*)(UNetDriver*, UWorld*))(ImageBase + 0x2494394);
+    static auto InitListen = (bool (*)(UNetDriver*, UWorld*, FURL*, bool, FString&))(ImageBase + 0x71BBFDC);
+    static auto SetAISettings = (void (*)(AFortGameModeAthena*, UAthenaAISettings*))(ImageBase + 0x8F991FC);
+    static auto StartStreamingAdditionalPlaylistLevel = (void (*)(AFortGameStateAthena*, FName, bool))(ImageBase + 0x984CF30);
+    static auto GetLevelsToStream = (bool (*)(UFortGameStateComponent_UEFNProjects*, TArray<FName>*))(ImageBase + 0x90D8CA0);
+    static auto ChangeGameFeatureTargetState = (void (*)(UGameFeaturesSubsystem*, const FString&, EGameFeatureTargetState, const void*))(ImageBase + 0x189B27C);
+    static auto InitializePoiManager = (void (*)(AFortPoiManager*))(ImageBase + 0x908918C);
+    static auto UpdateCullDistanceServer = (void (*)(ABuildingActor*))(ImageBase + 0x92D226C);
+    static auto InitializeMapInfo = (AFortAthenaMapInfo* (*)(AFortGameModeAthena*, AFortGameStateAthena*))(ImageBase + 0x8F9DDA0);
+    static auto InitializeFlightPath = (void (*)(AFortAthenaMapInfo*, AFortGameStateAthena*, UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, bool, double, float, float))(ImageBase + 0x8F0EF30);
+
     Stack.IncrementCode();
 
     if (Context->IsA(AFortGameModeFrontEnd::StaticClass()))
@@ -656,11 +1650,6 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
 
         GameMode->bEnableReplicationGraph = true;
 
-        static auto GetWorldContextFromWorld = (void* (*)(UEngine*, UWorld*))(ImageBase + 0x175C254);
-        static auto CreateNetDriver_Local = (UNetDriver* (*)(UEngine*, void*, FName, FName))(ImageBase + 0x1536974);
-        static auto SetWorld = (void (*)(UNetDriver*, UWorld*))(ImageBase + 0x2494394);
-        static auto InitListen = (bool (*)(UNetDriver*, UWorld*, FURL*, bool, FString&))(ImageBase + 0x71BBFDC);
-
         auto WorldContext = GetWorldContextFromWorld(Engine, World);
         auto NetDriver = World->NetDriver = CreateNetDriver_Local(Engine, WorldContext, NetDriverName, FName());
 
@@ -675,22 +1664,20 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
         FURL URL{};
         URL.Port = Port;
 
-        SetWorld(NetDriver, World);
         FString Error;
+
+        SetWorld(NetDriver, World);
+
         if (InitListen(NetDriver, World, &URL, false, Error))
             SetWorld(NetDriver, World);
 
         GameMode->WarmupRequiredPlayerCount = 1;
 
-        auto Playlist = FindObject<UFortPlaylistAthena>(::Playlist.c_str());
-
-        if (!Playlist)
-            Playlist = FindObject<UFortPlaylistAthena>(L"/BRPlaylists/Athena/Playlists/Playlist_DefaultSolo.Playlist_DefaultSolo");
+        auto Playlist = FindPlaylist();
 
         if (Playlist)
         {
             Playlist->GarbageCollectionFrequency = 9999999999999999.f;
-            Playlist->bEnableDynamicBotBackfill = false;
             GameMode->PlaylistHotfixOriginalGCFrequency = 9999999999999999.f;
             GameMode->bDisableGCOnServerDuringMatch = true;
             GameMode->bPlaylistHotfixChangedGCDisabling = true;
@@ -709,71 +1696,6 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
                 Playlist->RespawnTime.Curve.RowName = FName();
                 Playlist->bAllowJoinInProgress = true;
             }
-
-            GameState->CurrentPlaylistInfo.BasePlaylist = Playlist;
-            GameState->CurrentPlaylistInfo.PlaylistReplicationKey++;
-            GameState->CurrentPlaylistInfo.MarkArrayDirty();
-            GameState->OnRep_CurrentPlaylistInfo();
-
-            GameMode->CurrentPlaylistId = Playlist->PlaylistId;
-            GameState->CurrentPlaylistId = Playlist->PlaylistId;
-            GameMode->CurrentPlaylistName = Playlist->PlaylistName;
-            GameMode->GameSession->MaxPlayers = Playlist->MaxPlayers;
-
-            auto StreamingPlaylist = GameState->CurrentPlaylistInfo.OverridePlaylist ? GameState->CurrentPlaylistInfo.OverridePlaylist : GameState->CurrentPlaylistInfo.BasePlaylist;
-            static auto StartStreamingAdditionalPlaylistLevel = (void (*)(AFortGameStateAthena*, FName, bool))(ImageBase + 0x984CF30);
-
-            for (auto& AdditionalLevel : StreamingPlaylist->AdditionalLevels)
-                StartStreamingAdditionalPlaylistLevel(GameState, AdditionalLevel.ObjectID.AssetPath.PackageName, false);
-
-            for (auto& AdditionalLevel : StreamingPlaylist->AdditionalLevelsServerOnly)
-                StartStreamingAdditionalPlaylistLevel(GameState, AdditionalLevel.ObjectID.AssetPath.PackageName, true);
-
-            if (StreamingPlaylist->SharedAssetGroup)
-                for (auto& SharedAsset : StreamingPlaylist->SharedAssetGroup->SharedAssetsToLoad)
-                    for (auto& AdditionalLevel : SharedAsset->SharedAdditionalLevels)
-                        StartStreamingAdditionalPlaylistLevel(GameState, AdditionalLevel.ObjectID.AssetPath.PackageName, false);
-
-            if (auto UEFNProjects = (UFortGameStateComponent_UEFNProjects*)GameState->GetComponentByClass(UFortGameStateComponent_UEFNProjects::StaticClass()))
-            {
-                static auto GetLevelsToStream = (bool (*)(UFortGameStateComponent_UEFNProjects*, TArray<FName>*))(ImageBase + 0x90D8CA0);
-                static auto ChangeGameFeatureTargetState = (void (*)(UGameFeaturesSubsystem*, const FString&, EGameFeatureTargetState, const void*))(ImageBase + 0x189B27C);
-
-                GetLevelsToStream(UEFNProjects, &LevelsToStream);
-
-                for (auto& LevelToStream : LevelsToStream)
-                {
-                    auto PluginName = GetPluginName(LevelToStream);
-                    auto PluginURL = FString((L"file:../../../FortniteGame/Plugins/GameFeatures/" + PluginName + L"/" + PluginName + L".uplugin").c_str());
-                    uint8 CompleteDelegate[0x10]{};
-
-                    ChangeGameFeatureTargetState((UGameFeaturesSubsystem*)USubsystemBlueprintLibrary::GetEngineSubsystem(UGameFeaturesSubsystem::StaticClass()), PluginURL, EGameFeatureTargetState::Active, CompleteDelegate);
-                    PluginURL.Free();
-                }
-            }
-        }
-        else
-        {
-            GameState->CurrentPlaylistId = GameMode->CurrentPlaylistId = 0;
-            GameMode->GameSession->MaxPlayers = 100;
-        }
-
-        RegisterServer(GameMode->GameSession);
-
-        if (auto MeshNetworkSubsystem = (UMeshNetworkSubsystem*)USubsystemBlueprintLibrary::GetGameInstanceSubsystem(World, UMeshNetworkSubsystem::StaticClass()))
-            MeshNetworkSubsystem->NodeType = EMeshNetworkNodeType::Edge;
-
-        if (!GameMode->AIDirector)
-        {
-            GameMode->AIDirector = SpawnActor<AFortAIDirector>(AAthenaAIDirector::StaticClass(), FVector{}, {}, GameMode);
-            if (GameMode->AIDirector)
-                GameMode->AIDirector->Activate();
-        }
-
-        if (Playlist)
-        {
-            static auto SetAISettings = (void (*)(AFortGameModeAthena*, UAthenaAISettings*))(ImageBase + 0x8F991FC);
-            static auto OnGameModeInitialized = (void (*)(UAthenaAIServiceManager*, AFortGameModeAthena*))(ImageBase + 0xA6ADD4C);
 
             if (auto AISettings = Playlist->AISettings.Get())
             {
@@ -803,10 +1725,70 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
                     CreateSubsystems((UAthenaAISystem*)AISystem, GameMode);
 
                 SetAISettings(GameMode, AISettings);
-
-                if (AISystem && AISystem->IsA(UFortAISystem::StaticClass()) && AISystem->AIServiceManager)
-                    OnGameModeInitialized(AISystem->AIServiceManager, GameMode);
             }
+
+            GameState->CurrentPlaylistInfo.BasePlaylist = Playlist;
+            GameState->CurrentPlaylistInfo.PlaylistReplicationKey++;
+            GameState->CurrentPlaylistInfo.MarkArrayDirty();
+            GameState->OnRep_CurrentPlaylistInfo();
+
+            GameMode->CurrentPlaylistId = Playlist->PlaylistId;
+            GameState->CurrentPlaylistId = Playlist->PlaylistId;
+            GameMode->CurrentPlaylistName = Playlist->PlaylistName;
+            GameMode->GameSession->MaxPlayers = Playlist->MaxPlayers;
+
+            auto StreamingPlaylist = GameState->CurrentPlaylistInfo.OverridePlaylist ? GameState->CurrentPlaylistInfo.OverridePlaylist : GameState->CurrentPlaylistInfo.BasePlaylist;
+
+            for (auto& AdditionalLevel : StreamingPlaylist->AdditionalLevels)
+                StartStreamingAdditionalPlaylistLevel(GameState, AdditionalLevel.ObjectID.AssetPath.PackageName, false);
+
+            for (auto& AdditionalLevel : StreamingPlaylist->AdditionalLevelsServerOnly)
+                StartStreamingAdditionalPlaylistLevel(GameState, AdditionalLevel.ObjectID.AssetPath.PackageName, true);
+
+            if (StreamingPlaylist->SharedAssetGroup)
+            {
+                for (auto& SharedAsset : StreamingPlaylist->SharedAssetGroup->SharedAssetsToLoad)
+                {
+                    for (auto& AdditionalLevel : SharedAsset->SharedAdditionalLevels)
+                        StartStreamingAdditionalPlaylistLevel(GameState, AdditionalLevel.ObjectID.AssetPath.PackageName, false);
+                }
+            }
+
+            if (auto UEFNProjects = (UFortGameStateComponent_UEFNProjects*)GameState->GetComponentByClass(UFortGameStateComponent_UEFNProjects::StaticClass()))
+            {
+                GetLevelsToStream(UEFNProjects, &LevelsToStream);
+
+                for (auto& LevelToStream : LevelsToStream)
+                {
+                    auto PluginName = GetPluginName(LevelToStream);
+                    auto PluginURL = FString((L"file:../../../FortniteGame/Plugins/GameFeatures/" + PluginName + L"/" + PluginName + L".uplugin").c_str());
+                    uint8 CompleteDelegate[0x10]{};
+
+                    ChangeGameFeatureTargetState((UGameFeaturesSubsystem*)USubsystemBlueprintLibrary::GetEngineSubsystem(UGameFeaturesSubsystem::StaticClass()), PluginURL, EGameFeatureTargetState::Active, CompleteDelegate);
+                    PluginURL.Free();
+                }
+            }
+        }
+        else
+        {
+            GameState->CurrentPlaylistId = GameMode->CurrentPlaylistId = 0;
+            GameMode->GameSession->MaxPlayers = 100;
+        }
+
+        if (HasGameSession())
+            CleanupDedicatedServerSession(GameMode->GameSession, OnDestroySessionComplete);
+        else
+            RegisterServer(GameMode->GameSession);
+
+        if (auto MeshNetworkSubsystem = (UMeshNetworkSubsystem*)USubsystemBlueprintLibrary::GetGameInstanceSubsystem(World, UMeshNetworkSubsystem::StaticClass()))
+            MeshNetworkSubsystem->NodeType = EMeshNetworkNodeType::Edge;
+
+        if (!GameMode->AIDirector)
+        {
+            GameMode->AIDirector = SpawnActor<AFortAIDirector>(AAthenaAIDirector::StaticClass(), FVector{}, {}, GameMode);
+
+            if (GameMode->AIDirector)
+                GameMode->AIDirector->Activate();
         }
 
         if (!GameMode->AIGoalManager)
@@ -820,15 +1802,10 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
         }
 
         if (auto PoiManager = GameState->PoiManager; PoiManager && !PoiManager->bHasInitialized)
-        {
-            static auto InitializePoiManager = (void (*)(AFortPoiManager*))(ImageBase + 0x908918C);
             InitializePoiManager(PoiManager);
-        }
 
         if (World->NetDriver && GameState->HasBegunPlay())
         {
-            static auto UpdateCullDistanceServer = (void (*)(ABuildingActor*))(ImageBase + 0x92D226C);
-
             TArray<ABuildingActor*> BuildingActors;
             GetAll<ABuildingActor>(BuildingActors);
 
@@ -865,9 +1842,6 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
 
         if (!GameState->MapInfo && (MapInfosNum > 0 || LevelsToStream.Num() > 0))
         {
-            static auto StartStreamingAdditionalPlaylistLevel = (void (*)(AFortGameStateAthena*, FName, bool))(ImageBase + 0x984CF30);
-            static auto InitializeMapInfo = (AFortAthenaMapInfo* (*)(AFortGameModeAthena*, AFortGameStateAthena*))(ImageBase + 0x8F9DDA0);
-
             for (auto& LevelToStream : LevelsToStream)
             {
                 if (!IsGameFeaturePluginActive(GetPluginName(LevelToStream)))
@@ -892,8 +1866,6 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
         {
             if (auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(GameState))
             {
-                static auto InitializeFlightPath = (void (*)(AFortAthenaMapInfo*, AFortGameStateAthena*, UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, bool, double, float, float))(ImageBase + 0x8F0EF30);
-
                 InitializeSafeZoneLocations(GamePhaseLogic);
                 InitializeFlightPath(GameState->MapInfo, GameState, GamePhaseLogic, false, 0.f, 0.f, 360.f);
             }
@@ -910,28 +1882,55 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
         bLateGame = bLateGame && Playlist && (Playlist->RespawnType == EAthenaRespawnType::None || bForceRespawns) && !bSkipAircraft && GameState->MapInfo && LateGameZone >= 1 && GetLateGamePhase(GameState) >= 1 &&
                     GetLateGamePhase(GameState) < (int)GameState->MapInfo->SafeZoneDefinition.Count.Evaluate();
 
-        auto AbilitySet = FindObject<UFortAbilitySet>(L"/Game/Abilities/Player/Generic/Traits/DefaultPlayer/GAS_AthenaPlayer.GAS_AthenaPlayer");
-        AbilitySets.Add(AbilitySet);
+        if (bLateGame && GameState->MapInfo->FlightInfos.Num() > 0)
+        {
+            auto& FlightInfo = GameState->MapInfo->FlightInfos[0];
+            auto BusPhase = GetLateGamePhase(GameState) - 1;
+            auto& Center = SafeZoneLocations.Data[BusPhase];
+            auto Radius = GameState->MapInfo->SafeZoneDefinition.Radius.Evaluate((float)BusPhase);
+
+            if (bLateGameMovingBus && Radius > 0.f)
+            {
+                auto Speed = FlightInfo.FlightSpeed > 0.f && Radius / 10.f > FlightInfo.FlightSpeed ? FlightInfo.FlightSpeed : Radius / 10.f;
+                auto Yaw = FlightInfo.FlightStartRotation.Yaw;
+
+                (FVector&)FlightInfo.FlightStartLocation = FVector(Center.X - UKismetMathLibrary::DegCos(Yaw) * Speed * 5.f, Center.Y - UKismetMathLibrary::DegSin(Yaw) * Speed * 5.f, 17500.);
+                FlightInfo.FlightSpeed = Speed;
+                FlightInfo.TimeTillFlightEnd = 10.f;
+                FlightInfo.TimeTillDropEnd = 10.f;
+            }
+            else
+            {
+                (FVector&)FlightInfo.FlightStartLocation = FVector(Center.X, Center.Y, 17500.);
+                FlightInfo.FlightSpeed = 0.f;
+                FlightInfo.TimeTillFlightEnd = 7.f;
+                FlightInfo.TimeTillDropEnd = 7.f;
+            }
+
+            FlightInfo.TimeTillDropStart = 0.f;
+
+            if (GameState->TeamFlightPaths.Num() > 0)
+                GameState->TeamFlightPaths[0] = FlightInfo;
+
+            if (GameState->TeamFlightPaths.Num() == 1)
+                GameState->FlightPathMidLine = FlightInfo;
+        }
+
+        AbilitySets.Add(FindObject<UFortAbilitySet>(L"/Game/Abilities/Player/Generic/Traits/DefaultPlayer/GAS_AthenaPlayer.GAS_AthenaPlayer"));
 
         auto TacticalSprintAbility = FindObject<UFortAbilitySet>(L"/TacticalSprintGame/Gameplay/AS_TacticalSprint.AS_TacticalSprint");
 
         if (!TacticalSprintAbility)
             TacticalSprintAbility = FindObject<UFortAbilitySet>(L"/TacticalSprint/Gameplay/AS_TacticalSprint.AS_TacticalSprint");
+
         AbilitySets.Add(TacticalSprintAbility);
-
-        auto AscenderAbility = FindObject<UFortAbilitySet>(L"/Ascender/Gameplay/Ascender/AS_Ascender.AS_Ascender");
-        AbilitySets.Add(AscenderAbility);
-
-        auto DoorBashAbility = FindObject<UFortAbilitySet>(L"/DoorBashContent/Gameplay/AS_DoorBash.AS_DoorBash");
-        AbilitySets.Add(DoorBashAbility);
-
-        auto HillScrambleAbility = FindObject<UFortAbilitySet>(L"/HillScramble/Gameplay/AS_HillScramble.AS_HillScramble");
-        AbilitySets.Add(HillScrambleAbility);
-
-        auto SlideImpulseAbility = FindObject<UFortAbilitySet>(L"/SlideImpulse/Gameplay/AS_SlideImpulse.AS_SlideImpulse");
-        AbilitySets.Add(SlideImpulseAbility);
+        AbilitySets.Add(FindObject<UFortAbilitySet>(L"/Ascender/Gameplay/Ascender/AS_Ascender.AS_Ascender"));
+        AbilitySets.Add(FindObject<UFortAbilitySet>(L"/DoorBashContent/Gameplay/AS_DoorBash.AS_DoorBash"));
+        AbilitySets.Add(FindObject<UFortAbilitySet>(L"/HillScramble/Gameplay/AS_HillScramble.AS_HillScramble"));
+        AbilitySets.Add(FindObject<UFortAbilitySet>(L"/SlideImpulse/Gameplay/AS_SlideImpulse.AS_SlideImpulse"));
 
         if (Playlist)
+        {
             for (auto& ModifierPtr : Playlist->ModifierList)
             {
                 auto Modifier = ModifierPtr.Get();
@@ -948,10 +1947,13 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
                         AbilitySets.Add(AbilitySetPtr.Get());
                 }
             }
+        }
 
         for (auto& Set : AbilitySets)
+        {
             if (Set)
                 Set->AddToRoot();
+        }
 
         GameState->DefaultParachuteDeployTraceForGroundDistance = 10000;
 
@@ -983,16 +1985,16 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
                 float RarityWeight;
                 UDataTableFunctionLibrary::EvaluateCurveTableRow(VendingMachineRarityCount.Curve.CurveTable, VendingMachineRarityCount.Curve.RowName, (float)i, nullptr, &RarityWeight, FString());
 
-                WeightMap[i] = RarityWeight;
-                Sum += RarityWeight;
+                VendingRarityWeights[i] = RarityWeight;
+                VendingRarityWeightSum += RarityWeight;
             }
 
-            UDataTableFunctionLibrary::EvaluateCurveTableRow(VendingMachineRarityCount.Curve.CurveTable, VendingMachineRarityCount.Curve.RowName, 0.f, nullptr, &Weight, FString());
+            UDataTableFunctionLibrary::EvaluateCurveTableRow(VendingMachineRarityCount.Curve.CurveTable, VendingMachineRarityCount.Curve.RowName, 0.f, nullptr, &VendingRarityZeroWeight, FString());
 
-            TotalWeight = 0.0f;
+            VendingTotalWeight = 0.0f;
 
-            for (auto& [Rarity, RarityWeight] : WeightMap)
-                TotalWeight += RarityWeight;
+            for (auto& [Rarity, RarityWeight] : VendingRarityWeights)
+                VendingTotalWeight += RarityWeight;
         }
 
         GameMode->DefaultPawnClass = FindObject<UClass>(L"/Game/Athena/PlayerPawn_Athena.PlayerPawn_Athena_C");
@@ -1045,18 +2047,25 @@ static void SpawnDefaultPawnFor(UObject* Context, FFrame& Stack, APawn** Ret)
     Stack.StepCompiledIn(&NewPlayer);
     Stack.StepCompiledIn(&StartSpot);
     Stack.IncrementCode();
+
     auto GameMode = (AFortGameModeAthena*)Context;
 
-    if (!NewPlayer || !StartSpot)
+    if (!NewPlayer || (!NewPlayer->IsA(AFortPlayerControllerAthena::StaticClass()) && (!NewPlayer->PlayerState || !NewPlayer->PlayerState->bIsABot)) || !StartSpot)
         return;
 
-    auto Pawn = (APawn*)SpawnActor(GameMode->GetDefaultPawnClassForController(NewPlayer), StartSpot->GetTransform(), NewPlayer, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding);
+    auto PawnClass = GameMode->GetDefaultPawnClassForController(NewPlayer);
+
+    if (!PawnClass)
+        return;
+
+    auto Pawn = (APawn*)SpawnActor(PawnClass, StartSpot->GetTransform(), NewPlayer, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding);
 
     while (!Pawn)
     {
         auto PlayerStart = GameMode->ChoosePlayerStart(NewPlayer);
+
         if (PlayerStart)
-            Pawn = (APawn*)SpawnActor(GameMode->GetDefaultPawnClassForController(NewPlayer), PlayerStart->GetTransform(), NewPlayer, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding);
+            Pawn = (APawn*)SpawnActor(PawnClass, PlayerStart->GetTransform(), NewPlayer, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding);
     }
 
     *Ret = Pawn;
@@ -1079,21 +2088,6 @@ static void SpawnDefaultPawnFor(UObject* Context, FFrame& Stack, APawn** Ret)
     }
 }
 
-enum class EHttpRequestStatus : int32
-{
-    NotStarted,
-    Processing,
-    Failed,
-    Failed_ConnectionError,
-    Succeeded
-};
-
-struct FStringView
-{
-    const wchar_t* DataPtr;
-    int32 Size;
-};
-
 struct FVoiceChatTokenRequest
 {
     TWeakObjectPtr<AFortPlayerControllerZone> PlayerController;
@@ -1103,16 +2097,17 @@ struct FVoiceChatTokenRequest
 };
 
 static std::vector<FVoiceChatTokenRequest> VoiceChatTokenRequests;
+static std::wstring CurrentGameSessionId;
 
 static const std::wstring& GetCurrentGameSessionId()
 {
-    static const auto GameSessionId = []
+    if (CurrentGameSessionId.empty())
     {
         std::random_device Device;
-        return std::format(L"{:08x}{:08x}{:08x}{:08x}", Device(), Device(), Device(), Device());
-    }();
+        CurrentGameSessionId = std::format(L"{:08x}{:08x}{:08x}{:08x}", Device(), Device(), Device(), Device());
+    }
 
-    return GameSessionId;
+    return CurrentGameSessionId;
 }
 
 static std::wstring GenerateVoiceChatChannel(AFortGameModeAthena* GameMode, AFortPlayerControllerZone* PlayerController)
@@ -1268,10 +2263,10 @@ static void OnHttpRequestJoinTokenComplete(FVoiceChatTokenRequest& Request, bool
 {
     static auto TJsonReaderFactory_Create = (FSharedRef* (*)(FSharedRef*, const FString*))(ImageBase + 0x2A11D54);
     static auto FJsonSerializer_Deserialize = (bool (*)(void*, FSharedRef*, int32))(ImageBase + 0x1D916A4);
-    static auto TryGetStringField = (bool (*)(void*, const FStringView*, FString*))(ImageBase + 0x1D8F394);
+    static auto TryGetStringField = (bool (*)(void*, const FJsonKey*, FString*))(ImageBase + 0x1D8F394);
     static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
-    alignas(16) static const FStringView TokenField{ L"token", 5 };
-    alignas(16) static const FStringView ErrorCodeField{ L"errorCode", 9 };
+    alignas(16) static const FJsonKey TokenField{ L"token", 5 };
+    alignas(16) static const FJsonKey ErrorCodeField{ L"errorCode", 9 };
 
     FString Token;
     FString Error;
@@ -1323,15 +2318,18 @@ static void OnHttpRequestJoinTokenComplete(FVoiceChatTokenRequest& Request, bool
 static void (*HandleStartingNewPlayerOG)(UObject*, FFrame&, void*);
 static void HandleStartingNewPlayer(UObject* Context, FFrame& Stack, void* Ret)
 {
+    static auto CopyGameMemberInfo = (FGameMemberInfo* (*)(FGameMemberInfo*, const FGameMemberInfo*))(ImageBase + 0x3301224);
+    static auto NotifyGameMemberAdded = (void (*)(AFortGameStateAthena*, uint8, uint8, FUniqueNetIdRepl*))(ImageBase + 0x24AB834);
+
     APlayerController* NewPlayer;
     Stack.StepCompiledIn(&NewPlayer);
     Stack.IncrementCode();
+
     auto GameMode = (AFortGameModeAthena*)Context;
     auto GameState = (AFortGameStateAthena*)GameMode->GameState;
     auto PlayerController = (AFortPlayerControllerAthena*)NewPlayer;
     auto PlayerState = (AFortPlayerStateAthena*)PlayerController->PlayerState;
 
-    PlayerState->SquadID = PlayerState->TeamIndex - 2;
     PlayerState->OnRep_SquadId();
 
     FGameMemberInfo Member{};
@@ -1343,11 +2341,15 @@ static void HandleStartingNewPlayer(UObject* Context, FFrame& Stack, void* Ret)
     Member.SquadID = PlayerState->SquadID;
     Member.MemberUniqueId = PlayerState->UniqueID;
 
-    auto& NewMember = GameState->GameMemberInfoArray.Members.Add(Member);
-    GameState->GameMemberInfoArray.MarkItemDirty(NewMember);
+    auto& Members = GameState->GameMemberInfoArray.Members;
 
-    static auto NotifyGameMemberAdded = (void (*)(AFortGameStateAthena*, uint8, uint8, FUniqueNetIdRepl*))(ImageBase + 0x24AB834);
-    NotifyGameMemberAdded(GameState, Member.SquadID, Member.TeamIndex, &Member.MemberUniqueId);
+    Members.Reserve(1);
+
+    auto& NewMember = Members.Data[Members.NumElements++];
+
+    CopyGameMemberInfo(&NewMember, &Member);
+    GameState->GameMemberInfoArray.MarkItemDirty(NewMember);
+    NotifyGameMemberAdded(GameState, NewMember.SquadID, NewMember.TeamIndex, &NewMember.MemberUniqueId);
 
     if (!PlayerController->WorldInventory.ObjectPointer)
     {
@@ -1366,7 +2368,7 @@ static void HandleStartingNewPlayer(UObject* Context, FFrame& Stack, void* Ret)
     {
         auto SquadPlayerState = (AFortPlayerStateAthena*)OtherPlayerState;
 
-        if (SquadPlayerState && SquadPlayerState->IsA(AFortPlayerStateAthena::StaticClass()) &&SquadPlayerState->SquadID == PlayerState->SquadID && SquadPlayerState->Owner && SquadPlayerState->Owner->IsA(AFortPlayerControllerZone::StaticClass()))
+        if (SquadPlayerState && SquadPlayerState->IsA(AFortPlayerStateAthena::StaticClass()) && SquadPlayerState->SquadID == PlayerState->SquadID && SquadPlayerState->Owner && SquadPlayerState->Owner->IsA(AFortPlayerControllerZone::StaticClass()))
             SendVoiceChatChannelJoin(GameMode, (AFortPlayerControllerZone*)SquadPlayerState->Owner);
     }
 }
@@ -1377,15 +2379,13 @@ static UClass** GetGameSessionClass(AFortGameModeAthena* GameMode, UClass** Resu
     return Result;
 }
 
-static void (*ResolvePlayerEligibilityOG)(void*, void*, void*);
-static void ResolvePlayerEligibility(void* Resolver, void* PlayerId, void* OnResolved)
+static void (*InitGameOG)(AFortGameModeAthena*, const FString*, const FString*, FString*);
+static void InitGame(AFortGameModeAthena* GameMode, const FString* MapName, const FString* Options, FString* ErrorMessage)
 {
-    static auto CompleteEligibility = (void (*)(void*, void*, bool))(ImageBase + 0x520DA78);
+    for (auto& Resetter : Resetters)
+        Resetter();
 
-    if (!Resolver)
-        return CompleteEligibility(OnResolved, PlayerId, true);
-
-    ResolvePlayerEligibilityOG(Resolver, PlayerId, OnResolved);
+    InitGameOG(GameMode, MapName, Options, ErrorMessage);
 }
 
 static void (*HandleMatchHasStartedOG)(AFortGameModeAthena*);
@@ -1408,89 +2408,69 @@ static void HandleMatchHasStarted(AFortGameModeAthena* GameMode)
         StartAircraftPhase(GamePhaseLogic);
 }
 
+static void AddLootTierData(UDataTable* Table)
+{
+    if (!Table)
+        return;
+
+    Table->AddToRoot();
+
+    for (auto& Pair : Table->RowMap)
+    {
+        auto TierData = (FFortLootTierData*)Pair.Value();
+
+        TierDataMap[TierData->TierGroup.ComparisonIndex].Add(TierData);
+    }
+}
+
+static void AddLootPackageData(UDataTable* Table)
+{
+    if (!Table)
+        return;
+
+    Table->AddToRoot();
+
+    std::unordered_map<int32, FFortLootPackageData*> PackagesByRowName;
+
+    for (auto& Pair : Table->RowMap)
+        PackagesByRowName[Pair.Key().ComparisonIndex] = (FFortLootPackageData*)Pair.Value();
+
+    for (auto& [_, Package] : PackagesByRowName)
+        LootPackageMap[Package->LootPackageID.ComparisonIndex].Add(Package);
+}
+
 static void (*FinishWorldInitializationOG)(AFortGameModeAthena*, AActor*);
 static void FinishWorldInitialization(AFortGameModeAthena* GameMode, AActor* WorldManager)
 {
+    static auto GetGameFeatureDataForActivePlugin = (UGameFeatureData* (*)(UGameFeaturePluginStateMachine*))(ImageBase + 0x29EB49C);
+
     FinishWorldInitializationOG(GameMode, WorldManager);
 
-    auto AddToTierData = [&](UDataTable* Table, TArray<FFortLootTierData*>& TempArr)
-    {
-        if (!Table)
-            return;
-
-        Table->AddToRoot();
-
-        for (auto& Pair : Table->RowMap)
-            TempArr.Add((FFortLootTierData*)Pair.Value());
-    };
-
-    auto AddToPackages = [&](UDataTable* Table, std::unordered_map<int32, FFortLootPackageData*>& TempArr)
-    {
-        if (!Table)
-            return;
-
-        Table->AddToRoot();
-
-        for (auto& Pair : Table->RowMap)
-            TempArr[Pair.Key().ComparisonIndex] = (FFortLootPackageData*)Pair.Value();
-    };
-
-    auto Playlist = FindObject<UFortPlaylistAthena>(::Playlist.c_str());
-
-    if (!Playlist)
-        Playlist = FindObject<UFortPlaylistAthena>(L"/BRPlaylists/Athena/Playlists/Playlist_DefaultSolo.Playlist_DefaultSolo");
-
-    TArray<FFortLootTierData*> LootTierDataTempArr;
+    auto Playlist = FindPlaylist();
     auto LootTierData = Playlist ? Playlist->LootTierData.Get() : nullptr;
+
     if (!LootTierData)
         LootTierData = FindObject<UDataTable>(L"/Game/Items/Datatables/AthenaLootTierData_Client.AthenaLootTierData_Client");
-    if (LootTierData)
-        AddToTierData(LootTierData, LootTierDataTempArr);
 
-    for (auto& Val : LootTierDataTempArr)
-        TierDataMap[Val->TierGroup.ComparisonIndex].Add(Val);
+    AddLootTierData(LootTierData);
 
-    std::unordered_map<int32, FFortLootPackageData*> LootPackageTempArr;
     auto LootPackages = Playlist ? Playlist->LootPackages.Get() : nullptr;
+
     if (!LootPackages)
         LootPackages = FindObject<UDataTable>(L"/Game/Items/Datatables/AthenaLootPackages_Client.AthenaLootPackages_Client");
-    if (LootPackages)
-        AddToPackages(LootPackages, LootPackageTempArr);
 
-    for (auto& [_, Val] : LootPackageTempArr)
-        LootPackageMap[Val->LootPackageID.ComparisonIndex].Add(Val);
+    AddLootPackageData(LootPackages);
 
-    bool bUseGameModeGameFeatureLoot = GameMode->GameFeatureLootTierData.Num() > 0;
-
-    if (bUseGameModeGameFeatureLoot)
+    if (GameMode->GameFeatureLootTierData.Num() > 0)
     {
         for (auto& FeatureLootTierData : GameMode->GameFeatureLootTierData)
-        {
-            TArray<FFortLootTierData*> LTDTempData;
-
-            AddToTierData(FeatureLootTierData.Get(), LTDTempData);
-
-            for (auto& Val : LTDTempData)
-                TierDataMap[Val->TierGroup.ComparisonIndex].Add(Val);
-        }
+            AddLootTierData(FeatureLootTierData.Get());
 
         for (auto& FeatureLootPackageData : GameMode->GameFeatureLootPackageData)
-        {
-            std::unordered_map<int32, FFortLootPackageData*> LPTempData;
-
-            AddToPackages(FeatureLootPackageData.Get(), LPTempData);
-
-            for (auto& [_, Val] : LPTempData)
-                LootPackageMap[Val->LootPackageID.ComparisonIndex].Add(Val);
-        }
+            AddLootPackageData(FeatureLootPackageData.Get());
     }
-
-    auto GameFeaturesSubsystem = !bUseGameModeGameFeatureLoot ? (UGameFeaturesSubsystem*)USubsystemBlueprintLibrary::GetEngineSubsystem(UGameFeaturesSubsystem::StaticClass()) : nullptr;
-
-    if (GameFeaturesSubsystem)
+    else if (auto GameFeaturesSubsystem = (UGameFeaturesSubsystem*)USubsystemBlueprintLibrary::GetEngineSubsystem(UGameFeaturesSubsystem::StaticClass()))
     {
-        static auto GetGameFeatureDataForActivePlugin = (UGameFeatureData* (*)(UGameFeaturePluginStateMachine*))(ImageBase + 0x29EB49C);
-
         for (auto& Pair : GameFeaturesSubsystem->GameFeaturePluginStateMachines)
         {
             auto StateMachine = Pair.Value();
@@ -1516,20 +2496,11 @@ static void FinishWorldInitialization(AFortGameModeAthena* GameMode, AActor* Wor
             auto FeatureLootTierData = LootTableData->LootTierData.Get();
             auto FeatureLootPackageData = LootTableData->LootPackageData.Get();
 
-            TArray<FFortLootTierData*> LTDTempData;
-            AddToTierData(FeatureLootTierData, LTDTempData);
-
-            for (auto& Val : LTDTempData)
-                TierDataMap[Val->TierGroup.ComparisonIndex].Add(Val);
-
-            std::unordered_map<int32, FFortLootPackageData*> LPTempData;
-            AddToPackages(FeatureLootPackageData, LPTempData);
-
-            for (auto& [_, Val] : LPTempData)
-                LootPackageMap[Val->LootPackageID.ComparisonIndex].Add(Val);
+            AddLootTierData(FeatureLootTierData);
+            AddLootPackageData(FeatureLootPackageData);
         }
     }
-    else if (!bUseGameModeGameFeatureLoot)
+    else
     {
         for (int i = 0; i < UObject::GObjects->Num(); i++)
         {
@@ -1540,25 +2511,8 @@ static void FinishWorldInitialization(AFortGameModeAthena* GameMode, AActor* Wor
 
             auto& LootTableData = ((UFortGameFeatureData*)Object)->DefaultLootTableData;
 
-            if (auto LTDFeatureData = LootTableData.LootTierData.Get())
-            {
-                TArray<FFortLootTierData*> LTDTempData;
-
-                AddToTierData(LTDFeatureData, LTDTempData);
-
-                for (auto& Val : LTDTempData)
-                    TierDataMap[Val->TierGroup.ComparisonIndex].Add(Val);
-            }
-
-            if (auto LootPackageData = LootTableData.LootPackageData.Get())
-            {
-                std::unordered_map<int32, FFortLootPackageData*> LPTempData;
-
-                AddToPackages(LootPackageData, LPTempData);
-
-                for (auto& [_, Val] : LPTempData)
-                    LootPackageMap[Val->LootPackageID.ComparisonIndex].Add(Val);
-            }
+            AddLootTierData(LootTableData.LootTierData.Get());
+            AddLootPackageData(LootTableData.LootPackageData.Get());
         }
     }
 
@@ -1581,7 +2535,7 @@ static void FinishWorldInitialization(AFortGameModeAthena* GameMode, AActor* Wor
 
     for (auto& CollectorActor : Collectors)
     {
-        if (Sum <= Weight)
+        if (VendingRarityWeightSum <= VendingRarityZeroWeight)
         {
             CollectorActor->K2_DestroyActor();
             continue;
@@ -1596,9 +2550,9 @@ static void FinishWorldInitialization(AFortGameModeAthena* GameMode, AActor* Wor
 
             while (!bFound)
             {
-                auto RandomNum = (float)rand() / (RAND_MAX / TotalWeight);
+                auto RandomNum = (float)rand() / (RAND_MAX / VendingTotalWeight);
 
-                for (auto& [ElementRarity, ElementWeight] : WeightMap)
+                for (auto& [ElementRarity, ElementWeight] : VendingRarityWeights)
                 {
                     if (ElementWeight == 0)
                         continue;
@@ -1672,9 +2626,13 @@ static void FinishWorldInitialization(AFortGameModeAthena* GameMode, AActor* Wor
 
         CollectorActor->StartingGoalLevel = Rarity;
     }
+
     Collectors.Free();
 
-    ExecHook(FindObject<UFunction>(L"/Game/Athena/Items/Gameplay/VendingMachine/B_Athena_VendingMachine.B_Athena_VendingMachine_C:VendWobble__FinishedFunc"), VendWobble__FinishedFunc, VendWobble__FinishedFuncOG);
+    auto VendWobbleFinishedFunc = FindObject<UFunction>(L"/Game/Athena/Items/Gameplay/VendingMachine/B_Athena_VendingMachine.B_Athena_VendingMachine_C:VendWobble__FinishedFunc");
+
+    if (VendWobbleFinishedFunc && VendWobbleFinishedFunc->ExecFunction != (UFunction::FNativeFuncPtr)VendWobble__FinishedFunc)
+        ExecHook(VendWobbleFinishedFunc, VendWobble__FinishedFunc, VendWobble__FinishedFuncOG);
 }
 
 static void GetPhaseInfo(UObject* Context, FFrame& Stack, bool* Ret)
@@ -1686,11 +2644,11 @@ static void GetPhaseInfo(UObject* Context, FFrame& Stack, bool* Ret)
     Stack.IncrementCode();
 
     auto SafeZoneIndicator = (AFortSafeZoneIndicator*)Context;
-    auto& Array = SafeZoneIndicator->SafeZonePhases;
+    auto& SafeZonePhases = SafeZoneIndicator->SafeZonePhases;
 
-    if (Array.IsValidIndex(InPhaseToGet))
+    if (SafeZonePhases.IsValidIndex(InPhaseToGet))
     {
-        memcpy((PBYTE)&OutSafeZonePhase, (PBYTE)&Array[InPhaseToGet], sizeof(FFortSafeZonePhaseInfo));
+        memcpy((PBYTE)&OutSafeZonePhase, (PBYTE)&SafeZonePhases[InPhaseToGet], sizeof(FFortSafeZonePhaseInfo));
 
         *Ret = true;
         return;
@@ -1707,16 +2665,22 @@ static void OnGamePhaseStepChanged(UObject* Context, FFrame& Stack)
 
     auto Mutator = (AFortAthenaMutator_GiveItemsAtGamePhaseStep*)Context;
 
-    if (Event.GamePhaseStep == Mutator->PhaseToGiveItems)
-        for (auto& PlayerController : Mutator->CachedGameMode->AlivePlayers)
-        {
-            for (auto& Item : Mutator->ItemsToGive)
-                GiveItem((AFortInventory*)PlayerController->WorldInventory.ObjectPointer, Item.ItemToDrop, (int)Item.NumberToGive.Evaluate());
-        }
+    if (Event.GamePhaseStep != Mutator->PhaseToGiveItems)
+        return;
+
+    for (auto& PlayerController : Mutator->CachedGameMode->AlivePlayers)
+    {
+        for (auto& Item : Mutator->ItemsToGive)
+            GiveItem((AFortInventory*)PlayerController->WorldInventory.ObjectPointer, Item.ItemToDrop, (int)Item.NumberToGive.Evaluate());
+    }
 }
 
 void AFortGameMode__Init()
 {
+    ConfiguredPlaylist = Playlist;
+    bConfiguredLateGame = bLateGame;
+
+    Hook(ImageBase + 0x8F95D80, InitGame, InitGameOG);
     Hook(ImageBase + 0x8F94F28, HandleMatchHasStarted, HandleMatchHasStartedOG);
     ExecHook(AGameMode::StaticClass()->FindFunction("ReadyToStartMatch"), ReadyToStartMatch, ReadyToStartMatchOG);
     Patch<uint16_t>(ImageBase + 0x30276D8, 0x9090);
@@ -1735,15 +2699,49 @@ void AFortGameMode__PostLoad()
     ExecHook(AGameModeBase::StaticClass()->FindFunction("HandleStartingNewPlayer"), HandleStartingNewPlayer, HandleStartingNewPlayerOG);
     Patch<uint16_t>(ImageBase + 0x28730CC, 0x9090);
     Hook(ImageBase + 0x8F928A4, GetGameSessionClass);
-    Hook(ImageBase + 0x9924AFC, ResolvePlayerEligibility, ResolvePlayerEligibilityOG);
+    Hook<AFortGameSessionDedicatedAthena>(uint32(0xF7), Restart);
+    Hook<AFortGameSessionDedicatedAthena>(uint32(0x12B), ShutdownDedicatedServer);
+    Hook<AFortGameSessionDedicatedAthena>(uint32(0x134), OnMatchmakingSessionAssignMatchRequestV2);
+    Hook(ImageBase + 0x9D19F18, OnRegisterPlayersComplete, OnRegisterPlayersCompleteOG);
+    Hook(ImageBase + 0x9D19B70, OnQueryUserInfoComplete, OnQueryUserInfoCompleteOG);
 
     ExecHook(AFortSafeZoneIndicator::StaticClass()->FindFunction("GetPhaseInfo"), GetPhaseInfo);
 
     ExecHook(AFortAthenaMutator_GiveItemsAtGamePhaseStep::StaticClass()->FindFunction("OnGamePhaseStepChanged"), OnGamePhaseStepChanged);
 }
 
+static bool bFinishedFlight = false;
+static bool bGettingReady = false;
+static bool bBusUnlocked = false;
+static bool bStartedForming = false;
+static bool bFormedZone = false;
+static bool bSafeZoneShrinking = false;
+
+static AFortAthenaAircraft* GetActiveAircraft(AFortGameModeAthena* GameMode, UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic)
+{
+    if (GameMode->AlivePlayers.Num() <= 0 || GamePhaseLogic->Aircrafts_GameState.Num() <= 0)
+        return nullptr;
+
+    return GamePhaseLogic->Aircrafts_GameState.Data[0].Get();
+}
+
+static void UpdatePawnStormState(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic, AFortPlayerPawn* Pawn)
+{
+    bool bInZone = GamePhaseLogic->IsInCurrentSafeZone(Pawn->K2_GetActorLocation(), false);
+
+    if (Pawn->bIsInsideSafeZone != bInZone || Pawn->bIsInAnyStorm != !bInZone)
+    {
+        Pawn->bIsInAnyStorm = !bInZone;
+        Pawn->OnRep_IsInAnyStorm();
+        Pawn->bIsInsideSafeZone = bInZone;
+        Pawn->OnRep_IsInsideSafeZone();
+    }
+}
+
 void AFortGameMode__Tick()
 {
+    static auto GetPlayerBotsService = (UAthenaAIServicePlayerBots* (*)(UWorld*))(ImageBase + 0x8D45068);
+
     for (auto It = VoiceChatTokenRequests.begin(); It != VoiceChatTokenRequests.end();)
     {
         auto GetStatus = (EHttpRequestStatus (*)(void*))(*(void***)It->HttpRequest.Object)[0x2];
@@ -1767,40 +2765,32 @@ void AFortGameMode__Tick()
     auto Time = UGameplayStatics::GetTimeSeconds(UWorld::GetWorld());
     auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
 
-    static bool bFinishedFlight = false;
     if (!bSkipAircraft)
     {
-        if (GamePhaseLogic->GamePhase <= EAthenaGamePhase::Warmup)
+        if (GamePhaseLogic->GamePhase <= EAthenaGamePhase::Warmup && !PauseWarmupMask)
         {
-            static bool bGettingReady = false;
-            if (!bGettingReady && GamePhaseLogic->GamePhase == EAthenaGamePhase::Warmup)
+            if (!bGettingReady && GamePhaseLogic->GamePhase == EAthenaGamePhase::Warmup && GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->WarmupCountdownEndTime != -1 && GamePhaseLogic->WarmupCountdownEndTime - 10.f <= Time)
             {
-                if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->WarmupCountdownEndTime != -1 && GamePhaseLogic->WarmupCountdownEndTime - 10.f <= Time)
-                {
-                    bGettingReady = true;
+                bGettingReady = true;
 
-                    SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::GetReady);
-                    return;
-                }
+                SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::GetReady);
+                return;
             }
 
-            if (bGettingReady)
+            if (bGettingReady && GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->WarmupCountdownEndTime != -1 && GamePhaseLogic->WarmupCountdownEndTime < Time)
             {
-                if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->WarmupCountdownEndTime != -1 && GamePhaseLogic->WarmupCountdownEndTime < Time)
-                {
-                    StartAircraftPhase(GamePhaseLogic);
-
-                    return;
-                }
+                StartAircraftPhase(GamePhaseLogic);
+                return;
             }
         }
 
         if (GamePhaseLogic->GamePhase == EAthenaGamePhase::Aircraft)
         {
-            static bool bBusUnlocked = false;
             if (!bBusUnlocked)
             {
-                if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Data[0].Get() && GamePhaseLogic->Aircrafts_GameState.Data[0]->DropStartTime < Time)
+                auto Aircraft = GetActiveAircraft(GameMode, GamePhaseLogic);
+
+                if (Aircraft && Aircraft->DropStartTime < Time)
                 {
                     bBusUnlocked = true;
 
@@ -1810,18 +2800,22 @@ void AFortGameMode__Tick()
                 }
             }
 
-            static bool bStartedForming = false;
             if (!bStartedForming)
             {
-                if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Data[0].Get() && GamePhaseLogic->Aircrafts_GameState.Data[0]->DropEndTime != -1 && GamePhaseLogic->Aircrafts_GameState.Data[0]->DropEndTime < Time)
+                auto Aircraft = GetActiveAircraft(GameMode, GamePhaseLogic);
+
+                if (Aircraft && Aircraft->DropEndTime != -1 && Aircraft->DropEndTime < Time)
                 {
                     bStartedForming = true;
 
                     for (auto& Player : GameMode->AlivePlayers)
                     {
-                        if (!Player->PlayerState->bIsABot && Player->IsInAircraft())
+                        if (Player->IsInAircraft())
                             Player->GetAircraftComponent()->ServerAttemptAircraftJump(FRotator{});
                     }
+
+                    if (auto PlayerBotsService = GetPlayerBotsService(UWorld::GetWorld()))
+                        ForceAllExitAircraft(PlayerBotsService);
 
                     GamePhaseLogic->SafeZonesStartTime = bLateGame ? (float)Time : (float)Time + 60.f;
 
@@ -1834,10 +2828,11 @@ void AFortGameMode__Tick()
 
         if (!bFinishedFlight)
         {
-            if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Num() > 0 && GamePhaseLogic->Aircrafts_GameState.Data[0].Get() && GamePhaseLogic->Aircrafts_GameState.Data[0]->FlightEndTime != -1 && GamePhaseLogic->Aircrafts_GameState.Data[0]->FlightEndTime < Time)
+            auto Aircraft = GetActiveAircraft(GameMode, GamePhaseLogic);
+
+            if (Aircraft && Aircraft->FlightEndTime != -1 && Aircraft->FlightEndTime < Time)
             {
                 bFinishedFlight = true;
-                auto Aircraft = GamePhaseLogic->Aircrafts_GameState.Data[0].Get();
 
                 Aircraft->K2_DestroyActor();
                 GamePhaseLogic->Aircrafts_GameState.Clear();
@@ -1846,162 +2841,172 @@ void AFortGameMode__Tick()
             }
         }
     }
-    else
+    else if (!bFinishedFlight)
     {
-        if (!bFinishedFlight)
-        {
-            bFinishedFlight = true;
+        bFinishedFlight = true;
 
-            SetGamePhase(GamePhaseLogic, EAthenaGamePhase::SafeZones);
-            SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::StormForming);
+        SetGamePhase(GamePhaseLogic, EAthenaGamePhase::SafeZones);
+        SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::StormForming);
+    }
+
+    if (!bEnableZones || GamePhaseLogic->GamePhase != EAthenaGamePhase::SafeZones)
+        return;
+
+    if (bFinishedFlight && !bFormedZone && GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->SafeZonesStartTime != -1 && GamePhaseLogic->SafeZonesStartTime < Time)
+    {
+        bFormedZone = true;
+
+        if (!GamePhaseLogic->SafeZoneIndicator)
+        {
+            auto SafeZoneIndicator = SpawnActor<AFortSafeZoneIndicator>(GamePhaseLogic->SafeZoneIndicatorClass.Get(), FVector{});
+
+            if (SafeZoneIndicator)
+            {
+                auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
+                auto& SafeZoneDefinition = GameState->MapInfo->SafeZoneDefinition;
+                float SafeZoneCount = SafeZoneDefinition.Count.Evaluate();
+
+                auto& SafeZonePhases = SafeZoneIndicator->SafeZonePhases;
+
+                if (SafeZonePhases.IsValid())
+                    SafeZonePhases.Free();
+
+                const float TimeSeconds = (float)UGameplayStatics::GetTimeSeconds(GameState);
+
+                for (float i = 0; i < SafeZoneCount; i++)
+                {
+                    FFortSafeZonePhaseInfo PhaseInfo{};
+
+                    PhaseInfo.Radius = SafeZoneDefinition.Radius.Evaluate(i);
+                    PhaseInfo.WaitTime = SafeZoneDefinition.WaitTime.Evaluate(i);
+                    PhaseInfo.ShrinkTime = SafeZoneDefinition.ShrinkTime.Evaluate(i);
+                    PhaseInfo.PlayerCap = (int)SafeZoneDefinition.PlayerCapSolo.Evaluate(i);
+
+                    UDataTableFunctionLibrary::EvaluateCurveTableRow(GameState->AthenaGameDataTable, FName(L"Default.SafeZone.Damage"), i, nullptr, &PhaseInfo.DamageInfo.Damage, FString());
+
+                    if (i == 0.f)
+                        PhaseInfo.DamageInfo.Damage = 0.01f;
+
+                    PhaseInfo.DamageInfo.bPercentageBasedDamage = true;
+                    PhaseInfo.TimeBetweenStormCapDamage = GamePhaseLogic->TimeBetweenStormCapDamage.Evaluate(i);
+                    PhaseInfo.StormCapDamagePerTick = GamePhaseLogic->StormCapDamagePerTick.Evaluate(i);
+                    PhaseInfo.StormCampingIncrementTimeAfterDelay = GamePhaseLogic->StormCampingIncrementTimeAfterDelay.Evaluate(i);
+                    PhaseInfo.StormCampingInitialDelayTime = GamePhaseLogic->StormCampingInitialDelayTime.Evaluate(i);
+                    PhaseInfo.MegaStormGridCellThickness = (int)SafeZoneDefinition.MegaStormGridCellThickness.Evaluate(i);
+                    PhaseInfo.UsePOIStormCenter = false;
+
+                    PhaseInfo.Center = SafeZoneLocations.Data[(int)i];
+
+                    SafeZonePhases.Add(PhaseInfo);
+
+                    SafeZoneIndicator->PhaseCount++;
+                }
+
+                SafeZoneIndicator->OnRep_PhaseCount();
+
+                SafeZoneIndicator->SafeZoneStartShrinkTime = TimeSeconds + SafeZonePhases.Data[0].WaitTime;
+                SafeZoneIndicator->SafeZoneFinishShrinkTime = SafeZoneIndicator->SafeZoneStartShrinkTime + SafeZonePhases.Data[0].ShrinkTime;
+
+                SafeZoneIndicator->CurrentPhase = 0;
+                SafeZoneIndicator->OnRep_CurrentPhase();
+            }
+
+            GamePhaseLogic->SafeZoneIndicator = SafeZoneIndicator;
+            GamePhaseLogic->OnRep_SafeZoneIndicator();
+        }
+
+        StartNewSafeZonePhase(GamePhaseLogic, bLateGame ? GetLateGamePhase((AFortGameStateAthena*)UWorld::GetWorld()->GameState) : 1);
+        return;
+    }
+
+    auto SafeZoneIndicator = GamePhaseLogic->SafeZoneIndicator;
+
+    if (!bFormedZone || !SafeZoneIndicator)
+        return;
+
+    if (SafeZoneIndicator->SafeZonePhases.IsValidIndex(SafeZoneIndicator->CurrentPhase))
+    {
+        if (!bSafeZoneShrinking && SafeZoneIndicator->SafeZoneStartShrinkTime < Time)
+        {
+            bSafeZoneShrinking = true;
+
+            SetSafeZoneState(SafeZoneIndicator, EFortSafeZoneState::Shrinking);
+            SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::StormShrinking);
+        }
+        else if (SafeZoneIndicator->SafeZoneFinishShrinkTime < Time && SafeZoneIndicator->SafeZonePhases.IsValidIndex(SafeZoneIndicator->CurrentPhase + 1))
+        {
+            StartNewSafeZonePhase(GamePhaseLogic, SafeZoneIndicator->CurrentPhase + 1);
+            bSafeZoneShrinking = false;
         }
     }
 
-    if (bEnableZones)
+    for (auto& Player : GameMode->AlivePlayers)
     {
-        if (GamePhaseLogic->GamePhase == EAthenaGamePhase::SafeZones)
+        if (auto Pawn = Player->MyFortPawn)
+            UpdatePawnStormState(GamePhaseLogic, Pawn);
+    }
+
+    TArray<AFortPlayerPawnAthena*> Pawns;
+    GetAll<AFortPlayerPawnAthena>(Pawns);
+
+    for (auto& Pawn : Pawns)
+    {
+        if (!Pawn || Pawn->bActorIsBeingDestroyed || !Pawn->Controller || Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()))
+            continue;
+
+        UpdatePawnStormState(GamePhaseLogic, Pawn);
+
+        auto AbilitySystemComponent = Pawn->AbilitySystemComponent;
+
+        if (AbilitySystemComponent && !Pawn->SafeZoneAppliedGE)
         {
-            static bool bFormedZone = false;
-            if (bFinishedFlight && !bFormedZone)
-            {
-                if (GameMode->AlivePlayers.Num() > 0 && GamePhaseLogic->SafeZonesStartTime != -1 && GamePhaseLogic->SafeZonesStartTime < Time)
-                {
-                    bFormedZone = true;
-                    if (!GamePhaseLogic->SafeZoneIndicator)
-                    {
-                        auto SafeZoneIndicator = SpawnActor<AFortSafeZoneIndicator>(GamePhaseLogic->SafeZoneIndicatorClass.Get(), FVector{});
-
-                        if (SafeZoneIndicator)
-                        {
-                            auto GameState = (AFortGameStateAthena*)UWorld::GetWorld()->GameState;
-                            auto& SafeZoneDefinition = GameState->MapInfo->SafeZoneDefinition;
-                            float SafeZoneCount = SafeZoneDefinition.Count.Evaluate();
-
-                            auto& Array = SafeZoneIndicator->SafeZonePhases;
-
-                            if (Array.IsValid())
-                                Array.Free();
-
-                            const float Time = (float)UGameplayStatics::GetTimeSeconds(GameState);
-
-                            for (float i = 0; i < SafeZoneCount; i++)
-                            {
-                                FFortSafeZonePhaseInfo PhaseInfo{};
-
-                                PhaseInfo.Radius = SafeZoneDefinition.Radius.Evaluate(i);
-                                PhaseInfo.WaitTime = SafeZoneDefinition.WaitTime.Evaluate(i);
-                                PhaseInfo.ShrinkTime = SafeZoneDefinition.ShrinkTime.Evaluate(i);
-                                PhaseInfo.PlayerCap = (int)SafeZoneDefinition.PlayerCapSolo.Evaluate(i);
-
-                                UDataTableFunctionLibrary::EvaluateCurveTableRow(GameState->AthenaGameDataTable, FName(L"Default.SafeZone.Damage"), i, nullptr, &PhaseInfo.DamageInfo.Damage, FString());
-                                if (i == 0.f)
-                                    PhaseInfo.DamageInfo.Damage = 0.01f;
-                                PhaseInfo.DamageInfo.bPercentageBasedDamage = true;
-                                PhaseInfo.TimeBetweenStormCapDamage = GamePhaseLogic->TimeBetweenStormCapDamage.Evaluate(i);
-                                PhaseInfo.StormCapDamagePerTick = GamePhaseLogic->StormCapDamagePerTick.Evaluate(i);
-                                PhaseInfo.StormCampingIncrementTimeAfterDelay = GamePhaseLogic->StormCampingIncrementTimeAfterDelay.Evaluate(i);
-                                PhaseInfo.StormCampingInitialDelayTime = GamePhaseLogic->StormCampingInitialDelayTime.Evaluate(i);
-                                PhaseInfo.MegaStormGridCellThickness = (int)SafeZoneDefinition.MegaStormGridCellThickness.Evaluate(i);
-                                PhaseInfo.UsePOIStormCenter = false;
-
-                                PhaseInfo.Center = SafeZoneLocations.Data[(int)i];
-
-                                Array.Add(PhaseInfo);
-
-                                SafeZoneIndicator->PhaseCount++;
-                            }
-
-                            SafeZoneIndicator->OnRep_PhaseCount();
-
-                            SafeZoneIndicator->SafeZoneStartShrinkTime = Time + Array.Data[0].WaitTime;
-                            SafeZoneIndicator->SafeZoneFinishShrinkTime = SafeZoneIndicator->SafeZoneStartShrinkTime + Array.Data[0].ShrinkTime;
-
-                            SafeZoneIndicator->CurrentPhase = 0;
-                            SafeZoneIndicator->OnRep_CurrentPhase();
-                        }
-
-                        GamePhaseLogic->SafeZoneIndicator = SafeZoneIndicator;
-                        GamePhaseLogic->OnRep_SafeZoneIndicator();
-                    }
-
-                    StartNewSafeZonePhase(GamePhaseLogic, bLateGame ? GetLateGamePhase((AFortGameStateAthena*)UWorld::GetWorld()->GameState) : 1);
-                    return;
-                }
-            }
-
-            static bool bUpdatedPhase = false;
-            auto SafeZoneIndicator = GamePhaseLogic->SafeZoneIndicator;
-            if (bFormedZone && SafeZoneIndicator)
-            {
-                if (SafeZoneIndicator->SafeZonePhases.IsValidIndex(SafeZoneIndicator->CurrentPhase))
-                {
-                    if (!bUpdatedPhase && SafeZoneIndicator->SafeZoneStartShrinkTime < Time)
-                    {
-                        bUpdatedPhase = true;
-
-                        auto& SafeZoneState = *(uint8_t*)(__int64(SafeZoneIndicator) + 0x60C);
-                        SafeZoneState = 3;
-
-                        SafeZoneIndicator->OnSafeZoneStateChange(EFortSafeZoneState::Shrinking, false);
-                        SafeZoneIndicator->SafezoneStateChangedDelegate.Process(SafeZoneIndicator, EFortSafeZoneState::Shrinking);
-
-                        SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::StormShrinking);
-                    }
-                    else if (SafeZoneIndicator->SafeZoneFinishShrinkTime < Time)
-                    {
-                        if (SafeZoneIndicator->SafeZonePhases.IsValidIndex(SafeZoneIndicator->CurrentPhase + 1))
-                        {
-                            StartNewSafeZonePhase(GamePhaseLogic, SafeZoneIndicator->CurrentPhase + 1);
-                            bUpdatedPhase = false;
-                        }
-                    }
-                }
-
-                for (auto& Player : GameMode->AlivePlayers)
-                {
-                    if (auto Pawn = Player->MyFortPawn)
-                    {
-                        bool bInZone = GamePhaseLogic->IsInCurrentSafeZone(Player->MyFortPawn->K2_GetActorLocation(), false);
-
-                        if (Pawn->bIsInsideSafeZone != bInZone || Pawn->bIsInAnyStorm != !bInZone)
-                        {
-                            Pawn->bIsInAnyStorm = !bInZone;
-                            Pawn->OnRep_IsInAnyStorm();
-                            Pawn->bIsInsideSafeZone = bInZone;
-                            Pawn->OnRep_IsInsideSafeZone();
-                        }
-                    }
-                }
-
-                TArray<AFortPlayerPawnAthena*> Pawns;
-                GetAll<AFortPlayerPawnAthena>(Pawns);
-
-                for (auto& Pawn : Pawns)
-                {
-                    if (!Pawn || Pawn->bActorIsBeingDestroyed || !Pawn->Controller || Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()))
-                        continue;
-
-                    bool bInZone = GamePhaseLogic->IsInCurrentSafeZone(Pawn->K2_GetActorLocation(), false);
-
-                    if (Pawn->bIsInsideSafeZone != bInZone || Pawn->bIsInAnyStorm != !bInZone)
-                    {
-                        Pawn->bIsInAnyStorm = !bInZone;
-                        Pawn->OnRep_IsInAnyStorm();
-                        Pawn->bIsInsideSafeZone = bInZone;
-                        Pawn->OnRep_IsInsideSafeZone();
-                    }
-
-                    auto AbilitySystemComponent = Pawn->AbilitySystemComponent;
-
-                    if (AbilitySystemComponent && !Pawn->SafeZoneAppliedGE)
-                    {
-                        if (auto Effect = ApplyOutsideSafeZoneEffect(AbilitySystemComponent))
-                            Pawn->SafeZoneAppliedGE = (UClass*)Effect;
-                    }
-                }
-
-                Pawns.Free();
-            }
+            if (auto Effect = ApplyOutsideSafeZoneEffect(AbilitySystemComponent))
+                Pawn->SafeZoneAppliedGE = (UClass*)Effect;
         }
     }
+
+    Pawns.Free();
+}
+
+void AFortGameMode__Reset()
+{
+    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+
+    for (auto& Request : VoiceChatTokenRequests)
+    {
+        Request.ChannelName.Free();
+        TSharedRef_Destructor(&Request.HttpRequest);
+    }
+
+    VoiceChatTokenRequests.clear();
+    CurrentGameSessionId.clear();
+    AbilitySets.Free();
+    SafeZoneLocations.Free();
+    LevelsToStream.Free();
+    VendingRarityWeights.clear();
+    BuildingClassMap.clear();
+
+    VendingRarityWeightSum = 0;
+    VendingRarityZeroWeight = 0;
+    VendingTotalWeight = 0;
+    PauseWarmupMask = 0;
+    CalendarWaitStart = 0;
+    CreateSessionCompleteHandle = 0;
+    LeaveMeshNetworkCompleteHandle = 0;
+
+    bSkipWarmup = false;
+    bSkipAircraft = false;
+    bCalendarPlaylistDone = false;
+    bFinishedFlight = false;
+    bGettingReady = false;
+    bBusUnlocked = false;
+    bStartedForming = false;
+    bFormedZone = false;
+    bSafeZoneShrinking = false;
+    bReady = false;
+
+    Playlist = ConfiguredPlaylist;
+    bLateGame = bConfiguredLateGame;
+
+    SetConsoleTitleA("Remix 32.00 | Setting up");
 }

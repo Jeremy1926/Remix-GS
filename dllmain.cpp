@@ -6,24 +6,20 @@
 void Main()
 {
     AllocConsole();
-    FILE* s;
-    freopen_s(&s, "CONOUT$", "w", stdout);
-    freopen_s(&s, "CONOUT$", "w+", stderr);
-    freopen_s(&s, "CONIN$", "r", stdin);
+    FILE* Stream;
+    freopen_s(&Stream, "CONOUT$", "w", stdout);
+    freopen_s(&Stream, "CONOUT$", "w+", stderr);
+    freopen_s(&Stream, "CONIN$", "r", stdin);
 
     Sleep(5000);
 
-    UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), L"log LogFortUIDirector None", nullptr);
-    UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), L"log LogFortUIManager None", nullptr);
-    UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), L"net.AllowEncryption 0", nullptr);
-    UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), L"log LogIris None", nullptr);
-    UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), L"log LogIrisRpc None", nullptr);
-    UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), L"log LogIrisBridge None", nullptr);
+    for (auto Command : { L"log LogFortUIDirector None", L"log LogFortUIManager None", L"net.AllowEncryption 0", L"log LogIris None", L"log LogIrisRpc None", L"log LogIrisBridge None" })
+        UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), Command, nullptr);
 
     *(int32_t*)(ImageBase + 0x12A8B1D8) = 2;
     *(bool*)(ImageBase + 0x12C18DC8) = false;
     *(uint32_t*)(ImageBase + 0x12D6E070) = 1;
-    
+
     auto FortInventoryName = FName(L"/Script/FortniteGame.FortInventory");
 
     for (auto& FilterConfig : UObjectReplicationBridgeConfig::GetDefaultObj()->FilterConfigs)
@@ -89,16 +85,10 @@ void Main()
     bInit = true;
 }
 
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
+BOOL APIENTRY DllMain(HMODULE Module, DWORD Reason, LPVOID Reserved)
 {
-    switch (ul_reason_for_call)
-    {
-    case DLL_PROCESS_ATTACH:
+    if (Reason == DLL_PROCESS_ATTACH)
         std::thread(Main).detach();
-    case DLL_THREAD_ATTACH:
-    case DLL_THREAD_DETACH:
-    case DLL_PROCESS_DETACH:
-        break;
-    }
+
     return TRUE;
 }

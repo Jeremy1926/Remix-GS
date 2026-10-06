@@ -6,9 +6,16 @@ UFortWorldItem* GiveItem(AFortInventory* Inventory, const UFortItemDefinition* I
 UFortWorldItem* GiveItem(AFortInventory* Inventory, FFortItemEntry& Entry, int Count = -1, bool bNotifyPlayer = true, bool bUpdateInventory = true);
 void Update(AFortInventory* Inventory, FFortItemEntry* Entry);
 void Remove(AFortInventory* Inventory, FGuid Guid);
+UFortWorldItem* FindItemInstance(AFortInventory* Inventory, const FGuid& ItemGuid);
+UFortWorldItem* FindItemInstance(AFortInventory* Inventory, const UFortItemDefinition* ItemDefinition);
+FFortItemEntry* FindReplicatedEntry(AFortInventory* Inventory, const FGuid& ItemGuid);
+FFortItemEntry* FindReplicatedEntry(AFortInventory* Inventory, const UFortItemDefinition* ItemDefinition);
+void UpdateOrRemoveEntry(AFortInventory* Inventory, UFortWorldItem* Item, FFortItemEntry& Entry);
+bool RemoveInventoryItem(AFortInventory* Inventory, FGuid& ItemGuid, int32 Count, bool bForceRemoval, bool bForcePersistWhenEmpty);
 FFortItemEntry* MakeItemEntry(const UFortItemDefinition* ItemDefinition, int32 Count, int32 Level);
 FFortRangedWeaponStats* GetStats(const UFortWeaponItemDefinition* WeaponDefinition);
 bool IsPrimaryQuickbar(const UFortItemDefinition* ItemDefinition);
+bool TakesQuickbarSlot(const UFortItemDefinition* ItemDefinition);
 void UpdateEntry(AFortInventory* Inventory, FFortItemEntry& Entry);
 int32 AddItemCount(AFortInventory* Inventory, const UFortItemDefinition* ItemDefinition, int32 Count);
 void RemoveWeaponAbilities(AFortWeapon* Weapon);

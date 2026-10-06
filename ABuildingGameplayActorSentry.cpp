@@ -2,12 +2,21 @@
 #include "Shared.h"
 
 INIT_MODULE(ABuildingGameplayActorSentry);
+INIT_RESET(ABuildingGameplayActorSentry);
 
 static void (*TickOG)(ABuildingGameplayActorSentry*, float);
 static void (*BeginPlayOG)(ABuildingGameplayActorSentry*);
 static void (*HandleDamagedOG)(ABuildingGameplayActorSentry*, float, const void*, const void*, const void*, AActor*, AActor*);
 
 static std::unordered_map<ABuildingGameplayActorSentry*, float> AggroTimeRemaining;
+
+template <class T>
+static void SetReplicatedProperty(ABuildingGameplayActorSentry* Sentry, T& Property, const std::type_identity_t<T>& Value, const FName& PropertyName)
+{
+    Sentry->FlushNetDormancy();
+    Property = Value;
+    UNetPushModelHelpers::MarkPropertyDirty(Sentry, PropertyName);
+}
 
 static void SetSentryState(ABuildingGameplayActorSentry* Sentry, EBuildingGameplayActorSentry_State InSentryState)
 {
@@ -22,9 +31,7 @@ static void SetSentryState(ABuildingGameplayActorSentry* Sentry, EBuildingGamepl
 
     auto PreviousSentryState = Sentry->CurrentSentryState;
 
-    Sentry->FlushNetDormancy();
-    Sentry->CurrentSentryState = InSentryState;
-    UNetPushModelHelpers::MarkPropertyDirty(Sentry, CurrentSentryStateName);
+    SetReplicatedProperty(Sentry, Sentry->CurrentSentryState, InSentryState, CurrentSentryStateName);
 
     Sentry->BPOnSentryStateChanged(PreviousSentryState);
 }
@@ -38,9 +45,7 @@ static void SetActorToTrack(ABuildingGameplayActorSentry* Sentry, AActor* InActo
     if (TrackedActorPrevious == InActorToTrack)
         return;
 
-    Sentry->FlushNetDormancy();
-    Sentry->ActorBeingTracked = InActorToTrack;
-    UNetPushModelHelpers::MarkPropertyDirty(Sentry, ActorBeingTrackedName);
+    SetReplicatedProperty(Sentry, Sentry->ActorBeingTracked, InActorToTrack, ActorBeingTrackedName);
 
     auto State = Sentry->CurrentSentryState;
 
@@ -68,9 +73,7 @@ static void SetFixedRotationGoalForReplication(ABuildingGameplayActorSentry* Sen
 {
     static auto FixedRotationGoalReplicatedName = FName(L"FixedRotationGoalReplicated");
 
-    Sentry->FlushNetDormancy();
-    Sentry->FixedRotationGoalReplicated = InFixedRotationGoal;
-    UNetPushModelHelpers::MarkPropertyDirty(Sentry, FixedRotationGoalReplicatedName);
+    SetReplicatedProperty(Sentry, Sentry->FixedRotationGoalReplicated, InFixedRotationGoal, FixedRotationGoalReplicatedName);
 
     *(FRotator*)(__int64(Sentry) + 0xBE0) = InFixedRotationGoal;
 }
@@ -79,9 +82,7 @@ static void SetStartingIdleRotation(ABuildingGameplayActorSentry* Sentry, const 
 {
     static auto StartingIdleRotationName = FName(L"StartingIdleRotation");
 
-    Sentry->FlushNetDormancy();
-    Sentry->StartingIdleRotation = InStartingIdleRotation;
-    UNetPushModelHelpers::MarkPropertyDirty(Sentry, StartingIdleRotationName);
+    SetReplicatedProperty(Sentry, Sentry->StartingIdleRotation, InStartingIdleRotation, StartingIdleRotationName);
 }
 
 static void SelectClosestIdleRotation(ABuildingGameplayActorSentry* Sentry)
@@ -235,9 +236,7 @@ static void SetIdleBehavior(UObject* Context, FFrame& Stack)
 
     auto Sentry = (ABuildingGameplayActorSentry*)Context;
 
-    Sentry->FlushNetDormancy();
-    Sentry->IdleBehavior = NewIdleBehavior;
-    UNetPushModelHelpers::MarkPropertyDirty(Sentry, IdleBehaviorName);
+    SetReplicatedProperty(Sentry, Sentry->IdleBehavior, NewIdleBehavior, IdleBehaviorName);
 }
 
 static void SelectClosestIdleRotation(UObject* Context, FFrame& Stack)
@@ -301,4 +300,9 @@ void ABuildingGameplayActorSentry__Init()
     ExecHook(SentryClass->FindFunction("SetFixedRotationGoalForReplication"), (void (*)(UObject*, FFrame&))SetFixedRotationGoalForReplication);
     ExecHook(SentryClass->FindFunction("SetStartingIdleRotation"), (void (*)(UObject*, FFrame&))SetStartingIdleRotation);
     ExecHook(SentryClass->FindFunction("SetEmpApplied"), SetEmpApplied);
+}
+
+void ABuildingGameplayActorSentry__Reset()
+{
+    AggroTimeRemaining.clear();
 }

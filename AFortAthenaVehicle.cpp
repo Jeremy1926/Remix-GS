@@ -5,6 +5,7 @@
 
 INIT_MODULE(AFortAthenaVehicle);
 INIT_POSTLOAD(AFortAthenaVehicle);
+INIT_RESET(AFortAthenaVehicle);
 
 static void ServerMove(UObject* Context, FFrame& Stack, void* Ret)
 {
@@ -35,6 +36,13 @@ static void ServerMove(UObject* Context, FFrame& Stack, void* Ret)
     }
 }
 
+template <class T>
+static void SetNetTowhookAimDir(T* Vehicle, const FVector_NetQuantizeNormal& InNetTowhookAimDir)
+{
+    Vehicle->NetTowhookAimDir = InNetTowhookAimDir;
+    Vehicle->OnRep_NetTowhookAimDir();
+}
+
 static void ServerUpdateTowhook(UObject* Context, FFrame& Stack, void* Ret)
 {
     FVector_NetQuantizeNormal InNetTowhookAimDir;
@@ -42,19 +50,9 @@ static void ServerUpdateTowhook(UObject* Context, FFrame& Stack, void* Ret)
     Stack.IncrementCode();
 
     if (Context->IsA(AFortOctopusVehicle::StaticClass()))
-    {
-        auto Vehicle = (AFortOctopusVehicle*)Context;
-
-        Vehicle->NetTowhookAimDir = InNetTowhookAimDir;
-        Vehicle->OnRep_NetTowhookAimDir();
-    }
+        SetNetTowhookAimDir((AFortOctopusVehicle*)Context, InNetTowhookAimDir);
     else
-    {
-        auto Vehicle = (AFortSpaghettiVehicle*)Context;
-
-        Vehicle->NetTowhookAimDir = InNetTowhookAimDir;
-        Vehicle->OnRep_NetTowhookAimDir();
-    }
+        SetNetTowhookAimDir((AFortSpaghettiVehicle*)Context, InNetTowhookAimDir);
 }
 
 static void (*OnRep_ReplicatedAttachedInfoOG)(AFortOctopusTowhookAttachableProjectile*);
@@ -158,11 +156,26 @@ static void PostInitializeComponents(AFortAthenaVehicle* Vehicle)
     Vehicle->RefreshDamageableParts();
 }
 
-static void RepairDamageablePart(AFortAthenaVehicle* Vehicle, const FName& ShapeName, float NewHealthPercent)
+template <typename Fn>
+static void UpdateDamageableParts(AFortAthenaVehicle* Vehicle, Fn&& Update)
 {
     static auto RefreshDamageablePartsInternal = (void (*)(AFortAthenaVehicle*, const TArray<FVehicleDamageablePart>&))(ImageBase + 0x2EA04C0);
     static auto DamageablePartsName = FName(L"DamageableParts");
 
+    TArray<FVehicleDamageablePart> PrevDamageableParts;
+
+    for (auto& PrevPart : Vehicle->DamageableParts)
+        PrevDamageableParts.Add(PrevPart);
+
+    Update();
+
+    UNetPushModelHelpers::MarkPropertyDirty(Vehicle, DamageablePartsName);
+    RefreshDamageablePartsInternal(Vehicle, PrevDamageableParts);
+    PrevDamageableParts.Free();
+}
+
+static void RepairDamageablePart(AFortAthenaVehicle* Vehicle, const FName& ShapeName, float NewHealthPercent)
+{
     auto VehicleConfigs = Vehicle->FortPhysicsVehicleConfigs;
 
     if (Vehicle->Role != ENetRole::ROLE_Authority || !VehicleConfigs)
@@ -173,16 +186,10 @@ static void RepairDamageablePart(AFortAthenaVehicle* Vehicle, const FName& Shape
         if (Part.ShapeName != ShapeName || !VehicleConfigs->DamageableParts.IsValidIndex(Part.ConfigIndex))
             continue;
 
-        TArray<FVehicleDamageablePart> PrevDamageableParts;
-
-        for (auto& PrevPart : Vehicle->DamageableParts)
-            PrevDamageableParts.Add(PrevPart);
-
-        Part.Health = VehicleConfigs->DamageableParts[Part.ConfigIndex].MaxHealth.Evaluate() * NewHealthPercent;
-
-        UNetPushModelHelpers::MarkPropertyDirty(Vehicle, DamageablePartsName);
-        RefreshDamageablePartsInternal(Vehicle, PrevDamageableParts);
-        PrevDamageableParts.Free();
+        UpdateDamageableParts(Vehicle, [&]()
+        {
+            Part.Health = VehicleConfigs->DamageableParts[Part.ConfigIndex].MaxHealth.Evaluate() * NewHealthPercent;
+        });
         break;
     }
 }
@@ -195,26 +202,18 @@ static void BreakDamageablePart(AFortAthenaVehicle* Vehicle, const FName& ShapeN
 static void (*RepairAllDamageablePartsOG)(AFortAthenaVehicle*, float);
 static void RepairAllDamageableParts(AFortAthenaVehicle* Vehicle, float NewHealthPercent)
 {
-    static auto RefreshDamageablePartsInternal = (void (*)(AFortAthenaVehicle*, const TArray<FVehicleDamageablePart>&))(ImageBase + 0x2EA04C0);
-    static auto DamageablePartsName = FName(L"DamageableParts");
-
     auto VehicleConfigs = Vehicle->FortPhysicsVehicleConfigs;
 
     if (Vehicle->Role == ENetRole::ROLE_Authority && VehicleConfigs)
     {
-        TArray<FVehicleDamageablePart> PrevDamageableParts;
-
-        for (auto& Part : Vehicle->DamageableParts)
+        UpdateDamageableParts(Vehicle, [&]()
         {
-            PrevDamageableParts.Add(Part);
-
-            if (VehicleConfigs->DamageableParts.IsValidIndex(Part.ConfigIndex))
-                Part.Health = VehicleConfigs->DamageableParts[Part.ConfigIndex].MaxHealth.Evaluate() * NewHealthPercent;
-        }
-
-        UNetPushModelHelpers::MarkPropertyDirty(Vehicle, DamageablePartsName);
-        RefreshDamageablePartsInternal(Vehicle, PrevDamageableParts);
-        PrevDamageableParts.Free();
+            for (auto& Part : Vehicle->DamageableParts)
+            {
+                if (VehicleConfigs->DamageableParts.IsValidIndex(Part.ConfigIndex))
+                    Part.Health = VehicleConfigs->DamageableParts[Part.ConfigIndex].MaxHealth.Evaluate() * NewHealthPercent;
+            }
+        });
     }
 
     if (Vehicle->IsA(AFortDagwoodVehicle::StaticClass()))
@@ -237,10 +236,8 @@ static void AbsorbDamageIntoDamagablePart(AFortAthenaVehicle* Vehicle, float& Da
     static auto GetVehicleBulletCollisionComponent = (UPrimitiveComponent* (*)(AFortAthenaVehicle*))(ImageBase + 0x5A1021C);
     static auto GetBodySetup = (UBodySetup* (*)(FBodyInstance*))(ImageBase + 0x1861B14);
     static auto GetElement = (FKShapeElem* (*)(FKAggregateGeom*, int32))(ImageBase + 0x239E5E0);
-    static auto RefreshDamageablePartsInternal = (void (*)(AFortAthenaVehicle*, const TArray<FVehicleDamageablePart>&))(ImageBase + 0x2EA04C0);
     static auto NeverBreakVehiclePartTag = FGameplayTag{ FName(L"Gameplay.Damage.NeverBreakVehiclePart") };
     static auto AlwaysBreakVehiclePartTag = FGameplayTag{ FName(L"Gameplay.Damage.AlwaysBreakVehiclePart") };
-    static auto DamageablePartsName = FName(L"DamageableParts");
 
     auto Context = *(FFortGameplayEffectContext**)(__int64(&EffectContext) + 0x8);
     auto BulletCollisionComponent = GetVehicleBulletCollisionComponent(Vehicle);
@@ -263,28 +260,28 @@ static void AbsorbDamageIntoDamagablePart(AFortAthenaVehicle* Vehicle, float& Da
             if (Part.ShapeName != ShapeElem->Name || Part.Health <= 0.f)
                 continue;
 
-            TArray<FVehicleDamageablePart> PrevDamageableParts;
+            UpdateDamageableParts(Vehicle, [&]()
+            {
+                auto AbsorbedDamage = (std::min)(Damage, Part.Health);
 
-            for (auto& PrevPart : Vehicle->DamageableParts)
-                PrevDamageableParts.Add(PrevPart);
+                Damage = (std::max)(Damage - Part.Health, 0.f);
+                Part.Health = DamageTags.HasTag(AlwaysBreakVehiclePartTag) ? 0.f : Part.Health - AbsorbedDamage;
 
-            auto AbsorbedDamage = (std::min)(Damage, Part.Health);
-
-            Damage = (std::max)(Damage - Part.Health, 0.f);
-            Part.Health = DamageTags.HasTag(AlwaysBreakVehiclePartTag) ? 0.f : Part.Health - AbsorbedDamage;
-
-            if (AbsorbedDamage > 0.f && InstigatorPawn && InstigatorPawn->Controller && InstigatorPawn->Controller->IsA(AFortPlayerController::StaticClass()))
-                ((AFortPlayerController*)InstigatorPawn->Controller)->ClientAddDamageNumber(AbsorbedDamage, Vehicle, InstigatorPawn, EffectContext, DamageTags, Context->bIsCriticalHit, HitResult.ImpactPoint, HitResult.ImpactNormal);
-
-            UNetPushModelHelpers::MarkPropertyDirty(Vehicle, DamageablePartsName);
-            RefreshDamageablePartsInternal(Vehicle, PrevDamageableParts);
-            PrevDamageableParts.Free();
+                if (AbsorbedDamage > 0.f && InstigatorPawn && InstigatorPawn->Controller && InstigatorPawn->Controller->IsA(AFortPlayerController::StaticClass()))
+                    ((AFortPlayerController*)InstigatorPawn->Controller)->ClientAddDamageNumber(AbsorbedDamage, Vehicle, InstigatorPawn, EffectContext, DamageTags, Context->bIsCriticalHit, HitResult.ImpactPoint, HitResult.ImpactNormal);
+            });
             break;
         }
     }
 
     if (Vehicle->IsA(AFortDagwoodVehicle::StaticClass()))
         AbsorbDamageIntoDamagablePartOG(Vehicle, Damage, DamageTags, EffectContext, EventInstigator, DamageCauser, InstigatorPawn);
+}
+
+static void PatchIfReturnStub(void** Slot, void* Detour)
+{
+    if (*(uint8*)*Slot == 0xC3 || *(uint8*)*Slot == 0xC2)
+        Patch<void*>(uint64(Slot), Detour);
 }
 
 static void PatchVehicleVtables()
@@ -304,10 +301,7 @@ static void PatchVehicleVtables()
             continue;
 
         for (auto& [Index, Detour] : DamageablePartVirtuals)
-        {
-            if (*(uint8*)Object->VTable[Index] == 0xC3 || *(uint8*)Object->VTable[Index] == 0xC2)
-                Patch<void*>(uint64(&Object->VTable[Index]), Detour);
-        }
+            PatchIfReturnStub(&Object->VTable[Index], Detour);
 
         auto VehicleInterface = (uint8*)Object->GetInterface(IFortVehicleInterface::StaticClass());
 
@@ -316,11 +310,8 @@ static void PatchVehicleVtables()
 
         auto InterfaceVft = *(void***)VehicleInterface;
 
-        if (*(uint8*)InterfaceVft[0x3B] == 0xC3 || *(uint8*)InterfaceVft[0x3B] == 0xC2)
-            Patch<void*>(uint64(&InterfaceVft[0x3B]), (void*)RemoveVehicleMod);
-
-        if (*(uint8*)InterfaceVft[0x3A] == 0xC3 || *(uint8*)InterfaceVft[0x3A] == 0xC2)
-            Patch<void*>(uint64(&InterfaceVft[0x3A]), (void*)ApplyVehicleMod);
+        PatchIfReturnStub(&InterfaceVft[0x3B], (void*)RemoveVehicleMod);
+        PatchIfReturnStub(&InterfaceVft[0x3A], (void*)ApplyVehicleMod);
     }
 }
 
@@ -361,46 +352,51 @@ void ReplayMissedSelfSpawns()
     Spawners.Free();
 }
 
+static void GiveAndEquipSeatWeapon(UFortVehicleSeatWeaponComponent* Component, AFortPlayerPawn* FortPawn, FWeaponSeatDefinition* WeaponSeatDefinition)
+{
+    if (!FortPawn || !WeaponSeatDefinition)
+        return;
+
+    auto PlayerController = FortPawn->Controller && FortPawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)FortPawn->Controller : nullptr;
+    auto VehicleWeapon = WeaponSeatDefinition->VehicleWeaponOverride ? WeaponSeatDefinition->VehicleWeaponOverride : WeaponSeatDefinition->VehicleWeapon;
+    auto WorldInventory = PlayerController ? (AFortInventory*)PlayerController->WorldInventory.ObjectPointer : nullptr;
+
+    if (!WorldInventory || !PlayerController->MyFortPawn || !VehicleWeapon)
+        return;
+
+    auto Stats = GetStats(VehicleWeapon);
+    auto VehicleItem = GiveItem(WorldInventory, VehicleWeapon, 1, Stats ? Stats->ClipSize : 0);
+    auto Weapon = VehicleItem ? PlayerController->MyFortPawn->EquipWeaponDefinition((UFortWeaponItemDefinition*)VehicleItem->ItemEntry.ItemDefinition, VehicleItem->ItemEntry.ItemGuid, VehicleItem->ItemEntry.TrackerGuid, false) : nullptr;
+
+    if (!Weapon)
+        return;
+
+    Weapon->ForceNetUpdate();
+
+    *(TWeakObjectPtr<UFortWorldItem>*)(__int64(WeaponSeatDefinition) + 0x34) = TWeakObjectPtr<UFortWorldItem>(VehicleItem);
+    *(TWeakObjectPtr<AFortWeapon>*)(__int64(WeaponSeatDefinition) + 0x3C) = TWeakObjectPtr<AFortWeapon>(Weapon);
+
+    Component->CachedWeapon = TWeakObjectPtr<AFortWeaponRanged>((AFortWeaponRanged*)Weapon);
+    Component->CachedWeaponDef = (UFortWeaponRangedItemDefinition*)Weapon->WeaponData;
+    Component->bWeaponEquipped = true;
+
+    auto Vehicle = Component->GetVehicle();
+    FMountedWeaponInfoRepped RepWeaponInfo{};
+
+    RepWeaponInfo.HostVehicleCached.ObjectPointer = Vehicle;
+    RepWeaponInfo.HostVehicleCached.InterfacePointer = Vehicle->GetInterface(IFortVehicleInterface::StaticClass());
+    RepWeaponInfo.HostVehicleSeatIndexCached = WeaponSeatDefinition->SeatIndex;
+
+    ((AFortWeaponRangedForVehicle*)Weapon)->MountedWeaponInfoRepped = RepWeaponInfo;
+    ((AFortWeaponRangedForVehicle*)Weapon)->OnRep_MountedWeaponInfoRepped();
+
+    WeaponSeatDefinition->LastEquippedVehicleWeapon = VehicleWeapon;
+}
+
 static void (*EquipVehicleWeaponOG)(UFortVehicleSeatWeaponComponent*, AFortPlayerPawn*, FWeaponSeatDefinition*, int32);
 static void EquipVehicleWeapon(UFortVehicleSeatWeaponComponent* Component, AFortPlayerPawn* FortPawn, FWeaponSeatDefinition* WeaponSeatDefinition, int32 ItemLevel)
 {
-    if (FortPawn && WeaponSeatDefinition)
-    {
-        auto PlayerController = FortPawn->Controller && FortPawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)FortPawn->Controller : nullptr;
-        auto VehicleWeapon = WeaponSeatDefinition->VehicleWeaponOverride ? WeaponSeatDefinition->VehicleWeaponOverride : WeaponSeatDefinition->VehicleWeapon;
-        auto WorldInventory = PlayerController ? (AFortInventory*)PlayerController->WorldInventory.ObjectPointer : nullptr;
-
-        if (WorldInventory && PlayerController->MyFortPawn && VehicleWeapon)
-        {
-            auto Stats = GetStats(VehicleWeapon);
-            auto VehicleItem = GiveItem(WorldInventory, VehicleWeapon, 1, Stats ? Stats->ClipSize : 0);
-            auto Weapon = VehicleItem ? PlayerController->MyFortPawn->EquipWeaponDefinition((UFortWeaponItemDefinition*)VehicleItem->ItemEntry.ItemDefinition, VehicleItem->ItemEntry.ItemGuid, VehicleItem->ItemEntry.TrackerGuid, false) : nullptr;
-
-            if (Weapon)
-            {
-                Weapon->ForceNetUpdate();
-
-                *(TWeakObjectPtr<UFortWorldItem>*)(__int64(WeaponSeatDefinition) + 0x34) = TWeakObjectPtr<UFortWorldItem>(VehicleItem);
-                *(TWeakObjectPtr<AFortWeapon>*)(__int64(WeaponSeatDefinition) + 0x3C) = TWeakObjectPtr<AFortWeapon>(Weapon);
-
-                Component->CachedWeapon = TWeakObjectPtr<AFortWeaponRanged>((AFortWeaponRanged*)Weapon);
-                Component->CachedWeaponDef = (UFortWeaponRangedItemDefinition*)Weapon->WeaponData;
-                Component->bWeaponEquipped = true;
-
-                auto Vehicle = Component->GetVehicle();
-                FMountedWeaponInfoRepped RepWeaponInfo{};
-
-                RepWeaponInfo.HostVehicleCached.ObjectPointer = Vehicle;
-                RepWeaponInfo.HostVehicleCached.InterfacePointer = Vehicle->GetInterface(IFortVehicleInterface::StaticClass());
-                RepWeaponInfo.HostVehicleSeatIndexCached = WeaponSeatDefinition->SeatIndex;
-
-                ((AFortWeaponRangedForVehicle*)Weapon)->MountedWeaponInfoRepped = RepWeaponInfo;
-                ((AFortWeaponRangedForVehicle*)Weapon)->OnRep_MountedWeaponInfoRepped();
-
-                WeaponSeatDefinition->LastEquippedVehicleWeapon = VehicleWeapon;
-            }
-        }
-    }
+    GiveAndEquipSeatWeapon(Component, FortPawn, WeaponSeatDefinition);
 
     return EquipVehicleWeaponOG(Component, FortPawn, WeaponSeatDefinition, ItemLevel);
 }
@@ -427,4 +423,9 @@ void AFortAthenaVehicle__PostLoad()
     PatchVehicleVtables();
 
     Hook(ImageBase + 0xA3E7224, EquipVehicleWeapon, EquipVehicleWeaponOG);
+}
+
+void AFortAthenaVehicle__Reset()
+{
+    MissedSelfSpawns.clear();
 }

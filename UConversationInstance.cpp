@@ -7,6 +7,7 @@
 #include "AFortWeapon.h"
 
 INIT_MODULE(UConversationInstance);
+INIT_RESET(UConversationInstance);
 
 struct FServiceEntry
 {
@@ -22,9 +23,25 @@ struct FChosenSaleItem
     const FNPCSaleInventoryRow* Row;
 };
 
+struct FCheckpoint
+{
+    FConversationBranchPoint ClientBranchPoint;
+    TArray<FConversationChoiceReference> ScopeStack;
+};
+
 static TArray<FClientConversationOptionEntry>& GetCurrentUserChoices(UConversationInstance* Conversation)
 {
     return *(TArray<FClientConversationOptionEntry>*)(uint64(Conversation) + 0x40);
+}
+
+static FGameplayTag& GetStartingEntryGameplayTag(UConversationInstance* Conversation)
+{
+    return *(FGameplayTag*)(uint64(Conversation) + 0x68);
+}
+
+static FConversationBranchPoint& GetStartingBranchPoint(UConversationInstance* Conversation)
+{
+    return *(FConversationBranchPoint*)(uint64(Conversation) + 0x70);
 }
 
 static FConversationBranchPoint& GetCurrentBranchPoint(UConversationInstance* Conversation)
@@ -37,6 +54,49 @@ static FConversationNodeHandle& GetCurrentNodeHandle(UConversationInstance* Conv
     return GetCurrentBranchPoint(Conversation).ClientChoice.ChoiceReference.NodeReference;
 }
 
+static TArray<FCheckpoint>& GetClientBranchPoints(UConversationInstance* Conversation)
+{
+    return *(TArray<FCheckpoint>*)(uint64(Conversation) + 0x160);
+}
+
+static TArray<FConversationBranchPoint>& GetCurrentBranchPoints(UConversationInstance* Conversation)
+{
+    return *(TArray<FConversationBranchPoint>*)(uint64(Conversation) + 0x170);
+}
+
+static TArray<FConversationChoiceReference>& GetScopeStack(UConversationInstance* Conversation)
+{
+    return *(TArray<FConversationChoiceReference>*)(uint64(Conversation) + 0x180);
+}
+
+static FRandomStream& GetConversationRNG(UConversationInstance* Conversation)
+{
+    return *(FRandomStream*)(uint64(Conversation) + 0x190);
+}
+
+static bool& GetbConversationStarted(UConversationInstance* Conversation)
+{
+    return *(bool*)(uint64(Conversation) + 0x198);
+}
+
+template <typename T>
+static void ResetArray(TArray<T>& Array)
+{
+    for (int32 i = 0; i < Array.Num(); i++)
+        Array.Data[i].Destroy();
+
+    Array.NumElements = 0;
+}
+
+template <typename T>
+static void AddCopy(TArray<T>& Array, const T& Element)
+{
+    Array.Reserve(1);
+    memset(&Array.Data[Array.Num()], 0, sizeof(T));
+    Array.Data[Array.Num()].CopyFrom(Element);
+    Array.NumElements++;
+}
+
 static EConversationRequirementResult CheckRequirements(UConversationTaskNode* Node, const FConversationContext* Context);
 static void GenerateNextChoices(UConversationTaskNode* Node, TArray<FConversationBranchPoint>& BranchBuilder, const FConversationContext* Context);
 static void ExecuteTaskNodeWithSideEffects(UConversationTaskNode* Node, const FConversationContext* Context, FConversationTaskResult* OutResult);
@@ -45,12 +105,14 @@ static void ServerNotifyConversationStarted(UConversationParticipantComponent* C
 static void ServerNotifyConversationEnded(UConversationParticipantComponent* Component, UConversationInstance* Conversation, const FConversationParticipants& PreservedParticipants);
 static void SendClientConversationMessage(UConversationParticipantComponent* Component, const FConversationContext* Context, const FClientConversationMessagePayload& Payload);
 static void SendClientUpdatedChoices(UConversationParticipantComponent* Component, const FConversationContext* Context, bool bForcedRefresh);
+static void ModifyCurrentConversationNode(UConversationInstance* Conversation, const FConversationBranchPoint& NewBranchPoint);
+static void ProcessCurrentConversationNode(UConversationInstance* Conversation);
+
+static UObject* CachedWorld = nullptr;
+static UConversationRegistry* CachedRegistry = nullptr;
 
 static UConversationRegistry* GetFromWorld(UObject* World)
 {
-    static UObject* CachedWorld = nullptr;
-    static UConversationRegistry* CachedRegistry = nullptr;
-
     if (!World)
         return nullptr;
 
@@ -63,14 +125,19 @@ static UConversationRegistry* GetFromWorld(UObject* World)
     return CachedRegistry;
 }
 
-static UConversationNode* GetRuntimeNodeFromGUID(UConversationRegistry* Registry, const FGuid& NodeGUID, UConversationDatabase* Graph)
+static UConversationNode* TryGetRuntimeNodeFromGUID(UConversationRegistry* Registry, const FGuid& NodeGUID, UConversationDatabase* Graph)
 {
     static auto TryGetRuntimeNodeFromGUID = (UConversationNode* (*)(UConversationRegistry*, const FGuid*, UConversationDatabase*))(ImageBase + 0x8785FB8);
 
+    return TryGetRuntimeNodeFromGUID(Registry, &NodeGUID, Graph);
+}
+
+static UConversationNode* GetRuntimeNodeFromGUID(UConversationRegistry* Registry, const FGuid& NodeGUID, UConversationDatabase* Graph)
+{
     if ((NodeGUID.A | NodeGUID.B | NodeGUID.C | NodeGUID.D) == 0)
         return nullptr;
 
-    return TryGetRuntimeNodeFromGUID(Registry, &NodeGUID, Graph);
+    return TryGetRuntimeNodeFromGUID(Registry, NodeGUID, Graph);
 }
 
 static void AppendOutputLinkGUIDs(UConversationRegistry* Registry, TArray<FGuid>& Result, const FGuid& SourceGUID, UConversationDatabase* Graph)
@@ -88,12 +155,9 @@ static void AppendOutputLinkGUIDs(UConversationRegistry* Registry, TArray<FGuid>
 
 static void GetOutputLinkGUIDs(UConversationRegistry* Registry, TArray<FGuid>& Result, UConversationDatabase* Graph, const FGameplayTag& EntryPoint)
 {
-    static auto TryGetRuntimeNodeFromGUID = (UConversationNode* (*)(UConversationRegistry*, const FGuid*, UConversationDatabase*))(ImageBase + 0x8785FB8);
-
     if (!Graph)
     {
-        FGuid NoGuid{};
-        TryGetRuntimeNodeFromGUID(Registry, &NoGuid, nullptr);
+        TryGetRuntimeNodeFromGUID(Registry, FGuid{}, nullptr);
 
         auto& EntryTagToEntryList = *(TMap<FGameplayTag, TArray<FGuid>>*)(uint64(Registry) + 0x150);
 
@@ -127,50 +191,11 @@ static void GetOutputLinkGUIDs(UConversationRegistry* Registry, TArray<FGuid>& R
     }
 }
 
-static FGameplayTag& GetStartingEntryGameplayTag(UConversationInstance* Conversation)
+static UObject* GetWorld(UObject* Object)
 {
-    return *(FGameplayTag*)(uint64(Conversation) + 0x68);
-}
-
-static FConversationBranchPoint& GetStartingBranchPoint(UConversationInstance* Conversation)
-{
-    return *(FConversationBranchPoint*)(uint64(Conversation) + 0x70);
-}
-
-struct FCheckpoint
-{
-    FConversationBranchPoint ClientBranchPoint;
-    TArray<FConversationChoiceReference> ScopeStack;
-};
-
-static TArray<FCheckpoint>& GetClientBranchPoints(UConversationInstance* Conversation)
-{
-    return *(TArray<FCheckpoint>*)(uint64(Conversation) + 0x160);
-}
-
-static TArray<FConversationBranchPoint>& GetCurrentBranchPoints(UConversationInstance* Conversation)
-{
-    return *(TArray<FConversationBranchPoint>*)(uint64(Conversation) + 0x170);
-}
-
-static TArray<FConversationChoiceReference>& GetScopeStack(UConversationInstance* Conversation)
-{
-    return *(TArray<FConversationChoiceReference>*)(uint64(Conversation) + 0x180);
-}
-
-static bool& GetbConversationStarted(UConversationInstance* Conversation)
-{
-    return *(bool*)(uint64(Conversation) + 0x198);
-}
-
-static void ModifyCurrentConversationNode(UConversationInstance* Conversation, const FConversationBranchPoint& NewBranchPoint);
-static void ProcessCurrentConversationNode(UConversationInstance* Conversation);
-
-static UObject* GetWorld(UConversationInstance* Conversation)
-{
-    for (auto Object = Conversation->Outer; Object; Object = Object->Outer)
-        if (Object->IsA(UWorld::StaticClass()))
-            return Object;
+    for (auto Outer = Object; Outer; Outer = Outer->Outer)
+        if (Outer->IsA(UWorld::StaticClass()))
+            return Outer;
 
     return nullptr;
 }
@@ -185,9 +210,9 @@ static std::vector<AActor*> GetParticipantActors(UConversationInstance* Conversa
     return Actors;
 }
 
-static FConversationContext* CreateServerContext(UConversationInstance* Conversation, UConversationTaskNode* TaskBeingConsidered = nullptr)
+static FConversationContext* CreateServerContext(UConversationInstance* Conversation)
 {
-    return FConversationContext::CreateServerContext(Conversation, TaskBeingConsidered, GetFromWorld(GetWorld(Conversation)));
+    return FConversationContext::CreateServerContext(Conversation, nullptr, GetFromWorld(GetWorld(Conversation)));
 }
 
 static UConversationNode* ResolveNode(UConversationInstance* Conversation, const FConversationNodeHandle& Handle)
@@ -240,8 +265,9 @@ static int32 ChooseBranchIndex(UConversationInstance* Conversation, int32 NumBra
     if (NumBranchIndices <= 0)
         return 0;
 
-    auto& Seed = *(uint32*)(uint64(Conversation) + 0x194);
-    Seed = (Seed * 196314165U) + 907633515U;
+    auto& ConversationRNG = GetConversationRNG(Conversation);
+    auto Seed = (uint32(ConversationRNG.Seed) * 196314165U) + 907633515U;
+    ConversationRNG.Seed = int32(Seed);
 
     uint32 FractionBits = 0x3F800000U | (Seed >> 9);
     float Fraction = *(float*)&FractionBits - 1.0f;
@@ -256,10 +282,10 @@ static void PopClientBranchPoint(UConversationInstance* Conversation)
     if (ClientBranchPoints.Num() <= 0)
         return;
 
-    auto Index = ClientBranchPoints.Num() - 1;
+    auto& Checkpoint = ClientBranchPoints.Data[ClientBranchPoints.Num() - 1];
 
-    GetClientBranchPoints(Conversation).Data[Index].ClientBranchPoint.Destroy();
-    FConversationChoiceReference::DestroyArray(GetClientBranchPoints(Conversation).Data[Index].ScopeStack);
+    Checkpoint.ClientBranchPoint.Destroy();
+    FConversationChoiceReference::DestroyArray(Checkpoint.ScopeStack);
     ClientBranchPoints.NumElements--;
 }
 
@@ -268,23 +294,12 @@ static void ResetConversationProgress(UConversationInstance* Conversation)
     GetStartingEntryGameplayTag(Conversation).TagName.ComparisonIndex = 0;
     GetStartingBranchPoint(Conversation).Reset();
     GetCurrentBranchPoint(Conversation).Reset();
-
-    auto& CurrentBranchPoints = GetCurrentBranchPoints(Conversation);
-
-    for (int32 i = 0; i < CurrentBranchPoints.Num(); i++)
-        CurrentBranchPoints.Data[i].Destroy();
-
-    CurrentBranchPoints.NumElements = 0;
+    ResetArray(GetCurrentBranchPoints(Conversation));
 
     while (GetClientBranchPoints(Conversation).Num() > 0)
         PopClientBranchPoint(Conversation);
 
-    auto& CurrentUserChoices = GetCurrentUserChoices(Conversation);
-
-    for (int32 i = 0; i < CurrentUserChoices.Num(); i++)
-        CurrentUserChoices.Data[i].Destroy();
-
-    CurrentUserChoices.NumElements = 0;
+    ResetArray(GetCurrentUserChoices(Conversation));
 }
 
 static void DetermineBranches(UConversationInstance* Conversation, TArray<FGuid>& EnabledPaths, const TArray<FGuid>& SourceList, EConversationRequirementResult MaximumRequirementResult)
@@ -369,8 +384,9 @@ static void ServerStartConversation(UConversationInstance* Conversation, const F
     LARGE_INTEGER Cycles;
     QueryPerformanceCounter(&Cycles);
 
-    *(int32*)(uint64(Conversation) + 0x190) = int32(Cycles.LowPart);
-    *(uint32*)(uint64(Conversation) + 0x194) = uint32(Cycles.LowPart);
+    auto& ConversationRNG = GetConversationRNG(Conversation);
+    ConversationRNG.InitialSeed = int32(Cycles.LowPart);
+    ConversationRNG.Seed = int32(Cycles.LowPart);
 
     ((void (*)(UConversationInstance*))Conversation->VTable[0x59])(Conversation);
 
@@ -428,10 +444,7 @@ static void ServerAdvanceConversation(UConversationInstance* Conversation, const
             return;
         }
 
-        CandidateDestinations.Reserve(1);
-        memset(CandidateDestinations.Data, 0, sizeof(FConversationBranchPoint));
-        CandidateDestinations.Data[0].CopyFrom(*BranchPoint);
-        CandidateDestinations.NumElements = 1;
+        AddCopy(CandidateDestinations, *BranchPoint);
 
         auto TaskNode = ResolveNode(Conversation, CandidateDestinations.Data[0].ClientChoice.ChoiceReference.NodeReference);
 
@@ -454,8 +467,9 @@ static void ServerAdvanceConversation(UConversationInstance* Conversation, const
     else
     {
         auto& ScopeStack = GetScopeStack(Conversation);
+        auto& CurrentBranchPoints = GetCurrentBranchPoints(Conversation);
 
-        if (GetCurrentBranchPoints(Conversation).Num() == 0 && ScopeStack.Num() > 0)
+        if (CurrentBranchPoints.Num() == 0 && ScopeStack.Num() > 0)
         {
             auto ReturnChoice = FConversationChoiceReference::Allocate();
             ReturnChoice->CopyFrom(ScopeStack.Data[ScopeStack.Num() - 1]);
@@ -466,20 +480,9 @@ static void ServerAdvanceConversation(UConversationInstance* Conversation, const
             return;
         }
 
-        auto& CurrentBranchPoints = GetCurrentBranchPoints(Conversation);
-
         for (int32 i = 0; i < CurrentBranchPoints.Num(); i++)
-        {
-            auto& BranchPoint = CurrentBranchPoints.Data[i];
-
-            if (!BranchPoint.ClientChoice.IsChoiceAvailable())
-                continue;
-
-            CandidateDestinations.Reserve(1);
-            memset(&CandidateDestinations.Data[CandidateDestinations.Num()], 0, sizeof(FConversationBranchPoint));
-            CandidateDestinations.Data[CandidateDestinations.Num()].CopyFrom(BranchPoint);
-            CandidateDestinations.NumElements++;
-        }
+            if (CurrentBranchPoints.Data[i].ClientChoice.IsChoiceAvailable())
+                AddCopy(CandidateDestinations, CurrentBranchPoints.Data[i]);
     }
 
     TArray<FConversationBranchPoint> ValidDestinations;
@@ -498,10 +501,7 @@ static void ServerAdvanceConversation(UConversationInstance* Conversation, const
                 continue;
         }
 
-        ValidDestinations.Reserve(1);
-        memset(&ValidDestinations.Data[ValidDestinations.Num()], 0, sizeof(FConversationBranchPoint));
-        ValidDestinations.Data[ValidDestinations.Num()].CopyFrom(BranchPoint);
-        ValidDestinations.NumElements++;
+        AddCopy(ValidDestinations, BranchPoint);
     }
 
     RequirementContext->Free();
@@ -522,22 +522,23 @@ static void PushClientBranchPoint(UConversationInstance* Conversation)
 
     ClientBranchPoints.Reserve(1);
 
-    auto Index = ClientBranchPoints.Num();
-    memset(&ClientBranchPoints.Data[Index], 0, sizeof(FCheckpoint));
+    auto& Checkpoint = ClientBranchPoints.Data[ClientBranchPoints.Num()];
+    memset(&Checkpoint, 0, sizeof(FCheckpoint));
     ClientBranchPoints.NumElements++;
 
-    GetClientBranchPoints(Conversation).Data[Index].ClientBranchPoint.CopyFrom(GetCurrentBranchPoint(Conversation));
-    FConversationChoiceReference::CopyArray(GetClientBranchPoints(Conversation).Data[Index].ScopeStack, GetScopeStack(Conversation));
+    Checkpoint.ClientBranchPoint.CopyFrom(GetCurrentBranchPoint(Conversation));
+    FConversationChoiceReference::CopyArray(Checkpoint.ScopeStack, GetScopeStack(Conversation));
 }
 
 static void RestoreCheckpoint(UConversationInstance* Conversation, int32 Index)
 {
+    auto& Checkpoint = GetClientBranchPoints(Conversation).Data[Index];
     auto BranchPoint = FConversationBranchPoint::Allocate();
-    BranchPoint->CopyFrom(GetClientBranchPoints(Conversation).Data[Index].ClientBranchPoint);
+    BranchPoint->CopyFrom(Checkpoint.ClientBranchPoint);
 
     auto& ScopeStack = GetScopeStack(Conversation);
     FConversationChoiceReference::DestroyArray(ScopeStack);
-    FConversationChoiceReference::CopyArray(ScopeStack, GetClientBranchPoints(Conversation).Data[Index].ScopeStack);
+    FConversationChoiceReference::CopyArray(ScopeStack, Checkpoint.ScopeStack);
 
     ModifyCurrentConversationNode(Conversation, *BranchPoint);
     BranchPoint->Free();
@@ -568,16 +569,6 @@ static void ModifyCurrentConversationNode(UConversationInstance* Conversation, c
     ProcessCurrentConversationNode(Conversation);
 }
 
-static void AddUserChoice(UConversationInstance* Conversation, const FClientConversationOptionEntry& Choice)
-{
-    auto& CurrentUserChoices = GetCurrentUserChoices(Conversation);
-
-    CurrentUserChoices.Reserve(1);
-    memset(&CurrentUserChoices.Data[CurrentUserChoices.Num()], 0, sizeof(FClientConversationOptionEntry));
-    CurrentUserChoices.Data[CurrentUserChoices.Num()].CopyFrom(Choice);
-    CurrentUserChoices.NumElements++;
-}
-
 static void AddDefaultUserChoice(UConversationInstance* Conversation)
 {
     auto DefaultChoice = FClientConversationOptionEntry::Allocate();
@@ -599,7 +590,7 @@ static void AddDefaultUserChoice(UConversationInstance* Conversation)
     SourceString.Free();
 
     DefaultChoice->ChoiceType = EConversationChoiceType::UserChoiceAvailable;
-    AddUserChoice(Conversation, *DefaultChoice);
+    AddCopy(GetCurrentUserChoices(Conversation), *DefaultChoice);
     DefaultChoice->Free();
 }
 
@@ -618,17 +609,14 @@ static void UpdateNextChoices(UConversationInstance* Conversation, const FConver
     auto& CurrentUserChoices = GetCurrentUserChoices(Conversation);
     auto& CurrentBranchPoints = GetCurrentBranchPoints(Conversation);
 
-    for (int32 i = 0; i < CurrentUserChoices.Num(); i++)
-        CurrentUserChoices.Data[i].Destroy();
-
-    CurrentUserChoices.NumElements = 0;
+    ResetArray(CurrentUserChoices);
     FConversationBranchPoint::DestroyArray(CurrentBranchPoints);
 
     CurrentBranchPoints = AllChoices;
 
     for (int32 i = 0; i < CurrentBranchPoints.Num(); i++)
         if (CurrentBranchPoints.Data[i].ClientChoice.ChoiceType != EConversationChoiceType::ServerOnly)
-            AddUserChoice(Conversation, CurrentBranchPoints.Data[i].ClientChoice);
+            AddCopy(CurrentUserChoices, CurrentBranchPoints.Data[i].ClientChoice);
 
     if ((CurrentBranchPoints.Num() > 0 || GetScopeStack(Conversation).Num() > 0) && CurrentUserChoices.Num() == 0)
         AddDefaultUserChoice(Conversation);
@@ -654,6 +642,7 @@ static void ProcessCurrentConversationNode(UConversationInstance* Conversation)
     ExecuteTaskNodeWithSideEffects(TaskNode, Context, TaskResult);
 
     auto& ScopeStack = GetScopeStack(Conversation);
+    auto& ClientBranchPoints = GetClientBranchPoints(Conversation);
 
     if (ScopeStack.Num() > 0 && ScopeStack.Data[ScopeStack.Num() - 1].NodeReference.NodeGUID == TaskNode->Compiled_NodeGUID)
     {
@@ -697,21 +686,21 @@ static void ProcessCurrentConversationNode(UConversationInstance* Conversation)
         break;
     }
     case EConversationTaskResultType::ReturnToLastClientChoice:
-        if (GetClientBranchPoints(Conversation).Num() > 1)
+        if (ClientBranchPoints.Num() > 1)
         {
             PopClientBranchPoint(Conversation);
-            RestoreCheckpoint(Conversation, GetClientBranchPoints(Conversation).Num() - 1);
+            RestoreCheckpoint(Conversation, ClientBranchPoints.Num() - 1);
         }
         break;
     case EConversationTaskResultType::ReturnToCurrentClientChoice:
-        if (GetClientBranchPoints(Conversation).Num() > 0)
+        if (ClientBranchPoints.Num() > 0)
         {
-            auto Index = GetClientBranchPoints(Conversation).Num() - 1;
+            auto& Checkpoint = ClientBranchPoints.Data[ClientBranchPoints.Num() - 1];
             auto BranchPoint = FConversationBranchPoint::Allocate();
-            BranchPoint->CopyFrom(GetClientBranchPoints(Conversation).Data[Index].ClientBranchPoint);
+            BranchPoint->CopyFrom(Checkpoint.ClientBranchPoint);
 
             TArray<FConversationChoiceReference> CheckpointScopeStack;
-            FConversationChoiceReference::CopyArray(CheckpointScopeStack, GetClientBranchPoints(Conversation).Data[Index].ScopeStack);
+            FConversationChoiceReference::CopyArray(CheckpointScopeStack, Checkpoint.ScopeStack);
 
             PopClientBranchPoint(Conversation);
 
@@ -750,11 +739,7 @@ static UConversationInstance* StartConversation(const FGameplayTag& Conversation
     if (!Instigator || !Target)
         return nullptr;
 
-    UObject* World = nullptr;
-
-    for (auto Outer = (UObject*)Instigator; Outer && !World; Outer = Outer->Outer)
-        if (Outer->IsA(UWorld::StaticClass()))
-            World = Outer;
+    auto World = GetWorld(Instigator);
 
     if (!World)
         return nullptr;
@@ -961,6 +946,7 @@ struct FServiceState
 
 static std::unordered_map<uint64, int32> NPCUniqueIDTags;
 static std::unordered_map<uint64, FServiceState> ServiceStates;
+static std::unordered_map<uint64, int32> Purchases;
 
 static uint64 GetObjectKey(const UObject* Object)
 {
@@ -980,13 +966,18 @@ static FGameplayTag GetServiceProviderTag(const UFortNonPlayerConversationPartic
     return Component->ServiceProviderIDTag.TagName.ComparisonIndex != 0 ? Component->ServiceProviderIDTag : Component->ConversationEntryTag;
 }
 
-static UFortNonPlayerConversationParticipantComponent* FindNPCParticipantComponent(const FConversationParticipants& Participants, const AActor* Ignore)
+static UFortNonPlayerConversationParticipantComponent* GetNPCComponent(const FConversationContext* Context)
 {
-    for (int32 i = 0; i < Participants.List.Num(); i++)
-    {
-        auto Actor = Participants.List.Data[i].Actor;
+    auto Conversation = Context ? Context->ActiveConversation : nullptr;
 
-        if (!Actor || Actor == Ignore)
+    if (!Conversation)
+        return nullptr;
+
+    for (int32 i = 0; i < Conversation->Participants.List.Num(); i++)
+    {
+        auto Actor = Conversation->Participants.List.Data[i].Actor;
+
+        if (!Actor)
             continue;
 
         if (auto Component = Actor->GetComponentByClass(UFortNonPlayerConversationParticipantComponent::StaticClass()))
@@ -1242,24 +1233,15 @@ static void RequestServerAbortConversationWithParticipant(UObject* Context, FFra
     for (int32 i = 0; i < Component->Auth_Conversations.Num(); i++)
     {
         auto Conversation = Component->Auth_Conversations.Data[i];
+        auto Actors = GetParticipantActors(Conversation);
 
-        for (auto Actor : GetParticipantActors(Conversation))
-        {
-            if (Actor == ParticipantActor)
-            {
-                ConversationsToAbort.push_back(Conversation);
-                break;
-            }
-        }
+        if (std::find(Actors.begin(), Actors.end(), ParticipantActor) != Actors.end())
+            ConversationsToAbort.push_back(Conversation);
     }
 
     for (auto Conversation : ConversationsToAbort)
         ServerAbortConversation(Conversation);
 }
-
-static void (*GatherStaticExtraDataBase)(UConversationTaskNode*, const FConversationContext*, TArray<FConversationNodeParameterPair>*);
-
-static std::unordered_map<uint64, int32> Purchases;
 
 static EConversationRequirementResult CheckRequirements(UConversationTaskNode* Node, const FConversationContext* Context)
 {
@@ -1419,8 +1401,7 @@ static EConversationRequirementResult IsRequirementSatisfied(UFortConversationRe
 
 static EConversationRequirementResult IsRequirementSatisfied(UFortConversationRequirement_HasService* Node, const FConversationContext* Context)
 {
-    auto Conversation = Context ? Context->ActiveConversation : nullptr;
-    auto NPCComponent = Conversation ? FindNPCParticipantComponent(Conversation->Participants, nullptr) : nullptr;
+    auto NPCComponent = GetNPCComponent(Context);
 
     if (!NPCComponent || !FindSupportedService(NPCComponent, Node->ServiceTag, Node->bRequireExactMatch))
         return EConversationRequirementResult::FailedAndHidden;
@@ -1474,6 +1455,22 @@ static void AddExtraData(TArray<FConversationNodeParameterPair>& ExtraData, cons
 
     AddExtraData(ExtraData, Key, ValueString);
     ValueString.Free();
+}
+
+static void CopyTags(FGameplayTagContainer& Tags, const FGameplayTagContainer& Source)
+{
+    for (int32 i = 0; i < Source.GameplayTags.Num(); i++)
+        Tags.GameplayTags.Add(Source.GameplayTags.Data[i]);
+
+    for (int32 i = 0; i < Source.ParentTags.Num(); i++)
+        Tags.ParentTags.Add(Source.ParentTags.Data[i]);
+}
+
+static void DestroyQueryResult(FContextualMessageQueryResult* Result)
+{
+    FText::Destroy(&Result->Message);
+    FConversationNodeParameterPair::DestroyArray(Result->MetadataParameters);
+    FreeGameplayTags(Result->MetadataTags);
 }
 
 static void (*FillChoiceOG)(UFortConversationChoiceWithPreviewNode*, const FConversationContext*, FClientConversationOptionEntry*);
@@ -1533,6 +1530,8 @@ static void FillChoice(UFortConversationChoiceWithPreviewNode* Node, const FConv
             break;
     }
 }
+
+static void (*GatherStaticExtraDataBase)(UConversationTaskNode*, const FConversationContext*, TArray<FConversationNodeParameterPair>*);
 
 static void GatherStaticExtraData(UFortConversationTaskNode* Node, const FConversationContext* Context, TArray<FConversationNodeParameterPair>* InOutExtraData)
 {
@@ -1626,13 +1625,6 @@ static AFortPlayerControllerAthena* GetPlayerController(const FConversationConte
     return nullptr;
 }
 
-static UFortNonPlayerConversationParticipantComponent* GetNPCComponent(const FConversationContext* Context)
-{
-    auto Conversation = Context ? Context->ActiveConversation : nullptr;
-
-    return Conversation ? FindNPCParticipantComponent(Conversation->Participants, nullptr) : nullptr;
-}
-
 static int32 GetCurrencyCount(AFortPlayerControllerAthena* PlayerController, const UFortItemDefinition* Currency)
 {
     auto Inventory = PlayerController ? (AFortInventory*)PlayerController->WorldInventory.ObjectPointer : nullptr;
@@ -1663,7 +1655,7 @@ static int32 GetItemCost(UFortConversationTaskNode_SellItem* Node, const UFortNo
     ItemPath.Free();
 
     if (Cost < 0)
-        return -1;
+        return 0;
 
     if (Node->bPriceDiscountsEnabled && NPCComponent)
     {
@@ -1676,7 +1668,7 @@ static int32 GetItemCost(UFortConversationTaskNode_SellItem* Node, const UFortNo
         }
     }
 
-    return Cost;
+    return (std::max)(Cost, 0);
 }
 
 static int32 GetRemainingStock(UFortConversationTaskNode_SellItem* Node, const UObject* NPCComponent, const AActor* PlayerController)
@@ -1706,10 +1698,6 @@ static void GatherDynamicChoices(UFortConversationTaskNode_SellItem* Node, TArra
     auto Choice = FClientConversationOptionEntry::Allocate();
     bool bDiscounted = false;
     auto Cost = GetItemCost(Node, NPCComponent, SaleItem->ItemDefinition, bDiscounted);
-
-    if (Cost < 0)
-        Cost = 0;
-
     auto Remaining = GetRemainingStock(Node, NPCComponent, PlayerController);
     auto bCanAfford = GetCurrencyCount(PlayerController, Node->ResourceCurrency) >= Cost;
 
@@ -1731,11 +1719,7 @@ static void GatherDynamicChoices(UFortConversationTaskNode_SellItem* Node, TArra
     else
         FText::CopyTo(&Choice->ChoiceText, &Node->SoldOutTextFormat);
 
-    for (int32 i = 0; i < Node->NodeTags.GameplayTags.Num(); i++)
-        Choice->ChoiceTags.GameplayTags.Add(Node->NodeTags.GameplayTags.Data[i]);
-
-    for (int32 i = 0; i < Node->NodeTags.ParentTags.Num(); i++)
-        Choice->ChoiceTags.ParentTags.Add(Node->NodeTags.ParentTags.Data[i]);
+    CopyTags(Choice->ChoiceTags, Node->NodeTags);
 
     Choice->ChoiceType = Remaining > 0 && bCanAfford ? EConversationChoiceType::UserChoiceAvailable : EConversationChoiceType::UserChoiceUnavailable;
     Choice->ChoiceReference.NodeReference.NodeGUID = Node->Compiled_NodeGUID;
@@ -1787,9 +1771,6 @@ static FConversationTaskResult* ExecuteTaskNode(UFortConversationTaskNode_SellIt
 
     bool bDiscounted = false;
     auto Cost = GetItemCost(Node, NPCComponent, SaleItem->ItemDefinition, bDiscounted);
-
-    if (Cost < 0)
-        Cost = 0;
 
     if (GetCurrencyCount(PlayerController, Node->ResourceCurrency) < Cost)
         return Result;
@@ -1950,19 +1931,11 @@ static bool ResolveMessageForContext(UFortConversationTaskNode_Speech* Node, con
     auto& MetadataParameters = Chosen ? Chosen->MetadataParameters : Config->DefaultMetadataParameters;
     auto& MetadataTags = Chosen ? Chosen->MetadataTags : Config->DefaultMetadataTags;
 
-    FText::Destroy(&OutResult->Message);
-    FConversationNodeParameterPair::DestroyArray(OutResult->MetadataParameters);
-    OutResult->MetadataTags.GameplayTags.Free();
-    OutResult->MetadataTags.ParentTags.Free();
+    DestroyQueryResult(OutResult);
 
     FText::CopyTo(&OutResult->Message, &Message);
     FConversationNodeParameterPair::CopyArray(OutResult->MetadataParameters, MetadataParameters);
-
-    for (int32 i = 0; i < MetadataTags.GameplayTags.Num(); i++)
-        OutResult->MetadataTags.GameplayTags.Add(MetadataTags.GameplayTags.Data[i]);
-
-    for (int32 i = 0; i < MetadataTags.ParentTags.Num(); i++)
-        OutResult->MetadataTags.ParentTags.Add(MetadataTags.ParentTags.Data[i]);
+    CopyTags(OutResult->MetadataTags, MetadataTags);
 
     return Chosen != nullptr;
 }
@@ -1982,10 +1955,7 @@ static void ResolveMessageForContext(UObject* Context, FFrame& Stack, bool* Ret)
 
     *Ret = ResolveMessageForContext((UFortConversationTaskNode_Speech*)Context, SpeakerParticipantTag, ConversationContext, OutResult);
 
-    FText::Destroy(&OutResultTemp->Message);
-    FConversationNodeParameterPair::DestroyArray(OutResultTemp->MetadataParameters);
-    OutResultTemp->MetadataTags.GameplayTags.Free();
-    OutResultTemp->MetadataTags.ParentTags.Free();
+    DestroyQueryResult(OutResultTemp);
     FMemory::Free(OutResultTemp);
     ConversationContextTemp->Free();
 }
@@ -2113,4 +2083,13 @@ void UConversationInstance__Init()
     Hook<UFortConversationRequirement_ControllerRequirement>(uint32(0x5C), (EConversationRequirementResult (*)(UFortConversationRequirement_ControllerRequirement*, const FConversationContext*))IsRequirementSatisfied);
     Hook<UFortConversationRequirement_HasService>(uint32(0x5C), (EConversationRequirementResult (*)(UFortConversationRequirement_HasService*, const FConversationContext*))IsRequirementSatisfied);
     Hook<UFortConversationChoiceWithPreviewNode>(uint32(0x5C), FillChoice, FillChoiceOG);
+}
+
+void UConversationInstance__Reset()
+{
+    CachedWorld = nullptr;
+    CachedRegistry = nullptr;
+    NPCUniqueIDTags.clear();
+    ServiceStates.clear();
+    Purchases.clear();
 }

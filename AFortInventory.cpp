@@ -7,6 +7,82 @@
 INIT_MODULE(AFortInventory);
 INIT_POSTLOAD(AFortInventory);
 
+static bool IsValidGuid(const FGuid& Guid)
+{
+    return Guid.A != 0 || Guid.B != 0 || Guid.C != 0 || Guid.D != 0;
+}
+
+UFortWorldItem* FindItemInstance(AFortInventory* Inventory, const FGuid& ItemGuid)
+{
+    for (auto Instance : Inventory->Inventory.ItemInstances)
+    {
+        if (Instance->ItemEntry.ItemGuid == ItemGuid)
+            return Instance;
+    }
+
+    return nullptr;
+}
+
+UFortWorldItem* FindItemInstance(AFortInventory* Inventory, const UFortItemDefinition* ItemDefinition)
+{
+    for (auto Instance : Inventory->Inventory.ItemInstances)
+    {
+        if (Instance->ItemEntry.ItemDefinition == ItemDefinition)
+            return Instance;
+    }
+
+    return nullptr;
+}
+
+FFortItemEntry* FindReplicatedEntry(AFortInventory* Inventory, const FGuid& ItemGuid)
+{
+    for (auto& ReplicatedEntry : Inventory->Inventory.ReplicatedEntries)
+    {
+        if (ReplicatedEntry.ItemGuid == ItemGuid)
+            return &ReplicatedEntry;
+    }
+
+    return nullptr;
+}
+
+FFortItemEntry* FindReplicatedEntry(AFortInventory* Inventory, const UFortItemDefinition* ItemDefinition)
+{
+    for (auto& ReplicatedEntry : Inventory->Inventory.ReplicatedEntries)
+    {
+        if (ReplicatedEntry.ItemDefinition == ItemDefinition)
+            return &ReplicatedEntry;
+    }
+
+    return nullptr;
+}
+
+static void AssignItemEntry(FFortItemEntry* Entry, const FFortItemEntry* Source)
+{
+    static auto AssignItemEntry = (FFortItemEntry* (*)(FFortItemEntry*, const FFortItemEntry*))(ImageBase + 0x16E78D8);
+
+    AssignItemEntry(Entry, Source);
+}
+
+template <typename T>
+static void CopyRawArray(TArray<T>& Array, const TArray<T>& Source)
+{
+    if (Source.Num() <= 0)
+        return;
+
+    if (Array.Data)
+        FMemory::Free(Array.Data);
+
+    Array.Data = nullptr;
+
+    if (Source.Data)
+    {
+        Array.Data = (T*)FMemory::Malloc(uint64(Source.Num()) * sizeof(T));
+        memcpy(Array.Data, Source.Data, uint64(Source.Num()) * sizeof(T));
+    }
+
+    Array.NumElements = Array.MaxElements = Source.Num();
+}
+
 void SetStateValueConstObject(FFortItemEntry& Entry, const FGameplayTag& StateType, const UObject* Object)
 {
     auto& ConstObjects = Entry.StateValuesConstObject;
@@ -32,43 +108,8 @@ void CopyWeaponModsFrom(FFortItemEntry& Entry, const FFortItemEntry& Source)
     if (&Source == &Entry)
         return;
 
-    auto& WeaponModSlots = Entry.WeaponModSlots;
-    auto& SourceWeaponModSlots = Source.WeaponModSlots;
-
-    if (SourceWeaponModSlots.Num() > 0)
-    {
-        if (WeaponModSlots.Data)
-            FMemory::Free(WeaponModSlots.Data);
-
-        WeaponModSlots.Data = nullptr;
-
-        if (SourceWeaponModSlots.Data)
-        {
-            WeaponModSlots.Data = (FFortWeaponModSlot*)FMemory::Malloc(uint64(SourceWeaponModSlots.Num()) * sizeof(FFortWeaponModSlot));
-            memcpy(WeaponModSlots.Data, SourceWeaponModSlots.Data, uint64(SourceWeaponModSlots.Num()) * sizeof(FFortWeaponModSlot));
-        }
-
-        WeaponModSlots.NumElements = WeaponModSlots.MaxElements = SourceWeaponModSlots.Num();
-    }
-
-    auto& ConstObjects = Entry.StateValuesConstObject;
-    auto& SourceConstObjects = Source.StateValuesConstObject;
-
-    if (SourceConstObjects.Num() > 0)
-    {
-        if (ConstObjects.Data)
-            FMemory::Free(ConstObjects.Data);
-
-        ConstObjects.Data = nullptr;
-
-        if (SourceConstObjects.Data)
-        {
-            ConstObjects.Data = (FFortItemEntryStateValueConstObject*)FMemory::Malloc(uint64(SourceConstObjects.Num()) * sizeof(FFortItemEntryStateValueConstObject));
-            memcpy(ConstObjects.Data, SourceConstObjects.Data, uint64(SourceConstObjects.Num()) * sizeof(FFortItemEntryStateValueConstObject));
-        }
-
-        ConstObjects.NumElements = ConstObjects.MaxElements = SourceConstObjects.Num();
-    }
+    CopyRawArray(Entry.WeaponModSlots, Source.WeaponModSlots);
+    CopyRawArray(Entry.StateValuesConstObject, Source.StateValuesConstObject);
 }
 
 static void InitializeWeaponModSlots(FFortItemEntry& Entry, const UFortWeaponItemDefinition* WeaponDefinition)
@@ -122,28 +163,25 @@ UFortWorldItem* GiveItem(AFortInventory* Inventory, const UFortItemDefinition* I
         if (ReplicatedEntry.ItemDefinition != ItemDefinition || ReplicatedEntry.Count >= MaxStack)
             continue;
 
-        for (auto Instance : Inventory->Inventory.ItemInstances)
+        auto Instance = FindItemInstance(Inventory, ReplicatedEntry.ItemGuid);
+
+        if (!Instance)
+            continue;
+
+        auto Added = (std::min)(Count, MaxStack - ReplicatedEntry.Count);
+
+        ReplicatedEntry.Count += Added;
+        Instance->ItemEntry.Count = ReplicatedEntry.Count;
+        Count -= Added;
+
+        if (bUpdateInventory)
         {
-            if (Instance->ItemEntry.ItemGuid != ReplicatedEntry.ItemGuid)
-                continue;
-
-            auto Added = (std::min)(Count, MaxStack - ReplicatedEntry.Count);
-
-            ReplicatedEntry.Count += Added;
-            Instance->ItemEntry.Count = ReplicatedEntry.Count;
-            Count -= Added;
-
-            if (bUpdateInventory)
-            {
-                UpdateEntry(Inventory, ReplicatedEntry);
-                Instance->ItemEntry.bIsDirty = true;
-            }
-
-            if (Count <= 0)
-                return Instance;
-
-            break;
+            UpdateEntry(Inventory, ReplicatedEntry);
+            Instance->ItemEntry.bIsDirty = true;
         }
+
+        if (Count <= 0)
+            return Instance;
     }
 
     auto Item = (UFortWorldItem*)ItemDefinition->CreateTemporaryItemInstanceBP(Count, Level);
@@ -170,16 +208,15 @@ UFortWorldItem* GiveItem(AFortInventory* Inventory, const UFortItemDefinition* I
         Item->ItemEntry.StateValues.Data = (FFortItemEntryStateValue*)NewData;
     }
 
-    if (Item->ItemEntry.ItemGuid.A == 0 && Item->ItemEntry.ItemGuid.B == 0 && Item->ItemEntry.ItemGuid.C == 0 && Item->ItemEntry.ItemGuid.D == 0)
+    if (!IsValidGuid(Item->ItemEntry.ItemGuid))
     {
         CoCreateGuid((GUID*)&Item->ItemEntry.ItemGuid);
 
-        if (Item->ItemEntry.TrackerGuid.A == 0 && Item->ItemEntry.TrackerGuid.B == 0 && Item->ItemEntry.TrackerGuid.C == 0 && Item->ItemEntry.TrackerGuid.D == 0)
+        if (!IsValidGuid(Item->ItemEntry.TrackerGuid))
             CoCreateGuid((GUID*)&Item->ItemEntry.TrackerGuid);
     }
 
     static auto ConstructItemEntry = (FFortItemEntry* (*)(FFortItemEntry*))(ImageBase + 0x2287D6C);
-    static auto AssignItemEntry = (FFortItemEntry* (*)(FFortItemEntry*, const FFortItemEntry*))(ImageBase + 0x16E78D8);
 
     auto& ReplicatedEntries = Inventory->Inventory.ReplicatedEntries;
     ReplicatedEntries.Reserve(1);
@@ -226,78 +263,63 @@ static void SetRequiresUpdate(AFortInventory* Inventory)
     Inventory->ForceNetUpdate();
 }
 
+static void MarkReplicatedEntryDirty(AFortInventory* Inventory, FFortItemEntry& ReplicatedEntry)
+{
+    ReplicatedEntry.bIsDirty = false;
+    Inventory->Inventory.MarkItemDirty(ReplicatedEntry);
+    SetRequiresUpdate(Inventory);
+}
+
 void Update(AFortInventory* Inventory, FFortItemEntry* Entry)
 {
     if (!Entry)
         return SetRequiresUpdate(Inventory);
 
     if (Entry->bIsReplicatedCopy)
-    {
-        Entry->bIsDirty = false;
-        Inventory->Inventory.MarkItemDirty(*Entry);
-        SetRequiresUpdate(Inventory);
-        return;
-    }
+        return MarkReplicatedEntryDirty(Inventory, *Entry);
 
-    if (Entry->ItemGuid.A == 0 && Entry->ItemGuid.B == 0 && Entry->ItemGuid.C == 0 && Entry->ItemGuid.D == 0)
+    if (!IsValidGuid(Entry->ItemGuid))
         return;
 
-    for (int i = 0; i < Inventory->Inventory.ReplicatedEntries.Num(); i++)
+    if (auto ReplicatedEntry = FindReplicatedEntry(Inventory, Entry->ItemGuid))
     {
-        auto& ReplicatedEntry = Inventory->Inventory.ReplicatedEntries[i];
-
-        if (ReplicatedEntry.ItemGuid == Entry->ItemGuid)
-        {
-            static auto AssignItemEntry = (FFortItemEntry* (*)(FFortItemEntry*, const FFortItemEntry*))(ImageBase + 0x16E78D8);
-
-            AssignItemEntry(&ReplicatedEntry, Entry);
-            ReplicatedEntry.bIsDirty = false;
-            Inventory->Inventory.MarkItemDirty(ReplicatedEntry);
-            SetRequiresUpdate(Inventory);
-            break;
-        }
+        AssignItemEntry(ReplicatedEntry, Entry);
+        MarkReplicatedEntryDirty(Inventory, *ReplicatedEntry);
     }
+}
+
+static void ClearAbility(UAbilitySystemComponent* AbilitySystemComponent, FGameplayAbilitySpecHandle& Handle)
+{
+    static auto ClearAbility = (void (*)(UAbilitySystemComponent*, FGameplayAbilitySpecHandle&))(ImageBase + 0x7AE54BC);
+
+    if (Handle.Handle != -1)
+        ClearAbility(AbilitySystemComponent, Handle);
+}
+
+static void ClearAbilityHandle(UAbilitySystemComponent* AbilitySystemComponent, FGameplayAbilitySpecHandle& Handle)
+{
+    ClearAbility(AbilitySystemComponent, Handle);
+    Handle.Handle = -1;
 }
 
 void RemoveWeaponAbilities(AFortWeapon* Weapon)
 {
-    static auto ClearAbility = (void (*)(UAbilitySystemComponent*, FGameplayAbilitySpecHandle&))(ImageBase + 0x7AE54BC);
     auto PlayerController = Weapon->Instigator ? (AFortPlayerControllerAthena*)Weapon->Instigator->Controller : nullptr;
+
     if (!PlayerController || !PlayerController->PlayerState || !PlayerController->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()))
         return;
+
     auto AbilitySystemComponent = ((AFortPlayerStateAthena*)PlayerController->PlayerState)->AbilitySystemComponent;
 
-    if (Weapon->PrimaryAbilitySpecHandle.Handle != -1)
-    {
-        ClearAbility(AbilitySystemComponent, Weapon->PrimaryAbilitySpecHandle);
-        Weapon->PrimaryAbilitySpecHandle.Handle = -1;
-    }
-    if (Weapon->SecondaryAbilitySpecHandle.Handle != -1)
-    {
-        ClearAbility(AbilitySystemComponent, Weapon->SecondaryAbilitySpecHandle);
-        Weapon->SecondaryAbilitySpecHandle.Handle = -1;
-    }
-    if (Weapon->ReloadAbilitySpecHandle.Handle != -1)
-    {
-        ClearAbility(AbilitySystemComponent, Weapon->ReloadAbilitySpecHandle);
-        Weapon->ReloadAbilitySpecHandle.Handle = -1;
-    }
-    if (Weapon->ImpactAbilitySpecHandle.Handle != -1)
-    {
-        ClearAbility(AbilitySystemComponent, Weapon->ImpactAbilitySpecHandle);
-        Weapon->ImpactAbilitySpecHandle.Handle = -1;
-    }
-    if (Weapon->EquippedAbilityHandles.Num())
-    {
-        for (int i = 0; i < Weapon->EquippedAbilityHandles.Num(); i++)
-        {
-            auto& Handle = Weapon->EquippedAbilityHandles[i];
+    ClearAbilityHandle(AbilitySystemComponent, Weapon->PrimaryAbilitySpecHandle);
+    ClearAbilityHandle(AbilitySystemComponent, Weapon->SecondaryAbilitySpecHandle);
+    ClearAbilityHandle(AbilitySystemComponent, Weapon->ReloadAbilitySpecHandle);
+    ClearAbilityHandle(AbilitySystemComponent, Weapon->ImpactAbilitySpecHandle);
 
-            if (Handle.Handle != -1)
-                ClearAbility(AbilitySystemComponent, Handle);
-        }
-        Weapon->EquippedAbilityHandles.Clear();
-    }
+    for (int i = 0; i < Weapon->EquippedAbilityHandles.Num(); i++)
+        ClearAbility(AbilitySystemComponent, Weapon->EquippedAbilityHandles[i]);
+
+    Weapon->EquippedAbilityHandles.Clear();
 
     if (Weapon->EquippedAbilitySetHandles.Num())
     {
@@ -306,20 +328,21 @@ void RemoveWeaponAbilities(AFortWeapon* Weapon)
 
         if (PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()))
             PlayerController->AppliedInGameModifierAbilitySetHandles.Reset();
+
         Weapon->EquippedAbilitySetHandles.Clear();
     }
 }
 
 void Remove(AFortInventory* Inventory, FGuid Guid)
 {
-    int32 ItemEntryIdx = -1;
-    int32 ItemInstanceIdx = -1;
+    int32 ItemEntryIndex = -1;
+    int32 ItemInstanceIndex = -1;
 
     for (int i = 0; i < Inventory->Inventory.ReplicatedEntries.Num(); i++)
     {
         if (Inventory->Inventory.ReplicatedEntries[i].ItemGuid == Guid)
         {
-            ItemEntryIdx = i;
+            ItemEntryIndex = i;
             break;
         }
     }
@@ -328,25 +351,26 @@ void Remove(AFortInventory* Inventory, FGuid Guid)
     {
         if (Inventory->Inventory.ItemInstances[i]->ItemEntry.ItemGuid == Guid)
         {
-            ItemInstanceIdx = i;
+            ItemInstanceIndex = i;
             break;
         }
     }
 
-    auto Instance = ItemInstanceIdx != -1 ? Inventory->Inventory.ItemInstances.Data[ItemInstanceIdx] : nullptr;
+    auto Instance = ItemInstanceIndex != -1 ? Inventory->Inventory.ItemInstances.Data[ItemInstanceIndex] : nullptr;
 
-    if (ItemEntryIdx != -1)
+    if (ItemEntryIndex != -1)
     {
         static auto DestroyItemEntry = (void (*)(FFortItemEntry*))(ImageBase + 0x16E77DC);
 
         auto& ReplicatedEntries = Inventory->Inventory.ReplicatedEntries;
 
-        DestroyItemEntry(&ReplicatedEntries.Data[ItemEntryIdx]);
-        ReplicatedEntries.Data[ItemEntryIdx] = ReplicatedEntries.Data[ReplicatedEntries.Num() - 1];
+        DestroyItemEntry(&ReplicatedEntries.Data[ItemEntryIndex]);
+        ReplicatedEntries.Data[ItemEntryIndex] = ReplicatedEntries.Data[ReplicatedEntries.Num() - 1];
         ReplicatedEntries.NumElements--;
     }
-    if (ItemInstanceIdx != -1)
-        Inventory->Inventory.ItemInstances.Remove(ItemInstanceIdx);
+
+    if (ItemInstanceIndex != -1)
+        Inventory->Inventory.ItemInstances.Remove(ItemInstanceIndex);
 
     Inventory->bRequiresLocalUpdate = true;
     Inventory->bRequiresSaving = true;
@@ -358,6 +382,42 @@ void Remove(AFortInventory* Inventory, FGuid Guid)
 
     if (Instance && Instance->ItemEntry.ItemDefinition)
         ((bool (*)(const UFortWorldItem*, const void*, uint32_t))Instance->VTable[0xB3])(Instance, Inventory->Owner->GetInterface(IFortInventoryOwnerInterface::StaticClass()), Instance->ItemEntry.Count);
+}
+
+static void UpdateItemCount(AFortInventory* Inventory, UFortWorldItem* Item, FFortItemEntry& ItemEntry)
+{
+    Item->ItemEntry.Count = ItemEntry.Count;
+    UpdateEntry(Inventory, ItemEntry);
+    Item->ItemEntry.bIsDirty = true;
+}
+
+void UpdateOrRemoveEntry(AFortInventory* Inventory, UFortWorldItem* Item, FFortItemEntry& Entry)
+{
+    if (Entry.Count <= 0)
+    {
+        Remove(Inventory, Entry.ItemGuid);
+        return;
+    }
+
+    UpdateItemCount(Inventory, Item, Entry);
+}
+
+bool RemoveInventoryItem(AFortInventory* Inventory, FGuid& ItemGuid, int32 Count, bool bForceRemoval, bool bForcePersistWhenEmpty)
+{
+    auto Item = FindItemInstance(Inventory, ItemGuid);
+
+    if (!Item)
+        return false;
+
+    auto ItemEntry = FindReplicatedEntry(Inventory, ItemGuid);
+    ItemEntry->Count -= (std::max)(Count, 0);
+
+    if (bForceRemoval || Count < 0 || (ItemEntry->Count <= 0 && !bForcePersistWhenEmpty))
+        Remove(Inventory, ItemGuid);
+    else
+        UpdateItemCount(Inventory, Item, *ItemEntry);
+
+    return true;
 }
 
 FFortRangedWeaponStats* GetStats(const UFortWeaponItemDefinition* WeaponDefinition)
@@ -374,39 +434,48 @@ FFortRangedWeaponStats* GetStats(const UFortWeaponItemDefinition* WeaponDefiniti
     return nullptr;
 }
 
+static const UFortWeaponItemDefinition* GetWeaponDefinition(const UFortItemDefinition* ItemDefinition)
+{
+    if (ItemDefinition->IsA(UFortGadgetItemDefinition::StaticClass()))
+        return ((UFortGadgetItemDefinition*)ItemDefinition)->GetWeaponItemDefinition();
+
+    return ItemDefinition->IsA(UFortWeaponItemDefinition::StaticClass()) ? (UFortWeaponItemDefinition*)ItemDefinition : nullptr;
+}
+
 FFortItemEntry* MakeItemEntry(const UFortItemDefinition* ItemDefinition, int32 Count, int32 Level)
 {
     auto ItemEntry = (FFortItemEntry*)malloc(sizeof(FFortItemEntry));
-    memset((PBYTE)ItemEntry, 0, sizeof(FFortItemEntry));
+    memset(ItemEntry, 0, sizeof(FFortItemEntry));
 
     ItemEntry->MostRecentArrayReplicationKey = -1;
     ItemEntry->ReplicationID = -1;
     ItemEntry->ReplicationKey = -1;
 
-    auto ItemDef = ItemDefinition;
-    if (ItemDef->IsA(UFortWorldMultiItemDefinition::StaticClass()))
+    if (ItemDefinition->IsA(UFortWorldMultiItemDefinition::StaticClass()))
     {
-        auto MultiWorldItemDef = (UFortWorldMultiItemDefinition*)ItemDef;
+        auto MultiItemDefinition = (UFortWorldMultiItemDefinition*)ItemDefinition;
 
-        ItemDef = MultiWorldItemDef->ItemInfos[rand() % MultiWorldItemDef->ItemInfos.Num()].ItemDefinition.Get();
+        ItemDefinition = MultiItemDefinition->ItemInfos[rand() % MultiItemDefinition->ItemInfos.Num()].ItemDefinition.Get();
     }
-    ItemEntry->ItemDefinition = (UItemDefinitionBase*)ItemDef;
+
+    ItemEntry->ItemDefinition = (UItemDefinitionBase*)ItemDefinition;
     ItemEntry->Count = Count;
     ItemEntry->Durability = 1.f;
     ItemEntry->GameplayAbilitySpecHandle.Handle = -1;
     ItemEntry->ParentInventory.ObjectIndex = -1;
     ItemEntry->Level = Level;
-    if (auto Weapon = ItemDef->IsA(UFortGadgetItemDefinition::StaticClass()) ? ((UFortGadgetItemDefinition*)ItemDef)->GetWeaponItemDefinition() : ItemDef->IsA(UFortWeaponItemDefinition::StaticClass()) ? (UFortWeaponItemDefinition*)ItemDef : nullptr)
+
+    if (auto WeaponDefinition = GetWeaponDefinition(ItemDefinition))
     {
-        auto Stats = GetStats(Weapon);
-        if (Stats)
+        if (auto Stats = GetStats(WeaponDefinition))
         {
             ItemEntry->LoadedAmmo = Stats->ClipSize;
 
-            if (Weapon->bUsesPhantomReserveAmmo)
+            if (WeaponDefinition->bUsesPhantomReserveAmmo)
                 ItemEntry->PhantomReserveAmmo = (Stats->InitialClips - 1) * Stats->ClipSize;
         }
     }
+
     ItemEntry->PickupVariantIndex = -1;
     ItemEntry->ItemVariantDataMappingIndex = -1;
     ItemEntry->OrderIndex = -1;
@@ -416,11 +485,24 @@ FFortItemEntry* MakeItemEntry(const UFortItemDefinition* ItemDefinition, int32 C
 
 bool IsPrimaryQuickbar(const UFortItemDefinition* ItemDefinition)
 {
-    return ItemDefinition->ItemType == EFortItemType::WeaponHarvest || ItemDefinition->ItemType == EFortItemType::WorldResource || ItemDefinition->ItemType == EFortItemType::Ammo ||
-                   ItemDefinition->ItemType == EFortItemType::Trap || ItemDefinition->ItemType == EFortItemType::BuildingPiece || ItemDefinition->ItemType == EFortItemType::EditTool ||
-                   ItemDefinition->ItemType == EFortItemType::Ingredient
-               ? false
-               : true;
+    switch (ItemDefinition->ItemType)
+    {
+    case EFortItemType::WeaponHarvest:
+    case EFortItemType::WorldResource:
+    case EFortItemType::Ammo:
+    case EFortItemType::Trap:
+    case EFortItemType::BuildingPiece:
+    case EFortItemType::EditTool:
+    case EFortItemType::Ingredient:
+        return false;
+    default:
+        return true;
+    }
+}
+
+bool TakesQuickbarSlot(const UFortItemDefinition* ItemDefinition)
+{
+    return IsPrimaryQuickbar(ItemDefinition) && UFortItemFunctionLibrary::IsInventorySizeLimited(ItemDefinition);
 }
 
 void UpdateEntry(AFortInventory* Inventory, FFortItemEntry& Entry)
@@ -437,16 +519,7 @@ int32 AddItemCount(AFortInventory* Inventory, const UFortItemDefinition* ItemDef
         return 0;
 
     auto MaxStack = ItemDefinition->GetMaxStackSize(nullptr);
-    FFortItemEntry* ItemEntry = nullptr;
-
-    for (auto& ReplicatedEntry : Inventory->Inventory.ReplicatedEntries)
-    {
-        if (ReplicatedEntry.ItemDefinition == ItemDefinition)
-        {
-            ItemEntry = &ReplicatedEntry;
-            break;
-        }
-    }
+    auto ItemEntry = FindReplicatedEntry(Inventory, ItemDefinition);
 
     if (!ItemEntry)
     {
@@ -463,17 +536,21 @@ int32 AddItemCount(AFortInventory* Inventory, const UFortItemDefinition* ItemDef
 
     ItemEntry->Count = NewCount;
 
-    for (auto& ItemInstance : Inventory->Inventory.ItemInstances)
-    {
-        if (ItemInstance->ItemEntry.ItemDefinition == ItemDefinition)
-        {
-            ItemInstance->ItemEntry.Count = NewCount;
-            break;
-        }
-    }
+    if (auto Item = FindItemInstance(Inventory, ItemDefinition))
+        Item->ItemEntry.Count = NewCount;
 
     UpdateEntry(Inventory, *ItemEntry);
     return Added;
+}
+
+static AFortInventory* FindOwningInventory(UFortWorldItem* Item)
+{
+    if (auto Inventory = (AFortInventory*)Item->ItemEntry.ParentInventory.Get())
+        return Inventory;
+
+    auto Controller = Item->GetOwningController();
+
+    return Controller && Controller->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortInventory*)Controller->WorldInventory.ObjectPointer : nullptr;
 }
 
 static bool SetLoadedAmmo(UFortWorldItem* Item, int LoadedAmmo)
@@ -484,35 +561,13 @@ static bool SetLoadedAmmo(UFortWorldItem* Item, int LoadedAmmo)
     Item->ItemEntry.LoadedAmmo = LoadedAmmo;
     Item->ItemEntry.bIsDirty = true;
 
-    auto Inventory = (AFortInventory*)Item->ItemEntry.ParentInventory.Get();
+    auto Inventory = FindOwningInventory(Item);
 
-    if (!Inventory)
+    if (auto ReplicatedEntry = Inventory ? FindReplicatedEntry(Inventory, Item->ItemEntry.ItemGuid) : nullptr)
     {
-        auto Controller = Item->GetOwningController();
-
-        if (Controller && Controller->IsA(AFortPlayerControllerAthena::StaticClass()))
-            Inventory = (AFortInventory*)Controller->WorldInventory.ObjectPointer;
+        ReplicatedEntry->LoadedAmmo = LoadedAmmo;
+        UpdateEntry(Inventory, *ReplicatedEntry);
     }
-
-    if (!Inventory)
-        return true;
-
-    FFortItemEntry* repEnt = nullptr;
-
-    for (auto& ReplicatedEntry : Inventory->Inventory.ReplicatedEntries)
-    {
-        if (ReplicatedEntry.ItemGuid == Item->ItemEntry.ItemGuid)
-        {
-            repEnt = &ReplicatedEntry;
-            break;
-        }
-    }
-
-    if (!repEnt)
-        return true;
-
-    repEnt->LoadedAmmo = LoadedAmmo;
-    UpdateEntry(Inventory, *repEnt);
 
     return true;
 }
@@ -525,35 +580,13 @@ static bool SetPhantomReserveAmmo(UFortWorldItem* Item, unsigned int PhantomRese
     Item->ItemEntry.PhantomReserveAmmo = PhantomReserveAmmo;
     Item->ItemEntry.bIsDirty = true;
 
-    auto Inventory = (AFortInventory*)Item->ItemEntry.ParentInventory.Get();
+    auto Inventory = FindOwningInventory(Item);
 
-    if (!Inventory)
+    if (auto ReplicatedEntry = Inventory ? FindReplicatedEntry(Inventory, Item->ItemEntry.ItemGuid) : nullptr)
     {
-        auto Controller = Item->GetOwningController();
-
-        if (Controller && Controller->IsA(AFortPlayerControllerAthena::StaticClass()))
-            Inventory = (AFortInventory*)Controller->WorldInventory.ObjectPointer;
+        ReplicatedEntry->PhantomReserveAmmo = PhantomReserveAmmo;
+        UpdateEntry(Inventory, *ReplicatedEntry);
     }
-
-    if (!Inventory)
-        return true;
-
-    FFortItemEntry* repEnt = nullptr;
-
-    for (auto& ReplicatedEntry : Inventory->Inventory.ReplicatedEntries)
-    {
-        if (ReplicatedEntry.ItemGuid == Item->ItemEntry.ItemGuid)
-        {
-            repEnt = &ReplicatedEntry;
-            break;
-        }
-    }
-
-    if (!repEnt)
-        return true;
-
-    repEnt->PhantomReserveAmmo = PhantomReserveAmmo;
-    UpdateEntry(Inventory, *repEnt);
 
     return true;
 }
@@ -579,8 +612,8 @@ static void RemoveItem(UObject* Context, FFrame& Stack, bool* Ret)
     if (!*Ret || !Owner->IsA(AActor::StaticClass()) || ((AActor*)Owner)->Role != ENetRole::ROLE_Authority)
         return;
 
-    auto RemoveInventoryItem = (bool (*)(void*, FGuid&, int32, bool, bool))(*(void***)Interface)[0x3D];
-    RemoveInventoryItem(Interface, ItemGuid, Count, bForceRemoval, bForcePersistWhenEmpty);
+    auto OwnerRemoveInventoryItem = (bool (*)(void*, FGuid&, int32, bool, bool))(*(void***)Interface)[0x3D];
+    OwnerRemoveInventoryItem(Interface, ItemGuid, Count, bForceRemoval, bForcePersistWhenEmpty);
 }
 
 static void GiveItemToInventoryOwner(UObject* Context, FFrame& Stack, UFortWorldItem** Ret)
@@ -641,14 +674,7 @@ static void GiveItemToInventoryOwner(UObject* Context, FFrame& Stack, UFortWorld
     InternalPickup(PlayerController, ItemEntry);
     free(ItemEntry);
 
-    for (auto Item : WorldInventory->Inventory.ItemInstances)
-    {
-        if (Item->ItemEntry.ItemDefinition == ItemDefinition)
-        {
-            *Ret = Item;
-            break;
-        }
-    }
+    *Ret = FindItemInstance(WorldInventory, ItemDefinition);
 }
 
 static int32 RemoveItemFromPlayer(AFortInventory* WorldInventory, UFortWorldItem* Item, FFortItemEntry* ItemEntry, int32 AmountToRemove)
@@ -662,11 +688,7 @@ static int32 RemoveItemFromPlayer(AFortInventory* WorldInventory, UFortWorldItem
         Remove(WorldInventory, ItemEntry->ItemGuid);
     }
     else
-    {
-        Item->ItemEntry.Count = ItemEntry->Count;
-        UpdateEntry(WorldInventory, *ItemEntry);
-        Item->ItemEntry.bIsDirty = true;
-    }
+        UpdateItemCount(WorldInventory, Item, *ItemEntry);
 
     return RemoveCount;
 }
@@ -692,29 +714,9 @@ static void K2_RemoveItemFromPlayer(UObject* Context, FFrame& Stack, int32* Ret)
         return;
 
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
-    UFortWorldItem* Item = nullptr;
-    FFortItemEntry* ItemEntry = nullptr;
 
-    for (auto Instance : WorldInventory->Inventory.ItemInstances)
-    {
-        if (Instance->ItemEntry.ItemDefinition == ItemDefinition)
-        {
-            Item = Instance;
-            break;
-        }
-    }
-
-    for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
-    {
-        if (Entry.ItemDefinition == ItemDefinition)
-        {
-            ItemEntry = &Entry;
-            break;
-        }
-    }
-
-    if (Item)
-        *Ret = RemoveItemFromPlayer(WorldInventory, Item, ItemEntry, AmountToRemove);
+    if (auto Item = FindItemInstance(WorldInventory, ItemDefinition))
+        *Ret = RemoveItemFromPlayer(WorldInventory, Item, FindReplicatedEntry(WorldInventory, ItemDefinition), AmountToRemove);
 }
 
 static void K2_RemoveItemFromPlayerByGuid(UObject* Context, FFrame& Stack, int32* Ret)
@@ -736,29 +738,9 @@ static void K2_RemoveItemFromPlayerByGuid(UObject* Context, FFrame& Stack, int32
         return;
 
     auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
-    UFortWorldItem* Item = nullptr;
-    FFortItemEntry* ItemEntry = nullptr;
 
-    for (auto Instance : WorldInventory->Inventory.ItemInstances)
-    {
-        if (Instance->ItemEntry.ItemGuid == ItemGuid)
-        {
-            Item = Instance;
-            break;
-        }
-    }
-
-    for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
-    {
-        if (Entry.ItemGuid == ItemGuid)
-        {
-            ItemEntry = &Entry;
-            break;
-        }
-    }
-
-    if (Item)
-        *Ret = RemoveItemFromPlayer(WorldInventory, Item, ItemEntry, AmountToRemove);
+    if (auto Item = FindItemInstance(WorldInventory, ItemGuid))
+        *Ret = RemoveItemFromPlayer(WorldInventory, Item, FindReplicatedEntry(WorldInventory, ItemGuid), AmountToRemove);
 }
 
 void AFortInventory__Init()

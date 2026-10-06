@@ -4,6 +4,7 @@
 #include "SDK/SDK/DynamicPoiPointProviderRuntime_classes.hpp"
 
 INIT_MODULE(UFortAthenaLivingWorldManager);
+INIT_RESET(UFortAthenaLivingWorldManager);
 
 struct FPendingSpawnRequest
 {
@@ -349,6 +350,20 @@ static void GenerateEvents(UFortAthenaLivingWorldManager* LivingWorldManager, fl
     }
 }
 
+template <class T>
+static void NotifyWhenPlaylistLoaded(AFortGameStateAthena* GameState, T* Listener)
+{
+    if (GameState->bPlaylistDataIsLoaded)
+    {
+        auto Playlist = GameState->CurrentPlaylistInfo.BasePlaylist;
+        auto PlaylistContextTags = GameState->GetAthenaPlaylistContextTags();
+
+        Listener->OnCurrentPlaylistLoaded(Playlist ? Playlist->PlaylistName : FName(), PlaylistContextTags);
+    }
+    else
+        GameState->OnCurrentPlaylistLoaded.Bind(Listener, FName(L"OnCurrentPlaylistLoaded"));
+}
+
 static void OnRegister(UFortAthenaLivingWorldManager* LivingWorldManager)
 {
     LivingWorldManager->PrimaryComponentTick.bCanEverTick = true;
@@ -372,15 +387,7 @@ static void OnRegister(UFortAthenaLivingWorldManager* LivingWorldManager)
     if (auto AISpawner = UFortAIFunctionLibrary::GetAISpawner(LivingWorldManager))
         AISpawner->OnPawnSpawnedEvent.Bind(LivingWorldManager, FName(L"OnActorSpawned"));
 
-    if (GameState->bPlaylistDataIsLoaded)
-    {
-        auto Playlist = GameState->CurrentPlaylistInfo.BasePlaylist;
-        auto PlaylistContextTags = GameState->GetAthenaPlaylistContextTags();
-
-        LivingWorldManager->OnCurrentPlaylistLoaded(Playlist ? Playlist->PlaylistName : FName(), PlaylistContextTags);
-    }
-    else
-        GameState->OnCurrentPlaylistLoaded.Bind(LivingWorldManager, FName(L"OnCurrentPlaylistLoaded"));
+    NotifyWhenPlaylistLoaded(GameState, LivingWorldManager);
 }
 
 static void TickComponent(UFortAthenaLivingWorldManager* LivingWorldManager, float DeltaTime, uint8 TickType, void* ThisTickFunction)
@@ -484,15 +491,7 @@ static void BeginPlay(AFortAthenaPatrolPath* PatrolPath)
     if (!GameState || !GameState->IsA(AFortGameStateAthena::StaticClass()))
         return;
 
-    if (GameState->bPlaylistDataIsLoaded)
-    {
-        auto Playlist = GameState->CurrentPlaylistInfo.BasePlaylist;
-        auto PlaylistContextTags = GameState->GetAthenaPlaylistContextTags();
-
-        PatrolPath->OnCurrentPlaylistLoaded(Playlist ? Playlist->PlaylistName : FName(), PlaylistContextTags);
-    }
-    else
-        GameState->OnCurrentPlaylistLoaded.Bind(PatrolPath, FName(L"OnCurrentPlaylistLoaded"));
+    NotifyWhenPlaylistLoaded(GameState, PatrolPath);
 }
 
 void UFortAthenaLivingWorldManager__Init()
@@ -523,4 +522,9 @@ void UFortAthenaLivingWorldManager__Init()
     Hook(ImageBase + 0xB2D18D8, RegisterToLivingWorldManager, RegisterToLivingWorldManagerOG);
 
     Hook<AFortAthenaPatrolPath>(uint32(0x74), BeginPlay, BeginPlayOG);
+}
+
+void UFortAthenaLivingWorldManager__Reset()
+{
+    NextActorSpawnRequestID = -2;
 }

@@ -4,6 +4,8 @@
 #include "SDK/SDK/AccoladesRuntime_structs.hpp"
 #include "SDK/SDK/AccoladesRuntime_classes.hpp"
 
+INIT_RESET(UFortControllerComponent_Accolades);
+
 using FAccoladesTable = TMap<FDataRegistryId, FFortAccoladesTableRow*>;
 using FFilterEvaluator = std::function<int32(const FInstancedStruct&, FName)>;
 
@@ -113,12 +115,13 @@ static bool IsSupportedGate(const FObjectiveEntry_Gate& Gate)
            !Gate.bUseAutomaticOpenTime && Gate.GateResetBehavior == EGateResetBehavior::DoesNotReset;
 }
 
+static std::unordered_map<int32, FAccoladeQuest> AccoladeQuests;
+
 static const FAccoladeQuest& GetAccoladeQuest(FName RowName, FFortEventConditional_Quest* Conditional)
 {
     static auto GateExtension = FindObject<UScriptStruct>(L"/Script/FortniteGame.ObjectiveExtension_Gate");
-    static std::unordered_map<int32, FAccoladeQuest> Quests;
 
-    auto [It, bInserted] = Quests.try_emplace(RowName.ComparisonIndex);
+    auto [It, bInserted] = AccoladeQuests.try_emplace(RowName.ComparisonIndex);
     auto& Quest = It->second;
 
     if (!bInserted)
@@ -412,8 +415,7 @@ void ProcessAccoladeEvent(AFortPlayerControllerAthena* PlayerController, FGamepl
         }
     }
 
-    ProductTags.GameplayTags.Free();
-    ProductTags.ParentTags.Free();
+    FreeGameplayTags(ProductTags);
 
     for (auto& [RowName, Row] : Triggered)
     {
@@ -433,22 +435,23 @@ static void AddGameplayEventTags(TArray<FInstancedStruct>& Filters, std::unorder
     }
 }
 
+static std::unordered_set<int32> GameplayEventTags;
+static bool bGameplayEventTagsCached = false;
+
 bool HasAccoladeGameplayEvent(FGameplayTag EventTag)
 {
     static auto VerbConditional = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortEventConditional_Verb");
     static auto TrackedVerbConditional = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortEventConditional_TrackedVerb");
     static auto QuestConditional = FindObject<UScriptStruct>(L"/Script/FortniteGame.FortEventConditional_Quest");
-    static std::unordered_set<int32> Tags;
-    static bool bCached = false;
 
-    if (!bCached)
+    if (!bGameplayEventTagsCached)
     {
         auto Table = GetAccoladesTable();
 
         if (!Table || Table->Num() == 0)
             return false;
 
-        bCached = true;
+        bGameplayEventTagsCached = true;
 
         for (auto& Pair : *Table)
         {
@@ -459,9 +462,9 @@ bool HasAccoladeGameplayEvent(FGameplayTag EventTag)
                 continue;
 
             if (Row->EventConditional.ScriptStruct == VerbConditional)
-                AddGameplayEventTags(((FFortEventConditional_Verb*)Memory)->VerbFilters, Tags);
+                AddGameplayEventTags(((FFortEventConditional_Verb*)Memory)->VerbFilters, GameplayEventTags);
             else if (Row->EventConditional.ScriptStruct == TrackedVerbConditional)
-                AddGameplayEventTags(((FFortEventConditional_TrackedVerb*)Memory)->VerbFilters, Tags);
+                AddGameplayEventTags(((FFortEventConditional_TrackedVerb*)Memory)->VerbFilters, GameplayEventTags);
             else if (Row->EventConditional.ScriptStruct == QuestConditional)
             {
                 auto& Quest = GetAccoladeQuest(Pair.Key().ItemName, (FFortEventConditional_Quest*)Memory);
@@ -470,19 +473,28 @@ bool HasAccoladeGameplayEvent(FGameplayTag EventTag)
                     continue;
 
                 for (auto& Objective : Quest.Definition->Objectives)
-                    AddGameplayEventTags(Objective.ObjectiveFilters, Tags);
+                    AddGameplayEventTags(Objective.ObjectiveFilters, GameplayEventTags);
 
                 for (auto& [ObjectiveName, Gates] : Quest.Gates)
                 {
                     for (auto& Gate : Gates->ObjectiveGates)
                     {
-                        AddGameplayEventTags(Gate.OpenVerbFilters, Tags);
-                        AddGameplayEventTags(Gate.CloseVerbFilters, Tags);
+                        AddGameplayEventTags(Gate.OpenVerbFilters, GameplayEventTags);
+                        AddGameplayEventTags(Gate.CloseVerbFilters, GameplayEventTags);
                     }
                 }
             }
         }
     }
 
-    return Tags.contains(EventTag.TagName.ComparisonIndex);
+    return GameplayEventTags.contains(EventTag.TagName.ComparisonIndex);
+}
+
+void UFortControllerComponent_Accolades__Reset()
+{
+    PlayerStates.clear();
+    MatchTriggerCounts.clear();
+    AccoladeQuests.clear();
+    GameplayEventTags.clear();
+    bGameplayEventTagsCached = false;
 }

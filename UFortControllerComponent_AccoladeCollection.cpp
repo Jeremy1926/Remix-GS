@@ -5,27 +5,7 @@
 
 INIT_POSTLOAD(UFortControllerComponent_AccoladeCollection);
 INIT_TICKER(UFortControllerComponent_AccoladeCollection);
-
-enum class EHttpRequestStatus : int32
-{
-    NotStarted,
-    Processing,
-    Failed,
-    Failed_ConnectionError,
-    Succeeded
-};
-
-struct FSharedRef
-{
-    void* Object;
-    void* SharedReferenceCount;
-};
-
-struct FStringView
-{
-    const wchar_t* DataPtr;
-    int32 Size;
-};
+INIT_RESET(UFortControllerComponent_AccoladeCollection);
 
 struct FAccoladeCollectionRequest
 {
@@ -141,13 +121,13 @@ static bool RestorePersistentInfo(UFortControllerComponent_AccoladeCollection* C
 {
     static auto TJsonReaderFactory_Create = (FSharedRef* (*)(FSharedRef*, const FString*))(ImageBase + 0x2A11D54);
     static auto FJsonSerializer_Deserialize = (bool (*)(void*, FSharedRef*, int32))(ImageBase + 0x1D916A4);
-    static auto TryGetStringField = (bool (*)(void*, const FStringView*, FString*))(ImageBase + 0x1D8F394);
+    static auto TryGetStringField = (bool (*)(void*, const FJsonKey*, FString*))(ImageBase + 0x1D8F394);
     static auto JsonObjectToUStruct = (bool (*)(void*, UScriptStruct*, void*, int64, int64, bool, void*, void*))(ImageBase + 0x512A0A8);
     static auto ApplyPersistentInfo = (void (*)(FPFWAccoladeCollection_PersistentInfo*, UFortControllerComponent_AccoladeCollection**))(ImageBase + 0xB27F098);
     static auto DestroyPersistentInfo = (void (*)(FPFWAccoladeCollection_PersistentInfo*))(ImageBase + 0xB276DB0);
     static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
     static auto PersistentInfoStruct = FindObject<UScriptStruct>(L"/Script/AccoladesRuntime.PFWAccoladeCollection_PersistentInfo");
-    alignas(16) static const FStringView ErrorCodeField{ L"errorCode", 9 };
+    alignas(16) static const FJsonKey ErrorCodeField{ L"errorCode", 9 };
 
     auto GetResponse = (FSharedRef* (*)(void*, FSharedRef*))(*(void***)HttpRequest.Object)[0x24];
     FSharedRef Response{};
@@ -284,4 +264,14 @@ void UFortControllerComponent_AccoladeCollection__PostLoad()
     Hook<UFortControllerComponent_AccoladeCollection>(uint32(0x78), BeginPlay, BeginPlayOG);
     ExecHook(UFortControllerComponent_AccoladeCollection::StaticClass()->FindFunction("HandlePlayerProfileInitialized"), HandlePlayerProfileInitialized, HandlePlayerProfileInitializedOG);
     ExecHook(UFortControllerComponent_AccoladeCollection::StaticClass()->FindFunction("OnEndMatchForPlayer"), OnEndMatchForPlayer, OnEndMatchForPlayerOG);
+}
+
+void UFortControllerComponent_AccoladeCollection__Reset()
+{
+    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+
+    for (auto& Request : AccoladeCollectionRequests)
+        TSharedRef_Destructor(&Request.HttpRequest);
+
+    AccoladeCollectionRequests.clear();
 }

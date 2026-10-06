@@ -57,6 +57,19 @@ public:
 			Item->GetFlags() |= 1 << 30;
 	}
 
+	void RemoveFromRoot() const
+	{
+		if (FUObjectItem* Item = GObjects->GetItemByIndex(GetIndex()))
+			Item->GetFlags() &= ~(1 << 30);
+	}
+
+	bool IsRooted() const
+	{
+		FUObjectItem* Item = GObjects->GetItemByIndex(GetIndex());
+
+		return Item && (Item->GetFlags() & (1 << 30));
+	}
+
 public:
 	static class UClass* FindClass(const std::string& ClassFullName)
 	{

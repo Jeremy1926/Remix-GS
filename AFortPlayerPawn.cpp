@@ -4,12 +4,12 @@
 #include "AFortInventory.h"
 #include "AFortPickup.h"
 #include "UFortQuestManager.h"
-#include "AFortAthenaAIBotController.h"
 #include "UConversationInstance.h"
 
 INIT_MODULE(AFortPlayerPawn);
 INIT_POSTLOAD(AFortPlayerPawn);
 INIT_TICKER(AFortPlayerPawn);
+INIT_RESET(AFortPlayerPawn);
 
 static bool (*FinishedTargetSplineOG)(AFortPickupAthena*);
 static void (*OnCapsuleBeginOverlapOG)(UObject*, FFrame&, void*);
@@ -17,9 +17,22 @@ static void (*ServerOnExitVehicleOG)(UObject*, FFrame&, void*);
 static void (*EmoteStoppedOG)(UObject*, FFrame&, void*);
 static void (*TriggerAbilityFromAnimationOG)(AFortPlayerPawnAthena*, UObject*, uint32, uint32, bool, uint32);
 static bool (*ServerOnAttemptInteractOG)(void*, uint8*);
+static void* (*InternalConvertPawnOG)(UFortPawnComponent_Convert*, AFortPlayerPawnAthena*, UFortPawnComponent_Convert*);
 
 static int64 InteractInterfaceOffset = 0;
 static std::vector<std::pair<TWeakObjectPtr<AFortPlayerPawnAthena>, TWeakObjectPtr<AActor>>> DBNORevivePawns;
+static std::optional<UClass*> CachedZiplineClass;
+static std::optional<UClass*> CachedEmoteAbilityClass;
+
+static AFortPlayerStateAthena* GetPlayerStateAthena(APawn* Pawn)
+{
+    return Pawn->PlayerState && Pawn->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)Pawn->PlayerState : nullptr;
+}
+
+static AFortPlayerPawnAthena* GetInteractInterfacePawn(void* InteractInterface)
+{
+    return (AFortPlayerPawnAthena*)(__int64(InteractInterface) - InteractInterfaceOffset);
+}
 
 static void ServerHandlePickupInfo(UObject* Context, FFrame& Stack)
 {
@@ -53,12 +66,7 @@ static bool FinishedTargetSpline(AFortPickupAthena* Pickup)
     auto PlayerController = (AFortPlayerControllerAthena*)Pawn->Controller;
 
     if (!PlayerController || !PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()))
-    {
-        if (PlayerController && PlayerController->IsA(AFortAthenaAIBotController::StaticClass()))
-            return BotFinishedTargetSpline(Pickup, PlayerController, (bool (*)(void*))FinishedTargetSplineOG);
-
         return FinishedTargetSplineOG(Pickup);
-    }
 
     if (!PlayerController->bTryPickupSwap)
     {
@@ -91,17 +99,7 @@ static bool FinishedTargetSpline(AFortPickupAthena* Pickup)
     }
 
     auto CurrentWeapon = ((AFortPlayerPawnAthena*)PlayerController->Pawn)->CurrentWeapon;
-    auto& ReplicatedEntries = WorldInventory->Inventory.ReplicatedEntries;
-    FFortItemEntry* Entry = nullptr;
-
-    for (int i = 0; i < ReplicatedEntries.Num(); i++)
-    {
-        if (ReplicatedEntries[i].ItemGuid == CurrentWeapon->ItemEntryGuid)
-        {
-            Entry = &ReplicatedEntries[i];
-            break;
-        }
-    }
+    auto Entry = FindReplicatedEntry(WorldInventory, CurrentWeapon->ItemEntryGuid);
 
     SpawnPickup(PlayerController->GetViewTarget()->K2_GetActorLocation(), *Entry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, PlayerController->MyFortPawn, -1, true, true, true, nullptr,
                 FinalLoc);
@@ -146,7 +144,7 @@ static void ServerSendZiplineState(UObject* Context, FFrame& Stack)
         Pawn->LaunchCharacterJump(FVector{ (std::clamp)(VelocityX, -750., 750.), (std::clamp)(VelocityY, -750., 750.), 1200 }, false, false, true, true);
     }
 
-    static auto ZiplineClass = FindObject<UClass>(L"/Ascender/Gameplay/Ascender/B_Athena_Zipline_Ascender.B_Athena_Zipline_Ascender_C");
+    auto ZiplineClass = FindCachedObject(CachedZiplineClass, L"/Ascender/Gameplay/Ascender/B_Athena_Zipline_Ascender.B_Athena_Zipline_Ascender_C");
 
     if (Zipline && Zipline->IsA(ZiplineClass))
     {
@@ -190,14 +188,13 @@ static void OnCapsuleBeginOverlap(UObject* Context, FFrame& Stack)
     if (ItemDefinition && WorldInventory && Pickup->PawnWhoDroppedPickup.Get() != Pawn)
     {
         auto MaxStack = ItemDefinition->GetMaxStackSize(nullptr);
-        auto& ReplicatedEntries = WorldInventory->Inventory.ReplicatedEntries;
         FFortItemEntry* ItemEntry = nullptr;
 
-        for (int i = 0; i < ReplicatedEntries.Num(); i++)
+        for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
         {
-            if (ReplicatedEntries[i].ItemDefinition == ItemDefinition && ReplicatedEntries[i].Count <= MaxStack)
+            if (Entry.ItemDefinition == ItemDefinition && Entry.Count <= MaxStack)
             {
-                ItemEntry = &ReplicatedEntries[i];
+                ItemEntry = &Entry;
                 break;
             }
         }
@@ -351,13 +348,20 @@ static void SetDBNOBeingRevivedCue(AActor* AbilitySystemActor, bool bBeingRevive
         UGameplayCueFunctionLibrary::RemoveGameplayCueOnActor(AbilitySystemActor, BeingRevivedCueTag, CueParameters);
 }
 
+static void EndDBNOBeingRevived(AActor* AbilitySystemActor)
+{
+    SetDBNOBeingRevivedCue(AbilitySystemActor, false);
+    SetDBNOBeingRevivedTag(AbilitySystemActor, false);
+}
+
+static decltype(DBNORevivePawns)::iterator FindDBNORevivePawn(AFortPlayerPawnAthena* Pawn)
+{
+    return std::find_if(DBNORevivePawns.begin(), DBNORevivePawns.end(), [&](auto& RevivePawn) { return RevivePawn.first.Get() == Pawn; });
+}
+
 static void BeginDBNOBeingRevived(AFortPlayerPawnAthena* Pawn, AActor* RevivingPawn)
 {
-    for (auto& RevivePawn : DBNORevivePawns)
-        if (RevivePawn.first.Get() == Pawn)
-            return;
-
-    if (!Pawn->PlayerState)
+    if (FindDBNORevivePawn(Pawn) != DBNORevivePawns.end() || !Pawn->PlayerState)
         return;
 
     SetDBNOBeingRevivedTag(Pawn->PlayerState, true);
@@ -423,10 +427,7 @@ static void UpdateDBNORevivingActors(AFortPlayerPawnAthena* Pawn)
             continue;
 
         if (auto AbilitySystemActor = DBNORevivePawns[i].second.Get())
-        {
-            SetDBNOBeingRevivedCue(AbilitySystemActor, false);
-            SetDBNOBeingRevivedTag(AbilitySystemActor, false);
-        }
+            EndDBNOBeingRevived(AbilitySystemActor);
 
         DBNORevivePawns.erase(DBNORevivePawns.begin() + i);
         return;
@@ -438,7 +439,7 @@ static void FinishDBNORevive(AFortPlayerPawnAthena* Pawn)
     Pawn->ServerWorldTimeRevivalTime = -1.f;
     Pawn->ForceNetUpdate();
 
-    auto PlayerState = Pawn->PlayerState && Pawn->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)Pawn->PlayerState : nullptr;
+    auto PlayerState = GetPlayerStateAthena(Pawn);
 
     if (!Pawn->IsDBNO() && Pawn->Controller && PlayerState && PlayerState->AbilitySystemComponent)
     {
@@ -457,26 +458,25 @@ static void FinishDBNORevive(AFortPlayerPawnAthena* Pawn)
     UpdateDBNORevivingActors(Pawn);
 }
 
-static FGameplayTagContainer GetOwnedGameplayTags(AActor* Actor)
+static void SendReviveStatEvent(AFortPlayerControllerAthena* PlayerController, EFortQuestObjectiveStatEvent StatEvent, AActor* Target)
 {
-    FGameplayTagContainer OwnedTags{};
-
-    if (auto Interface = Actor ? Actor->GetInterface(IGameplayTagAssetInterface::StaticClass()) : nullptr)
-        ((void (*)(void*, FGameplayTagContainer*))(*(void***)Interface)[0x2])(Interface, &OwnedTags);
-
-    return OwnedTags;
+    FGameplayTagContainer TargetTags{};
+    GetOwnedGameplayTags(Target, TargetTags);
+    SendStatEvent(PlayerController->GetQuestManager(ESubGame::Athena), PlayerController, StatEvent, 1, true, Target, TargetTags);
+    FreeGameplayTags(TargetTags);
 }
 
 static void ReviveFromDBNO(AFortPlayerPawnAthena* Pawn, AActor* EventInstigator, bool bForceRevive)
 {
-    auto PlayerState = Pawn->PlayerState && Pawn->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)Pawn->PlayerState : nullptr;
+    auto PlayerState = GetPlayerStateAthena(Pawn);
     auto AbilitySystemComponent = PlayerState ? PlayerState->AbilitySystemComponent : nullptr;
 
     if (!Pawn->IsDBNO() || !AbilitySystemComponent)
         return;
 
     auto ReviverController = EventInstigator && EventInstigator->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)EventInstigator : nullptr;
-    auto ReviverPawn = ReviverController ? ReviverController->MyFortPawn : nullptr;
+    auto ReviverBotController = EventInstigator && EventInstigator->IsA(AFortAthenaAIBotController::StaticClass()) ? (AFortAthenaAIBotController*)EventInstigator : nullptr;
+    auto ReviverPawn = ReviverController ? ReviverController->MyFortPawn : ReviverBotController ? ReviverBotController->Pawn : nullptr;
     auto PlayerController = Pawn->Controller && Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)Pawn->Controller : nullptr;
     auto GameMode = (AFortGameModeZone*)UWorld::GetWorld()->AuthorityGameMode;
     auto ReviveGameplayEffect = GameMode ? GameMode->GetTeammateReviveGameplayEffectOverride() : TSubclassOf<UGameplayEffect>();
@@ -525,15 +525,12 @@ static void ReviveFromDBNO(AFortPlayerPawnAthena* Pawn, AActor* EventInstigator,
 
     BeginDBNOBeingRevived(Pawn, ReviverPawn);
 
-    for (auto& RevivePawn : DBNORevivePawns)
-    {
-        if (RevivePawn.first.Get() == Pawn)
-        {
-            if (auto AbilitySystemActor = RevivePawn.second.Get())
-                SetDBNOBeingRevivedCue(AbilitySystemActor, false);
+    auto RevivePawn = FindDBNORevivePawn(Pawn);
 
-            break;
-        }
+    if (RevivePawn != DBNORevivePawns.end())
+    {
+        if (auto AbilitySystemActor = RevivePawn->second.Get())
+            SetDBNOBeingRevivedCue(AbilitySystemActor, false);
     }
 
     Pawn->ServerWorldTimeRevivalTime = (float)UGameplayStatics::GetTimeSeconds(Pawn) + Pawn->ConvertFromDBNOTime;
@@ -543,20 +540,10 @@ static void ReviveFromDBNO(AFortPlayerPawnAthena* Pawn, AActor* EventInstigator,
         PlayerController->ClientOnPawnRevived((AController*)EventInstigator);
 
     if (ReviverController)
-    {
-        auto TargetTags = GetOwnedGameplayTags(Pawn);
-        SendStatEvent(ReviverController->GetQuestManager(ESubGame::Athena), ReviverController, EFortQuestObjectiveStatEvent::RevivePlayer, 1, true, Pawn, TargetTags);
-        TargetTags.GameplayTags.Free();
-        TargetTags.ParentTags.Free();
-    }
+        SendReviveStatEvent(ReviverController, EFortQuestObjectiveStatEvent::RevivePlayer, Pawn);
 
     if (PlayerController)
-    {
-        auto TargetTags = GetOwnedGameplayTags(ReviverPawn);
-        SendStatEvent(PlayerController->GetQuestManager(ESubGame::Athena), PlayerController, EFortQuestObjectiveStatEvent::RevivedFromDBNO, 1, true, ReviverPawn, TargetTags);
-        TargetTags.GameplayTags.Free();
-        TargetTags.ParentTags.Free();
-    }
+        SendReviveStatEvent(PlayerController, EFortQuestObjectiveStatEvent::RevivedFromDBNO, ReviverPawn);
 }
 
 static void ServerReviveFromDBNO(AFortPlayerPawnAthena* Pawn, AActor* EventInstigator)
@@ -566,14 +553,14 @@ static void ServerReviveFromDBNO(AFortPlayerPawnAthena* Pawn, AActor* EventInsti
 
 static void ServerReviveFromDBNO(UObject* Context, FFrame& Stack)
 {
-    AFortPlayerControllerAthena* EventInstigator;
+    AController* EventInstigator;
 
     Stack.StepCompiledIn(&EventInstigator);
     Stack.IncrementCode();
 
     auto Pawn = (AFortPlayerPawnAthena*)Context;
 
-    if (Pawn->Controller && !Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()))
+    if (Pawn->Controller && (!Pawn->Controller->IsA(AFortPlayerControllerAthena::StaticClass()) || (EventInstigator && EventInstigator->IsA(AFortAthenaAIBotController::StaticClass()) && ((AFortAthenaAIBotController*)EventInstigator)->ReviveTarget == Pawn)))
         ReviveFromDBNO(Pawn, EventInstigator, false);
 }
 
@@ -596,13 +583,13 @@ static void PlayGroupEmote(UObject* Context, FFrame& Stack)
 
     auto Pawn = (AFortPlayerPawnAthena*)Context;
     auto DanceAsset = EmoteAsset && EmoteAsset->IsA(UAthenaDanceItemDefinition::StaticClass()) ? (UAthenaDanceItemDefinition*)EmoteAsset : nullptr;
-    auto PlayerState = Pawn->PlayerState && Pawn->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)Pawn->PlayerState : nullptr;
+    auto PlayerState = GetPlayerStateAthena(Pawn);
     auto AbilitySystemComponent = PlayerState ? PlayerState->AbilitySystemComponent : nullptr;
 
     if (!DanceAsset || !AbilitySystemComponent)
         return;
 
-    static auto EmoteAbilityClass = FindObject<UClass>(L"/Game/Abilities/Emotes/GAB_Emote_Generic.GAB_Emote_Generic_C");
+    auto EmoteAbilityClass = FindCachedObject(CachedEmoteAbilityClass, L"/Game/Abilities/Emotes/GAB_Emote_Generic.GAB_Emote_Generic_C");
     auto CustomAbility = DanceAsset->CustomDanceAbility.Get();
     auto AbilityClass = CustomAbility ? CustomAbility : EmoteAbilityClass;
 
@@ -632,7 +619,7 @@ static void PlayGroupEmote(UObject* Context, FFrame& Stack)
 
 static void ServerNotifyStartLongUse(void* InteractInterface, AFortPlayerPawnAthena* InteractingPawn)
 {
-    auto Pawn = (AFortPlayerPawnAthena*)(__int64(InteractInterface) - InteractInterfaceOffset);
+    auto Pawn = GetInteractInterfacePawn(InteractInterface);
 
     if (Pawn->IsDBNO())
         UpdateDBNORevivingActors(Pawn);
@@ -640,7 +627,7 @@ static void ServerNotifyStartLongUse(void* InteractInterface, AFortPlayerPawnAth
 
 static void ServerNotifyEndLongUse(void* InteractInterface, AFortPlayerPawnAthena* InteractingPawn, bool bUseCompleted)
 {
-    auto Pawn = (AFortPlayerPawnAthena*)(__int64(InteractInterface) - InteractInterfaceOffset);
+    auto Pawn = GetInteractInterfacePawn(InteractInterface);
 
     if (Pawn->DBNORevivingActorsCount > 0)
         UpdateDBNORevivingActors(Pawn);
@@ -777,7 +764,7 @@ static bool ServerOnAttemptInteract(void* InteractInterface, uint8* Request)
     static auto GetNPCConversationComponentForInteraction = (bool (*)(AFortPlayerPawnAthena*, AActor*, UObject**))(ImageBase + 0x9F58698);
     static auto GetInteractionRequestController = (AActor* (*)(uint8*))(ImageBase + 0x988316C);
 
-    auto Pawn = (AFortPlayerPawnAthena*)(__int64(InteractInterface) - InteractInterfaceOffset);
+    auto Pawn = GetInteractInterfacePawn(InteractInterface);
     auto Controller = GetValidInteractionRequestController(Request);
     UObject* ConversationComponent = nullptr;
 
@@ -887,8 +874,6 @@ static void DropHeldObject(UObject* Context, FFrame& Stack)
     HeldObjectComponent->OnHeldObjectDropped.Process();
 }
 
-static void* (*InternalConvertPawnOG)(UFortPawnComponent_Convert*, AFortPlayerPawnAthena*, UFortPawnComponent_Convert*);
-
 static void* InternalConvertPawn(UFortPawnComponent_Convert* ConverterComponent, AFortPlayerPawnAthena* ConvertedPawn, UFortPawnComponent_Convert* ConvertedComponent)
 {
     if (ConverterComponent && ConvertedComponent && ConvertedPawn && ConvertedPawn->IsA(AFortPlayerPawnAthena::StaticClass()) && ConvertedPawn->IsDBNO())
@@ -989,10 +974,7 @@ void AFortPlayerPawn__Tick()
             if (!Pawn)
             {
                 if (auto AbilitySystemActor = RevivePawn.second.Get())
-                {
-                    SetDBNOBeingRevivedCue(AbilitySystemActor, false);
-                    SetDBNOBeingRevivedTag(AbilitySystemActor, false);
-                }
+                    EndDBNOBeingRevived(AbilitySystemActor);
             }
             else if (Pawn->ServerWorldTimeRevivalTime < 0.f)
                 UpdateDBNORevivingActors(Pawn);
@@ -1011,7 +993,7 @@ void AFortPlayerPawn__Tick()
 
     for (auto Pawn : Pawns)
     {
-        auto PlayerState = Pawn && Pawn->PlayerState && Pawn->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)Pawn->PlayerState : nullptr;
+        auto PlayerState = Pawn ? GetPlayerStateAthena(Pawn) : nullptr;
         auto AbilitySystemComponent = PlayerState ? PlayerState->AbilitySystemComponent : nullptr;
 
         if (!AbilitySystemComponent)
@@ -1025,4 +1007,11 @@ void AFortPlayerPawn__Tick()
     }
 
     Pawns.Free();
+}
+
+void AFortPlayerPawn__Reset()
+{
+    DBNORevivePawns.clear();
+    CachedZiplineClass.reset();
+    CachedEmoteAbilityClass.reset();
 }

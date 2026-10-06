@@ -1,6 +1,13 @@
 #include "pch.h"
 #include "Shared.h"
+
 INIT_MODULE(ASpecialEventScript);
+
+static void SetPhaseDataLayersState(UDataLayerManager* DataLayerManager, FPhaseInfo& PhaseInfo, EDataLayerRuntimeState State)
+{
+    for (auto& DataLayerEntry : PhaseInfo.DataLayers)
+        DataLayerManager->SetDataLayerRuntimeState(DataLayerEntry.DataLayerAsset, State, DataLayerEntry.bIsRecursive);
+}
 
 static void (*ActivatePhaseOG)(ASpecialEventScript*, int32, float);
 static void ActivatePhase(ASpecialEventScript* SpecialEventScript, int32 IndexToActivate, float SequenceTimeOffset)
@@ -8,17 +15,9 @@ static void ActivatePhase(ASpecialEventScript* SpecialEventScript, int32 IndexTo
     auto DataLayerManager = UWorld::GetWorld()->GetDataLayerManager();
 
     if (SpecialEventScript->ReplicatedActivePhaseIndex >= 0)
-    {
-        auto& OldPhaseInfo = SpecialEventScript->PhaseInfoArray[SpecialEventScript->ReplicatedActivePhaseIndex];
+        SetPhaseDataLayersState(DataLayerManager, SpecialEventScript->PhaseInfoArray[SpecialEventScript->ReplicatedActivePhaseIndex], EDataLayerRuntimeState::Unloaded);
 
-        for (auto& DataLayerEntry : OldPhaseInfo.DataLayers)
-            DataLayerManager->SetDataLayerRuntimeState(DataLayerEntry.DataLayerAsset, EDataLayerRuntimeState::Unloaded, DataLayerEntry.bIsRecursive);
-    }
-
-    auto& PhaseInfo = SpecialEventScript->PhaseInfoArray[IndexToActivate];
-
-    for (auto& DataLayerEntry : PhaseInfo.DataLayers)
-        DataLayerManager->SetDataLayerRuntimeState(DataLayerEntry.DataLayerAsset, EDataLayerRuntimeState::Activated, DataLayerEntry.bIsRecursive);
+    SetPhaseDataLayersState(DataLayerManager, SpecialEventScript->PhaseInfoArray[IndexToActivate], EDataLayerRuntimeState::Activated);
 
     SpecialEventScript->ReplicatedActivePhaseIndex = IndexToActivate;
 
