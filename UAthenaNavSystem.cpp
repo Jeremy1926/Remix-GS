@@ -18,7 +18,6 @@ static void* ArchiveVTable[0x2F] = {};
 static uint64 Archive[8] = {};
 static std::vector<std::pair<std::wstring, int32>> CachedAreas;
 static std::vector<uint64> CachedLinks;
-static bool bNavCacheDone = false;
 
 static void ArchiveSerialize(void* Ar, void* Data, int64 Length)
 {
@@ -379,7 +378,12 @@ void UAthenaNavSystem__Tick()
 
     auto World = UWorld::GetWorld();
 
-    if (!World || !World->GameState || !World->GameState->HasMatchStarted())
+    if (!World || !World->GameState)
+        return;
+
+    auto bMatchStarted = World->GameState->HasMatchStarted();
+
+    if (bNavCacheAttached ? !bMatchStarted : UNavigationSystemV1::IsNavigationBeingBuiltOrLocked(World))
         return;
 
     bNavCacheDone = true;
@@ -396,7 +400,7 @@ void UAthenaNavSystem__Tick()
         DeleteFileW(GetCachePath().c_str());
         bNavCacheAttached = false;
     }
-    else if (!bNavCacheAttached && !UNavigationSystemV1::IsNavigationBeingBuiltOrLocked(World))
+    else if (!bNavCacheAttached && !bMatchStarted)
         BakeCache(NavSystem, NavMesh);
 }
 

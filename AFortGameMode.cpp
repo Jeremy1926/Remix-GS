@@ -10,6 +10,7 @@
 #include "AFortPlayerController.h"
 #include "AFortAthenaAIBotController.h"
 #include "UAthenaAIServicePlayerBots.h"
+#include "UAthenaNavSystem.h"
 #include "UFortControllerComponent_TournamentStatsTracker.h"
 
 INIT_MODULE(AFortGameMode);
@@ -75,6 +76,7 @@ struct FMatchAssignment
 };
 
 static uint64 CreateSessionCompleteHandle = 0;
+static ULONGLONG MatchmakingWaitStart = 0;
 static uint64 LeaveMeshNetworkCompleteHandle = 0;
 static int32 ShutdownExitCode = 0;
 
@@ -200,11 +202,7 @@ static void OnCreateSessionComplete(AFortGameSessionDedicatedAthena* GameSession
     TSharedRef_Destructor(&SessionInterface);
 
     if (SessionName == GetGameSessionName() && bWasSuccessful && !*(uint8*)(__int64(GameSession) + 0x430))
-    {
-        auto ConnectToMatchmakingServiceV2 = (bool (*)(AFortGameSessionDedicatedAthena*, bool))GameSession->VTable[0x138];
-
-        ConnectToMatchmakingServiceV2(GameSession, false);
-    }
+        MatchmakingWaitStart = GetTickCount64();
 }
 
 static bool HandleMatchAssignmentV2(AFortPartyBeaconHost* ReservationBeaconHost, FMatchAssignment& MatchAssignment)
@@ -1056,6 +1054,7 @@ static bool LeaveMatchmakingAndMeshNetwork(AFortGameSessionDedicatedAthena* Game
     auto DisconnectFromMatchmakingServiceV2 = (bool (*)(AFortGameSessionDedicatedAthena*, bool))GameSession->VTable[0x139];
 
     ClearTimer(GameSession, *(uint64*)(__int64(GameSession) + 0xAA0));
+    MatchmakingWaitStart = 0;
     DisconnectFromMatchmakingServiceV2(GameSession, true);
 
     if (!LeaveMeshNetwork(GameSession))
@@ -2379,6 +2378,13 @@ static UClass** GetGameSessionClass(AFortGameModeAthena* GameMode, UClass** Resu
     return Result;
 }
 
+static double GetServerWorldTimeSeconds(AGameStateBase* GameState)
+{
+    static auto GetTimeSeconds = (double (*)(UObject*))(ImageBase + 0x1732950);
+
+    return GetTimeSeconds(GameState);
+}
+
 static void (*InitGameOG)(AFortGameModeAthena*, const FString*, const FString*, FString*);
 static void InitGame(AFortGameModeAthena* GameMode, const FString* MapName, const FString* Options, FString* ErrorMessage)
 {
@@ -2685,6 +2691,7 @@ void AFortGameMode__Init()
     ExecHook(AGameMode::StaticClass()->FindFunction("ReadyToStartMatch"), ReadyToStartMatch, ReadyToStartMatchOG);
     Patch<uint16_t>(ImageBase + 0x30276D8, 0x9090);
     Hook(ImageBase + 0x8F91858, FinishWorldInitialization, FinishWorldInitializationOG);
+    Hook(ImageBase + 0x2010398, GetServerWorldTimeSeconds);
     Hook(ImageBase + 0x982D114, SendVoiceChatToken);
     HookEvery<AFortGameModeZone>(uint32(0x1B8), SendVoiceChatChannelJoin);
 
@@ -2755,6 +2762,15 @@ void AFortGameMode__Tick()
 
         OnHttpRequestJoinTokenComplete(*It, Status == EHttpRequestStatus::Succeeded);
         It = VoiceChatTokenRequests.erase(It);
+    }
+
+    if (MatchmakingWaitStart && (bNavCacheAttached || bNavCacheDone || GetTickCount64() - MatchmakingWaitStart >= 600000))
+    {
+        auto GameSession = (AFortGameSessionDedicatedAthena*)UWorld::GetWorld()->AuthorityGameMode->GameSession;
+        auto ConnectToMatchmakingServiceV2 = (bool (*)(AFortGameSessionDedicatedAthena*, bool))GameSession->VTable[0x138];
+
+        MatchmakingWaitStart = 0;
+        ConnectToMatchmakingServiceV2(GameSession, false);
     }
 
     auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(UWorld::GetWorld());
@@ -2992,6 +3008,7 @@ void AFortGameMode__Reset()
     PauseWarmupMask = 0;
     CalendarWaitStart = 0;
     CreateSessionCompleteHandle = 0;
+    MatchmakingWaitStart = 0;
     LeaveMeshNetworkCompleteHandle = 0;
 
     bSkipWarmup = false;

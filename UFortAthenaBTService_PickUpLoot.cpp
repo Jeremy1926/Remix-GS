@@ -57,7 +57,7 @@ static void OnBecomeRelevant(UFortAthenaBTService_PickUpLoot* Service, UBehavior
     if (!Blackboard)
         return;
 
-    struct { void* Function; uint64 Adjustment; } ObserverMethod{ (void*)OnPickupInteractionExecutionStatusChanged, 0 };
+    struct alignas(16) { void* Function; uint64 Adjustment; } ObserverMethod{ (void*)OnPickupInteractionExecutionStatusChanged, 0 };
     uint8 ObserverDelegate[0x10];
     uint64 ObserverHandle = 0;
 

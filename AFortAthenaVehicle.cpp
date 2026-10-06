@@ -134,7 +134,12 @@ static void PostInitializeComponents(AFortAthenaVehicle* Vehicle)
 
     auto VehicleConfigs = Vehicle->FortPhysicsVehicleConfigs;
 
-    if (Vehicle->Role != ENetRole::ROLE_Authority || !VehicleConfigs || Vehicle->DamageableParts.Num() > 0)
+    if (Vehicle->Role != ENetRole::ROLE_Authority || !VehicleConfigs)
+        return;
+
+    Vehicle->ServerSetDestructionInfo(VehicleConfigs->SelfDestructTime, VehicleConfigs->MaxTimeZeroHealth, VehicleConfigs->MaxTimeSelfDestructCleanup, VehicleConfigs->MaxTimeExplosion);
+
+    if (Vehicle->DamageableParts.Num() > 0)
         return;
 
     for (int32 i = 0; i < VehicleConfigs->DamageableParts.Num(); i++)

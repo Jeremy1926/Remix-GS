@@ -134,6 +134,8 @@ static void AddDiscoveredData(AFortPoiManager* PoiManager, AFortPlayerController
 static void (*ProcessTagDeltaForControllerOG)(AFortPoiManager*, AFortPlayerControllerGameplay*, TArray<FGameplayTag>&, TArray<FGameplayTag>&);
 static void ProcessTagDeltaForController(AFortPoiManager* PoiManager, AFortPlayerControllerGameplay* PlayerController, TArray<FGameplayTag>& ExitedTags, TArray<FGameplayTag>& EnteredTags)
 {
+    static auto CanVisitPoi = (bool (*)(AFortPlayerControllerGameplay*))(ImageBase + 0x9081E5C);
+
     auto PlayerControllerAthena = PlayerController && PlayerController->IsA(AFortPlayerControllerAthena::StaticClass()) ? (AFortPlayerControllerAthena*)PlayerController : nullptr;
     auto Component = PlayerControllerAthena ? PlayerControllerAthena->DiscoverabilityComponent : nullptr;
 
@@ -142,7 +144,7 @@ static void ProcessTagDeltaForController(AFortPoiManager* PoiManager, AFortPlaye
 
     ProcessTagDeltaForControllerOG(PoiManager, PlayerController, ExitedTags, EnteredTags);
 
-    if (!Component || *(bool*)(__int64(Component) + 0x39C))
+    if (!Component || *(bool*)(__int64(Component) + 0x39C) || !CanVisitPoi(PlayerController))
         return;
 
     for (auto& Tag : EnteredTags)

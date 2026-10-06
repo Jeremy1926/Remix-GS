@@ -13,6 +13,7 @@ static void (*StartSpawningOG)(UAthenaAIServicePlayerBots*, void*);
 static void (*OnAllBotsSpawnedOG)(UAthenaAIServicePlayerBots*);
 static void (*UnpauseWarmupFailSafeOG)(UAthenaAIServicePlayerBots*);
 static void (*PlacePlayersInAircraftOG)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*);
+static void (*AssignBotTeamOG)(UAthenaAIServicePlayerBots*, AFortAthenaAIBotController*, AFortTeamInfo*, uint8);
 
 static const wchar_t* BotNames[] = {
     L"Kyzen", L"Vaxtrix", L"FrostByte07", L"NovaRush", L"lilzapp", L"Drexo", L"Mxrcus", L"Zynthra", L"Kaioken42", L"Ravvy",
@@ -456,6 +457,25 @@ static void PlacePlayersInAircraft(UFortGameStateComponent_BattleRoyaleGamePhase
     }
 }
 
+static void AssignBotTeam(UAthenaAIServicePlayerBots* Service, AFortAthenaAIBotController* Controller, AFortTeamInfo* TeamInfo, uint8 SquadId)
+{
+    static auto FindOrAddGroup = (void* (*)(void*, uint32))(ImageBase + 0x24ABAFC);
+    static auto AddToGroup = (void (*)(void*, APlayerState*))(ImageBase + 0x24ABB50);
+    static auto BroadcastGroupMemberAdded = (void (*)(void*, uint8, uint8, APlayerState*))(ImageBase + 0x329E8F8);
+
+    AssignBotTeamOG(Service, Controller, TeamInfo, SquadId);
+
+    auto PlayerState = (AFortPlayerStateAthena*)Controller->PlayerState;
+    auto GameState = UWorld::GetWorld()->GameState;
+
+    if (!Controller->bIsAnAthenaGameParticipant || !PlayerState || !GameState)
+        return;
+
+    AddToGroup(FindOrAddGroup((void*)(uint64(GameState) + 0x1A28), PlayerState->TeamIndex), PlayerState);
+    AddToGroup(FindOrAddGroup((void*)(uint64(GameState) + 0x1A60), PlayerState->SquadID), PlayerState);
+    BroadcastGroupMemberAdded((void*)(uint64(GameState) + 0x1C58), PlayerState->SquadID, PlayerState->TeamIndex, PlayerState);
+}
+
 void UAthenaAIServicePlayerBots__Init()
 {
     static constexpr uint8_t FetchCall[] = { 0x48, 0x8D, 0x54, 0x24, 0x40, 0x4C, 0x8B, 0xC6, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x90, 0x90 };
@@ -465,6 +485,7 @@ void UAthenaAIServicePlayerBots__Init()
     Hook(ImageBase + 0xA6AC1A8, OnAllBotsSpawned, OnAllBotsSpawnedOG);
     Hook(ImageBase + 0xA6BAC00, UnpauseWarmupFailSafe, UnpauseWarmupFailSafeOG);
     Hook(ImageBase + 0x2B54F10, PlacePlayersInAircraft, PlacePlayersInAircraftOG);
+    Hook(ImageBase + 0xA69A8F8, AssignBotTeam, AssignBotTeamOG);
 
     for (int32 i = 0; i < int32(sizeof(FetchCall)); i++)
         Patch<uint8_t>(ImageBase + 0xA549BBE + i, FetchCall[i]);

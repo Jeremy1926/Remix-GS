@@ -4,6 +4,7 @@
 #include "SDK/SDK/AccoladesRuntime_structs.hpp"
 #include "SDK/SDK/AccoladesRuntime_classes.hpp"
 
+INIT_POSTLOAD(UFortControllerComponent_Accolades);
 INIT_RESET(UFortControllerComponent_Accolades);
 
 using FAccoladesTable = TMap<FDataRegistryId, FFortAccoladesTableRow*>;
@@ -488,6 +489,24 @@ bool HasAccoladeGameplayEvent(FGameplayTag EventTag)
     }
 
     return GameplayEventTags.contains(EventTag.TagName.ComparisonIndex);
+}
+
+static void (*BeginPlayOG)(UFortGameStateComponent_Accolades*);
+static void BeginPlay(UFortGameStateComponent_Accolades* Component)
+{
+    static auto OnWorldBeginPlay = (void (*)(UFortGameStateComponent_Accolades*))(ImageBase + 0x3BAEDC0);
+
+    BeginPlayOG(Component);
+
+    auto Owner = Component->GetOwner();
+
+    if (Owner && Owner->Role == ENetRole::ROLE_Authority)
+        OnWorldBeginPlay(Component);
+}
+
+void UFortControllerComponent_Accolades__PostLoad()
+{
+    Hook<UFortGameStateComponent_Accolades>(uint32(0x78), BeginPlay, BeginPlayOG);
 }
 
 void UFortControllerComponent_Accolades__Reset()
