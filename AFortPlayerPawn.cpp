@@ -105,6 +105,29 @@ static bool FinishedTargetSpline(AFortPickupAthena* Pickup)
                 FinalLoc);
 
     auto Item = GiveItem(WorldInventory, Pickup->PrimaryPickupItemEntry);
+    auto& SlotItemGuids = PlayerController->PrimaryQuickBarSlotItemGuids;
+    auto NumEnabledSlots = (std::min)(SlotItemGuids.NumEnabledSlots, (int32)std::size(SlotItemGuids.EquippedItemGuids));
+    auto NumSlots = (int32)Item->GetNumberOfSlotsTaken();
+    int32 Slot = 0;
+
+    while (Slot < NumEnabledSlots && !(SlotItemGuids.EquippedItemGuids[Slot] == CurrentWeapon->ItemEntryGuid))
+        Slot++;
+
+    auto FirstSlot = Slot < NumEnabledSlots ? (std::min)(Slot, NumEnabledSlots - NumSlots) : -1;
+
+    for (int32 i = FirstSlot; i >= 0 && i < FirstSlot + NumSlots; i++)
+    {
+        auto CoveredEntry = FindReplicatedEntry(WorldInventory, SlotItemGuids.EquippedItemGuids[i]);
+        auto CoveredDefinition = CoveredEntry ? (UFortItemDefinition*)CoveredEntry->ItemDefinition : nullptr;
+
+        if (!CoveredDefinition || CoveredEntry->ItemGuid == CurrentWeapon->ItemEntryGuid || !TakesQuickbarSlot(CoveredDefinition) || !CanBeDropped(CoveredDefinition))
+            continue;
+
+        SpawnPickup(PlayerController->GetViewTarget()->K2_GetActorLocation(), *CoveredEntry, EFortPickupSourceTypeFlag::Player, EFortPickupSpawnSource::Unset, PlayerController->MyFortPawn, -1, true, true, true,
+                    nullptr, FinalLoc);
+        Remove(WorldInventory, CoveredEntry->ItemGuid);
+    }
+
     Remove(WorldInventory, CurrentWeapon->ItemEntryGuid);
     PlayerController->ClientEquipItem(Item->ItemEntry.ItemGuid, true);
 

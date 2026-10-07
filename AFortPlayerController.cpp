@@ -1080,10 +1080,10 @@ void InternalPickup(AController* Controller, FFortItemEntry* PickupEntry)
     auto MaxStack = PickupDefinition->GetMaxStackSize(nullptr);
     int ItemCount = 0;
 
-    for (auto& Entry : WorldInventory->Inventory.ReplicatedEntries)
+    for (auto Instance : WorldInventory->Inventory.ItemInstances)
     {
-        if (TakesQuickbarSlot((UFortItemDefinition*)Entry.ItemDefinition))
-            ItemCount++;
+        if (TakesQuickbarSlot((UFortItemDefinition*)Instance->ItemEntry.ItemDefinition))
+            ItemCount += Instance->GetNumberOfSlotsTaken();
     }
 
     auto FinalLoc = Pawn ? Pawn->K2_GetActorLocation() : FVector();
@@ -1141,6 +1141,32 @@ void InternalPickup(AController* Controller, FFortItemEntry* PickupEntry)
             }
 
             auto Item = GiveItem(WorldInventory, *PickupEntry, PickupEntry->Count, true);
+
+            if (PlayerController)
+            {
+                auto& SlotItemGuids = PlayerController->PrimaryQuickBarSlotItemGuids;
+                auto NumEnabledSlots = (std::min)(SlotItemGuids.NumEnabledSlots, (int32)std::size(SlotItemGuids.EquippedItemGuids));
+                auto NumSlots = (int32)Item->GetNumberOfSlotsTaken();
+                int32 Slot = 0;
+
+                while (Slot < NumEnabledSlots && !(SlotItemGuids.EquippedItemGuids[Slot] == MyFortPawn->CurrentWeapon->ItemEntryGuid))
+                    Slot++;
+
+                auto FirstSlot = Slot < NumEnabledSlots ? (std::min)(Slot, NumEnabledSlots - NumSlots) : -1;
+
+                for (int32 i = FirstSlot; i >= 0 && i < FirstSlot + NumSlots; i++)
+                {
+                    auto CoveredEntry = FindReplicatedEntry(WorldInventory, SlotItemGuids.EquippedItemGuids[i]);
+                    auto CoveredDefinition = CoveredEntry ? (UFortItemDefinition*)CoveredEntry->ItemDefinition : nullptr;
+
+                    if (!CoveredDefinition || CoveredEntry->ItemGuid == MyFortPawn->CurrentWeapon->ItemEntryGuid || !TakesQuickbarSlot(CoveredDefinition) || !CanBeDropped(CoveredDefinition))
+                        continue;
+
+                    DropPickup(*CoveredEntry, -1);
+                    Remove(WorldInventory, CoveredEntry->ItemGuid);
+                }
+            }
+
             Remove(WorldInventory, MyFortPawn->CurrentWeapon->ItemEntryGuid);
 
             if (PlayerController)
