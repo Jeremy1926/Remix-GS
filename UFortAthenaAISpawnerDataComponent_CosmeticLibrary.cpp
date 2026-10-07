@@ -63,26 +63,9 @@ static std::vector<FPrimaryAssetId> GetPrimaryAssetIds(const wchar_t* PrimaryAss
     return Ids;
 }
 
-static UObject* PickItem(std::vector<FPrimaryAssetId>& Ids, const UClass* Class)
-{
-    while (!Ids.empty())
-    {
-        auto Index = size_t(RandomFraction() * float(Ids.size()));
-        auto Item = LoadPrimaryAsset(Ids[Index]);
-
-        if (Item && Item->IsA(Class))
-            return Item;
-
-        Ids[Index] = Ids.back();
-        Ids.pop_back();
-    }
-
-    return nullptr;
-}
-
 static bool IsExcludedCosmetic(UObject* Object)
 {
-    static FName ExcludedTags[] = { FName(L"Cosmetics.UserFacingFlags.BuiltinEmote"), FName(L"Cosmetics.UserFacingFlags.Synced") };
+    static FName ExcludedTags[] = { FName(L"Phoebe.Cosmetic.Minus.Zone1"), FName(L"Cosmetics.UserFacingFlags.BuiltinEmote"), FName(L"Cosmetics.UserFacingFlags.Synced") };
 
     auto TagInterface = Object->GetInterface(IGameplayTagAssetInterface::StaticClass());
 
@@ -103,6 +86,49 @@ static bool IsExcludedCosmetic(UObject* Object)
     FreeGameplayTags(OwnedTags);
 
     return bExcluded;
+}
+
+static bool IsPlayerCosmetic(UObject* Object)
+{
+    static auto HasItemTrait = (bool (*)(UObject*, const FGameplayTag*))(ImageBase + 0x1C73FEC);
+    static auto MatchesTag = (bool (*)(const FGameplayTag*, const FGameplayTag*))(ImageBase + 0x1D74320);
+    static FGameplayTag UnownedTraits[] = { FGameplayTag{ FName(L"Item.Trait.Transient") }, FGameplayTag{ FName(L"Item.Trait.ShuffleTile") } };
+    static auto CosmeticsTag = FGameplayTag{ FName(L"Cosmetics") };
+
+    for (auto& Trait : UnownedTraits)
+    {
+        if (HasItemTrait(Object, &Trait))
+            return false;
+    }
+
+    FGameplayTagContainer OwnedTags{};
+    bool bPlayerCosmetic = false;
+
+    GetOwnedGameplayTags(Object, OwnedTags);
+
+    for (auto& Tag : OwnedTags.GameplayTags)
+        bPlayerCosmetic |= MatchesTag(&Tag, &CosmeticsTag);
+
+    FreeGameplayTags(OwnedTags);
+
+    return bPlayerCosmetic && !IsExcludedCosmetic(Object);
+}
+
+static UObject* PickItem(std::vector<FPrimaryAssetId>& Ids, const UClass* Class)
+{
+    while (!Ids.empty())
+    {
+        auto Index = size_t(RandomFraction() * float(Ids.size()));
+        auto Item = LoadPrimaryAsset(Ids[Index]);
+
+        if (Item && Item->IsA(Class) && IsPlayerCosmetic(Item))
+            return Item;
+
+        Ids[Index] = Ids.back();
+        Ids.pop_back();
+    }
+
+    return nullptr;
 }
 
 static FBotLoadout PickLoadout()

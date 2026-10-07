@@ -1433,7 +1433,7 @@ static bool SelectCalendarPlaylist()
     auto Manager = ManagerClass ? GetFirstInstance(ManagerClass) : nullptr;
     auto CurrentPlaylist = FindObject<UFortPlaylistAthena>(Playlist.c_str());
 
-    if (!Manager || !CurrentPlaylist)
+    if (!Manager || !CurrentPlaylist || CurrentPlaylist->bIsTournament)
         return bCalendarPlaylistDone = true;
 
     auto EventsProperty = FindProperty(Manager, "ClydeWeekCalendarEventsToWatch");

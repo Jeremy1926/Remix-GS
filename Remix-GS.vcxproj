@@ -175,6 +175,7 @@
     <ClInclude Include="UFortControllerComponent_Accolades.h" />
     <ClInclude Include="UFortControllerComponent_TournamentStatsTracker.h" />
     <ClInclude Include="UFortQuestManager.h" />
+    <ClInclude Include="UReplaySubsystem.h" />
     <ClInclude Include="hde64.h" />
     <ClInclude Include="SDK\SDK.hpp" />
     <ClInclude Include="SDK\UnrealContainers.hpp" />
@@ -440,6 +441,7 @@
     <ClCompile Include="UFortControllerComponent_TournamentStatsTracker.cpp" />
     <ClCompile Include="UFortQuestManager.cpp" />
     <ClCompile Include="UNetDriver.cpp" />
+    <ClCompile Include="UReplaySubsystem.cpp" />
     <ClCompile Include="UWorld.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="SDK\SDK\Basic.cpp">

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Shared.h"
 #include "UFortQuestManager.h"
+#include "UReplaySubsystem.h"
 #include "AFortGameMode.h"
 #include "UFortControllerComponent_Accolades.h"
 #include "SDK/SDK/AccoladesRuntime_classes.hpp"
@@ -1507,6 +1508,8 @@ static void SendRequestedMatchReports(double Now)
 
 void EndBattleRoyaleGame(AFortPlayerControllerAthena* PlayerController)
 {
+    RecordMatchResult(PlayerController);
+
     static auto EndBattleRoyaleGameV2 = UFortMcpProfileAthena::StaticClass()->FindFunction("EndBattleRoyaleGameV2");
 
     auto QuestManager = PlayerController ? PlayerController->GetQuestManager(ESubGame::Athena) : nullptr;

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Shared.h"
 #include "hde64.h"
+#include <tlhelp32.h>
 
 INIT_MODULE(UWorld);
 
@@ -24,6 +25,45 @@ static void PatchNops(uint8_t* Address, uint32_t Length)
         Patch<uint8_t>(uint64_t(Address + i), 0x90);
 }
 
+static std::vector<HANDLE> SuspendOtherThreads()
+{
+    std::vector<DWORD> ThreadIds;
+    auto Snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+    THREADENTRY32 Entry{ sizeof(Entry) };
+
+    for (auto bFound = Thread32First(Snapshot, &Entry); bFound; bFound = Thread32Next(Snapshot, &Entry))
+    {
+        if (Entry.th32OwnerProcessID == GetCurrentProcessId() && Entry.th32ThreadID != GetCurrentThreadId())
+            ThreadIds.push_back(Entry.th32ThreadID);
+    }
+
+    CloseHandle(Snapshot);
+
+    std::vector<HANDLE> Threads;
+    Threads.reserve(ThreadIds.size());
+
+    for (auto ThreadId : ThreadIds)
+    {
+        auto Thread = OpenThread(THREAD_SUSPEND_RESUME | THREAD_GET_CONTEXT, FALSE, ThreadId);
+
+        if (!Thread)
+            continue;
+
+        if (SuspendThread(Thread) == DWORD(-1))
+        {
+            CloseHandle(Thread);
+            continue;
+        }
+
+        CONTEXT Context{};
+        Context.ContextFlags = CONTEXT_CONTROL;
+        GetThreadContext(Thread, &Context);
+        Threads.push_back(Thread);
+    }
+
+    return Threads;
+}
+
 static void PatchAllNetModes(uint64_t AttemptDeriveFromURLAddress)
 {
     auto IsMovOrLea = [](const hde64s& Insn)
@@ -37,6 +77,7 @@ static void PatchAllNetModes(uint64_t AttemptDeriveFromURLAddress)
     auto Text = IMAGE_FIRST_SECTION((PIMAGE_NT_HEADERS)(ImageBase + ((PIMAGE_DOS_HEADER)ImageBase)->e_lfanew));
     auto TextStart = (uint8_t*)(ImageBase + Text->VirtualAddress);
     auto TextSize = Text->Misc.VirtualSize;
+    auto Threads = SuspendOtherThreads();
 
     for (uint32_t i = 0; i + 5 < TextSize; i++)
     {
@@ -160,6 +201,12 @@ static void PatchAllNetModes(uint64_t AttemptDeriveFromURLAddress)
             FlushInstructionCache(GetCurrentProcess(), Compare, Branch + BranchInsn.len - Compare);
             break;
         }
+    }
+
+    for (auto Thread : Threads)
+    {
+        ResumeThread(Thread);
+        CloseHandle(Thread);
     }
 }
 
