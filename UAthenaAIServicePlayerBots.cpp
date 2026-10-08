@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Shared.h"
+#include "Config.h"
 #include "UAthenaAIServicePlayerBots.h"
 #include "AFortGameMode.h"
 #include "AFortAthenaAIBotController.h"
@@ -837,6 +838,15 @@ static void InitializeMMRInfos(UAthenaAIServicePlayerBots* Service)
 
 static void StartSpawning(UAthenaAIServicePlayerBots* Service, void* FlowNode)
 {
+    auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
+
+    if (!bPlayerBots && GameMode)
+    {
+        GameMode->PlaylistEnableBots.Value = 0.f;
+        GameMode->PlaylistEnableBots.Curve.CurveTable = nullptr;
+        GameMode->PlaylistEnableBots.Curve.RowName = FName();
+    }
+
     InitializeMMRInfos(Service);
     StartSpawningOG(Service, FlowNode);
 
