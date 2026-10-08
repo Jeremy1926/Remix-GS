@@ -8,6 +8,7 @@
 #include "AFortAthenaAIBotController.h"
 #include "UFortQuestManager.h"
 #include "UFortControllerComponent_TournamentStatsTracker.h"
+#include "UFortControllerComponent_VictoryCrowns.h"
 #include "SDK/SDK/FortniteGame_parameters.hpp"
 
 INIT_POSTLOAD(AFortPlayerController);
@@ -805,25 +806,6 @@ static void ApplySiphon(AFortPlayerStateAthena* KillerPlayerState, AFortPlayerPa
         AddItemCount(WorldInventory, UFortKismetLibrary::K2_GetResourceItemDefinition(ResourceType), 50);
 }
 
-static void GiveVictoryCrown(AFortPlayerControllerAthena* PlayerController)
-{
-    auto Crown = FindObject<UFortItemDefinition>(L"/VictoryCrownsGameplay/Items/AGID_VictoryCrown.AGID_VictoryCrown");
-    auto WorldInventory = (AFortInventory*)PlayerController->WorldInventory.ObjectPointer;
-
-    if (!Crown || !WorldInventory)
-        return;
-
-    TArray<FFortItemEntryStateValue> StateValues{};
-    FFortItemEntryStateValue Value{};
-
-    Value.IntValue = 1;
-    Value.StateType = EFortItemEntryState::ShouldShowItemToast;
-    StateValues.Add(Value);
-
-    GiveItem(WorldInventory, Crown, 1, 0, 0, true, true, 0, StateValues);
-    StateValues.Free();
-}
-
 void DropItemsAsPickups(TArray<UFortWorldItem*>& ItemsToDropViaPickup, AFortPawn* DestructionPawn, AFortInventory* Inventory, AActor* PickupPostSpawnObject, void (*PickupPostSpawn)(AActor*, AFortPickup*, int32))
 {
     auto Location = DestructionPawn->K2_GetActorLocation();
@@ -994,10 +976,10 @@ void ReportElimination(AFortGameModeAthena* GameMode, AFortPlayerStateAthena* Pl
     {
         if (KillerPlayerController)
         {
+            GrantVictoryCrownAwards(KillerPlayerController);
             KillerPlayerController->PlayWinEffects(KillerPawn, KillerWeapon, DeathCause, false, ERoundVictoryAnimation::Default);
             KillerPlayerController->ClientNotifyWon(KillerPawn, KillerWeapon, DeathCause);
             KillerPlayerController->ClientNotifyTeamWon(KillerPawn, KillerWeapon, DeathCause);
-            GiveVictoryCrown(KillerPlayerController);
         }
 
         GameState->WinningTeam = KillerPlayerState->TeamIndex;
@@ -1652,6 +1634,7 @@ static void ServerAttemptAircraftJump(UFortControllerComponent_Aircraft* Aircraf
 
     UWorld::GetWorld()->AuthorityGameMode->RestartPlayer(PlayerController);
     PlayerController->SetControlRotation(ClientRotation);
+    AircraftComponent->OnExitAircraftEvent.Process(PlayerController);
 
     if (bLateGame)
         PlaceLateGamePawn(PlayerController, (AFortPawn*)PlayerController->Pawn);

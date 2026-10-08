@@ -174,6 +174,7 @@
     <ClInclude Include="UFortAthenaAISpawnerDataComponent_CosmeticLibrary.h" />
     <ClInclude Include="UFortControllerComponent_Accolades.h" />
     <ClInclude Include="UFortControllerComponent_TournamentStatsTracker.h" />
+    <ClInclude Include="UFortControllerComponent_VictoryCrowns.h" />
     <ClInclude Include="UFortQuestManager.h" />
     <ClInclude Include="UReplaySubsystem.h" />
     <ClInclude Include="hde64.h" />
@@ -440,6 +441,7 @@
     <ClCompile Include="UFortEngine.cpp" />
     <ClCompile Include="UFortMovementComp_Character.cpp" />
     <ClCompile Include="UFortControllerComponent_TournamentStatsTracker.cpp" />
+    <ClCompile Include="UFortControllerComponent_VictoryCrowns.cpp" />
     <ClCompile Include="UFortQuestManager.cpp" />
     <ClCompile Include="UNetDriver.cpp" />
     <ClCompile Include="UReplaySubsystem.cpp" />
@@ -518,6 +520,12 @@
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="SDK\SDK\AccoladesRuntime_functions.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="SDK\SDK\VictoryCrownsRuntime_functions.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</ForcedIncludeFiles>

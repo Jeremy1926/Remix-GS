@@ -4,6 +4,7 @@
 #include "UReplaySubsystem.h"
 #include "AFortGameMode.h"
 #include "UFortControllerComponent_Accolades.h"
+#include "UFortControllerComponent_VictoryCrowns.h"
 #include "SDK/SDK/AccoladesRuntime_classes.hpp"
 #include "SDK/SDK/FortniteGame_parameters.hpp"
 
@@ -1482,6 +1483,9 @@ static void SendEndBattleRoyaleGame(UFortQuestManager* QuestManager, FQuestManag
     Parms.MatchStats.MatchID = FString(MatchId.c_str());
     Parms.TotalXPAccum = PlayerController->XPComponent ? PlayerController->XPComponent->TotalXpEarned : 0;
 
+    if (auto VictoryCrowns = (UFortControllerComponent_VictoryCrowns*)PlayerController->GetComponentByClass(UFortControllerComponent_VictoryCrowns::StaticClass()))
+        Parms.VictoryCrownData = VictoryCrowns->VictoryCrownAccountData;
+
     uint64 RewardResultHandle = 0;
     AddUObject((uint8*)Profile + 0x4E0, &RewardResultHandle, PlayerController, OnAthenaRewardResult);
 
@@ -1522,6 +1526,7 @@ void EndBattleRoyaleGame(AFortPlayerControllerAthena* PlayerController)
         return;
 
     LinkQuestManagerController(QuestManager, PlayerController);
+    GrantVictoryCrownAwards(PlayerController);
     SendMatchFinished(PlayerController);
 
     if (auto AccoladeCollection = (UFortControllerComponent_AccoladeCollection*)PlayerController->GetComponentByClass(UFortControllerComponent_AccoladeCollection::StaticClass()))

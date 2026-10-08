@@ -72,6 +72,9 @@
     <ClInclude Include="UFortControllerComponent_Accolades.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UFortControllerComponent_VictoryCrowns.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="UFortControllerComponent_TournamentStatsTracker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -818,6 +821,9 @@
     <ClCompile Include="UFortControllerComponent_Accolades.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UFortControllerComponent_VictoryCrowns.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="UFortControllerComponent_IndicatedActorManagement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -900,6 +906,9 @@
       <Filter>SDK</Filter>
     </ClCompile>
     <ClCompile Include="SDK\SDK\AccoladesRuntime_functions.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="SDK\SDK\VictoryCrownsRuntime_functions.cpp">
       <Filter>SDK</Filter>
     </ClCompile>
   </ItemGroup>
