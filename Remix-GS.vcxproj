@@ -428,6 +428,7 @@
     <ClCompile Include="UAthenaAIServiceLoot.cpp" />
     <ClCompile Include="UAthenaAIServicePlayerBots.cpp" />
     <ClCompile Include="UAthenaNavSystem.cpp" />
+    <ClCompile Include="UAthenaSpecialActorComponent.cpp" />
     <ClCompile Include="UConversationInstance.cpp" />
     <ClCompile Include="UFortAthenaAISpawnerDataComponent_CosmeticLibrary.cpp" />
     <ClCompile Include="UFortAthenaBTService_PickUpLoot.cpp" />

@@ -18,6 +18,8 @@ static void (*EmoteStoppedOG)(UObject*, FFrame&, void*);
 static void (*TriggerAbilityFromAnimationOG)(AFortPlayerPawnAthena*, UObject*, uint32, uint32, bool, uint32);
 static bool (*ServerOnAttemptInteractOG)(void*, uint8*);
 static void* (*InternalConvertPawnOG)(UFortPawnComponent_Convert*, AFortPlayerPawnAthena*, UFortPawnComponent_Convert*);
+static void (*OnPlayerStateChangedOG)(AFortPlayerPawnAthena*, APlayerState*, APlayerState*);
+static bool (*AddToTeamOG)(AFortTeamInfo*, AController*);
 
 static int64 InteractInterfaceOffset = 0;
 static std::vector<std::pair<TWeakObjectPtr<AFortPlayerPawnAthena>, TWeakObjectPtr<AActor>>> DBNORevivePawns;
@@ -939,9 +941,65 @@ static void TeleportPlayerPawn(UObject* Context, FFrame& Stack, bool* Ret)
     *Ret = true;
 }
 
+static uint64 GetTeamGroupHandle(APlayerState* PlayerState)
+{
+    auto TeamPrivateInfo = PlayerState && PlayerState->IsA(AFortPlayerState::StaticClass()) ? ((AFortPlayerState*)PlayerState)->PlayerTeamPrivate.Get() : nullptr;
+
+    return TeamPrivateInfo ? *(uint64*)(uint64(TeamPrivateInfo) + 0x568) : 0;
+}
+
+static void UpdateTeamGroup(APawn* Pawn, APlayerState* OldPlayerState, APlayerState* NewPlayerState)
+{
+    static auto GetReplicationSystem = (UReplicationSystem* (*)(AActor*))(ImageBase + 0x2398140);
+    static auto GetReplicationBridge = (void* (*)(UReplicationSystem*))(ImageBase + 0x61FD8D4);
+    static auto GetReplicatedRefHandle = (uint64* (*)(void*, uint64*, UObject*, uint8))(ImageBase + 0x6225BA4);
+    static auto AddToGroup = (bool (*)(UReplicationSystem*, uint64, uint64))(ImageBase + 0x623B210);
+    static auto RemoveFromGroup = (bool (*)(UReplicationSystem*, uint64, uint64))(ImageBase + 0x6245C48);
+
+    auto OldTeamGroupHandle = GetTeamGroupHandle(OldPlayerState);
+    auto TeamGroupHandle = GetTeamGroupHandle(NewPlayerState);
+
+    if (!Pawn || OldTeamGroupHandle == TeamGroupHandle)
+        return;
+
+    auto ReplicationSystem = GetReplicationSystem(Pawn);
+    auto ReplicationBridge = ReplicationSystem ? GetReplicationBridge(ReplicationSystem) : nullptr;
+    uint64 Handle = 0;
+
+    if (ReplicationBridge)
+        GetReplicatedRefHandle(ReplicationBridge, &Handle, Pawn, 0);
+
+    if (!Handle)
+        return;
+
+    if (OldTeamGroupHandle)
+        RemoveFromGroup(ReplicationSystem, OldTeamGroupHandle, Handle);
+
+    if (TeamGroupHandle)
+        AddToGroup(ReplicationSystem, TeamGroupHandle, Handle);
+}
+
+static void OnPlayerStateChanged(AFortPlayerPawnAthena* Pawn, APlayerState* NewPlayerState, APlayerState* OldPlayerState)
+{
+    OnPlayerStateChangedOG(Pawn, NewPlayerState, OldPlayerState);
+
+    UpdateTeamGroup(Pawn, OldPlayerState, NewPlayerState);
+}
+
+static bool AddToTeam(AFortTeamInfo* TeamInfo, AController* Controller)
+{
+    auto bAdded = AddToTeamOG(TeamInfo, Controller);
+
+    if (bAdded)
+        UpdateTeamGroup(Controller->Pawn, nullptr, Controller->PlayerState);
+
+    return bAdded;
+}
+
 void AFortPlayerPawn__Init()
 {
     Hook(ImageBase + 0x94EA094, InternalConvertPawn, InternalConvertPawnOG);
+    Hook(ImageBase + 0x9979C90, AddToTeam, AddToTeamOG);
 }
 
 void AFortPlayerPawn__PostLoad()
@@ -975,6 +1033,7 @@ void AFortPlayerPawn__PostLoad()
     Hook<AFortPlayerPawnAthena>(uint32(0x1F9), TriggerAbilityFromAnimation, TriggerAbilityFromAnimationOG);
     Hook<AFortPlayerPawnAthena>(uint32(0x271), SetIsInsideSafeZone);
     Hook<AFortPlayerPawnAthena>(uint32(0x272), UpdateOutsideSafeZone);
+    Hook<AFortPlayerPawnAthena>(uint32(0xE8), OnPlayerStateChanged, OnPlayerStateChangedOG);
 
     auto HeldObjectComponentClass = UFortHeldObjectComponent::StaticClass();
 

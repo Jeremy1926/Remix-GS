@@ -866,6 +866,8 @@ static void OnPawnDied(AFortPlayerControllerAthena* PlayerController, AFortPawn*
 
 void ReportDeath(AController* Controller, AFortPlayerStateAthena* PlayerState, AFortPlayerPawnAthena* Pawn, AFortPlayerStateAthena* KillerPlayerState, AFortPlayerPawnAthena* KillerPawn, const FGameplayTagContainer& Tags)
 {
+    static auto GetTeamMembers = (TArray<TWeakObjectPtr<AFortPlayerStateAthena>>* (*)(AFortPlayerStateAthena*))(ImageBase + 0x908849C);
+
     auto KillerPlayerController = GetPlayerControllerAthena(KillerPlayerState);
 
     PlayerState->PawnDeathLocation = Pawn ? Pawn->K2_GetActorLocation() : FVector();
@@ -894,10 +896,19 @@ void ReportDeath(AController* Controller, AFortPlayerStateAthena* PlayerState, A
         if (!PlayerState->bIsABot)
             KillerPlayerState->HumanKillScore++;
 
-        KillerPlayerState->TeamKillScore++;
-        KillerPlayerState->OnRep_TeamKillScore();
         KillerPlayerState->ClientReportKill(PlayerState);
-        KillerPlayerState->ClientReportTeamKill(KillerPlayerState->TeamKillScore);
+
+        for (auto& TeamMember : *GetTeamMembers(KillerPlayerState))
+        {
+            auto TeamPlayerState = TeamMember.Get();
+
+            if (!TeamPlayerState)
+                continue;
+
+            TeamPlayerState->TeamKillScore++;
+            TeamPlayerState->OnRep_TeamKillScore();
+            TeamPlayerState->ClientReportTeamKill(TeamPlayerState->TeamKillScore);
+        }
     }
 
     if (Pawn && KillerPlayerState && KillerPlayerState->AbilitySystemComponent && KillerPawn && KillerPawn->Controller != Controller)

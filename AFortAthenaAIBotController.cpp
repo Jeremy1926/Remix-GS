@@ -15,6 +15,7 @@ INIT_RESET(AFortAthenaAIBotController);
 static void (*InitializeInventoryOG)(void*, TArray<FItemAndCount>*);
 static void (*ApplyCosmeticLoadoutOG)(AFortAthenaAIBotController*, void*);
 static void (*OnPossesedPawnDiedOG)(AFortAthenaAIBotController*, AFortPawn*, float, AController*, AActor*);
+static void (*OnPawnDiedOG)(AFortAthenaAIBotController*, AFortPawn*, float, const FGameplayTagContainer&, const FGameplayEffectContextHandle&, AController*, AActor*, AActor*);
 
 static bool CreateInventory(void* InventoryOwnerInterface)
 {
@@ -315,6 +316,22 @@ static void DropLootOnDeath(AFortAthenaAIBotController* Controller, AFortPawn* F
     SpawnedPickups.Free();
 }
 
+static void OnPawnDied(AFortAthenaAIBotController* Controller, AFortPawn* DeadPawn, float Damage, const FGameplayTagContainer& DamageTags, const FGameplayEffectContextHandle& EffectContext,
+                       AController* InstigatedBy, AActor* DamageCauser, AActor* KillerActor)
+{
+    auto PlayerState = (AFortPlayerStateAthena*)Controller->PlayerState;
+
+    if (DeadPawn && (AFortPawn*)Controller->PlayerBotPawn == DeadPawn && Controller->bIsAnAthenaGameParticipant && PlayerState && PlayerState->IsA(AFortPlayerStateAthena::StaticClass()))
+    {
+        auto KillerPlayerState = InstigatedBy && InstigatedBy->PlayerState && InstigatedBy->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)InstigatedBy->PlayerState : nullptr;
+        auto KillerPawn = InstigatedBy && InstigatedBy->Pawn && InstigatedBy->Pawn->IsA(AFortPawn::StaticClass()) ? (AFortPlayerPawnAthena*)InstigatedBy->Pawn : nullptr;
+
+        ReportDeath(Controller, PlayerState, (AFortPlayerPawnAthena*)DeadPawn, KillerPlayerState, KillerPawn, DamageTags);
+    }
+
+    OnPawnDiedOG(Controller, DeadPawn, Damage, DamageTags, EffectContext, InstigatedBy, DamageCauser, KillerActor);
+}
+
 static void OnPossesedPawnDied(AFortAthenaAIBotController* Controller, AFortPawn* Pawn, float Damage, AController* InstigatedBy, AActor* DamageCauser)
 {
     auto PlayerState = (AFortPlayerStateAthena*)Controller->PlayerState;
@@ -325,8 +342,6 @@ static void OnPossesedPawnDied(AFortAthenaAIBotController* Controller, AFortPawn
     auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
     auto KillerPlayerState = InstigatedBy && InstigatedBy->PlayerState && InstigatedBy->PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) ? (AFortPlayerStateAthena*)InstigatedBy->PlayerState : nullptr;
     auto KillerPawn = InstigatedBy && InstigatedBy->Pawn && InstigatedBy->Pawn->IsA(AFortPawn::StaticClass()) ? (AFortPlayerPawnAthena*)InstigatedBy->Pawn : nullptr;
-
-    ReportDeath(Controller, PlayerState, (AFortPlayerPawnAthena*)Pawn, KillerPlayerState, KillerPawn, Pawn->DeathTags);
 
     auto bWasAlive = GameMode && GameMode->IsA(AFortGameModeAthena::StaticClass()) && GameMode->AliveBots.Contains(Controller);
 
@@ -616,6 +631,7 @@ void AFortAthenaAIBotController__Init()
     Hook(ImageBase + 0xA549788, ApplyCosmeticLoadout, ApplyCosmeticLoadoutOG);
     Hook(ImageBase + 0xA5512C8, DropLootOnDeath);
     Hook(ImageBase + 0xA5510C8, DropInventoryItems);
+    Hook(ImageBase + 0xA5666FC, OnPawnDied, OnPawnDiedOG);
     Hook(ImageBase + 0xA566F04, OnPossesedPawnDied, OnPossesedPawnDiedOG);
     Hook(ImageBase + 0xA56DF24, RestartBot, RestartBotOG);
     Hook(ImageBase + 0xA56CF74, RespawnPlayerAfterDeath, RespawnPlayerAfterDeathOG);

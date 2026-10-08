@@ -75,6 +75,13 @@ struct FMatchAssignment
     FString PayloadJwt;
 };
 
+struct FMatchmakingBackfill
+{
+    FString BackfillId;
+    TArray<TArray<TArray<FSharedRef>>> Teams;
+    FSharedRef BackfillOptions;
+};
+
 static uint64 CreateSessionCompleteHandle = 0;
 static ULONGLONG MatchmakingWaitStart = 0;
 static uint64 LeaveMeshNetworkCompleteHandle = 0;
@@ -325,6 +332,43 @@ static bool HandleMatchAssignmentV2(AFortPartyBeaconHost* ReservationBeaconHost,
     return true;
 }
 
+static void ReadPlayerDivisions(void* Options, TArray<TArray<TArray<FSharedRef>>>& Teams)
+{
+    static auto HasTypedField = (bool (*)(void*, const FJsonKey*, int32))(ImageBase + 0x3BD6E48);
+    static auto GetObjectField = (FSharedRef* (*)(void*, const FJsonKey*))(ImageBase + 0x2BECAF0);
+    static auto TryGetStringField = (bool (*)(void*, const FJsonKey*, FString*))(ImageBase + 0x1D8F394);
+
+    auto DivisionsKey = JsonKey(L"match.option.player.divisions");
+
+    if (!Options || !HasTypedField(Options, &DivisionsKey, 6))
+        return;
+
+    auto Divisions = GetObjectField(Options, &DivisionsKey)->Object;
+
+    for (auto& Team : Teams)
+    {
+        for (auto& Party : Team)
+        {
+            for (auto& Player : Party)
+            {
+                FString PlayerIdString;
+                FString Division;
+                auto ToString = (FString* (*)(void*, FString*))(*(void***)Player.Object)[0x6];
+
+                ToString(Player.Object, &PlayerIdString);
+
+                auto PlayerKey = JsonKey(PlayerIdString);
+
+                if (TryGetStringField(Divisions, &PlayerKey, &Division) && Division.Num() > 1)
+                    TournamentPlayerDivision(PlayerIdString.Data, Division.Data);
+
+                PlayerIdString.Free();
+                Division.Free();
+            }
+        }
+    }
+}
+
 static void OnPlaylistAssetUpdateComplete(AFortGameSessionDedicatedAthena* GameSession, uint8 Result, void* PatchedAssetIds)
 {
     static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
@@ -432,10 +476,17 @@ static void OnPlaylistAssetUpdateComplete(AFortGameSessionDedicatedAthena* GameS
                 {
                     SetStringSetting(SessionSettings, FName(L"EVENTID"), &TournamentId, 2);
                     SetStringSetting(SessionSettings, FName(L"EVENTWINDOWID"), &WindowId, 2);
+
+                    if (GameMode)
+                    {
+                        AssignString((FString*)(__int64(GameMode) + 0xE78), TournamentId.Data, JsonKey(TournamentId).Len);
+                        AssignString((FString*)(__int64(GameMode) + 0xE88), WindowId.Data, JsonKey(WindowId).Len);
+                    }
                 }
 
                 TournamentId.Free();
                 WindowId.Free();
+                ReadPlayerDivisions(MatchOptions, MatchAssignment.Teams);
 
                 FNativeDelegate OnUpdateSessionComplete;
                 MakeOnUpdateSessionCompleteDelegate(&OnUpdateSessionComplete, GameSession);
@@ -775,6 +826,13 @@ static void ProcessQueryResults(AFortGameSessionDedicatedAthena* GameSession, co
 
     RemoveString(RegisterPlayerResults, BackfillId);
     RemoveString(QueryUserInfoResults, BackfillId);
+}
+
+static void (*OnMatchmakingSessionBackfillMatchRequestV2OG)(AFortGameSessionDedicatedAthena*, FMatchmakingBackfill*);
+static void OnMatchmakingSessionBackfillMatchRequestV2(AFortGameSessionDedicatedAthena* GameSession, FMatchmakingBackfill* Backfill)
+{
+    ReadPlayerDivisions(Backfill->BackfillOptions.Object, Backfill->Teams);
+    OnMatchmakingSessionBackfillMatchRequestV2OG(GameSession, Backfill);
 }
 
 static void (*OnRegisterPlayersCompleteOG)(AFortGameSessionDedicatedAthena*, FName, void*, bool, FString*);
@@ -1158,8 +1216,6 @@ static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogi
 
     SetConsoleTitleA("Remix 32.00 | Match started");
 
-    TournamentMatchStarted(GameMode);
-
     if (Playlist && Playlist->bAllowJoinInProgress)
         *(bool*)(__int64(GameMode) + 0x1018) = false;
 
@@ -1182,6 +1238,7 @@ static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogi
     {
         SetGamePhase(GamePhaseLogic, EAthenaGamePhase::SafeZones);
         SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::StormForming);
+        TournamentMatchStarted(GameMode);
 
         return;
     }
@@ -1243,6 +1300,7 @@ static void StartAircraftPhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogi
 
     SetGamePhase(GamePhaseLogic, EAthenaGamePhase::Aircraft);
     SetGamePhaseStep(GamePhaseLogic, EAthenaGamePhaseStep::BusLocked);
+    TournamentMatchStarted(GameMode);
 }
 
 static void StartNewSafeZonePhase(UFortGameStateComponent_BattleRoyaleGamePhaseLogic* GamePhaseLogic, int NewSafeZonePhase)
@@ -1861,6 +1919,12 @@ static void ReadyToStartMatch(UObject* Context, FFrame& Stack, bool* Ret)
             }
         }
 
+        if (GameState->MapInfo && GameState->MapInfo->AircraftDropVolume && !GameState->bPlaylistDataIsLoaded)
+        {
+            *Ret = false;
+            return;
+        }
+
         if (GameState->MapInfo)
         {
             if (auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(GameState))
@@ -2363,6 +2427,8 @@ static void HandleStartingNewPlayer(UObject* Context, FFrame& Stack, void* Ret)
 
     callOG(GameMode, Stack.CurrentNativeFunction, HandleStartingNewPlayer, NewPlayer);
 
+    TournamentPlayerJoined(GameMode, PlayerState);
+
     for (auto& OtherPlayerState : GameState->PlayerArray)
     {
         auto SquadPlayerState = (AFortPlayerStateAthena*)OtherPlayerState;
@@ -2443,6 +2509,106 @@ static void AddLootPackageData(UDataTable* Table)
 
     for (auto& [_, Package] : PackagesByRowName)
         LootPackageMap[Package->LootPackageID.ComparisonIndex].Add(Package);
+}
+
+static void FillVendingMachine(ABuildingItemCollectorActor* CollectorActor)
+{
+    auto GameMode = (AFortGameModeAthena*)UWorld::GetWorld()->AuthorityGameMode;
+    auto MapInfo = ((AFortGameStateAthena*)UWorld::GetWorld()->GameState)->MapInfo;
+
+    if (!GameMode || !*(bool*)(__int64(&GameMode->OnPlaylistLootTablesAppliedDelegate) + 0x10) || !MapInfo || !CollectorActor->IsA(MapInfo->VendingMachineClass) || CollectorActor->StartingGoalLevel != 0)
+        return;
+
+    if (VendingRarityWeightSum <= VendingRarityZeroWeight)
+    {
+        CollectorActor->K2_DestroyActor();
+        return;
+    }
+
+    int Rarity = 0;
+    bool bFilled = false;
+
+    while (!bFilled)
+    {
+        bool bFound = false;
+
+        while (!bFound)
+        {
+            auto RandomNum = (float)rand() / (RAND_MAX / VendingTotalWeight);
+
+            for (auto& [ElementRarity, ElementWeight] : VendingRarityWeights)
+            {
+                if (ElementWeight == 0)
+                    continue;
+
+                if (RandomNum <= ElementWeight)
+                {
+                    Rarity = ElementRarity;
+                    bFound = true;
+                    break;
+                }
+
+                RandomNum -= ElementWeight;
+            }
+        }
+
+        if (Rarity == 0)
+            break;
+
+        bFilled = true;
+        int AttemptsToGetItem = 0;
+
+        for (int i = 0; i < CollectorActor->ItemCollections.Num(); i++)
+        {
+            if (AttemptsToGetItem > 10)
+            {
+                bFilled = false;
+                break;
+            }
+
+            auto& Collection = CollectorActor->ItemCollections[i];
+
+            if (Collection.bUseDefinedOutputItem)
+                continue;
+
+            TArray<FFortItemEntry*> LootDrops{};
+
+            ChooseLootForContainer(LootDrops, CollectorActor->DefaultItemLootTierGroupName, Rarity);
+
+            if (Collection.OutputItemEntry.Num() > 0)
+            {
+                Collection.OutputItemEntry.Clear();
+                Collection.OutputItem = nullptr;
+            }
+
+            for (auto& LootDrop : LootDrops)
+            {
+                if (!Collection.OutputItem && IsPrimaryQuickbar((UFortItemDefinition*)LootDrop->ItemDefinition))
+                    Collection.OutputItem = (UFortWorldItemDefinition*)LootDrop->ItemDefinition;
+
+                Collection.OutputItemEntry.Add(*LootDrop);
+                free(LootDrop);
+            }
+
+            if (!Collection.OutputItem)
+            {
+                i--;
+                AttemptsToGetItem++;
+
+                continue;
+            }
+
+            AttemptsToGetItem = 0;
+        }
+    }
+
+    if (Rarity == 0)
+    {
+        CollectorActor->K2_DestroyActor();
+        return;
+    }
+
+    CollectorActor->StartingGoalLevel = Rarity;
 }
 
 static void (*FinishWorldInitializationOG)(AFortGameModeAthena*, AActor*);
@@ -2540,98 +2706,7 @@ static void FinishWorldInitialization(AFortGameModeAthena* GameMode, AActor* Wor
     GetAll<ABuildingItemCollectorActor>(Collectors);
 
     for (auto& CollectorActor : Collectors)
-    {
-        if (VendingRarityWeightSum <= VendingRarityZeroWeight)
-        {
-            CollectorActor->K2_DestroyActor();
-            continue;
-        }
-
-        int Rarity = 0;
-        bool bFilled = false;
-
-        while (!bFilled)
-        {
-            bool bFound = false;
-
-            while (!bFound)
-            {
-                auto RandomNum = (float)rand() / (RAND_MAX / VendingTotalWeight);
-
-                for (auto& [ElementRarity, ElementWeight] : VendingRarityWeights)
-                {
-                    if (ElementWeight == 0)
-                        continue;
-
-                    if (RandomNum <= ElementWeight)
-                    {
-                        Rarity = ElementRarity;
-                        bFound = true;
-                        break;
-                    }
-
-                    RandomNum -= ElementWeight;
-                }
-            }
-
-            if (Rarity == 0)
-                break;
-
-            bFilled = true;
-            int AttemptsToGetItem = 0;
-
-            for (int i = 0; i < CollectorActor->ItemCollections.Num(); i++)
-            {
-                if (AttemptsToGetItem > 10)
-                {
-                    bFilled = false;
-                    break;
-                }
-
-                auto& Collection = CollectorActor->ItemCollections[i];
-
-                if (Collection.bUseDefinedOutputItem)
-                    continue;
-
-                TArray<FFortItemEntry*> LootDrops{};
-
-                ChooseLootForContainer(LootDrops, CollectorActor->DefaultItemLootTierGroupName, Rarity);
-
-                if (Collection.OutputItemEntry.Num() > 0)
-                {
-                    Collection.OutputItemEntry.Clear();
-                    Collection.OutputItem = nullptr;
-                }
-
-                for (auto& LootDrop : LootDrops)
-                {
-                    if (!Collection.OutputItem && IsPrimaryQuickbar((UFortItemDefinition*)LootDrop->ItemDefinition))
-                        Collection.OutputItem = (UFortWorldItemDefinition*)LootDrop->ItemDefinition;
-
-                    Collection.OutputItemEntry.Add(*LootDrop);
-                    free(LootDrop);
-                }
-
-                if (!Collection.OutputItem)
-                {
-                    i--;
-                    AttemptsToGetItem++;
-
-                    continue;
-                }
-
-                AttemptsToGetItem = 0;
-            }
-        }
-
-        if (Rarity == 0)
-        {
-            CollectorActor->K2_DestroyActor();
-            continue;
-        }
-
-        CollectorActor->StartingGoalLevel = Rarity;
-    }
+        FillVendingMachine(CollectorActor);
 
     Collectors.Free();
 
@@ -2706,9 +2781,11 @@ void AFortGameMode__PostLoad()
     ExecHook(AGameModeBase::StaticClass()->FindFunction("HandleStartingNewPlayer"), HandleStartingNewPlayer, HandleStartingNewPlayerOG);
     Patch<uint16_t>(ImageBase + 0x28730CC, 0x9090);
     Hook(ImageBase + 0x8F928A4, GetGameSessionClass);
+    Hook<ABuildingItemCollectorActor>(uint32(0x195), FillVendingMachine);
     Hook<AFortGameSessionDedicatedAthena>(uint32(0xF7), Restart);
     Hook<AFortGameSessionDedicatedAthena>(uint32(0x12B), ShutdownDedicatedServer);
     Hook<AFortGameSessionDedicatedAthena>(uint32(0x134), OnMatchmakingSessionAssignMatchRequestV2);
+    Hook<AFortGameSessionDedicatedAthena>(uint32(0x135), OnMatchmakingSessionBackfillMatchRequestV2, OnMatchmakingSessionBackfillMatchRequestV2OG);
     Hook(ImageBase + 0x9D19F18, OnRegisterPlayersComplete, OnRegisterPlayersCompleteOG);
     Hook(ImageBase + 0x9D19B70, OnQueryUserInfoComplete, OnQueryUserInfoCompleteOG);
 

@@ -9,7 +9,6 @@
 #pragma comment(lib, "crypt32.lib")
 
 INIT_MODULE(UFortControllerComponent_TournamentStatsTracker);
-INIT_TICKER(UFortControllerComponent_TournamentStatsTracker);
 INIT_RESET(UFortControllerComponent_TournamentStatsTracker);
 
 constexpr auto MaxSendAttempts = 3;
@@ -22,21 +21,18 @@ struct FTournamentPlayer
     uint8 TeamIndex = 0;
     float EliminatedTime = -1.f;
     bool bReported = false;
-    bool bInTournament = false;
 };
 
 struct FTournamentRequest
 {
     std::wstring Path;
     std::string Body;
-    bool bMatchPlayers = false;
 };
 
-struct FTournamentAssignment
+struct FTournamentWindow
 {
-    std::string AccountId;
-    std::string EventId;
-    std::string EventWindowId;
+    std::wstring EventId;
+    std::wstring WindowId;
 };
 
 static std::wstring BackendUrl;
@@ -50,15 +46,13 @@ static std::mutex RequestMutex;
 static std::condition_variable RequestSignal;
 static std::deque<FTournamentRequest> Requests;
 
-static std::mutex AssignmentMutex;
-static std::atomic<bool> bAssignmentsReady = false;
-static std::vector<FTournamentAssignment> Assignments;
-
 static std::unordered_map<std::string, FTournamentPlayer> TournamentPlayers;
+static std::unordered_map<std::string, FTournamentWindow> PlayerDivisions;
 static std::unordered_map<uint8, int32> TeamEliminations;
 static std::wstring MatchId;
 static float MatchStartTime = 0.f;
 static int32 StartingTeams = 0;
+static int32 PlacementReported = 0;
 
 static std::wstring CommandLineValue(const std::wstring& Name)
 {
@@ -189,29 +183,6 @@ static bool Login()
     return !AccessToken.empty();
 }
 
-static void ReadAssignments(const std::string& Response)
-{
-    std::vector<FTournamentAssignment> Read;
-    size_t Cursor = 0;
-
-    while (true)
-    {
-        FTournamentAssignment Assignment;
-        Assignment.AccountId = JsonString(Response, "accountId", Cursor);
-        Assignment.EventId = JsonString(Response, "eventId", Cursor);
-        Assignment.EventWindowId = JsonString(Response, "eventWindowId", Cursor);
-
-        if (Cursor == std::string::npos)
-            break;
-
-        Read.push_back(std::move(Assignment));
-    }
-
-    std::lock_guard Lock(AssignmentMutex);
-    Assignments.insert(Assignments.end(), Read.begin(), Read.end());
-    bAssignmentsReady = true;
-}
-
 static void TournamentWorker()
 {
     while (true)
@@ -245,20 +216,17 @@ static void TournamentWorker()
             else if (Status != 200)
                 break;
         }
-
-        if (Status == 200 && Request.bMatchPlayers)
-            ReadAssignments(Response);
     }
 }
 
-static void Queue(const std::wstring& Route, std::string Body, bool bMatchPlayers)
+static void Queue(const std::wstring& Route, std::string Body)
 {
     if (!Session)
         return;
 
     {
         std::lock_guard Lock(RequestMutex);
-        Requests.push_back({ std::wstring(L"/api/v1/events/") + EventsGameId + L"/gameserver/matches/" + MatchId + Route, std::move(Body), bMatchPlayers });
+        Requests.push_back({ std::wstring(L"/api/v1/events/") + EventsGameId + L"/gameserver/matches/" + MatchId + Route, std::move(Body) });
     }
 
     RequestSignal.notify_one();
@@ -291,24 +259,93 @@ static float GetMatchTime()
     return (float)UGameplayStatics::GetTimeSeconds(UWorld::GetWorld()) - MatchStartTime;
 }
 
-static void ReportTeamEliminations(uint8 TeamIndex, int32 Eliminations)
+static FEventTournamentIds& GetEventTournamentIds(AFortGameModeAthena* GameMode)
 {
-    for (auto& [AccountId, Player] : TournamentPlayers)
-    {
-        auto PlayerState = Player.PlayerState.Get();
+    return *(FEventTournamentIds*)(__int64(GameMode) + 0xE78);
+}
 
-        if (Player.TeamIndex != TeamIndex || !Player.bInTournament || !PlayerState)
+static bool IsTournamentMatch(AFortGameModeAthena* GameMode)
+{
+    auto& EventTournamentIds = GetEventTournamentIds(GameMode);
+
+    return !PlayerDivisions.empty() || (EventTournamentIds.EventId.Num() > 1 && EventTournamentIds.WindowId.Num() > 1);
+}
+
+static bool GetTournamentWindow(AFortGameModeAthena* GameMode, AFortPlayerStateAthena* PlayerState, FTournamentWindow& Window)
+{
+    auto Found = PlayerDivisions.find(GetAccountId(PlayerState));
+
+    if (Found != PlayerDivisions.end())
+    {
+        Window = Found->second;
+        return true;
+    }
+
+    auto& EventTournamentIds = GetEventTournamentIds(GameMode);
+
+    if (EventTournamentIds.EventId.Num() <= 1 || EventTournamentIds.WindowId.Num() <= 1)
+        return false;
+
+    Window = { EventTournamentIds.EventId.Data, EventTournamentIds.WindowId.Data };
+    return true;
+}
+
+static void UpdateMatchAbandonState(AFortPlayerStateAthena* PlayerState)
+{
+    auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(UWorld::GetWorld());
+
+    if (GamePhaseLogic)
+        ((void (*)(UFortGameStateComponent_BattleRoyaleGamePhaseLogic*, AFortPlayerStateAthena*))GamePhaseLogic->VTable[0xC6])(GamePhaseLogic, PlayerState);
+}
+
+static void ReportPlacementPoints(AFortGameModeAthena* GameMode, const std::set<uint8>& AliveTeams)
+{
+    static auto FindTournamentSession = (FSharedRef* (*)(UFortTournamentManager*, FSharedRef*, const FString*, const FString*))(ImageBase + 0x9EE4E58);
+    static auto GetEventTemplate = (FSharedRef* (*)(void*, FSharedRef*))(ImageBase + 0x9EEB7E0);
+    static auto GetPlacementPointsChange = (int32 (*)(void*, void*, int32, int32))(ImageBase + 0x9EED720);
+    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
+
+    auto GameState = (AFortGameStateAthena*)GameMode->GameState;
+    auto Placement = GameState->TeamsLeft;
+
+    if (Placement < 1 || Placement >= PlacementReported)
+        return;
+
+    auto GameInstance = (UFortGameInstance*)UWorld::GetWorld()->OwningGameInstance;
+
+    for (auto& Player : GameState->PlayerArray)
+    {
+        auto PlayerState = (AFortPlayerStateAthena*)Player;
+        FTournamentWindow Window;
+
+        if (!PlayerState || !PlayerState->IsA(AFortPlayerStateAthena::StaticClass()) || !AliveTeams.contains(PlayerState->TeamIndex) || !PlayerState->Owner || !PlayerState->Owner->IsA(AFortPlayerControllerAthena::StaticClass()) || !GetTournamentWindow(GameMode, PlayerState, Window))
             continue;
 
-        FFortTournamentStatInfo TournamentStatInfo{};
-        TournamentStatInfo.StatName = FString(L"TEAM_ELIMS_STAT_INDEX");
-        TournamentStatInfo.StatDisplayName = FName(L"Eliminations");
-        TournamentStatInfo.bIsDeltaCount = false;
-        TournamentStatInfo.StatValue = Eliminations;
+        FString EventId(Window.EventId.c_str());
+        FString WindowId(Window.WindowId.c_str());
+        FSharedRef TournamentSession{};
+        FSharedRef Template{};
 
-        PlayerState->ClientReportTournamentStatUpdate(TournamentStatInfo);
-        TournamentStatInfo.StatName.Free();
+        FindTournamentSession(GameInstance->TournamentManager, &TournamentSession, &EventId, &WindowId);
+
+        if (TournamentSession.Object)
+            GetEventTemplate(TournamentSession.Object, &Template);
+
+        for (auto Place = PlacementReported - 1; Template.Object && Place >= Placement; Place--)
+        {
+            auto PointsEarned = GetPlacementPointsChange(Template.Object, nullptr, Place + 1, Place);
+
+            if (PointsEarned > 0)
+                ((AFortPlayerControllerAthena*)PlayerState->Owner)->ClientReportTournamentPlacementPointsScored(Place, PointsEarned);
+        }
+
+        TSharedRef_Destructor(&Template);
+        TSharedRef_Destructor(&TournamentSession);
+        EventId.Free();
+        WindowId.Free();
     }
+
+    PlacementReported = Placement;
 }
 
 static void BuildAndSendTournamentStats(uint8 TeamIndex, int32 Placement)
@@ -317,7 +354,7 @@ static void BuildAndSendTournamentStats(uint8 TeamIndex, int32 Placement)
 
     for (auto& [AccountId, Player] : TournamentPlayers)
     {
-        if (Player.TeamIndex != TeamIndex || Player.bReported || !Player.bInTournament)
+        if (Player.TeamIndex != TeamIndex || Player.bReported)
             continue;
 
         Player.bReported = true;
@@ -328,7 +365,7 @@ static void BuildAndSendTournamentStats(uint8 TeamIndex, int32 Placement)
     }
 
     if (!Results.empty())
-        Queue(L"/results", R"({"results":[)" + Results + "]}", false);
+        Queue(L"/results", R"({"results":[)" + Results + "]}");
 }
 
 static std::set<uint8> GetAliveTeams(AFortGameModeAthena* GameMode)
@@ -350,10 +387,52 @@ static std::set<uint8> GetAliveTeams(AFortGameModeAthena* GameMode)
     return AliveTeams;
 }
 
+void TournamentPlayerDivision(const wchar_t* AccountId, const wchar_t* Division)
+{
+    std::wstring Text = Division;
+    auto Separator = Text.find(L':');
+
+    if (Separator == std::wstring::npos || Separator == 0 || Separator + 1 >= Text.size())
+        return;
+
+    auto Account = Utf8(AccountId);
+
+    for (auto& Char : Account)
+        Char = (char)tolower((uint8)Char);
+
+    PlayerDivisions[Account] = { Text.substr(0, Separator), Text.substr(Separator + 1, Text.find(L':', Separator + 1) - Separator - 1) };
+}
+
+void TournamentPlayerJoined(AFortGameModeAthena* GameMode, AFortPlayerStateAthena* PlayerState)
+{
+    FTournamentWindow Window;
+
+    if (!PlayerState || !GetTournamentWindow(GameMode, PlayerState, Window))
+        return;
+
+    FEventTournamentIds EventTournamentIds{};
+    EventTournamentIds.EventId = FString(Window.EventId.c_str());
+    EventTournamentIds.WindowId = FString(Window.WindowId.c_str());
+
+    PlayerState->ClientNotifyMatchEntered(EventTournamentIds);
+    UpdateMatchAbandonState(PlayerState);
+
+    EventTournamentIds.EventId.Free();
+    EventTournamentIds.WindowId.Free();
+}
+
 void TournamentMatchStarted(AFortGameModeAthena* GameMode)
 {
-    if (!Session)
+    if (!IsTournamentMatch(GameMode))
         return;
+
+    for (auto& Player : GameMode->GameState->PlayerArray)
+    {
+        FTournamentWindow Window;
+
+        if (Player && Player->IsA(AFortPlayerStateAthena::StaticClass()) && GetTournamentWindow(GameMode, (AFortPlayerStateAthena*)Player, Window))
+            UpdateMatchAbandonState((AFortPlayerStateAthena*)Player);
+    }
 
     GUID Guid{};
     CoCreateGuid(&Guid);
@@ -362,24 +441,17 @@ void TournamentMatchStarted(AFortGameModeAthena* GameMode)
     TournamentPlayers.clear();
     TeamEliminations.clear();
 
-    std::string AccountIds;
-
     for (auto& PlayerController : GameMode->AlivePlayers)
     {
         auto PlayerState = PlayerController ? (AFortPlayerStateAthena*)PlayerController->PlayerState : nullptr;
         auto AccountId = PlayerState ? GetAccountId(PlayerState) : "";
 
-        if (AccountId.empty() || TournamentPlayers.contains(AccountId))
-            continue;
-
-        TournamentPlayers[AccountId] = { TWeakObjectPtr<AFortPlayerStateAthena>(PlayerState), PlayerState->TeamIndex };
-        AccountIds += std::format(R"({}"{}")", AccountIds.empty() ? "" : ",", AccountId);
+        if (!AccountId.empty() && !TournamentPlayers.contains(AccountId))
+            TournamentPlayers[AccountId] = { TWeakObjectPtr<AFortPlayerStateAthena>(PlayerState), PlayerState->TeamIndex };
     }
 
     StartingTeams = (int32)GetAliveTeams(GameMode).size();
-
-    if (!AccountIds.empty())
-        Queue(L"/players", R"({"accountIds":[)" + AccountIds + "]}", true);
+    PlacementReported = ((AFortGameStateAthena*)GameMode->GameState)->TeamsLeft;
 }
 
 void TournamentPlayerEliminated(AFortGameModeAthena* GameMode, AFortPlayerStateAthena* PlayerState, AFortPlayerStateAthena* KillerPlayerState)
@@ -393,12 +465,15 @@ void TournamentPlayerEliminated(AFortGameModeAthena* GameMode, AFortPlayerStateA
         Found->second.EliminatedTime = GetMatchTime();
 
     if (KillerPlayerState && KillerPlayerState->TeamIndex != PlayerState->TeamIndex)
-        ReportTeamEliminations(KillerPlayerState->TeamIndex, ++TeamEliminations[KillerPlayerState->TeamIndex]);
+        TeamEliminations[KillerPlayerState->TeamIndex]++;
 
     auto AliveTeams = GetAliveTeams(GameMode);
 
     if (!AliveTeams.contains(PlayerState->TeamIndex))
+    {
         BuildAndSendTournamentStats(PlayerState->TeamIndex, (int32)AliveTeams.size() + 1);
+        ReportPlacementPoints(GameMode, AliveTeams);
+    }
 
     if (AliveTeams.size() == 1)
         BuildAndSendTournamentStats(*AliveTeams.begin(), 1);
@@ -420,54 +495,13 @@ void UFortControllerComponent_TournamentStatsTracker__Init()
         std::thread(TournamentWorker).detach();
 }
 
-void UFortControllerComponent_TournamentStatsTracker__Tick()
-{
-    if (!bAssignmentsReady.exchange(false))
-        return;
-
-    std::vector<FTournamentAssignment> Ready;
-
-    {
-        std::lock_guard Lock(AssignmentMutex);
-        Ready.swap(Assignments);
-    }
-
-    for (auto& Assignment : Ready)
-    {
-        auto Found = TournamentPlayers.find(Assignment.AccountId);
-
-        if (Found == TournamentPlayers.end())
-            continue;
-
-        Found->second.bInTournament = true;
-
-        auto PlayerState = Found->second.PlayerState.Get();
-
-        if (!PlayerState)
-            continue;
-
-        FEventTournamentIds EventIds{};
-        EventIds.EventId = FString(Wide(Assignment.EventId).c_str());
-        EventIds.WindowId = FString(Wide(Assignment.EventWindowId).c_str());
-
-        PlayerState->ClientNotifyMatchEntered(EventIds);
-
-        EventIds.EventId.Free();
-        EventIds.WindowId.Free();
-    }
-}
-
 void UFortControllerComponent_TournamentStatsTracker__Reset()
 {
-    {
-        std::lock_guard Lock(AssignmentMutex);
-        Assignments.clear();
-        bAssignmentsReady = false;
-    }
-
     TournamentPlayers.clear();
+    PlayerDivisions.clear();
     TeamEliminations.clear();
     MatchId.clear();
     MatchStartTime = 0.f;
     StartingTeams = 0;
+    PlacementReported = 0;
 }

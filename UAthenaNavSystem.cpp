@@ -2,6 +2,7 @@
 #include "Shared.h"
 #include "UAthenaNavSystem.h"
 #include <fstream>
+#include <share.h>
 
 INIT_MODULE(UAthenaNavSystem);
 INIT_TICKER(UAthenaNavSystem);
@@ -18,6 +19,35 @@ static void* ArchiveVTable[0x2F] = {};
 static uint64 Archive[8] = {};
 static std::vector<std::pair<std::wstring, int32>> CachedAreas;
 static std::vector<uint64> CachedLinks;
+
+static FILE* NavDiagFile = nullptr;
+
+static void NavDiag(const char* Format, ...)
+{
+    if (!NavDiagFile)
+    {
+        wchar_t LocalAppData[MAX_PATH];
+
+        if (!GetEnvironmentVariableW(L"LOCALAPPDATA", LocalAppData, MAX_PATH))
+            return;
+
+        NavDiagFile = _wfsopen((std::wstring(LocalAppData) + L"\\FortniteGame\\Saved\\RemixNavDiag.log").c_str(), L"a", _SH_DENYNO);
+
+        if (!NavDiagFile)
+            return;
+    }
+
+    SYSTEMTIME Now;
+    va_list Args;
+
+    GetLocalTime(&Now);
+    fprintf(NavDiagFile, "[%02d:%02d:%02d.%03d pid %lu] ", Now.wHour, Now.wMinute, Now.wSecond, Now.wMilliseconds, GetCurrentProcessId());
+    va_start(Args, Format);
+    vfprintf(NavDiagFile, Format, Args);
+    va_end(Args);
+    fputc('\n', NavDiagFile);
+    fflush(NavDiagFile);
+}
 
 static void ArchiveSerialize(void* Ar, void* Data, int64 Length)
 {
@@ -131,12 +161,28 @@ static std::wstring GetCachePath()
     auto World = UWorld::GetWorld();
     auto GameState = (AFortGameStateAthena*)World->GameState;
     auto Playlist = GameState ? GameState->CurrentPlaylistInfo.BasePlaylist : nullptr;
+    auto NavSystem = (UNavigationSystemV1*)World->NavigationSystem;
+    auto MapName = World->Name.GetRawString();
     wchar_t LocalAppData[MAX_PATH];
 
     if (!Playlist || !GetEnvironmentVariableW(L"LOCALAPPDATA", LocalAppData, MAX_PATH))
         return std::wstring();
 
-    auto Name = World->Name.GetRawString() + "_" + Playlist->PlaylistName.GetRawString() + ".bin";
+    TArray<ANavMeshBoundsVolume*> Volumes;
+    GetAll<ANavMeshBoundsVolume>(Volumes);
+
+    for (auto Volume : Volumes)
+    {
+        if (Volume && NavSystem && (*(uint32*)&Volume->SupportedAgents & *(uint32*)&NavSystem->SupportedAgentsMask) && Volume->Outer && Volume->Outer->Outer)
+        {
+            MapName = Volume->Outer->Outer->Name.GetRawString();
+            break;
+        }
+    }
+
+    Volumes.Free();
+
+    auto Name = MapName + "_" + Playlist->PlaylistName.GetRawString() + ".bin";
 
     return std::wstring(LocalAppData) + L"\\FortniteGame\\Saved\\RemixNavCache_" + std::wstring(Name.begin(), Name.end());
 }
@@ -173,6 +219,78 @@ static std::vector<std::pair<std::wstring, int32>> GetAreas(ARecastNavMesh* NavM
         Areas.push_back({ Area.AreaClassName.ToWString(), Area.AreaID });
 
     return Areas;
+}
+
+static int32 FindCachedAreaId(const std::wstring& Name)
+{
+    for (auto& [CachedName, AreaId] : CachedAreas)
+    {
+        if (CachedName == Name)
+            return AreaId;
+    }
+
+    return -1;
+}
+
+static bool IsAreaIdUsed(ARecastNavMesh* NavMesh, int32 AreaId)
+{
+    for (auto& Area : NavMesh->SupportedAreas)
+    {
+        if (Area.AreaID == AreaId)
+            return true;
+    }
+
+    return false;
+}
+
+static bool HasCachedAreaNames(ARecastNavMesh* NavMesh)
+{
+    for (auto& Area : NavMesh->SupportedAreas)
+    {
+        if (FindCachedAreaId(Area.AreaClassName.ToWString()) < 0)
+            return false;
+    }
+
+    return true;
+}
+
+static void RemapAreas(ARecastNavMesh* NavMesh)
+{
+    static auto OnNavAreaEvent = (void (*)(ARecastNavMesh*, const UClass*, int32))(ImageBase + 0x753F0B0);
+
+    std::vector<const UClass*> Classes;
+
+    for (auto& Area : NavMesh->SupportedAreas)
+    {
+        if (Area.AreaClass && FindCachedAreaId(Area.AreaClassName.ToWString()) != Area.AreaID)
+            Classes.push_back(Area.AreaClass);
+    }
+
+    for (auto Class : Classes)
+        OnNavAreaEvent(NavMesh, Class, 1);
+
+    for (auto Class : Classes)
+        OnNavAreaEvent(NavMesh, Class, 0);
+}
+
+static int32 (*GetNewAreaIDOG)(ARecastNavMesh*, const UClass*);
+static int32 GetNewAreaID(ARecastNavMesh* NavMesh, const UClass* AreaClass)
+{
+    auto AreaId = GetNewAreaIDOG(NavMesh, AreaClass);
+
+    if (CachedAreas.empty() || AreaId == 0 || AreaId >= 62)
+        return AreaId;
+
+    auto Name = AreaClass->GetName();
+    auto CachedId = FindCachedAreaId(std::wstring(Name.begin(), Name.end()));
+
+    if (CachedId > 0 && CachedId < 62 && !IsAreaIdUsed(NavMesh, CachedId))
+        return CachedId;
+
+    while (AreaId < 61 && (IsAreaIdUsed(NavMesh, AreaId) || std::any_of(CachedAreas.begin(), CachedAreas.end(), [&](auto& Area) { return Area.second == AreaId; })))
+        AreaId++;
+
+    return AreaId;
 }
 
 static std::vector<uint64> GetLinks(UNavigationSystemV1* NavSystem)
@@ -214,7 +332,12 @@ static bool AttachCache(UNavigationSystemV1* NavSystem, ARecastNavMesh* NavMesh)
 
     auto Path = GetCachePath();
 
-    if (Path.empty() || !*(void**)(uint64(NavMesh) + 0x750) || !OpenCache(Path, true))
+    auto bImpl = *(void**)(uint64(NavMesh) + 0x750) != nullptr;
+    auto bOpen = !Path.empty() && bImpl && OpenCache(Path, true);
+
+    NavDiag("ATTACH path %ls impl %d open %d size %lld", Path.c_str(), int(bImpl), int(bOpen), bOpen ? CacheSize : -1ll);
+
+    if (!bOpen)
         return false;
 
     uint8 Params[0x7C];
@@ -225,9 +348,42 @@ static bool AttachCache(UNavigationSystemV1* NavSystem, ARecastNavMesh* NavMesh)
 
     GetParams(NavMesh, Params);
 
-    if (SerializeHeader(GetImageStamp(), Params, CachedAreas, CachedLinks, Columns, Version, PayloadSize) && PayloadSize == CacheSize - int64(CacheStream.tellg()) &&
-        Version >= 20 && Version <= 26 && IsSubset(GetAreas(NavMesh), CachedAreas, false) && IsSubset(GetLinks(NavSystem), CachedLinks, false))
+    auto bHeader = SerializeHeader(GetImageStamp(), Params, CachedAreas, CachedLinks, Columns, Version, PayloadSize);
+    auto bPayload = bHeader && PayloadSize == CacheSize - int64(CacheStream.tellg()) && Version >= 20 && Version <= 26;
+    auto RuntimeAreas = GetAreas(NavMesh);
+    auto RuntimeLinks = GetLinks(NavSystem);
+    auto bAreaNames = bPayload && HasCachedAreaNames(NavMesh);
+    auto bAreaIds = bPayload && IsSubset(RuntimeAreas, CachedAreas, false);
+    auto bLinks = bPayload && IsSubset(RuntimeLinks, CachedLinks, false);
+    int32 Remapped = 0;
+
+    NavDiag("HEADER ok %d payloadOk %d version %d stamp %08X cachedAreas %d cachedLinks %d columns %d runtimeAreas %d runtimeLinks %d areaNamesOk %d areaIdsOk %d linksOk %d",
+        int(bHeader), int(bPayload), Version, GetImageStamp(), int(CachedAreas.size()), int(CachedLinks.size()), int(Columns.size()), int(RuntimeAreas.size()), int(RuntimeLinks.size()), int(bAreaNames), int(bAreaIds), int(bLinks));
+
+    for (auto& [Name, AreaId] : RuntimeAreas)
     {
+        auto CachedId = FindCachedAreaId(Name);
+
+        if (CachedId != AreaId)
+        {
+            Remapped++;
+            NavDiag("AREA %ls runtime %d cached %d", Name.c_str(), AreaId, CachedId);
+        }
+    }
+
+    int32 MissingLinks = 0;
+
+    for (auto Link : RuntimeLinks)
+    {
+        if (std::find(CachedLinks.begin(), CachedLinks.end(), Link) == CachedLinks.end() && MissingLinks++ < 40)
+            NavDiag("LINK runtime id 0x%llX not in cache", Link);
+    }
+
+    NavDiag("LINKS runtime ids not in cache %d", MissingLinks);
+
+    if (bPayload && bAreaNames && bLinks)
+    {
+        RemapAreas(NavMesh);
         Chunk = UGameplayStatics::SpawnObject(URecastNavMeshDataChunk::StaticClass(), NavMesh);
         *(FName*)(uint64(Chunk) + 0x28) = NavMesh->Name;
         SerializeRecastData(Chunk, Archive, Version);
@@ -240,13 +396,18 @@ static bool AttachCache(UNavigationSystemV1* NavSystem, ARecastNavMesh* NavMesh)
     auto Tiles = Chunk && bConsumed ? *(int32*)(uint64(Chunk) + 0x38) : 0;
 
     if (!Tiles)
+    {
+        NavDiag("RESULT consumed %d tiles 0 attached 0", int(bConsumed));
         return false;
+    }
 
     TArray<uint64> Refs;
 
     AttachTiles(Chunk, &Refs, NavMesh, false, false);
 
     auto bAttached = Refs.Num() == Tiles;
+
+    NavDiag("RESULT consumed %d tiles %d refs %d attached %d remappedAreas %d", int(bConsumed), Tiles, Refs.Num(), int(bAttached), Remapped);
 
     if (!bAttached)
         RebuildAll(NavMesh);
@@ -313,6 +474,8 @@ static void BakeCache(UNavigationSystemV1* NavSystem, ARecastNavMesh* NavMesh)
     auto Chunk = ChunkActor->NavDataChunks.Num() > 0 ? ChunkActor->NavDataChunks[0] : nullptr;
     auto TempPath = Path + L"." + std::to_wstring(GetCurrentProcessId()) + L".tmp";
 
+    NavDiag("BAKE path %ls bounds %.0f %.0f %.0f %.0f %.0f %.0f tiles %d", Path.c_str(), Bounds.Min.X, Bounds.Min.Y, Bounds.Min.Z, Bounds.Max.X, Bounds.Max.Y, Bounds.Max.Z, Chunk ? *(int32*)(uint64(Chunk) + 0x38) : -1);
+
     if (Chunk && OpenCache(TempPath, false))
     {
         uint8 Params[0x7C];
@@ -351,6 +514,8 @@ static void RemoveNavigationLocks(UAthenaNavSystem* NavSystem)
 {
     auto NavMesh = (ARecastNavMesh*)NavSystem->MainNavData;
 
+    NavDiag("LOCKS lockBit %d navMesh %d athena %d generator %d", int(*(uint8*)(uint64(NavSystem) + 0x3C8) & 1), NavMesh != nullptr, NavMesh && NavMesh->IsA(AAthenaNavMesh::StaticClass()), NavMesh && *(void**)(uint64(NavMesh) + 0x368));
+
     if ((*(uint8*)(uint64(NavSystem) + 0x3C8) & 1) && NavMesh && NavMesh->IsA(AAthenaNavMesh::StaticClass()) && *(void**)(uint64(NavMesh) + 0x368))
         bNavCacheAttached = AttachCache(NavSystem, NavMesh);
 
@@ -369,17 +534,31 @@ void UAthenaNavSystem__Init()
     Archive[1] = uint64(&Archive[2]);
 
     Hook(ImageBase + 0xA5DB3C0, RemoveNavigationLocks, RemoveNavigationLocksOG);
+    Hook(ImageBase + 0x755D780, GetNewAreaID, GetNewAreaIDOG);
 }
 
 void UAthenaNavSystem__Tick()
 {
+    static auto OnInitialPlaylistLoad = (void (*)(UNavigationSystemV1*))(ImageBase + 0xA5CCAEC);
+
     if (bNavCacheDone)
         return;
 
     auto World = UWorld::GetWorld();
 
-    if (!World || !World->GameState)
+    if (!World || !World->GameState || !World->AuthorityGameMode || !World->AuthorityGameMode->IsA(AFortGameModeAthena::StaticClass()))
         return;
+
+    auto NavSystem = (UNavigationSystemV1*)World->NavigationSystem;
+
+    if (!NavSystem && !((AFortGameModeAthena*)World->AuthorityGameMode)->bWorldIsReady)
+        return;
+
+    if (NavSystem && NavSystem->IsA(UAthenaNavSystem::StaticClass()) && *(uint64*)(uint64(NavSystem) + 0x18C8) && ((AFortGameStateAthena*)World->GameState)->bPlaylistDataIsLoaded)
+    {
+        NavDiag("PLAYLISTUNLOCK nav system born after the initial playlist load lockBit %d navMesh %d", int(*(uint8*)(uint64(NavSystem) + 0x3C8) & 1), NavSystem->MainNavData != nullptr);
+        OnInitialPlaylistLoad(NavSystem);
+    }
 
     auto bMatchStarted = World->GameState->HasMatchStarted();
 
@@ -388,20 +567,29 @@ void UAthenaNavSystem__Tick()
 
     bNavCacheDone = true;
 
-    auto NavSystem = (UNavigationSystemV1*)World->NavigationSystem;
     auto NavMesh = NavSystem ? (ARecastNavMesh*)NavSystem->MainNavData : nullptr;
 
     if (!NavMesh || !NavMesh->IsA(AAthenaNavMesh::StaticClass()) || !*(void**)(uint64(NavMesh) + 0x368))
+    {
+        NavDiag("DONE without athena navmesh navSystem %d navMesh %d world %s", NavSystem != nullptr, NavMesh != nullptr, World->Name.GetRawString().c_str());
         return;
+    }
+
+    NavDiag("TICK attached %d matchStarted %d areasEqual %d linksEqual %d runtimeAreas %d runtimeLinks %d", int(bNavCacheAttached), int(bMatchStarted), int(IsSubset(GetAreas(NavMesh), CachedAreas, true)), int(IsSubset(GetLinks(NavSystem), CachedLinks, true)), int(GetAreas(NavMesh).size()), int(GetLinks(NavSystem).size()));
 
     if (bNavCacheAttached && (!IsSubset(GetAreas(NavMesh), CachedAreas, true) || !IsSubset(GetLinks(NavSystem), CachedLinks, true)))
     {
+        NavDiag("LATE MISMATCH rebuild and delete");
         RebuildAll(NavMesh);
         DeleteFileW(GetCachePath().c_str());
         bNavCacheAttached = false;
     }
     else if (!bNavCacheAttached && !bMatchStarted)
+    {
+        NavDiag("BAKE start");
         BakeCache(NavSystem, NavMesh);
+        NavDiag("BAKE done");
+    }
 }
 
 void UAthenaNavSystem__Reset()
