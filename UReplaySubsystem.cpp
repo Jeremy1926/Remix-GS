@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Shared.h"
 #include "Config.h"
-#include <shellapi.h>
 #include <shlobj.h>
 #include <wincrypt.h>
 #include <bcrypt.h>
@@ -18,9 +17,9 @@ constexpr DWORD ChunkBytes = 32 * 1024 * 1024;
 constexpr ULONGLONG SettledTime = 120ull * 10000000ull;
 constexpr DWORD ScanDelay = 30000;
 
-static std::wstring BaseUrl;
-static std::wstring ClientId;
-static std::wstring ClientSecret;
+extern std::wstring BackendUrl;
+extern std::wstring ClientId;
+extern std::wstring ClientSecret;
 static HINTERNET Session = nullptr;
 static bool bStreamerSet = false;
 static int32 MostTeams = 0;
@@ -36,23 +35,6 @@ struct FMatchResult
 static std::mutex ResultMutex;
 static std::vector<FMatchResult> Results;
 static std::unordered_set<std::wstring> Recorded;
-
-static std::wstring CommandLineValue(const std::wstring& Name)
-{
-    int32 Count = 0;
-    auto Arguments = CommandLineToArgvW(GetCommandLineW(), &Count);
-    auto Prefix = L"-" + Name + L"=";
-    std::wstring Value;
-
-    for (int32 i = 0; Arguments && i < Count; i++)
-    {
-        if (_wcsnicmp(Arguments[i], Prefix.c_str(), Prefix.size()) == 0)
-            Value = Arguments[i] + Prefix.size();
-    }
-
-    LocalFree(Arguments);
-    return Value;
-}
 
 static std::string Utf8(const std::wstring& Text)
 {
@@ -81,7 +63,7 @@ static DWORD Send(const wchar_t* Verb, const std::wstring& Path, const std::wstr
     Parts.lpszHostName = Host;
     Parts.dwHostNameLength = _countof(Host);
 
-    if (!WinHttpCrackUrl(BaseUrl.c_str(), 0, 0, &Parts))
+    if (!WinHttpCrackUrl(BackendUrl.c_str(), 0, 0, &Parts))
         return 0;
 
     auto Connection = WinHttpConnect(Session, Host, Parts.nPort, 0);
@@ -293,12 +275,7 @@ static void UploadWorker()
 
 void UReplaySubsystem__Init()
 {
-    ClientId = CommandLineValue(L"AuthClient");
-    ClientSecret = CommandLineValue(L"AuthSecret");
-    ClientId = ClientId.substr(0, ClientId.find(L','));
-    BaseUrl = CommandLineValue(L"TournamentBackend");
-
-    if (!bRecordReplays || ClientId.empty() || ClientSecret.empty() || BaseUrl.empty())
+    if (!bRecordReplays)
         return;
 
     UKismetSystemLibrary::ExecuteConsoleCommand(UWorld::GetWorld(), L"Fort.AutomaticReplayRecordingBR 1", nullptr);

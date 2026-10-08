@@ -1,5 +1,6 @@
 #pragma once
 
+inline std::wstring VeloraCheckUrl = L"https://velora.remixogfn.dev/velora/api/v1/gameservers/check";
 inline auto Port = 7777;
 inline std::string Region = "EU";
 inline bool bReload = false;

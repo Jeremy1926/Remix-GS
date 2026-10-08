@@ -2,7 +2,6 @@
 #include "Shared.h"
 #include "UFortControllerComponent_TournamentStatsTracker.h"
 #include <objbase.h>
-#include <shellapi.h>
 #include <wincrypt.h>
 #include <winhttp.h>
 #pragma comment(lib, "winhttp.lib")
@@ -35,10 +34,9 @@ struct FTournamentWindow
     std::wstring WindowId;
 };
 
-static std::wstring BackendUrl;
-static std::wstring ClientCredentials;
-static std::wstring HostLogin;
-static std::wstring HostPassword;
+extern std::wstring BackendUrl;
+extern std::wstring ClientId;
+extern std::wstring ClientSecret;
 static std::string AccessToken;
 static HINTERNET Session = nullptr;
 
@@ -54,23 +52,6 @@ static float MatchStartTime = 0.f;
 static int32 StartingTeams = 0;
 static int32 PlacementReported = 0;
 
-static std::wstring CommandLineValue(const std::wstring& Name)
-{
-    int32 Count = 0;
-    auto Arguments = CommandLineToArgvW(GetCommandLineW(), &Count);
-    auto Prefix = L"-" + Name + L"=";
-    std::wstring Value;
-
-    for (int32 i = 0; Arguments && i < Count; i++)
-    {
-        if (_wcsnicmp(Arguments[i], Prefix.c_str(), Prefix.size()) == 0)
-            Value = Arguments[i] + Prefix.size();
-    }
-
-    LocalFree(Arguments);
-    return Value;
-}
-
 static std::string Utf8(const std::wstring& Text)
 {
     auto Size = WideCharToMultiByte(CP_UTF8, 0, Text.c_str(), (int32)Text.size(), nullptr, 0, nullptr, nullptr);
@@ -84,21 +65,6 @@ static std::wstring Wide(const std::string& Text)
     auto Size = MultiByteToWideChar(CP_UTF8, 0, Text.c_str(), (int32)Text.size(), nullptr, 0);
     std::wstring Result(Size, L'\0');
     MultiByteToWideChar(CP_UTF8, 0, Text.c_str(), (int32)Text.size(), Result.data(), Size);
-    return Result;
-}
-
-static std::string UrlEncode(const std::string& Text)
-{
-    std::string Result;
-
-    for (auto Char : Text)
-    {
-        if (isalnum((uint8)Char) || Char == '-' || Char == '_' || Char == '.' || Char == '~')
-            Result += Char;
-        else
-            Result += std::format("%{:02X}", (uint8)Char);
-    }
-
     return Result;
 }
 
@@ -174,8 +140,8 @@ static DWORD Send(const std::wstring& Path, const std::string& Body, const std::
 
 static bool Login()
 {
-    auto Body = "grant_type=password&username=" + UrlEncode(Utf8(HostLogin)) + "&password=" + UrlEncode(Utf8(HostPassword));
-    auto Headers = L"Content-Type: application/x-www-form-urlencoded\r\nAuthorization: basic " + Wide(Base64(Utf8(ClientCredentials)));
+    auto Body = std::string("grant_type=client_credentials");
+    auto Headers = L"Content-Type: application/x-www-form-urlencoded\r\nAuthorization: basic " + Wide(Base64(Utf8(ClientId + L":" + ClientSecret)));
 
     std::string Response;
     size_t Cursor = 0;
@@ -481,14 +447,6 @@ void TournamentPlayerEliminated(AFortGameModeAthena* GameMode, AFortPlayerStateA
 
 void UFortControllerComponent_TournamentStatsTracker__Init()
 {
-    BackendUrl = CommandLineValue(L"TournamentBackend");
-    ClientCredentials = CommandLineValue(L"TournamentClient");
-    HostLogin = CommandLineValue(L"AUTH_LOGIN");
-    HostPassword = CommandLineValue(L"AUTH_PASSWORD");
-
-    if (BackendUrl.empty() || ClientCredentials.empty() || HostLogin.empty())
-        return;
-
     Session = WinHttpOpen(L"Remix-GS", WINHTTP_ACCESS_TYPE_NO_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
 
     if (Session)

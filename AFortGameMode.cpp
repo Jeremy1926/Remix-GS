@@ -973,7 +973,10 @@ static void OnShutdownSessionDestroyed(AFortGameSessionDedicatedAthena* GameSess
     static auto RequestExitWithStatus = (void (*)(bool, uint8, const wchar_t*))(ImageBase + 0x41D939C);
 
     if (SessionName == GetGameSessionName())
-        RequestExitWithStatus(false, uint8(ShutdownExitCode), nullptr);
+    {
+        Patch<uint8_t>(ImageBase + 0x41D939C, 0x4C);
+        RequestExitWithStatus(true, uint8(ShutdownExitCode), nullptr);
+    }
 }
 
 static void DedicatedShutdownDedicatedServer(AFortGameSessionDedicatedAthena* GameSession, int32 ExitCode)
