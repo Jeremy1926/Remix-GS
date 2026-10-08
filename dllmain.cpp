@@ -98,6 +98,8 @@ static void VeloraTick()
 {
     static auto GetOnlineSubsystem = (uint8* (*)(void*))(ImageBase + 0x25336F0);
     static auto GetMcpService = (FSharedRef* (*)(uint8*, FSharedRef*))(ImageBase + 0x30223F4);
+    static auto GetCheckinService = (FSharedRef* (*)(uint8*, FSharedRef*))(ImageBase + 0x7487964);
+    static auto GetIdentityInterface = (FSharedRef* (*)(uint8*, FSharedRef*))(ImageBase + 0x2BD8F1C);
     static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
     static auto FindServicePermissions = (uint8* (*)(uint8*, void*))(ImageBase + 0x3C253EC);
     static auto MakeServicePermissions = (void* (*)(void*, void*, void*, void*))(ImageBase + 0x2BF1684);
@@ -112,14 +114,22 @@ static void VeloraTick()
     static bool bShutdownRequested = false;
 
     auto OnlineSubsystem = GetOnlineSubsystem((void*)(ImageBase + 0x12D183B8));
-    FSharedRef McpService{};
+    FSharedRef Services[3]{};
 
     if (OnlineSubsystem)
-        GetMcpService(OnlineSubsystem, &McpService);
-
-    if (McpService.Object)
     {
-        auto Config = (uint8*)McpService.Object + 0x10;
+        GetMcpService(OnlineSubsystem, &Services[0]);
+        GetCheckinService(OnlineSubsystem, &Services[1]);
+        GetIdentityInterface(OnlineSubsystem, &Services[2]);
+    }
+
+    uint8* Configs[] = { Services[0].Object ? (uint8*)Services[0].Object + 0x10 : nullptr, Services[1].Object ? (uint8*)Services[1].Object + 0x10 : nullptr, Services[2].Object ? (uint8*)Services[2].Object + 0x198 : nullptr };
+
+    for (auto Config : Configs)
+    {
+        if (!Config)
+            continue;
+
         auto Permissions = FindServicePermissions(Config, (void*)(ImageBase + 0x12D18A90));
         auto Id = Permissions ? (FString*)(Permissions + 0x10) : nullptr;
 
@@ -147,7 +157,8 @@ static void VeloraTick()
         }
     }
 
-    TSharedRef_Destructor(&McpService);
+    for (auto& Service : Services)
+        TSharedRef_Destructor(&Service);
 
     if (!bServing)
     {
