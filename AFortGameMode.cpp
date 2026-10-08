@@ -83,6 +83,7 @@ struct FMatchmakingBackfill
 
 static uint64 CreateSessionCompleteHandle = 0;
 static ULONGLONG MatchmakingWaitStart = 0;
+static bool bMatchmakingServiceLost = false;
 static uint64 LeaveMeshNetworkCompleteHandle = 0;
 static int32 ShutdownExitCode = 0;
 
@@ -832,6 +833,13 @@ static void OnMatchmakingSessionBackfillMatchRequestV2(AFortGameSessionDedicated
 {
     ReadPlayerDivisions(Backfill->BackfillOptions.Object, Backfill->Teams);
     OnMatchmakingSessionBackfillMatchRequestV2OG(GameSession, Backfill);
+}
+
+static void (*OnMatchmakingSessionErrorV2OG)(AFortGameSessionDedicatedAthena*, void*);
+static void OnMatchmakingSessionErrorV2(AFortGameSessionDedicatedAthena* GameSession, void* Error)
+{
+    OnMatchmakingSessionErrorV2OG(GameSession, Error);
+    bMatchmakingServiceLost = true;
 }
 
 static void (*OnRegisterPlayersCompleteOG)(AFortGameSessionDedicatedAthena*, FName, void*, bool, FString*);
@@ -2669,6 +2677,7 @@ void AFortGameMode__PostLoad()
     Hook<AFortGameSessionDedicatedAthena>(uint32(0x12B), ShutdownDedicatedServer);
     Hook<AFortGameSessionDedicatedAthena>(uint32(0x134), OnMatchmakingSessionAssignMatchRequestV2);
     Hook<AFortGameSessionDedicatedAthena>(uint32(0x135), OnMatchmakingSessionBackfillMatchRequestV2, OnMatchmakingSessionBackfillMatchRequestV2OG);
+    Hook<AFortGameSessionDedicatedAthena>(uint32(0x136), OnMatchmakingSessionErrorV2, OnMatchmakingSessionErrorV2OG);
     Hook(ImageBase + 0x9D19F18, OnRegisterPlayersComplete, OnRegisterPlayersCompleteOG);
     Hook(ImageBase + 0x9D19B70, OnQueryUserInfoComplete, OnQueryUserInfoCompleteOG);
 
@@ -2731,6 +2740,16 @@ void AFortGameMode__Tick()
 
         MatchmakingWaitStart = 0;
         ConnectToMatchmakingServiceV2(GameSession, false);
+    }
+
+    if (bMatchmakingServiceLost)
+    {
+        auto GameSession = UWorld::GetWorld()->AuthorityGameMode->GameSession;
+        auto RequestGracefulShutdown = (void (*)(AGameSession*, int32))GameSession->VTable[0x12C];
+
+        bMatchmakingServiceLost = false;
+        SetConsoleTitleA("Remix 32.00 | Lost the matchmaker, stopping");
+        RequestGracefulShutdown(GameSession, 0);
     }
 
     auto GamePhaseLogic = UFortGameStateComponent_BattleRoyaleGamePhaseLogic::Get(UWorld::GetWorld());

@@ -277,6 +277,7 @@ void Main()
     Patch<uint8_t>(ImageBase + 0x41D9328, 0xC3);
     Patch<uint8_t>(ImageBase + 0x41D939C, 0xC3);
     Patch<uint8_t>(ImageBase + 0xC339E70, 0xC3);
+    Patch<uint8_t>(ImageBase + 0x9E823AC, 0xC3);
     Patch<uint32_t>(ImageBase + 0x9CDF2E0, 0xC0FFC031);
     Patch<uint8_t>(ImageBase + 0x9CDF2E4, 0xC3);
     Patch<uint32_t>(ImageBase + 0x9CF42D8, 0xC0FFC031);
