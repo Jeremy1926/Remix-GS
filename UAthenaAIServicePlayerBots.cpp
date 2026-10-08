@@ -1083,8 +1083,6 @@ static void AssignBotTeam(UAthenaAIServicePlayerBots* Service, AFortAthenaAIBotC
 
 void UAthenaAIServicePlayerBots__Init()
 {
-    static constexpr uint8_t FetchCall[] = { 0x48, 0x8D, 0x54, 0x24, 0x40, 0x4C, 0x8B, 0xC6, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x90, 0x90 };
-
     Hook<UAthenaAIServicePlayerBots>(uint32(0x59), OnPlaylistLoaded, OnPlaylistLoadedOG);
     Hook(ImageBase + 0xA6B9420, StartSpawning, StartSpawningOG);
     Hook(ImageBase + 0xA6AC1A8, OnAllBotsSpawned, OnAllBotsSpawnedOG);
@@ -1092,8 +1090,10 @@ void UAthenaAIServicePlayerBots__Init()
     Hook(ImageBase + 0x2B54F10, PlacePlayersInAircraft, PlacePlayersInAircraftOG);
     Hook(ImageBase + 0xA69A8F8, AssignBotTeam, AssignBotTeamOG);
 
-    for (int32 i = 0; i < int32(sizeof(FetchCall)); i++)
-        Patch<uint8_t>(ImageBase + 0xA549BBE + i, FetchCall[i]);
+    int32 i = 0;
+
+    for (auto Byte : { 0x48, 0x8D, 0x54, 0x24, 0x40, 0x4C, 0x8B, 0xC6, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x90, 0x90 })
+        Patch<uint8_t>(ImageBase + 0xA549BBE + i++, uint8_t(Byte));
 
     Rel32Hook(ImageBase + 0xA549BC6 + 1, FetchPlayerBotNameAndID);
 }

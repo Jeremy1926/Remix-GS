@@ -9,7 +9,6 @@ INIT_TICKER(UAthenaNavSystem);
 
 static void (*RemoveNavigationLocksOG)(UAthenaNavSystem*);
 
-static constexpr uint32 CacheMagic = 0x31434E52;
 static std::fstream CacheStream;
 static int64 CacheSize = 0;
 static uint32 FortniteMainVersion[10] = {};
@@ -118,7 +117,7 @@ static void Serialize(std::vector<std::pair<std::wstring, int32>>& Areas)
 
 static bool SerializeHeader(uint32 Stamp, uint8 (&Params)[0x7C], std::vector<std::pair<std::wstring, int32>>& Areas, std::vector<uint64>& Links, std::vector<uint64>& Columns, int32& Version, int64& PayloadSize)
 {
-    auto Magic = CacheMagic;
+    uint32 Magic = 0x31434E52;
     auto SavedStamp = Stamp;
     uint8 SavedParams[0x7C];
 
@@ -128,7 +127,7 @@ static bool SerializeHeader(uint32 Stamp, uint8 (&Params)[0x7C], std::vector<std
     Serialize(SavedStamp);
     Serialize(SavedParams);
 
-    if (!CacheStream || Magic != CacheMagic || SavedStamp != Stamp || memcmp(SavedParams, Params, sizeof(SavedParams)))
+    if (!CacheStream || Magic != 0x31434E52 || SavedStamp != Stamp || memcmp(SavedParams, Params, sizeof(SavedParams)))
         return false;
 
     Serialize(Areas);

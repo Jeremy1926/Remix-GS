@@ -188,11 +188,10 @@ static void HandleDamaged(ABuildingGameplayActorSentry* Sentry, float Damage, co
             Normal = Direction * (1.0 / sqrt(SquareSum));
     }
 
-    constexpr double RadiansToDegrees = 180.0 / 3.14159265358979323846;
     FRotator LookRotation{};
 
-    LookRotation.Yaw = atan2(Normal.Y, Normal.X) * RadiansToDegrees;
-    LookRotation.Pitch = atan2(Normal.Z, sqrt(Normal.X * Normal.X + Normal.Y * Normal.Y)) * RadiansToDegrees;
+    LookRotation.Yaw = atan2(Normal.Y, Normal.X) * 180.0 / 3.14159265358979323846;
+    LookRotation.Pitch = atan2(Normal.Z, sqrt(Normal.X * Normal.X + Normal.Y * Normal.Y)) * 180.0 / 3.14159265358979323846;
     LookRotation.Roll = 0.0;
 
     double PitchClampMin = Sentry->SentryPitchClampMin;

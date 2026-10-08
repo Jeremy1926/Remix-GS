@@ -9,10 +9,6 @@
 
 INIT_MODULE(UFortControllerComponent_TournamentStatsTracker);
 
-constexpr auto MaxSendAttempts = 3;
-constexpr auto SendRetryDelay = 2000;
-constexpr auto EventsGameId = L"Fortnite";
-
 struct FTournamentPlayer
 {
     TWeakObjectPtr<AFortPlayerStateAthena> PlayerState;
@@ -164,11 +160,11 @@ static void TournamentWorker()
         std::string Response;
         DWORD Status = 0;
 
-        for (int32 Attempt = 0; Attempt < MaxSendAttempts && Status != 200; Attempt++)
+        for (int32 Attempt = 0; Attempt < 3 && Status != 200; Attempt++)
         {
             if (AccessToken.empty() && !Login())
             {
-                Sleep(SendRetryDelay);
+                Sleep(2000);
                 continue;
             }
 
@@ -177,7 +173,7 @@ static void TournamentWorker()
             if (Status == 401)
                 AccessToken.clear();
             else if (Status == 0 || Status >= 500)
-                Sleep(SendRetryDelay);
+                Sleep(2000);
             else if (Status != 200)
                 break;
         }
@@ -191,7 +187,7 @@ static void Queue(const std::wstring& Route, std::string Body)
 
     {
         std::lock_guard Lock(RequestMutex);
-        Requests.push_back({ std::wstring(L"/api/v1/events/") + EventsGameId + L"/gameserver/matches/" + MatchId + Route, std::move(Body) });
+        Requests.push_back({ std::wstring(L"/api/v1/events/Fortnite/gameserver/matches/") + MatchId + Route, std::move(Body) });
     }
 
     RequestSignal.notify_one();

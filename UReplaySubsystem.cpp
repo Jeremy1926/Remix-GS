@@ -12,10 +12,6 @@
 INIT_MODULE(UReplaySubsystem);
 INIT_TICKER(UReplaySubsystem);
 
-constexpr DWORD ChunkBytes = 32 * 1024 * 1024;
-constexpr ULONGLONG SettledTime = 120ull * 10000000ull;
-constexpr DWORD ScanDelay = 30000;
-
 extern std::wstring BackendUrl;
 extern std::wstring ClientId;
 extern std::wstring ClientSecret;
@@ -155,7 +151,7 @@ static bool UploadReplay(const std::wstring& File, const std::wstring& SessionId
     LARGE_INTEGER FileSize{};
     BCRYPT_ALG_HANDLE Algorithm = nullptr;
     BCRYPT_HASH_HANDLE Hash = nullptr;
-    std::vector<uint8> Buffer(ChunkBytes);
+    std::vector<uint8> Buffer(32 * 1024 * 1024);
     auto Base = L"/fortnite/api/game/v2/replays/" + SessionId;
     auto Headers = L"Authorization: bearer " + Token + L"\r\nContent-Type: application/octet-stream";
     std::string Response;
@@ -166,7 +162,7 @@ static bool UploadReplay(const std::wstring& File, const std::wstring& SessionId
     {
         DWORD Read = 0;
 
-        if (!ReadFile(Handle, Buffer.data(), (DWORD)std::min<int64>(ChunkBytes, FileSize.QuadPart - Offset), &Read, nullptr) || Read == 0 || BCryptHashData(Hash, Buffer.data(), Read, 0) != 0)
+        if (!ReadFile(Handle, Buffer.data(), (DWORD)std::min<int64>(32 * 1024 * 1024, FileSize.QuadPart - Offset), &Read, nullptr) || Read == 0 || BCryptHashData(Hash, Buffer.data(), Read, 0) != 0)
         {
             bFailed = true;
             break;
@@ -233,7 +229,7 @@ static void UploadWorker()
                 std::wstring SessionId;
                 auto Written = ULARGE_INTEGER{ Entry.ftLastWriteTime.dwLowDateTime, Entry.ftLastWriteTime.dwHighDateTime }.QuadPart;
 
-                if (!(Entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && SessionName(Entry.cFileName, SessionId) && NowTicks > Written + SettledTime)
+                if (!(Entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && SessionName(Entry.cFileName, SessionId) && NowTicks > Written + 120ull * 10000000ull)
                     Finished.push_back({ Directory + L"\\" + Entry.cFileName, SessionId });
             } while (FindNextFileW(Find, &Entry));
 
@@ -268,7 +264,7 @@ static void UploadWorker()
             }
         }
 
-        Sleep(ScanDelay);
+        Sleep(30000);
     }
 }
 
