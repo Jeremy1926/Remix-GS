@@ -23,7 +23,7 @@ struct FEmoteRowsInfo
 static std::vector<FBotLoadout> Loadouts;
 static size_t NextLoadout = 0;
 static std::unordered_map<UDataTable*, FEmoteRowsInfo> EmoteRowsInfos;
-static std::vector<UObject*> RootedObjects;
+static std::vector<std::pair<UObject*, int32>> RootedObjects;
 static const FFortAthenaLoadout* FirstSpawnLoadout = nullptr;
 
 static void Root(UObject* Object)
@@ -32,7 +32,7 @@ static void Root(UObject* Object)
         return;
 
     Object->AddToRoot();
-    RootedObjects.push_back(Object);
+    RootedObjects.push_back({ Object, Object->GetIndex() });
 }
 
 static float RandomFraction()
@@ -321,8 +321,13 @@ void UFortAthenaAISpawnerDataComponent_CosmeticLibrary__Init()
 
 void UFortAthenaAISpawnerDataComponent_CosmeticLibrary__Reset()
 {
-    for (auto Object : RootedObjects)
-        Object->RemoveFromRoot();
+    for (auto& [Object, Index] : RootedObjects)
+    {
+        auto Item = UObject::GObjects->GetItemByIndex(Index);
+
+        if (Item && Item->GetObject() == Object)
+            Object->RemoveFromRoot();
+    }
 
     RootedObjects.clear();
     Loadouts.clear();
