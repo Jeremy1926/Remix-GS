@@ -793,6 +793,8 @@ static void ProcessQueryResults(AFortGameSessionDedicatedAthena* GameSession, co
     static auto FindString = (int32 (*)(void*, uint32, const FString*))(ImageBase + 0x5144CF8);
     static auto RemoveString = (int32 (*)(void*, const FString*))(ImageBase + 0x5A96088);
     static auto DeclineMatchmaking = (void (*)(AFortGameSessionDedicatedAthena*, uint8, const FString*))(ImageBase + 0x9D15934);
+    static auto PauseBeaconRequests = (void (*)(AFortGameSession*, bool))(ImageBase + 0x9CE6B40);
+    static auto SetClientsReadyToJoinPhase = (void (*)(AContentBeaconHostObjectV2*))(ImageBase + 0x9CEB2A8);
 
     auto Base = __int64(GameSession);
     auto RegisterPlayerResults = (void*)(Base + 0x8F0);
@@ -819,6 +821,11 @@ static void ProcessQueryResults(AFortGameSessionDedicatedAthena* GameSession, co
         else
         {
             auto RespondToMatchAssignment = (bool (*)(void*, uint8))(*(void***)MatchmakingService)[0x4];
+
+            PauseBeaconRequests(GameSession, false);
+
+            if (auto ContentBeaconHost = GameSession->ContentBeaconHostV2; ContentBeaconHost && ContentBeaconHost->IsA(AFortContentBeaconHostObjectV2::StaticClass()))
+                SetClientsReadyToJoinPhase(ContentBeaconHost);
 
             RespondToMatchAssignment(MatchmakingService, 0);
         }
