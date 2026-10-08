@@ -4,7 +4,6 @@
 #include "SDK/SDK/DynamicPoiPointProviderRuntime_classes.hpp"
 
 INIT_MODULE(UFortAthenaLivingWorldManager);
-INIT_RESET(UFortAthenaLivingWorldManager);
 
 struct FPendingSpawnRequest
 {
@@ -522,9 +521,4 @@ void UFortAthenaLivingWorldManager__Init()
     Hook(ImageBase + 0xB2D18D8, RegisterToLivingWorldManager, RegisterToLivingWorldManagerOG);
 
     Hook<AFortAthenaPatrolPath>(uint32(0x74), BeginPlay, BeginPlayOG);
-}
-
-void UFortAthenaLivingWorldManager__Reset()
-{
-    NextActorSpawnRequestID = -2;
 }

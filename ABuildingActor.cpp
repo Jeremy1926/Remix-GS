@@ -8,7 +8,6 @@
 
 INIT_MODULE(ABuildingActor);
 INIT_POSTLOAD(ABuildingActor);
-INIT_RESET(ABuildingActor);
 
 static std::optional<UCurveTable*> ResourceRates;
 
@@ -533,9 +532,4 @@ void ABuildingActor__PostLoad()
 
     HookServerOnAttemptInteract<ABuildingGameplayActorConversationCompatible>();
     HookServerOnAttemptInteract<ABuildingProp_ConversationCompatible>();
-}
-
-void ABuildingActor__Reset()
-{
-    ResourceRates.reset();
 }

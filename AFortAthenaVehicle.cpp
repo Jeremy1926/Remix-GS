@@ -5,7 +5,6 @@
 
 INIT_MODULE(AFortAthenaVehicle);
 INIT_POSTLOAD(AFortAthenaVehicle);
-INIT_RESET(AFortAthenaVehicle);
 
 static void ServerMove(UObject* Context, FFrame& Stack, void* Ret)
 {
@@ -428,9 +427,4 @@ void AFortAthenaVehicle__PostLoad()
     PatchVehicleVtables();
 
     Hook(ImageBase + 0xA3E7224, EquipVehicleWeapon, EquipVehicleWeaponOG);
-}
-
-void AFortAthenaVehicle__Reset()
-{
-    MissedSelfSpawns.clear();
 }

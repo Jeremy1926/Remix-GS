@@ -9,7 +9,6 @@
 INIT_MODULE(AFortPlayerPawn);
 INIT_POSTLOAD(AFortPlayerPawn);
 INIT_TICKER(AFortPlayerPawn);
-INIT_RESET(AFortPlayerPawn);
 
 static bool (*FinishedTargetSplineOG)(AFortPickupAthena*);
 static void (*OnCapsuleBeginOverlapOG)(UObject*, FFrame&, void*);
@@ -1089,11 +1088,4 @@ void AFortPlayerPawn__Tick()
     }
 
     Pawns.Free();
-}
-
-void AFortPlayerPawn__Reset()
-{
-    DBNORevivePawns.clear();
-    CachedZiplineClass.reset();
-    CachedEmoteAbilityClass.reset();
 }

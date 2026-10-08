@@ -11,7 +11,6 @@
 
 INIT_MODULE(UReplaySubsystem);
 INIT_TICKER(UReplaySubsystem);
-INIT_RESET(UReplaySubsystem);
 
 constexpr DWORD ChunkBytes = 32 * 1024 * 1024;
 constexpr ULONGLONG SettledTime = 120ull * 10000000ull;
@@ -303,13 +302,6 @@ void UReplaySubsystem__Tick()
         GameMode->ReplayStreamerOverride = FString(L"LocalFileNetworkReplayStreaming");
         bStreamerSet = true;
     }
-}
-
-void UReplaySubsystem__Reset()
-{
-    bStreamerSet = false;
-    MostTeams = 0;
-    Recorded.clear();
 }
 
 void RecordMatchResult(AFortPlayerControllerAthena* PlayerController)

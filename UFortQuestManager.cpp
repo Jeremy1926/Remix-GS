@@ -9,7 +9,6 @@
 
 INIT_POSTLOAD(UFortQuestManager);
 INIT_TICKER(UFortQuestManager);
-INIT_RESET(UFortQuestManager);
 
 struct FFortQuestStatEvent
 {
@@ -1727,15 +1726,4 @@ void UFortQuestManager__PostLoad()
     Hook(ImageBase + 0x9F2CCAC, OnDamageServer, OnDamageServerOG);
     Hook(ImageBase + 0x8F96DA4, HandlePawnKilled, HandlePawnKilledOG);
     Hook((uint64)HandleGameplayEventFunction, HandleGameplayEvent, HandleGameplayEventOG);
-}
-
-void UFortQuestManager__Reset()
-{
-    FreeGameplayTags(PendingDamageTaken.DamageSourceTags);
-    FreeGameplayTags(PendingDamageTaken.DamageTypeTags);
-
-    PendingDamageTaken = FPendingDamageTaken{};
-    FlushStates.clear();
-    CurrentMatchId.clear();
-    TimeElapsedCountedUntil = -1.0;
 }

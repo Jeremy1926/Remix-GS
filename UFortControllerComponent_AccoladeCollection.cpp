@@ -5,7 +5,6 @@
 
 INIT_POSTLOAD(UFortControllerComponent_AccoladeCollection);
 INIT_TICKER(UFortControllerComponent_AccoladeCollection);
-INIT_RESET(UFortControllerComponent_AccoladeCollection);
 
 struct FAccoladeCollectionRequest
 {
@@ -264,14 +263,4 @@ void UFortControllerComponent_AccoladeCollection__PostLoad()
     Hook<UFortControllerComponent_AccoladeCollection>(uint32(0x78), BeginPlay, BeginPlayOG);
     ExecHook(UFortControllerComponent_AccoladeCollection::StaticClass()->FindFunction("HandlePlayerProfileInitialized"), HandlePlayerProfileInitialized, HandlePlayerProfileInitializedOG);
     ExecHook(UFortControllerComponent_AccoladeCollection::StaticClass()->FindFunction("OnEndMatchForPlayer"), OnEndMatchForPlayer, OnEndMatchForPlayerOG);
-}
-
-void UFortControllerComponent_AccoladeCollection__Reset()
-{
-    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
-
-    for (auto& Request : AccoladeCollectionRequests)
-        TSharedRef_Destructor(&Request.HttpRequest);
-
-    AccoladeCollectionRequests.clear();
 }

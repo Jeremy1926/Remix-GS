@@ -10,7 +10,6 @@
 
 INIT_MODULE(AFortAthenaAIBotController);
 INIT_TICKER(AFortAthenaAIBotController);
-INIT_RESET(AFortAthenaAIBotController);
 
 static void (*InitializeInventoryOG)(void*, TArray<FItemAndCount>*);
 static void (*ApplyCosmeticLoadoutOG)(AFortAthenaAIBotController*, void*);
@@ -770,15 +769,4 @@ void AFortAthenaAIBotController__Tick()
     }
     else if (bBoundsReannounced && Now - StageTime >= 10000)
         BotNavigationStage = EBotNavigationStage::Done;
-}
-
-void AFortAthenaAIBotController__Reset()
-{
-    DescriptorTags.clear();
-
-    BotNavigationStage = EBotNavigationStage::WaitingForRelease;
-    BotNavigationSystem = nullptr;
-    NavDataCountBeforeSpawn = 0;
-    StageTime = 0;
-    bBoundsReannounced = false;
 }

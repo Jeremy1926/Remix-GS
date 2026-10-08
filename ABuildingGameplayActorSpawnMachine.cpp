@@ -3,7 +3,6 @@
 
 INIT_MODULE(ABuildingGameplayActorSpawnMachine);
 INIT_TICKER(ABuildingGameplayActorSpawnMachine);
-INIT_RESET(ABuildingGameplayActorSpawnMachine);
 
 static void (*SetSpawnMachineStateOG)(ABuildingGameplayActorSpawnMachine*, ESpawnMachineState);
 
@@ -192,9 +191,4 @@ void ABuildingGameplayActorSpawnMachine__Tick()
 
     for (auto SpawnMachine : SpawnMachines)
         ResurrectNextPlayer(SpawnMachine);
-}
-
-void ABuildingGameplayActorSpawnMachine__Reset()
-{
-    PendingResurrections.clear();
 }

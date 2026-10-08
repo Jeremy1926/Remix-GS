@@ -16,7 +16,6 @@
 INIT_MODULE(AFortGameMode);
 INIT_POSTLOAD(AFortGameMode);
 INIT_TICKER(AFortGameMode);
-INIT_RESET(AFortGameMode);
 
 static TArray<UFortAbilitySet*> AbilitySets;
 static bool bSkipWarmup = false;
@@ -995,108 +994,6 @@ static void DedicatedShutdownDedicatedServer(AFortGameSessionDedicatedAthena* Ga
     CleanupDedicatedServerSession(GameSession, OnShutdownSessionDestroyed);
 }
 
-static void OnAllPlayersUnregistered(AFortGameSessionDedicatedAthena* GameSession)
-{
-    static auto Broadcast = (void (*)(void*))(ImageBase + 0x59E4F90);
-    static auto GetMapName = (FString* (*)(UWorld*, FString*))(ImageBase + 0x2268120);
-    static auto AssignString = (FString* (*)(FString*, const FString*))(ImageBase + 0x4A3CC98);
-    static auto LeavingMap = FName(L"LeavingMap");
-
-    if (*(bool*)(ImageBase + 0x12C11FE4))
-    {
-        auto ShutdownDedicatedServer = (void (*)(AFortGameSessionDedicatedAthena*, int32))GameSession->VTable[0x12B];
-
-        return ShutdownDedicatedServer(GameSession, *(int32*)(ImageBase + 0x12C11FE0));
-    }
-
-    Broadcast((void*)(ImageBase + 0x12A9CE98));
-
-    auto World = UWorld::GetWorld();
-    auto GameMode = (AFortGameMode*)World->AuthorityGameMode;
-    auto DestroyHostBeacon = (void (*)(AFortGameSessionDedicatedAthena*, bool))GameSession->VTable[0x11A];
-
-    DestroyHostBeacon(GameSession, false);
-
-    if (GameMode->MatchState == LeavingMap)
-        return;
-
-    auto CanServerTravel = (bool (*)(AFortGameMode*, const FString*, bool))GameMode->VTable[0xFF];
-    FString URL;
-
-    GameMode->bUseSeamlessTravel = false;
-    GetMapName(World, &URL);
-
-    if (CanServerTravel(GameMode, &URL, true))
-    {
-        *(uint8*)(__int64(World) + 0x749) = 0;
-
-        if (*(int32*)(__int64(World) + 0x758) <= 1)
-            AssignString((FString*)(__int64(World) + 0x750), &URL);
-    }
-
-    URL.Free();
-}
-
-static void DedicatedRestart(AFortGameSessionDedicatedAthena* GameSession)
-{
-    static auto GetCsvProfiler = (void* (*)())(ImageBase + 0x175B328);
-    static auto EndCapture = (void (*)(void*, FSharedRef*, void**))(ImageBase + 0x5AB6E74);
-    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
-    static auto IsInSeamlessTravel = (bool (*)(UWorld*))(ImageBase + 0x2009328);
-    static auto PauseBeaconRequests = (void (*)(AFortGameSessionDedicatedAthena*, bool))(ImageBase + 0x9CE6B40);
-    static auto BindTimerDelegate = (void (*)(FNativeDelegate*, UObject*, void*))(ImageBase + 0x9816384);
-    static auto UnregisterAllPlayerInfos = (void (*)(UGameInstance*, FNativeDelegate*))(ImageBase + 0x9811B74);
-    static auto GetAllRegistries = (void (*)(void*, TArray<UDataRegistry*>*, bool))(ImageBase + 0x74CFAB0);
-    static auto PurgeAllOverrides = (void (*)(UDataRegistry*))(ImageBase + 0x97E9D1C);
-
-    auto CsvProfiler = GetCsvProfiler();
-
-    if (CsvProfiler && *(bool*)(ImageBase + 0x12D5C3C0))
-    {
-        FSharedRef Result{};
-        void* EventToSignal = nullptr;
-
-        EndCapture(CsvProfiler, &Result, &EventToSignal);
-        TSharedRef_Destructor(&Result);
-    }
-
-    ClearSessionTimers(GameSession);
-
-    auto World = UWorld::GetWorld();
-    auto GameMode = (AFortGameMode*)World->AuthorityGameMode;
-
-    if (GameMode->bTravelInitiated || IsInSeamlessTravel(World))
-        return;
-
-    auto ClearServerDelegates = (void (*)(AFortGameSessionDedicatedAthena*))GameSession->VTable[0x11C];
-    auto StopMeshNetwork = (void (*)(AFortGameSessionDedicatedAthena*))GameSession->VTable[0x125];
-
-    ClearServerDelegates(GameSession);
-    GameMode->bTravelInitiated = true;
-    PauseBeaconRequests(GameSession, true);
-
-    FNativeDelegate OnAllPlayersUnregisteredDelegate{};
-
-    BindTimerDelegate(&OnAllPlayersUnregisteredDelegate, GameSession, OnAllPlayersUnregistered);
-    UnregisterAllPlayerInfos(World->OwningGameInstance, &OnAllPlayersUnregisteredDelegate);
-
-    if (auto DataRegistrySubsystem = *(void**)(ImageBase + 0x12D18AE0))
-    {
-        TArray<UDataRegistry*> Registries;
-        GetAllRegistries(DataRegistrySubsystem, &Registries, false);
-
-        for (auto Registry : Registries)
-        {
-            if (Registry && Registry->IsA(UFortDataRegistry::StaticClass()))
-                PurgeAllOverrides(Registry);
-        }
-
-        Registries.Free();
-    }
-
-    StopMeshNetwork(GameSession);
-}
-
 static void StopWaitingForLeaveMeshNetwork()
 {
     static auto RemoveDelegateInstance = (bool (*)(void*, uint64))(ImageBase + 0x1C1C39C);
@@ -1129,18 +1026,6 @@ static bool LeaveMatchmakingAndMeshNetwork(AFortGameSessionDedicatedAthena* Game
     return true;
 }
 
-static void OnRestartLeaveMeshNetworkComplete(AFortGameSessionDedicatedAthena* GameSession, const FName& MeshName, const void* Error)
-{
-    StopWaitingForLeaveMeshNetwork();
-    DedicatedRestart(GameSession);
-}
-
-static void Restart(AFortGameSessionDedicatedAthena* GameSession)
-{
-    if (!LeaveMatchmakingAndMeshNetwork(GameSession, OnRestartLeaveMeshNetworkComplete))
-        DedicatedRestart(GameSession);
-}
-
 static void OnShutdownLeaveMeshNetworkComplete(AFortGameSessionDedicatedAthena* GameSession, const FName& MeshName, const void* Error)
 {
     StopWaitingForLeaveMeshNetwork();
@@ -1153,6 +1038,11 @@ static void ShutdownDedicatedServer(AFortGameSessionDedicatedAthena* GameSession
 
     if (!LeaveMatchmakingAndMeshNetwork(GameSession, OnShutdownLeaveMeshNetworkComplete))
         DedicatedShutdownDedicatedServer(GameSession, ExitCode);
+}
+
+static void Restart(AFortGameSessionDedicatedAthena* GameSession)
+{
+    ShutdownDedicatedServer(GameSession, *(bool*)(ImageBase + 0x12C11FE4) ? *(int32*)(ImageBase + 0x12C11FE0) : 0);
 }
 
 void PauseWarmup(EGameModePauseWarmupMaskId MaskId)
@@ -2454,15 +2344,6 @@ static double GetServerWorldTimeSeconds(AGameStateBase* GameState)
     return GetTimeSeconds(GameState);
 }
 
-static void (*InitGameOG)(AFortGameModeAthena*, const FString*, const FString*, FString*);
-static void InitGame(AFortGameModeAthena* GameMode, const FString* MapName, const FString* Options, FString* ErrorMessage)
-{
-    for (auto& Resetter : Resetters)
-        Resetter();
-
-    InitGameOG(GameMode, MapName, Options, ErrorMessage);
-}
-
 static void (*HandleMatchHasStartedOG)(AFortGameModeAthena*);
 static void HandleMatchHasStarted(AFortGameModeAthena* GameMode)
 {
@@ -2764,7 +2645,6 @@ void AFortGameMode__Init()
     ConfiguredPlaylist = Playlist;
     bConfiguredLateGame = bLateGame;
 
-    Hook(ImageBase + 0x8F95D80, InitGame, InitGameOG);
     Hook(ImageBase + 0x8F94F28, HandleMatchHasStarted, HandleMatchHasStartedOG);
     ExecHook(AGameMode::StaticClass()->FindFunction("ReadyToStartMatch"), ReadyToStartMatch, ReadyToStartMatchOG);
     Patch<uint16_t>(ImageBase + 0x30276D8, 0x9090);
@@ -3062,48 +2942,4 @@ void AFortGameMode__Tick()
     }
 
     Pawns.Free();
-}
-
-void AFortGameMode__Reset()
-{
-    static auto TSharedRef_Destructor = (void (*)(FSharedRef*))(ImageBase + 0x14DA148);
-
-    for (auto& Request : VoiceChatTokenRequests)
-    {
-        Request.ChannelName.Free();
-        TSharedRef_Destructor(&Request.HttpRequest);
-    }
-
-    VoiceChatTokenRequests.clear();
-    CurrentGameSessionId.clear();
-    AbilitySets.Free();
-    SafeZoneLocations.Free();
-    LevelsToStream.Free();
-    VendingRarityWeights.clear();
-    BuildingClassMap.clear();
-
-    VendingRarityWeightSum = 0;
-    VendingRarityZeroWeight = 0;
-    VendingTotalWeight = 0;
-    PauseWarmupMask = 0;
-    CalendarWaitStart = 0;
-    CreateSessionCompleteHandle = 0;
-    MatchmakingWaitStart = 0;
-    LeaveMeshNetworkCompleteHandle = 0;
-
-    bSkipWarmup = false;
-    bSkipAircraft = false;
-    bCalendarPlaylistDone = false;
-    bFinishedFlight = false;
-    bGettingReady = false;
-    bBusUnlocked = false;
-    bStartedForming = false;
-    bFormedZone = false;
-    bSafeZoneShrinking = false;
-    bReady = false;
-
-    Playlist = ConfiguredPlaylist;
-    bLateGame = bConfiguredLateGame;
-
-    SetConsoleTitleA("Remix 32.00 | Setting up");
 }

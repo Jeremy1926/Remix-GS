@@ -11,7 +11,6 @@
 #include "SDK/SDK/FortniteGame_parameters.hpp"
 
 INIT_POSTLOAD(AFortPlayerController);
-INIT_RESET(AFortPlayerController);
 
 static void (*GetPlayerViewPointOG)(AFortPlayerControllerAthena*, FVector&, FRotator&);
 static void (*OnPawnDiedOG)(AFortPlayerControllerAthena*, AFortPawn*, float, const FGameplayTagContainer&, const FGameplayEffectContextHandle&, AController*, AActor*, AActor*);
@@ -1838,26 +1837,4 @@ void AFortPlayerController__PostLoad()
     ExecHook(UFortControllerComponent_Interaction::StaticClass()->FindFunction("ServerAttemptInteract"), ServerAttemptInteract, ServerAttemptInteractOG);
     ExecHook(UFortControllerComponent_Interaction::StaticClass()->FindFunction("ServerNotifyStartLongUse"), ServerNotifyStartLongUse);
     ExecHook(UFortControllerComponent_Interaction::StaticClass()->FindFunction("ServerNotifyEndLongUse"), ServerNotifyEndLongUse);
-}
-
-void AFortPlayerController__Reset()
-{
-    LateGamePool = {};
-    bLateGamePoolBuilt = false;
-
-    CachedDefaultPickaxe.reset();
-    CachedWallBuild.reset();
-    CachedFloorBuild.reset();
-    CachedStairBuild.reset();
-    CachedConeBuild.reset();
-    CachedEditTool.reset();
-    CachedWID_Launcher_Petrol.reset();
-    CachedBGA_Petrol_PickupClass.reset();
-    CachedSprayAbilityClass.reset();
-    CachedEmoteAbilityClass.reset();
-    CachedOutsideSafeZoneEffect.reset();
-
-    HealthEffect = nullptr;
-    ShieldEffect = nullptr;
-    bResolvedEffects = false;
 }

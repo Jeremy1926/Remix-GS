@@ -9,7 +9,6 @@
 INIT_MODULE(AFortPickup);
 INIT_POSTLOAD(AFortPickup);
 INIT_TICKER(AFortPickup);
-INIT_RESET(AFortPickup);
 
 static void SetPickupItems(AFortPickupAthena* Pickup)
 {
@@ -686,17 +685,4 @@ void AFortPickup__Tick()
 
         PendingQueries.erase(PendingQueries.begin() + i);
     }
-}
-
-void AFortPickup__Reset()
-{
-    for (auto& [TierGroup, TierData] : TierDataMap)
-        TierData.Free();
-
-    for (auto& [LootPackageID, LootPackages] : LootPackageMap)
-        LootPackages.Free();
-
-    TierDataMap.clear();
-    LootPackageMap.clear();
-    PendingQueries.clear();
 }

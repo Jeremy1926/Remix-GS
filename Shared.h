@@ -182,7 +182,6 @@ inline void Rel32Hook(uint64_t _Ptr, void* _Detour)
 inline std::vector<void (*)()> Initters;
 inline std::vector<void (*)()> PostLoaders;
 inline std::vector<void (*)()> Tickers;
-inline std::vector<void (*)()> Resetters;
 
 #define INIT_MODULE(Name)                                                                          \
     void Name##__Init();                                                                           \
@@ -195,10 +194,6 @@ inline std::vector<void (*)()> Resetters;
 #define INIT_TICKER(Name)                                                                          \
     void Name##__Tick();                                                                           \
     auto Ticker__##Name = ([]() { Tickers.push_back(Name##__Tick); return 1; })();
-
-#define INIT_RESET(Name)                                                                           \
-    void Name##__Reset();                                                                          \
-    auto Resetter__##Name = ([]() { Resetters.push_back(Name##__Reset); return 1; })();
 
 #define callOG(_Tr, _Fn, _Th, ...)                                 \
     ([&]()                                                         \

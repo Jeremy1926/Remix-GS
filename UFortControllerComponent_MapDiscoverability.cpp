@@ -2,7 +2,6 @@
 #include "Shared.h"
 
 INIT_MODULE(UFortControllerComponent_MapDiscoverability);
-INIT_RESET(UFortControllerComponent_MapDiscoverability);
 
 struct FDiscoverablePOI
 {
@@ -165,11 +164,4 @@ static void ProcessTagDeltaForController(AFortPoiManager* PoiManager, AFortPlaye
 void UFortControllerComponent_MapDiscoverability__Init()
 {
     Hook(ImageBase + 0x908CF5C, ProcessTagDeltaForController, ProcessTagDeltaForControllerOG);
-}
-
-void UFortControllerComponent_MapDiscoverability__Reset()
-{
-    CachedDiscoverablePOIs.clear();
-    CachedPoiManager = TWeakObjectPtr<AFortPoiManager>();
-    CachedVolumes = -1;
 }

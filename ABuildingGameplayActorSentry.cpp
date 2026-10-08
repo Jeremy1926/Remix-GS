@@ -2,7 +2,6 @@
 #include "Shared.h"
 
 INIT_MODULE(ABuildingGameplayActorSentry);
-INIT_RESET(ABuildingGameplayActorSentry);
 
 static void (*TickOG)(ABuildingGameplayActorSentry*, float);
 static void (*BeginPlayOG)(ABuildingGameplayActorSentry*);
@@ -300,9 +299,4 @@ void ABuildingGameplayActorSentry__Init()
     ExecHook(SentryClass->FindFunction("SetFixedRotationGoalForReplication"), (void (*)(UObject*, FFrame&))SetFixedRotationGoalForReplication);
     ExecHook(SentryClass->FindFunction("SetStartingIdleRotation"), (void (*)(UObject*, FFrame&))SetStartingIdleRotation);
     ExecHook(SentryClass->FindFunction("SetEmpApplied"), SetEmpApplied);
-}
-
-void ABuildingGameplayActorSentry__Reset()
-{
-    AggroTimeRemaining.clear();
 }

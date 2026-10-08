@@ -2,7 +2,6 @@
 #include "Shared.h"
 
 INIT_POSTLOAD(UFortControllerComponent_IndicatedActorManagement);
-INIT_RESET(UFortControllerComponent_IndicatedActorManagement);
 
 static void FreeData(FIndicatedActorData& Data)
 {
@@ -400,9 +399,4 @@ void UFortControllerComponent_IndicatedActorManagement__PostLoad()
     ExecHook(LibraryClass->FindFunction("AddActorsToStenciledList"), AddActorsToStenciledList);
     ExecHook(LibraryClass->FindFunction("AddActorsInRadiusToIndicatedList"), AddActorsInRadiusToIndicatedList);
     ExecHook(LibraryClass->FindFunction("AddActorsInRadiusToStenciledList"), AddActorsInRadiusToStenciledList);
-}
-
-void UFortControllerComponent_IndicatedActorManagement__Reset()
-{
-    StencilDefinitionCollection = nullptr;
 }

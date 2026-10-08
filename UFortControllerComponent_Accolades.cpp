@@ -5,7 +5,6 @@
 #include "SDK/SDK/AccoladesRuntime_classes.hpp"
 
 INIT_POSTLOAD(UFortControllerComponent_Accolades);
-INIT_RESET(UFortControllerComponent_Accolades);
 
 using FAccoladesTable = TMap<FDataRegistryId, FFortAccoladesTableRow*>;
 using FFilterEvaluator = std::function<int32(const FInstancedStruct&, FName)>;
@@ -507,13 +506,4 @@ static void BeginPlay(UFortGameStateComponent_Accolades* Component)
 void UFortControllerComponent_Accolades__PostLoad()
 {
     Hook<UFortGameStateComponent_Accolades>(uint32(0x78), BeginPlay, BeginPlayOG);
-}
-
-void UFortControllerComponent_Accolades__Reset()
-{
-    PlayerStates.clear();
-    MatchTriggerCounts.clear();
-    AccoladeQuests.clear();
-    GameplayEventTags.clear();
-    bGameplayEventTagsCached = false;
 }

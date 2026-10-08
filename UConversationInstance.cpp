@@ -7,7 +7,6 @@
 #include "AFortWeapon.h"
 
 INIT_MODULE(UConversationInstance);
-INIT_RESET(UConversationInstance);
 
 struct FServiceEntry
 {
@@ -2083,13 +2082,4 @@ void UConversationInstance__Init()
     Hook<UFortConversationRequirement_ControllerRequirement>(uint32(0x5C), (EConversationRequirementResult (*)(UFortConversationRequirement_ControllerRequirement*, const FConversationContext*))IsRequirementSatisfied);
     Hook<UFortConversationRequirement_HasService>(uint32(0x5C), (EConversationRequirementResult (*)(UFortConversationRequirement_HasService*, const FConversationContext*))IsRequirementSatisfied);
     Hook<UFortConversationChoiceWithPreviewNode>(uint32(0x5C), FillChoice, FillChoiceOG);
-}
-
-void UConversationInstance__Reset()
-{
-    CachedWorld = nullptr;
-    CachedRegistry = nullptr;
-    NPCUniqueIDTags.clear();
-    ServiceStates.clear();
-    Purchases.clear();
 }

@@ -6,7 +6,6 @@
 
 INIT_MODULE(UAthenaNavSystem);
 INIT_TICKER(UAthenaNavSystem);
-INIT_RESET(UAthenaNavSystem);
 
 static void (*RemoveNavigationLocksOG)(UAthenaNavSystem*);
 
@@ -593,12 +592,4 @@ void UAthenaNavSystem__Tick()
         BakeCache(NavSystem, NavMesh);
         NavDiag("BAKE done");
     }
-}
-
-void UAthenaNavSystem__Reset()
-{
-    CachedAreas.clear();
-    CachedLinks.clear();
-    bNavCacheDone = false;
-    bNavCacheAttached = false;
 }

@@ -3,7 +3,6 @@
 #include "UFortAthenaAISpawnerDataComponent_CosmeticLibrary.h"
 
 INIT_MODULE(UFortAthenaAISpawnerDataComponent_CosmeticLibrary);
-INIT_RESET(UFortAthenaAISpawnerDataComponent_CosmeticLibrary);
 
 struct FBotLoadout
 {
@@ -23,17 +22,7 @@ struct FEmoteRowsInfo
 static std::vector<FBotLoadout> Loadouts;
 static size_t NextLoadout = 0;
 static std::unordered_map<UDataTable*, FEmoteRowsInfo> EmoteRowsInfos;
-static std::vector<std::pair<UObject*, int32>> RootedObjects;
 static const FFortAthenaLoadout* FirstSpawnLoadout = nullptr;
-
-static void Root(UObject* Object)
-{
-    if (Object->IsRooted())
-        return;
-
-    Object->AddToRoot();
-    RootedObjects.push_back({ Object, Object->GetIndex() });
-}
 
 static float RandomFraction()
 {
@@ -189,7 +178,7 @@ static FEmoteRowsInfo& GetEmoteRowsInfo(UDataTable* EmotesDataTable)
         if (!Dance || !Dance->IsA(UAthenaDanceItemDefinition::StaticClass()) || IsExcludedCosmetic(Dance))
             continue;
 
-        Root(Dance);
+        Dance->AddToRoot();
         Info.Rows.push_back({ (UAthenaDanceItemDefinition*)Dance, Row->Weight });
         Info.TotalWeight += Row->Weight;
     }
@@ -206,7 +195,7 @@ void PreloadBotCosmetics(UClass* SpawnerDataClass, int32 Count)
         for (UObject* Item : { (UObject*)Loadout.Character, (UObject*)Loadout.Backpack, (UObject*)Loadout.Glider, (UObject*)Loadout.Pickaxe, (UObject*)Loadout.SkyDiveContrail })
         {
             if (Item)
-                Root(Item);
+                Item->AddToRoot();
         }
 
         Loadouts.push_back(Loadout);
@@ -317,20 +306,4 @@ void UFortAthenaAISpawnerDataComponent_CosmeticLibrary__Init()
     Hook<UFortAthenaAISpawnerDataComponent_CosmeticLibrary>(uint32(0x5B), OnSpawned, OnSpawnedOG);
     Hook<UFortAthenaAISpawnerDataComponent_CosmeticLibrary>(uint32(0x5F), GetDances);
     Hook<UFortAthenaAISpawnerDataComponent_CosmeticLibrary>(uint32(0x62), GetLoadout);
-}
-
-void UFortAthenaAISpawnerDataComponent_CosmeticLibrary__Reset()
-{
-    for (auto& [Object, Index] : RootedObjects)
-    {
-        auto Item = UObject::GObjects->GetItemByIndex(Index);
-
-        if (Item && Item->GetObject() == Object)
-            Object->RemoveFromRoot();
-    }
-
-    RootedObjects.clear();
-    Loadouts.clear();
-    NextLoadout = 0;
-    EmoteRowsInfos.clear();
 }

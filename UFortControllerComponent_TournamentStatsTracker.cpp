@@ -8,7 +8,6 @@
 #pragma comment(lib, "crypt32.lib")
 
 INIT_MODULE(UFortControllerComponent_TournamentStatsTracker);
-INIT_RESET(UFortControllerComponent_TournamentStatsTracker);
 
 constexpr auto MaxSendAttempts = 3;
 constexpr auto SendRetryDelay = 2000;
@@ -451,15 +450,4 @@ void UFortControllerComponent_TournamentStatsTracker__Init()
 
     if (Session)
         std::thread(TournamentWorker).detach();
-}
-
-void UFortControllerComponent_TournamentStatsTracker__Reset()
-{
-    TournamentPlayers.clear();
-    PlayerDivisions.clear();
-    TeamEliminations.clear();
-    MatchId.clear();
-    MatchStartTime = 0.f;
-    StartingTeams = 0;
-    PlacementReported = 0;
 }
