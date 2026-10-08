@@ -163,9 +163,10 @@ static std::wstring GetCachePath()
     auto Playlist = GameState ? GameState->CurrentPlaylistInfo.BasePlaylist : nullptr;
     auto NavSystem = (UNavigationSystemV1*)World->NavigationSystem;
     auto MapName = World->Name.GetRawString();
-    wchar_t LocalAppData[MAX_PATH];
+    wchar_t ModulePath[MAX_PATH];
+    HMODULE Module = nullptr;
 
-    if (!Playlist || !GetEnvironmentVariableW(L"LOCALAPPDATA", LocalAppData, MAX_PATH))
+    if (!Playlist || !GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCWSTR)&GetCachePath, &Module) || !GetModuleFileNameW(Module, ModulePath, MAX_PATH))
         return std::wstring();
 
     TArray<ANavMeshBoundsVolume*> Volumes;
@@ -184,7 +185,9 @@ static std::wstring GetCachePath()
 
     auto Name = MapName + "_" + Playlist->PlaylistName.GetRawString() + ".bin";
 
-    return std::wstring(LocalAppData) + L"\\FortniteGame\\Saved\\RemixNavCache_" + std::wstring(Name.begin(), Name.end());
+    auto Folder = std::wstring(ModulePath);
+
+    return Folder.substr(0, Folder.rfind(L'\\')) + L"\\RemixNavCache_" + std::wstring(Name.begin(), Name.end());
 }
 
 static void GetParams(ARecastNavMesh* NavMesh, uint8 (&Params)[0x7C])
