@@ -2844,7 +2844,7 @@ void AFortGameMode__Tick()
         It = VoiceChatTokenRequests.erase(It);
     }
 
-    if (MatchmakingWaitStart && (bNavCacheAttached || bNavCacheDone || GetTickCount64() - MatchmakingWaitStart >= 600000))
+    if (MatchmakingWaitStart && (bNavCacheAttached || bNavCacheDone || GetTickCount64() - MatchmakingWaitStart >= 1800000))
     {
         auto GameSession = (AFortGameSessionDedicatedAthena*)UWorld::GetWorld()->AuthorityGameMode->GameSession;
         auto ConnectToMatchmakingServiceV2 = (bool (*)(AFortGameSessionDedicatedAthena*, bool))GameSession->VTable[0x138];
