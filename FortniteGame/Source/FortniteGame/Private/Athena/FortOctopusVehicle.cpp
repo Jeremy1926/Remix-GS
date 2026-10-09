@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Shared.h"
+#include "FortniteGame/Source/FortniteGame/Public/Athena/FortOctopusVehicle.h"
 
 INIT_MODULE(AFortOctopusVehicle);
 
@@ -10,7 +11,7 @@ static void SetNetTowhookAimDir(T* Vehicle, const FVector_NetQuantizeNormal& InN
     Vehicle->OnRep_NetTowhookAimDir();
 }
 
-static void ServerUpdateTowhook(UObject* Context, FFrame& Stack, void* Ret)
+void ServerUpdateTowhook(UObject* Context, FFrame& Stack, void* Ret)
 {
     FVector_NetQuantizeNormal InNetTowhookAimDir;
     Stack.StepCompiledIn(&InNetTowhookAimDir);
@@ -25,5 +26,4 @@ static void ServerUpdateTowhook(UObject* Context, FFrame& Stack, void* Ret)
 void AFortOctopusVehicle__Init()
 {
     ExecHook(AFortOctopusVehicle::StaticClass()->FindFunction("ServerUpdateTowhook"), ServerUpdateTowhook);
-    ExecHook(AFortSpaghettiVehicle::StaticClass()->FindFunction("ServerUpdateTowhook"), ServerUpdateTowhook);
 }
