@@ -349,6 +349,15 @@
     <Filter Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Public\Components">
       <UniqueIdentifier>{F612ED77-7096-504A-8D36-E640775E2385}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Source\Runtime\Launch">
+      <UniqueIdentifier>{0280E15B-C792-54A3-8D04-54371F4B7B55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Source\Runtime\Launch\Private">
+      <UniqueIdentifier>{0FBC0A24-E54F-5AF8-AD72-F6F5E2CCFCCF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Source\Runtime\Launch\Private\Windows">
+      <UniqueIdentifier>{C6DF95D1-6398-5237-91FF-1DCF6A98BE17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1196,8 +1205,8 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Engine\Source\Runtime\Launch\Private\Windows\LaunchWindows.cpp">
+      <Filter>Engine\Source\Runtime\Launch\Private\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Plugins\Experimental\CommonConversation\Source\CommonConversationRuntime\Private\ConversationContext.cpp">
       <Filter>Engine\Plugins\Experimental\CommonConversation\Source\CommonConversationRuntime\Private</Filter>

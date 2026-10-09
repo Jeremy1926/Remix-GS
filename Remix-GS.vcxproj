@@ -545,7 +545,7 @@
     <ClCompile Include="Engine\Source\Runtime\Engine\Private\NetDriver.cpp" />
     <ClCompile Include="Engine\Source\Runtime\Engine\Private\ReplaySubsystem.cpp" />
     <ClCompile Include="Engine\Source\Runtime\Engine\Private\World.cpp" />
-    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Engine\Source\Runtime\Launch\Private\Windows\LaunchWindows.cpp" />
     <ClCompile Include="SDK\SDK\Basic.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</ForcedIncludeFiles>
