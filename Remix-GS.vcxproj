@@ -172,7 +172,7 @@
     <ClInclude Include="FortniteGame\Plugins\GameFeatures\VictoryCrownsGameplay\Source\VictoryCrownsRuntime\Public\FortControllerComponent_VictoryCrowns.h" />
     <ClInclude Include="FortniteGame\Source\FortniteAI\Public\AI\FortAthenaAIBotController.h" />
     <ClInclude Include="FortniteGame\Source\FortniteAI\Public\AI\Navigation\AthenaNavSystem.h" />
-    <ClInclude Include="FortniteGame\Source\FortniteAI\Public\Athena\AI\AthenaAISystem.h" />
+    <ClInclude Include="FortniteGame\Source\FortniteAI\Public\AI\AthenaAISystem.h" />
     <ClInclude Include="FortniteGame\Source\FortniteAI\Public\Athena\AI\FortAthenaAISpawnerDataComponent_CosmeticLibrary.h" />
     <ClInclude Include="FortniteGame\Source\FortniteAI\Public\Athena\AI\Systems\AthenaAIServiceLoot.h" />
     <ClInclude Include="FortniteGame\Source\FortniteAI\Public\Athena\AI\Systems\AthenaAIServicePlayerBots.h" />
@@ -451,11 +451,11 @@
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Building\BuildingGameplayActorSentry.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Building\BuildingGameplayActorSpawnMachine.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteAI\Private\AI\FortAthenaAIBotController.cpp" />
-    <ClCompile Include="FortniteGame\Source\FortniteAI\Private\Athena\AI\AthenaAISystem.cpp" />
+    <ClCompile Include="FortniteGame\Source\FortniteAI\Private\AI\AthenaAISystem.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteAI\Private\Athena\AI\FortAthenaAISpawnerDataComponent_SkillsetBase.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteAI\Private\Athena\AI\FortAthenaAISpawnerDataComponent_AIBotConversation.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\FortNearbyActorsPerceptionComponent.cpp" />
-    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Athena\Physics\FortPhysicsPawn.cpp" />
+    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Pawns\FortPhysicsPawn.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Athena\FortOctopusVehicle.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Weapons\Projectiles\FortOctopusTowhookAttachableProjectile.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Athena\FortAthenaVehicle.cpp" />

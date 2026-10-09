@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Shared.h"
-#include "FortniteGame/Source/FortniteAI/Public/Athena/AI/AthenaAISystem.h"
+#include "FortniteGame/Source/FortniteAI/Public/AI/AthenaAISystem.h"
 
 void CreateSubsystems(UAthenaAISystem* AISystem, UObject* GameMode)
 {

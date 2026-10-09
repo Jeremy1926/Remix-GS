@@ -220,9 +220,6 @@
     <Filter Include="FortniteGame\Source\FortniteGame\Private\Athena\Modifiers">
       <UniqueIdentifier>{CA01D16B-96C4-52B3-9F0B-32EF27F235AC}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FortniteGame\Source\FortniteGame\Private\Athena\Physics">
-      <UniqueIdentifier>{1485931B-EA03-53D9-9760-98796992AE96}</UniqueIdentifier>
-    </Filter>
     <Filter Include="FortniteGame\Source\FortniteGame\Private\Athena\SpecialActor">
       <UniqueIdentifier>{25D3A2DE-520E-525C-85EF-8DF14E332FE0}</UniqueIdentifier>
     </Filter>
@@ -390,8 +387,8 @@
     <ClInclude Include="FortniteGame\Source\FortniteAI\Public\AI\Navigation\AthenaNavSystem.h">
       <Filter>FortniteGame\Source\FortniteAI\Public\AI\Navigation</Filter>
     </ClInclude>
-    <ClInclude Include="FortniteGame\Source\FortniteAI\Public\Athena\AI\AthenaAISystem.h">
-      <Filter>FortniteGame\Source\FortniteAI\Public\Athena\AI</Filter>
+    <ClInclude Include="FortniteGame\Source\FortniteAI\Public\AI\AthenaAISystem.h">
+      <Filter>FortniteGame\Source\FortniteAI\Public\AI</Filter>
     </ClInclude>
     <ClInclude Include="FortniteGame\Source\FortniteAI\Public\Athena\AI\FortAthenaAISpawnerDataComponent_CosmeticLibrary.h">
       <Filter>FortniteGame\Source\FortniteAI\Public\Athena\AI</Filter>
@@ -1247,8 +1244,8 @@
     <ClCompile Include="FortniteGame\Source\FortniteAI\Private\AI\Navigation\AthenaNavSystem.cpp">
       <Filter>FortniteGame\Source\FortniteAI\Private\AI\Navigation</Filter>
     </ClCompile>
-    <ClCompile Include="FortniteGame\Source\FortniteAI\Private\Athena\AI\AthenaAISystem.cpp">
-      <Filter>FortniteGame\Source\FortniteAI\Private\Athena\AI</Filter>
+    <ClCompile Include="FortniteGame\Source\FortniteAI\Private\AI\AthenaAISystem.cpp">
+      <Filter>FortniteGame\Source\FortniteAI\Private\AI</Filter>
     </ClCompile>
     <ClCompile Include="FortniteGame\Source\FortniteAI\Private\Athena\AI\FortAthenaAISpawnerDataComponent_AIBotConversation.cpp">
       <Filter>FortniteGame\Source\FortniteAI\Private\Athena\AI</Filter>
@@ -1313,8 +1310,8 @@
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Athena\Modifiers\FortAthenaMutator_GiveItemsAtGamePhaseStep.cpp">
       <Filter>FortniteGame\Source\FortniteGame\Private\Athena\Modifiers</Filter>
     </ClCompile>
-    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Athena\Physics\FortPhysicsPawn.cpp">
-      <Filter>FortniteGame\Source\FortniteGame\Private\Athena\Physics</Filter>
+    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Pawns\FortPhysicsPawn.cpp">
+      <Filter>FortniteGame\Source\FortniteGame\Private\Pawns</Filter>
     </ClCompile>
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Athena\SpecialActor\AthenaSpecialActorComponent.cpp">
       <Filter>FortniteGame\Source\FortniteGame\Private\Athena\SpecialActor</Filter>

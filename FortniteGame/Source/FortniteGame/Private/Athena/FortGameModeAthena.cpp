@@ -2,7 +2,7 @@
 #include "Shared.h"
 #include "Config.h"
 #include "FortniteGame/Source/FortniteGame/Public/Athena/FortGameModeAthena.h"
-#include "FortniteGame/Source/FortniteAI/Public/Athena/AI/AthenaAISystem.h"
+#include "FortniteGame/Source/FortniteAI/Public/AI/AthenaAISystem.h"
 #include "FortniteGame/Source/FortniteGame/Public/Athena/ControllerComponents/FortControllerComponent_TournamentStatsTracker.h"
 #include "FortniteGame/Source/FortniteGame/Public/Athena/FortAthenaVehicleSpawner.h"
 #include "FortniteGame/Source/FortniteGame/Public/Athena/FortPlayerControllerAthena.h"
