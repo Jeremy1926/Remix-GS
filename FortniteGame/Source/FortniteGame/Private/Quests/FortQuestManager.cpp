@@ -2,8 +2,8 @@
 #include "Shared.h"
 #include "FortniteGame/Source/FortniteGame/Public/Quests/FortQuestManager.h"
 #include "Engine/Source/Runtime/Engine/Public/ReplaySubsystem.h"
+#include "FortniteGame/Plugins/GameFeatures/Accolades/Source/AccoladesRuntime/Public/Components/FortGameStateComponent_Accolades.h"
 #include "FortniteGame/Plugins/GameFeatures/VictoryCrownsGameplay/Source/VictoryCrownsRuntime/Public/FortControllerComponent_VictoryCrowns.h"
-#include "FortniteGame/Source/FortniteGame/Public/Components/FortGameStateComponent_Accolades.h"
 #include "SDK/SDK/AccoladesRuntime_classes.hpp"
 #include "SDK/SDK/FortniteGame_parameters.hpp"
 

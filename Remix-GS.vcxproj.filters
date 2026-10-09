@@ -328,6 +328,27 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{48C98BB3-639A-501A-A516-7B73A1CA46BE}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FortniteGame\Plugins\GameFeatures\Accolades">
+      <UniqueIdentifier>{22699F98-8C82-5946-AC1A-7FCC71C19BC2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FortniteGame\Plugins\GameFeatures\Accolades\Source">
+      <UniqueIdentifier>{6B9569B6-E76A-5BE9-B70E-CB71A2263821}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime">
+      <UniqueIdentifier>{FEBF9B85-911A-5DAF-9A4B-A780D559BC11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Private">
+      <UniqueIdentifier>{514050FE-0779-5D10-8DC1-3781B1996E3E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Private\Components">
+      <UniqueIdentifier>{622CAE12-9918-531D-AC34-142DA94B4B3A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Public">
+      <UniqueIdentifier>{FD1D3F58-6FBB-573C-A17E-C8400079B6CF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Public\Components">
+      <UniqueIdentifier>{F612ED77-7096-504A-8D36-E640775E2385}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -435,14 +456,14 @@
     <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Components\FortControllerComponent_IndicatedActorManagement.h">
       <Filter>FortniteGame\Source\FortniteGame\Public\Components</Filter>
     </ClInclude>
-    <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Components\FortGameStateComponent_Accolades.h">
-      <Filter>FortniteGame\Source\FortniteGame\Public\Components</Filter>
+    <ClInclude Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Public\Components\FortGameStateComponent_Accolades.h">
+      <Filter>FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Public\Components</Filter>
     </ClInclude>
     <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Conversation\FortConversationRequirement_ControllerRequirement.h">
       <Filter>FortniteGame\Source\FortniteGame\Public\Conversation</Filter>
     </ClInclude>
-    <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Conversation\FortConversationRequirement_HasService.h">
-      <Filter>FortniteGame\Source\FortniteGame\Public\Conversation</Filter>
+    <ClInclude Include="FortniteGame\Source\FortniteGame\Private\Conversation\FortConversationRequirement_HasService.h">
+      <Filter>FortniteGame\Source\FortniteGame\Private\Conversation</Filter>
     </ClInclude>
     <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Conversation\FortConversationTaskNode.h">
       <Filter>FortniteGame\Source\FortniteGame\Public\Conversation</Filter>
@@ -1352,8 +1373,8 @@
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortActorComponent_MultiInteract.cpp">
       <Filter>FortniteGame\Source\FortniteGame\Private\Components</Filter>
     </ClCompile>
-    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortControllerComponent_AccoladeCollection.cpp">
-      <Filter>FortniteGame\Source\FortniteGame\Private\Components</Filter>
+    <ClCompile Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Private\Components\FortControllerComponent_AccoladeCollection.cpp">
+      <Filter>FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Private\Components</Filter>
     </ClCompile>
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortControllerComponent_Aircraft.cpp">
       <Filter>FortniteGame\Source\FortniteGame\Private\Components</Filter>
@@ -1367,14 +1388,14 @@
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortControllerComponent_Interaction.cpp">
       <Filter>FortniteGame\Source\FortniteGame\Private\Components</Filter>
     </ClCompile>
-    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortGameStateComponent_Accolades.cpp">
-      <Filter>FortniteGame\Source\FortniteGame\Private\Components</Filter>
+    <ClCompile Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Private\Components\FortGameStateComponent_Accolades.cpp">
+      <Filter>FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Private\Components</Filter>
     </ClCompile>
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortHeldObjectComponent.cpp">
       <Filter>FortniteGame\Source\FortniteGame\Private\Components</Filter>
     </ClCompile>
-    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortIndicatedActorManagementLibrary.cpp">
-      <Filter>FortniteGame\Source\FortniteGame\Private\Components</Filter>
+    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\FortIndicatedActorManagementLibrary.cpp">
+      <Filter>FortniteGame\Source\FortniteGame\Private</Filter>
     </ClCompile>
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortPawnComponent_Convert.cpp">
       <Filter>FortniteGame\Source\FortniteGame\Private\Components</Filter>

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Shared.h"
-#include "FortniteGame/Source/FortniteGame/Public/Components/FortGameStateComponent_Accolades.h"
+#include "FortniteGame/Plugins/GameFeatures/Accolades/Source/AccoladesRuntime/Public/Components/FortGameStateComponent_Accolades.h"
 #include "SDK/SDK/AccoladesRuntime_structs.hpp"
 #include "SDK/SDK/AccoladesRuntime_classes.hpp"
 

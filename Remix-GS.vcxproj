@@ -188,9 +188,9 @@
     <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Building\BuildingItemCollectorActor.h" />
     <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Building\BuildingItemWeaponUpgradeActor.h" />
     <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Components\FortControllerComponent_IndicatedActorManagement.h" />
-    <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Components\FortGameStateComponent_Accolades.h" />
+    <ClInclude Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Public\Components\FortGameStateComponent_Accolades.h" />
     <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Conversation\FortConversationRequirement_ControllerRequirement.h" />
-    <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Conversation\FortConversationRequirement_HasService.h" />
+    <ClInclude Include="FortniteGame\Source\FortniteGame\Private\Conversation\FortConversationRequirement_HasService.h" />
     <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Conversation\FortConversationTaskNode.h" />
     <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Conversation\FortConversationTaskNode_SellItem.h" />
     <ClInclude Include="FortniteGame\Source\FortniteGame\Public\Conversation\FortConversationTaskNode_Service.h" />
@@ -524,10 +524,10 @@
     <ClCompile Include="FortniteGame\Plugins\GameFeatures\Lager\Source\LagerRuntime\Private\FortAthenaLivingWorldManager.cpp" />
     <ClCompile Include="FortniteGame\Plugins\GameFeatures\Lager\Source\LagerRuntime\Private\PointProviders\FortAthenaLivingWorldStaticPointProvider.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteAI\Private\Athena\AI\FortAthenaPatrolPath.cpp" />
-    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortControllerComponent_AccoladeCollection.cpp" />
-    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortGameStateComponent_Accolades.cpp" />
+    <ClCompile Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Private\Components\FortControllerComponent_AccoladeCollection.cpp" />
+    <ClCompile Include="FortniteGame\Plugins\GameFeatures\Accolades\Source\AccoladesRuntime\Private\Components\FortGameStateComponent_Accolades.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortControllerComponent_IndicatedActorManagement.cpp" />
-    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Components\FortIndicatedActorManagementLibrary.cpp" />
+    <ClCompile Include="FortniteGame\Source\FortniteGame\Private\FortIndicatedActorManagementLibrary.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Athena\ControllerComponents\FortControllerComponent_MapDiscoverability.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\Athena\FortPoiManager.cpp" />
     <ClCompile Include="FortniteGame\Source\FortniteGame\Private\FortEngine.cpp" />

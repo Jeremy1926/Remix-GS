@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Shared.h"
-#include "FortniteGame/Source/FortniteGame/Public/Components/FortGameStateComponent_Accolades.h"
+#include "FortniteGame/Plugins/GameFeatures/Accolades/Source/AccoladesRuntime/Public/Components/FortGameStateComponent_Accolades.h"
 #include "FortniteGame/Source/FortniteGame/Public/Quests/FortQuestManager.h"
 
 INIT_POSTLOAD(UFortAbilitySystemComponentAthena);

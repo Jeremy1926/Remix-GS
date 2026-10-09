@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Shared.h"
-#include "FortniteGame/Source/FortniteGame/Public/Conversation/FortConversationRequirement_HasService.h"
+#include "FortniteGame/Source/FortniteGame/Private/Conversation/FortConversationRequirement_HasService.h"
 #include "FortniteGame/Source/FortniteGame/Public/Conversation/FortConversationRequirement_ControllerRequirement.h"
 #include "FortniteGame/Source/FortniteGame/Public/Conversation/FortConversationTaskNode_SellItem.h"
 #include "FortniteGame/Source/FortniteGame/Public/Conversation/FortNonPlayerConversationParticipantComponent.h"
