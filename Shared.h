@@ -229,6 +229,12 @@ inline void FreeGameplayTags(FGameplayTagContainer& Tags)
     Tags.ParentTags.Free();
 }
 
+struct FNativeDelegate
+{
+    uint8* Instance;
+    int32 Size;
+};
+
 struct FSharedRef
 {
     void* Object;
